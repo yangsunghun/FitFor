@@ -9,7 +9,184 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      bookmarks: {
+        Row: {
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookmarks_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookmarks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          post_id: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          post_id: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          body_size: string | null
+          content: string
+          created_at: string | null
+          id: string
+          latitude: string | null
+          longitude: string | null
+          season_tag: string | null
+          title: string
+          upload_place: string | null
+          user_id: string
+        }
+        Insert: {
+          body_size?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          latitude?: string | null
+          longitude?: string | null
+          season_tag?: string | null
+          title: string
+          upload_place?: string | null
+          user_id: string
+        }
+        Update: {
+          body_size?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          latitude?: string | null
+          longitude?: string | null
+          season_tag?: string | null
+          title?: string
+          upload_place?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      purchase: {
+        Row: {
+          description: string | null
+          id: string
+          post_id: string
+          price: number | null
+          title: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          post_id: string
+          price?: number | null
+          title: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          post_id?: string
+          price?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          email: string
+          id: string
+          nickname: string
+          profile_image: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          nickname: string
+          profile_image?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          nickname?: string
+          profile_image?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -65,7 +65,8 @@ export const login = async (formData: FormData) => {
     redirect("/error");
   }
 
-  useAuthStore.setState({ user: userInfo });
+  console.log("로그인시 유저 데이터", userInfo);
+  useAuthStore.getState().setUser(userInfo!);
 
   revalidatePath("/", "layout");
   redirect("/");

@@ -49,21 +49,21 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          image_file: string
+          image_url: string
           room_leader: string
           title: string
         }
         Insert: {
           created_at?: string
           id?: string
-          image_file: string
+          image_url: string
           room_leader?: string
           title: string
         }
         Update: {
           created_at?: string
           id?: string
-          image_file?: string
+          image_url?: string
           room_leader?: string
           title?: string
         }

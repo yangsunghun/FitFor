@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="min-h-full">
       <body className={`${pretendard.className} text-slate-900`}>
         <Header />
         <main>{children}</main>

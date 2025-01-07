@@ -1,4 +1,15 @@
-export const mock_data = [
+export type MockData = {
+  image: string;
+  title: string;
+  viewCount: number;
+  createdAt: string;
+  tags: string[];
+  likes: number;
+  comments: number;
+  bookmarks: number;
+};
+
+export const mock_data: MockData[] = [
   {
     title: "게시물 테스트 데이터",
     image:

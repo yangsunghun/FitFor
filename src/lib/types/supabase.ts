@@ -45,6 +45,38 @@ export type Database = {
           },
         ]
       }
+      chatrooms: {
+        Row: {
+          created_at: string
+          id: string
+          image_file: string
+          room_leader: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_file: string
+          room_leader?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_file?: string
+          room_leader?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatrooms_room_leader_fkey"
+            columns: ["room_leader"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comments: {
         Row: {
           content: string
@@ -83,6 +115,68 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          room_id?: string
+          user_id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "chatrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      participants: {
+        Row: {
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          room_id?: string
+          user_id?: string
+        }
+        Update: {
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "participants_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: true
+            referencedRelation: "chatrooms"
             referencedColumns: ["id"]
           },
         ]

@@ -1,6 +1,7 @@
 "use client";
 import { PROVIDER_CONFIG, Provider } from "@/lib/types/auth";
 import { socialLogin } from "@/lib/utils/auth/auth";
+import { createClient } from "@/lib/utils/supabase/server";
 import Image from "next/image";
 
 type SocialLoginButtonProps = {
@@ -11,7 +12,11 @@ const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
   const handleSocialLogin = async () => {
     await socialLogin(provider);
 
-    window.location.href = "/";
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    console.log("소셜 로그인 버튼에서", data);
+
+    window.location.href = "/login";
   };
 
   return (

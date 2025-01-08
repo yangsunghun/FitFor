@@ -5,8 +5,7 @@ import Link from "next/link";
 import SocialLoginButton from "./SocialLoginButton";
 
 const LoginForm = () => {
-  // handler 작성 || hook으로 사용
-
+  // handler 작성
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -31,7 +30,7 @@ const LoginForm = () => {
         <input id="password" name="password" type="password" required />
         <button type="submit">로그인</button>
       </form>
-      {/* 예시시 */}
+      {/* 예시 */}
       <div className="flex w-full flex-col items-center">
         <SocialLoginButton provider="google" />
         {/* <SocialLoginButton provider="kakao" /> */}

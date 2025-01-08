@@ -11,28 +11,65 @@ import { redirect } from "next/navigation";
 export const signup = async (formData: FormData): Promise<void> => {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const inputData = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string
-  };
+  // 기본 프로파일 이미지
+  const profileImage = "/images/default-user-profile.png";
 
-  const { data, error } = await supabase.auth.signUp(inputData);
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const nickname = formData.get("nickname") as string;
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: nickname,
+        avatar_url: profileImage
+      }
+    }
+  });
 
   if (error) {
+    console.error("signup error -", error);
     redirect("/error");
   }
 
-  await supabase.from("users").insert({
-    email: data.user?.email as string,
+  await insertUserToPublic({
+    email,
     id: data.user?.id as string,
-    nickname: formData.get("nickname") as string,
+    nickname,
     profile_image: ""
   });
 };
 
-// 로그인 예시 코드
+// public.users에 데이터를 업데이트 해주는 함수
+export const insertUserToPublic = async ({
+  email,
+  id,
+  nickname,
+  profile_image
+}: {
+  email: string;
+  id: string;
+  nickname: string;
+  profile_image: string;
+}) => {
+  const supabase = await createClient();
+
+  // public 유저 테이블에 저장
+  const { error } = await supabase.from("users").insert({
+    email,
+    id,
+    nickname,
+    profile_image
+  });
+
+  if (error) {
+    console.error("유저 테이블 insert 에러", error);
+  }
+};
+
+// 일반 로그인 코드
 export const login = async (formData: FormData) => {
   const supabase = await createClient();
 
@@ -63,13 +100,14 @@ export const login = async (formData: FormData) => {
   return userInfo;
 };
 
+// 소셜 로그인 코드
 export const socialLogin = async (provider: Provider) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `https://czcbonajmenirmxdslhj.supabase.co/auth/v1/callback`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
       queryParams: PROVIDER_CONFIG[provider].queryParams
     }
   });
@@ -79,10 +117,12 @@ export const socialLogin = async (provider: Provider) => {
     console.error("소셜 로그인 에러", error);
   }
 
-  console.log("socialLogin -", data)
+  if (data.url) {
+    redirect(data.url); // use the redirect API for your server framework
+  }
 };
 
-// 로그아웃 예시 코드
+// 로그아웃 코드
 export const signOut = async () => {
   const supabase = await createClient();
 

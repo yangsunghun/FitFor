@@ -1,8 +1,8 @@
+import Header from "@/components/layout/Header";
+import TQProviders from "@/components/providers/TQProvider";
+import "@/lib/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "@/lib/styles/globals.css";
-import Header from "@/components/layout/Header";
-import Providers from "@/components/providers/RQProvider";
 
 const pretendard = localFont({
   src: "../assets/fonts/PretendardVariable.woff2",
@@ -22,13 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${pretendard.className} text-slate-900`}>
-        <Providers>
+    <html lang="en" className="min-h-full">
+      <TQProviders>
+        <body className={`${pretendard.className} text-slate-900`}>
           <Header />
           <main>{children}</main>
-        </Providers>
-      </body>
+        </body>
+      </TQProviders>
     </html>
   );
 }

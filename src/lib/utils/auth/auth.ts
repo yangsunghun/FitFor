@@ -4,7 +4,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/utils/supabase/server";
-import { useAuthStore } from "@/lib/store/authStore";
 
 // 회원가입 예시 코드
 // 받아온 formData에는 email, password, nickname이 존재
@@ -30,16 +29,13 @@ export const signup = async (formData: FormData): Promise<void> => {
     nickname: formData.get("nickname") as string,
     profile_image: ""
   });
-
-  revalidatePath("/", "layout");
-  redirect("/");
 };
 
 // 로그인 예시 코드
 export const login = async (formData: FormData) => {
   const supabase = await createClient();
 
-  // TODO: 타입 캐스팅 나중에 변경
+  // 로그인 폼 데이터 읽어오기
   const data = {
     email: formData.get("email") as string,
     password: formData.get("password") as string
@@ -47,13 +43,12 @@ export const login = async (formData: FormData) => {
 
   const { data: authData, error } = await supabase.auth.signInWithPassword(data);
 
-  // TODO: 나중에 변경 필요
+  // 에러 처리
   if (error) {
-    console.error(error);
-    redirect("/error");
+    console.error("로그인 에러", error);
   }
 
-  // public에 저장된 user 정보 store에 저장
+  // public에 저장된 user 정보 반환
   const { data: userInfo, error: userFetchError } = await supabase
     .from("users")
     .select("*")
@@ -61,15 +56,10 @@ export const login = async (formData: FormData) => {
     .maybeSingle();
 
   if (userFetchError) {
-    console.error(userFetchError);
-    redirect("/error");
+    console.error("유저 정보를 불러오지 못했습니다",userFetchError);
   }
 
-  console.log("로그인시 유저 데이터", userInfo);
-  useAuthStore.getState().setUser(userInfo!);
-
-  revalidatePath("/", "layout");
-  redirect("/");
+  return userInfo;
 };
 
 // 로그아웃 예시 코드

@@ -1,9 +1,10 @@
 "use server";
 
 // 예시 코드
+import { PROVIDER_CONFIG, type Provider } from "@/lib/types/auth";
+import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/utils/supabase/server";
 
 // 회원가입 예시 코드
 // 받아온 formData에는 email, password, nickname이 존재
@@ -56,10 +57,29 @@ export const login = async (formData: FormData) => {
     .maybeSingle();
 
   if (userFetchError) {
-    console.error("유저 정보를 불러오지 못했습니다",userFetchError);
+    console.error("유저 정보를 불러오지 못했습니다", userFetchError);
   }
 
   return userInfo;
+};
+
+export const socialLogin = async (provider: Provider) => {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: `https://czcbonajmenirmxdslhj.supabase.co/auth/v1/callback`,
+      queryParams: PROVIDER_CONFIG[provider].queryParams
+    }
+  });
+
+  // 에러 처리
+  if (error) {
+    console.error("소셜 로그인 에러", error);
+  }
+
+  console.log("socialLogin -", data)
 };
 
 // 로그아웃 예시 코드

@@ -79,9 +79,6 @@ export type Database = {
           content: string
           created_at: string
           id: string
-          image_url: string
-          room_leader: string
-          title: string
           room_id: string
           user_id: string
         }
@@ -89,9 +86,6 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
-          image_url: string
-          room_leader?: string
-          title: string
           room_id?: string
           user_id?: string
         }
@@ -99,9 +93,6 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
-          image_url?: string
-          room_leader?: string
-          title?: string
           room_id?: string
           user_id?: string
         }
@@ -130,6 +121,7 @@ export type Database = {
           room_description: string
           room_hash_tags: string[]
           room_id: string
+          room_subtitle: string
           room_thumbnail_url: string
           room_title: string
         }
@@ -140,6 +132,7 @@ export type Database = {
           room_description: string
           room_hash_tags: string[]
           room_id?: string
+          room_subtitle: string
           room_thumbnail_url: string
           room_title: string
         }
@@ -150,13 +143,12 @@ export type Database = {
           room_description?: string
           room_hash_tags?: string[]
           room_id?: string
+          room_subtitle?: string
           room_thumbnail_url?: string
           room_title?: string
         }
         Relationships: [
           {
-            foreignKeyName: "chatrooms_room_leader_fkey"
-            columns: ["room_leader"]
             foreignKeyName: "fitfor_chat_rooms_room_admin_id_fkey"
             columns: ["room_admin_id"]
             isOneToOne: false
@@ -332,18 +324,21 @@ export type Database = {
       }
       users: {
         Row: {
+          created_at: string
           email: string
           id: string
           nickname: string
           profile_image: string | null
         }
         Insert: {
+          created_at?: string
           email: string
           id?: string
           nickname: string
           profile_image?: string | null
         }
         Update: {
+          created_at?: string
           email?: string
           id?: string
           nickname?: string

@@ -2,7 +2,6 @@
 import { useAuthStore } from "@/lib/store/authStore";
 import { login } from "@/lib/utils/auth/auth";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 const LoginForm = () => {
   // handler 작성 || hook으로 사용

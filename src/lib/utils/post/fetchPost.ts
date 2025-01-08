@@ -1,13 +1,5 @@
-import type { Database } from "@/lib/types/supabase";
+import type { FetchPostsResponse } from "@/lib/types/post";
 import { createClient } from "../supabase/client";
-
-type PostType = Database["public"]["Tables"]["posts"]["Row"];
-
-type FetchPostsResponse = {
-  items: PostType[];
-  nextPage?: number;
-  hasMore: boolean;
-};
 
 export const fetchPosts = async ({ pageParam = 1 }): Promise<FetchPostsResponse> => {
   const perPage = 8;

@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { signOut } from '@/lib/utils/auth/auth'
-import React from 'react'
+import { signOut } from "@/lib/utils/auth/auth";
+import React from "react";
 
 const SignoutButton = () => {
   return (
-      <button className="border m-4 p-4 rounded-xl" onClick={() => signOut()}>
-        Sign out
-      </button>
-  )
-}
+    <button className="m-4 rounded-xl border p-4" onClick={() => signOut()}>
+      Sign out
+    </button>
+  );
+};
 
-export default SignoutButton
+export default SignoutButton;

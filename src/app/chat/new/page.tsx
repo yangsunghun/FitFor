@@ -1,25 +1,34 @@
 "use client";
 
 import React from "react";
-import { useFunnel } from "./_hooks/useFunnel";
+import { useFunnel } from "./useFunnel";
 import { useForm } from "react-hook-form";
-import { steps } from "./_utils/chatSteps";
-import Introduction from "./_components/Introduction";
-import Details from "./_components/Details";
-import HashTags from "./_components/HashTags";
-import ImageUpload from "./_components/ImageUpload";
-import Completion from "./_components/Completion";
-import MoveActions from "./_components/MoveActions";
-import { uploadThumbnailImage } from "./_lib/uploadThumbnailImage";
-import { useCreateChatRoom } from "./_hooks/useCreateChatRoom";
 import { useRouter } from "next/navigation";
+import { uploadProfileImage } from "./uploadProfileImage";
+import { createChatRoom } from "./createChatRoom";
+import TitleStep from "./_components/TitleStep";
+import ThumbnailStep from "./_components/ThumbnailStep";
+import HashTagsStep from "./_components/HashTagsStep";
+import CompletionStep from "./_components/CompletionStep";
+import MoveActions from "./_components/MoveActions";
 
-const CreateChatRoomPage = () => {
+const steps = {
+  order: ["title", "thumbnail", "hashTags", "completion"],
+  getNextStep: (currentStep: string) => {
+    const index = steps.order.indexOf(currentStep);
+    return steps.order[index + 1] || null;
+  },
+  getPrevStep: (currentStep: string) => {
+    const index = steps.order.indexOf(currentStep);
+    return steps.order[index - 1] || null;
+  }
+};
+
+const CreateChatRoom = () => {
   const { Funnel, Step, next, prev, currentStep } = useFunnel(steps.order[0]);
   const formReturn = useForm({ mode: "onSubmit" });
-  const { isPending, mutate } = useCreateChatRoom(next);
-  const router = useRouter();
   const { trigger } = formReturn;
+  const router = useRouter();
 
   const handleNext = async () => {
     const nextStep = steps.getNextStep(currentStep);
@@ -32,9 +41,25 @@ const CreateChatRoomPage = () => {
   };
 
   const submitFormData = async () => {
-    const { title, description, hashTags, imageFile } = formReturn.getValues();
-    const uploadedImage = await uploadThumbnailImage({ type: "chat-room", file: imageFile[0] });
-    mutate({ title, description, hashTags, uploadedImage });
+    const { title, subtitle, description, hashTags, thumbnailFile } = formReturn.getValues();
+
+    // 프로필 이미지 업로드
+    const thumbnail_url = await uploadProfileImage({
+      type: "chat-thumbnail",
+      file: thumbnailFile[0]
+    });
+
+    // Supabase에 데이터 업로드
+    await createChatRoom({
+      room_title: title,
+      room_subtitle: subtitle,
+      room_description: description,
+      room_hash_tags: hashTags,
+      room_thumbnail_url: thumbnail_url,
+      isActive: true
+    });
+
+    router.push("/chat"); // 채팅방 리스트로 이동
   };
 
   const onSubmit = () => {
@@ -45,42 +70,33 @@ const CreateChatRoomPage = () => {
     <div className="mt-16 h-lvh">
       <form className="flex flex-col items-center">
         <Funnel>
-          <Step name="introduction">
-            <Introduction formReturn={formReturn} />
+          <Step name="title">
+            <TitleStep formReturn={formReturn} />
           </Step>
-          <Step name="details">
-            <Details formReturn={formReturn} />
+          <Step name="thumbnail">
+            <ThumbnailStep formReturn={formReturn} />
           </Step>
           <Step name="hashTags">
-            <HashTags formReturn={formReturn} />
-          </Step>
-          <Step name="imageUpload">
-            <ImageUpload formReturn={formReturn} />
+            <HashTagsStep formReturn={formReturn} />
           </Step>
           <Step name="completion">
-            <Completion />
+            <CompletionStep />
           </Step>
         </Funnel>
         {currentStep === "completion" ? (
           <button
             type="button"
-            onClick={() => router.push("/chat")}
+            onClick={onSubmit}
             className="bg-main hover:bg-main-hover mx-auto block min-w-[100px] rounded px-8 py-2 text-white transition-all"
           >
-            채팅 리스트로 이동
+            채팅방 생성
           </button>
         ) : (
-          <MoveActions
-            onNext={handleNext}
-            onPrev={handlePrev}
-            currentStep={currentStep}
-            isPending={isPending}
-            onSubmit={onSubmit}
-          />
+          <MoveActions onNext={handleNext} onPrev={handlePrev} currentStep={currentStep} isPending={false} />
         )}
       </form>
     </div>
   );
 };
 
-export default CreateChatRoomPage;
+export default CreateChatRoom;

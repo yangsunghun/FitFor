@@ -1,17 +1,11 @@
 "use client";
 
-import type { Post } from "@/lib/types/post";
+import type { FetchPostsResponse } from "@/lib/types/post";
 import { fetchPosts } from "@/lib/utils/post/fetchPost";
-import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { useState } from "react";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
-
-// fetchPosts 반환 타입
-interface FetchPostsResponse {
-  items: Post[];
-  nextPage?: number;
-}
 
 const ListLender: React.FC = () => {
   const [isMasonry, setIsMasonry] = useState(false);
@@ -20,24 +14,28 @@ const ListLender: React.FC = () => {
     setIsMasonry((prev) => !prev);
   };
 
-  // useInfiniteQuery에 정확한 제네릭 타입 적용
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<
-    FetchPostsResponse, // queryFn의 반환 타입
-    Error, // 에러 타입
-    InfiniteData<FetchPostsResponse> // InfiniteQuery의 데이터 타입
+  const { data, fetchNextPage, hasNextPage, isPending, isError, isFetchingNextPage } = useInfiniteQuery<
+    FetchPostsResponse,
+    Error,
+    InfiniteData<FetchPostsResponse>,
+    [string],
+    number
   >({
     queryKey: ["posts"],
-    queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage.nextPage ?? false
+    queryFn: async ({ pageParam }) => {
+      return await fetchPosts({ pageParam });
+    },
+    getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextPage : undefined)
   });
 
-  // 안전하게 데이터 추출
   const posts = data?.pages?.flatMap((page) => page.items) || [];
+
+  if (isPending) return <p>로딩</p>;
+  if (isError) return <p>오류</p>;
 
   return (
     <section>
-      {/* 레이아웃 토글 버튼 */}
       <div
         onClick={toggleLayout}
         className={`relative inline-flex h-6 w-12 cursor-pointer items-center rounded-full transition-all duration-300 ${
@@ -51,17 +49,15 @@ const ListLender: React.FC = () => {
         ></div>
       </div>
 
-      {/* 데이터 전달 */}
       {isMasonry ? <MasonryLayout posts={posts} /> : <ListLayout posts={posts} />}
 
-      {/* 더보기 버튼 */}
       {hasNextPage && (
         <button
           onClick={() => fetchNextPage()}
           disabled={isFetchingNextPage}
           className="mt-4 rounded-lg border border-gray-300 px-4 py-2"
         >
-          {isFetchingNextPage ? "불러오는 중..." : "더보기"}
+          {isFetchingNextPage ? "불러오는 중 로딩" : "더보기"}
         </button>
       )}
     </section>

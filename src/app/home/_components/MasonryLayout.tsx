@@ -1,13 +1,13 @@
 "use client";
 
 import sampleImage from "@/assets/images/image_sample.png";
-import type { Post } from "@/lib/types/post";
+import type { PostType } from "@/lib/types/post";
 import Image from "next/image";
 import React from "react";
 import Masonry from "react-layout-masonry";
 
 interface MasonryLayoutProps {
-  posts: Post[];
+  posts: PostType[];
 }
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({ posts }) => {

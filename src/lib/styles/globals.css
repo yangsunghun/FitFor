@@ -4,6 +4,6 @@
 
 @layer utilities {
   .click-box {
-    @apply absolute left-0 top-0 z-10 block h-full w-full;
+    @apply absolute left-0 top-0 block h-full w-full;
   }
 }

@@ -9,9 +9,16 @@ import MasonryLayout from "./MasonryLayout";
 
 const ListLender: React.FC = () => {
   const [isMasonry, setIsMasonry] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+  // 레이아웃 형태 토글
   const toggleLayout = () => {
     setIsMasonry((prev) => !prev);
+  };
+
+  // 태그 필터링
+  const handleTagClick = (tag: string) => {
+    setSelectedTags((prevTags) => (prevTags.includes(tag) ? prevTags.filter((t) => t !== tag) : [...prevTags, tag]));
   };
 
   const { data, fetchNextPage, hasNextPage, isPending, isError, isFetchingNextPage } = useInfiniteQuery<
@@ -29,27 +36,32 @@ const ListLender: React.FC = () => {
     getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextPage : undefined)
   });
 
-  const posts = data?.pages?.flatMap((page) => page.items) || [];
+  const allPosts = data?.pages?.flatMap((page) => page.items) || [];
 
-  if (isPending) return <p>로딩</p>;
-  if (isError) return <p>오류</p>;
+  const filteredPosts =
+    selectedTags.length > 0
+      ? allPosts.filter((post) => selectedTags.some((tag) => post.season_tag?.includes(tag)))
+      : allPosts;
+
+  if (isPending) return <p>로딩...</p>;
+  if (isError) return <p>오류 발생</p>;
 
   return (
     <>
       <section>
         <ul className="my-10 flex gap-2">
-          <li>
-            <button className="rounded-full border border-gray-500 px-[15px]">분류1</button>
-          </li>
-          <li>
-            <button className="rounded-full border border-gray-500 px-[15px]">분류2</button>
-          </li>
-          <li>
-            <button className="rounded-full border border-gray-500 px-[15px]">분류3</button>
-          </li>
-          <li>
-            <button className="rounded-full border border-gray-500 px-[15px]">분류4</button>
-          </li>
+          {["봄", "여름", "가을", "겨울"].map((tag) => (
+            <li key={tag}>
+              <button
+                onClick={() => handleTagClick(tag)}
+                className={`rounded-full border px-[15px] ${
+                  selectedTags.includes(tag) ? "bg-blue-500 text-white" : "border-gray-500"
+                }`}
+              >
+                {tag}
+              </button>
+            </li>
+          ))}
         </ul>
       </section>
       <section>
@@ -66,7 +78,7 @@ const ListLender: React.FC = () => {
           ></div>
         </div>
 
-        {isMasonry ? <MasonryLayout posts={posts} /> : <ListLayout posts={posts} />}
+        {isMasonry ? <MasonryLayout posts={filteredPosts} /> : <ListLayout posts={filteredPosts} />}
 
         {hasNextPage && (
           <button

@@ -12,7 +12,6 @@ interface ListLayoutProps {
 const ListLayout: React.FC<ListLayoutProps> = ({ posts }) => {
   return (
     <section>
-      <h2 className="mb-4 text-xl font-bold">List Layout</h2>
       <ul className="flex flex-wrap gap-5">
         {posts.map((item) => (
           <li key={item.id} className="flex w-[48%] items-center gap-10">

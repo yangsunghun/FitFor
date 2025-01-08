@@ -49,28 +49,28 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          image_file: string
-          room_leader: string
+          image_url: string
+          leader_id: string
           title: string
         }
         Insert: {
           created_at?: string
           id?: string
-          image_file: string
-          room_leader?: string
+          image_url: string
+          leader_id?: string
           title: string
         }
         Update: {
           created_at?: string
           id?: string
-          image_file?: string
-          room_leader?: string
+          image_url?: string
+          leader_id?: string
           title?: string
         }
         Relationships: [
           {
             foreignKeyName: "chatrooms_room_leader_fkey"
-            columns: ["room_leader"]
+            columns: ["leader_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]

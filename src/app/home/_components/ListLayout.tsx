@@ -6,9 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface ListLayoutProps {
+type ListLayoutProps = {
   posts: PostType[];
-}
+};
 
 const ListLayout: React.FC<ListLayoutProps> = ({ posts }) => {
   return (
@@ -16,7 +16,7 @@ const ListLayout: React.FC<ListLayoutProps> = ({ posts }) => {
       <ul className="flex flex-wrap gap-5">
         {posts.map((item) => (
           <li key={item.id} className="relative flex w-[48%] items-center gap-10">
-            <Link href={`/detail/${item.id}`} className="click-box z-20"></Link>
+            <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
             <figure className="relative h-[150px] w-[150px] overflow-hidden bg-gray-200">
               <Image src={item.thumbnail || sampleImage} alt={item.title} width={150} height={150} />
             </figure>

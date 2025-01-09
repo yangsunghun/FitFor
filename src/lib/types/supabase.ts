@@ -321,18 +321,21 @@ export type Database = {
       }
       users: {
         Row: {
+          created_at: string
           email: string
           id: string
           nickname: string
           profile_image: string | null
         }
         Insert: {
+          created_at?: string
           email: string
           id?: string
           nickname: string
           profile_image?: string | null
         }
         Update: {
+          created_at?: string
           email?: string
           id?: string
           nickname?: string

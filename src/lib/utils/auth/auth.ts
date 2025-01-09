@@ -38,7 +38,7 @@ export const signup = async (formData: FormData): Promise<void> => {
     email,
     id: data.user?.id as string,
     nickname,
-    profile_image: ""
+    profile_image: profileImage
   });
 };
 

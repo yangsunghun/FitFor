@@ -15,15 +15,18 @@ export async function GET(request: Request) {
     if (!error) {
       // 소셜 로그인 한정
       // // 유저 정보 public에 저장
-      // const { data } = await supabase.auth.getUser();
-      // console.log("route.ts", data);
+      // 구글 
+      const { data } = await supabase.auth.getUser();
+      console.log("route.ts =>", data);
 
-      // const email = data.user?.email as string;
-      // const id = data.user?.id as string;
-      // const nickname = data.user?.user_metadata.full_name as string;
-      // const profile_image = data.user?.user_metadata.avatar_url as string;
+      const email = data.user?.email as string;
+      const id = data.user?.id as string;
+      const nickname = data.user?.user_metadata.full_name as string;
+      const profile_image = data.user?.user_metadata.avatar_url as string;
 
-      // await insertUserToPublic({ email, id, nickname, profile_image });
+      await insertUserToPublic({ email, id, nickname, profile_image });
+
+      // 데이터 구조가 문제일 수 있습니다
 
       const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === "development";

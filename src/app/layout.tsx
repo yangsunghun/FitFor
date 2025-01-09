@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="min-h-full">
       <TQProviders>
-        <body className={`${pretendard.className} text-slate-900`}>
+        <body className={`${pretendard.className} text-slate-900 justify-items-center`}>
           <Header />
           <main>{children}</main>
         </body>

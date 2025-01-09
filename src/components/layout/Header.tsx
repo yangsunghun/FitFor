@@ -1,7 +1,5 @@
-import React from "react";
-
 const Header = () => {
-  return <div>Header</div>;
+  return <div className="max-w-screen-xl bg-blue-800">logo</div>;
 };
 
 export default Header;

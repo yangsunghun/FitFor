@@ -57,16 +57,23 @@ export const insertUserToPublic = async ({
   const supabase = await createClient();
 
   // public 유저 테이블에 저장
-  const { error } = await supabase.from("users").insert({
-    email,
-    id,
-    nickname,
-    profile_image
-  });
+  const { data, error } = await supabase
+  .from("users")
+  .upsert(
+    {
+      email,
+      id,
+      nickname,
+      profile_image,
+    },
+    { onConflict: "id" } 
+  );
 
-  if (error) {
-    console.error("유저 테이블 insert 에러", error);
-  }
+if (error) {
+  console.error("유저 테이블 upsert 에러", error);
+}
+
+  return data;
 };
 
 // 일반 로그인 코드
@@ -98,6 +105,15 @@ export const login = async (formData: FormData) => {
   }
 
   return userInfo;
+};
+
+export const fetchUser = async () => {
+  const supabase = await createClient();
+
+  const { data } = await supabase.auth.getUser();
+
+  console.log("fetchUser", data)
+  return data;
 };
 
 // 소셜 로그인 코드

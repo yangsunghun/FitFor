@@ -1,7 +1,6 @@
 "use client";
 import { PROVIDER_CONFIG, Provider } from "@/lib/types/auth";
-import { socialLogin } from "@/lib/utils/auth/auth";
-import { createClient } from "@/lib/utils/supabase/server";
+import { fetchUser, socialLogin } from "@/lib/utils/auth/auth";
 import Image from "next/image";
 
 type SocialLoginButtonProps = {
@@ -11,18 +10,31 @@ type SocialLoginButtonProps = {
 const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
   const handleSocialLogin = async () => {
     await socialLogin(provider);
+    const userData = await fetchUser();
+    if (userData) {
+      console.log("social,", userData);
+      const email = userData.user?.email as string;
+      const id = userData.user?.id as string;
+      const nickname = userData.user?.user_metadata.full_name as string;
+      const profile_image = userData.user?.user_metadata.avatar_url as string;
 
-    const supabase = await createClient();
-    const { data } = await supabase.auth.getUser();
-    console.log("소셜 로그인 버튼에서", data);
+      // zustand에 저장
+      // useAuthStore.getState().setUser(tableUserData);
+    }
 
-    window.location.href = "/login";
+    // 헤더(layout)에서 로그인 정보
+    // 리소스 많이 잡아먹지 않음
+
+    // + trigger (SQL)
+    // 잘 인지 못했을때 수정이 어려울 수 있습니다.
+
+    window.location.href = "/";
   };
 
   return (
     <button
       onClick={handleSocialLogin}
-      className={`flex flex-row gap-4 p-4 rounded-2xl ${PROVIDER_CONFIG[provider].bgColor} ${PROVIDER_CONFIG[provider].textColor}`}
+      className={`flex flex-row gap-4 rounded-2xl p-4 ${PROVIDER_CONFIG[provider].bgColor} ${PROVIDER_CONFIG[provider].textColor}`}
     >
       <Image
         src={PROVIDER_CONFIG[provider].logo}

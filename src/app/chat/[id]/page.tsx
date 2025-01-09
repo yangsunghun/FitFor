@@ -5,7 +5,7 @@ import { createClient } from "@/lib/utils/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-type Message = Database["public"]["Tables"]["messages"]["Row"];
+type Message = Database["public"]["Tables"]["chat_room_messages"]["Row"];
 
 interface ChatPageProps {
   params: { id: string };
@@ -15,7 +15,7 @@ const supabase = createClient();
 
 const fetchMessages = async (chatRoomId: string) => {
   const { data: messages, error } = await supabase
-    .from("messages")
+    .from("chat_room_messages")
     .select("*")
     .eq("room_id", chatRoomId)
     .order("created_at", { ascending: true });
@@ -50,7 +50,7 @@ const ChatPage = ({ params }: ChatPageProps) => {
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
       const { error } = await supabase
-        .from("messages")
+        .from("chat_room_messages")
         .insert({ content, room_id: chatRoomId, user_id: "95fb7522-36c1-46cc-83e5-86ec575ba745" });
 
       if (error) {

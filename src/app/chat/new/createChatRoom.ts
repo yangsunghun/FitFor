@@ -1,6 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/lib/utils/supabase/client";
 
-const supabase = createClient("https://your-project.supabase.co", "your-anon-key");
+const supabase = createClient();
 
 interface ChatRoomData {
   room_title: string;

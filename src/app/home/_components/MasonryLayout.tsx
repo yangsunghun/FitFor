@@ -17,7 +17,7 @@ const MasonryLayout: React.FC<MasonryLayoutProps> = ({ posts }) => {
       <Masonry columns={{ 1200: 4, 768: 3, 480: 2 }} gap={16} className="flex">
         {posts.map((item) => (
           <div key={item.id} className="masonry-item group relative">
-            <Link href={`/detail/${item.id}`} className="click-box z-20"></Link>
+            <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
             <figure className="relative w-full">
               <Image src={item.thumbnail || sampleImage} alt={item.title} width={500} height={500} />
             </figure>

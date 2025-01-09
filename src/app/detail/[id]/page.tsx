@@ -1,35 +1,10 @@
 import { fetchPostDetail } from "@/lib/api/post/fetchPostDetail";
-import type { Metadata } from "next";
 
 type Props = {
   params: {
     id: string;
   };
 };
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const postId = params.id;
-
-  const post = await fetchPostDetail(postId);
-  console.log(await fetchPostDetail(params.id));
-
-  if (!post) {
-    return {
-      title: "게시글을 찾을 수 없습니다.",
-      description: "해당 게시글이 존재하지 않습니다."
-    };
-  }
-
-  return {
-    title: post.title,
-    description: post.content,
-    openGraph: {
-      title: post.title,
-      description: post.content,
-      url: `http://localhost:3000/detail/${postId}`
-    }
-  };
-}
 
 const DetailPage = async ({ params }: Props) => {
   const postId = params.id;

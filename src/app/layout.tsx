@@ -17,9 +17,11 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children
+  children,
+  modal
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en" className="min-h-full">
@@ -27,6 +29,7 @@ export default function RootLayout({
         <body className={`${pretendard.className} text-slate-900`}>
           <Header />
           <main>{children}</main>
+          {modal && <div>{modal}</div>}
         </body>
       </TQProviders>
     </html>

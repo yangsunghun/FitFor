@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchPosts } from "@/lib/api/post/fetchPost";
-import { useLayoutStore } from "@/lib/store/uselayoutStore";
+import { useLayoutStore } from "@/lib/store/useLayoutStore";
 import type { FetchPostsResponse } from "@/lib/types/post";
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { useState } from "react";

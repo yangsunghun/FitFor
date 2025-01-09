@@ -57,21 +57,19 @@ export const insertUserToPublic = async ({
   const supabase = await createClient();
 
   // public 유저 테이블에 저장
-  const { data, error } = await supabase
-  .from("users")
-  .upsert(
+  const { data, error } = await supabase.from("users").upsert(
     {
       email,
       id,
       nickname,
-      profile_image,
+      profile_image
     },
-    { onConflict: "id" } 
+    { onConflict: "id" }
   );
 
-if (error) {
-  console.error("유저 테이블 upsert 에러", error);
-}
+  if (error) {
+    console.error("유저 테이블 upsert 에러", error);
+  }
 
   return data;
 };
@@ -110,10 +108,33 @@ export const login = async (formData: FormData) => {
 export const fetchUser = async () => {
   const supabase = await createClient();
 
-  const { data } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: getUserError
+  } = await supabase.auth.getUser();
 
-  console.log("fetchUser", data)
-  return data;
+  if (getUserError) {
+    // 현재 유저가 없는 경우 에러 발생
+    // 없는 경우 반환할 값 null
+    return null;
+  }
+
+  if (user) {
+    const { data: userDetails, error: userDetailsError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", user!.id)
+      .maybeSingle();
+
+    if (userDetailsError || !userDetails) {
+      console.error("public 테이블에 유저 정보가 없습니다");
+      return;
+    }
+
+    return userDetails;
+  }
+
+  return null;
 };
 
 // 소셜 로그인 코드

@@ -6,7 +6,6 @@ const ProfileSection = () => {
   const user = useAuthStore((state) => state.user);
 
   if (user === null) {
-    console.log("프로필 섹션", user);
     return (
       <div className="mt-5 text-center">
         <p className="text-gray-500">로딩 중...</p>

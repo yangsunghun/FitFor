@@ -1,5 +1,11 @@
+import HeaderContent from "./HeaderContent";
+
 const Header = () => {
-  return <div className="max-w-screen-xl bg-blue-800">logo</div>;
+  return (
+    <div className="w-screen bg-white p-8 flex justify-center">
+      <HeaderContent />
+    </div>
+  );
 };
 
 export default Header;

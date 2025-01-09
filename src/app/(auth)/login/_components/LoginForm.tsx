@@ -33,7 +33,7 @@ const LoginForm = () => {
       {/* 예시 */}
       <div className="flex w-full flex-col items-center">
         <SocialLoginButton provider="google" />
-        <SocialLoginButton provider="kakao" />
+        {/* <SocialLoginButton provider="kakao" /> */}
       </div>
       <p>
         계정이 없으신가요?{` `}

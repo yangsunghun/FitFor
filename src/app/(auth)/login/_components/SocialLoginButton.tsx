@@ -11,12 +11,6 @@ const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
   const handleSocialLogin = async () => {
     await socialLogin(provider);
 
-    // 헤더(layout)에서 로그인 정보
-    // 리소스 많이 잡아먹지 않음
-
-    // + trigger (SQL)
-    // 잘 인지 못했을때 수정이 어려울 수 있습니다.
-
     window.location.href = "/";
   };
 

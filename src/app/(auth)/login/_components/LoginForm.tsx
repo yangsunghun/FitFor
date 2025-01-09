@@ -31,7 +31,7 @@ const LoginForm = () => {
         <button type="submit">로그인</button>
       </form>
       {/* 예시 */}
-      <div className="flex w-full flex-col items-center">
+      <div className="flex w-2/4 flex-col items-center gap-2">
         <SocialLoginButton provider="google" />
         <SocialLoginButton provider="kakao" />
       </div>

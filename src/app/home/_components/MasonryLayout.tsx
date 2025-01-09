@@ -7,9 +7,9 @@ import Link from "next/link";
 import React from "react";
 import Masonry from "react-layout-masonry";
 
-interface MasonryLayoutProps {
+type MasonryLayoutProps = {
   posts: PostType[];
-}
+};
 
 const MasonryLayout: React.FC<MasonryLayoutProps> = ({ posts }) => {
   return (

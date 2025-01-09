@@ -1,4 +1,4 @@
-import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
+import { fetchPostDetail } from "@/lib/api/post/fetchPostDetail";
 import type { Metadata } from "next";
 
 type Props = {

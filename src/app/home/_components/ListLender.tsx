@@ -1,20 +1,16 @@
 "use client";
 
+import { fetchPosts } from "@/lib/api/post/fetchPost";
+import { useLayoutStore } from "@/lib/store/uselayoutStore";
 import type { FetchPostsResponse } from "@/lib/types/post";
-import { fetchPosts } from "@/lib/utils/post/fetchPost";
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { useState } from "react";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
 
 const ListLender: React.FC = () => {
-  const [isMasonry, setIsMasonry] = useState(false);
+  const { isMasonry, toggleLayout } = useLayoutStore();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-  // 레이아웃 형태 토글
-  const toggleLayout = () => {
-    setIsMasonry((prev) => !prev);
-  };
 
   // 태그 필터링
   const handleTagClick = (tag: string) => {

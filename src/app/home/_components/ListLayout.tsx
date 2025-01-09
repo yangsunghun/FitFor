@@ -6,9 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface ListLayoutProps {
+type ListLayoutProps = {
   posts: PostType[];
-}
+};
 
 const ListLayout: React.FC<ListLayoutProps> = ({ posts }) => {
   return (

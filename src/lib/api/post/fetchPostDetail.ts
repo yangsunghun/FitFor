@@ -1,5 +1,5 @@
 import type { PostType } from "@/lib/types/post";
-import { createClient } from "../supabase/client";
+import { createClient } from "../../utils/supabase/client";
 
 export const fetchPostDetail = async (postId: string): Promise<PostType | null> => {
   const supabase = await createClient();

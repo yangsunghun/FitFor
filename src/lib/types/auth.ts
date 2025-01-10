@@ -11,7 +11,6 @@ export type ProviderConfig = {
   bgColor: string;
   textColor: string;
   logo: string;
-  logoClass?: string;
   queryParams?: Record<string, string>;
 };
 

@@ -23,7 +23,7 @@ const LoginForm = () => {
   };
   return (
     <>
-      <form className="flex w-1/4 flex-col" autoComplete="off" onSubmit={handleLogin}>
+      <form className="flex w-full flex-col" autoComplete="off" onSubmit={handleLogin}>
         <label htmlFor="email">이메일:</label>
         <input id="email" name="email" type="email" required />
         <label htmlFor="password">비밀번호:</label>

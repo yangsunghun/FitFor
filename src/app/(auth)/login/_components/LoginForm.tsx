@@ -2,7 +2,7 @@
 import { useAuthStore } from "@/lib/store/authStore";
 import { login } from "@/lib/utils/auth/auth";
 import Link from "next/link";
-import AuthInput from "./AuthInput";
+import AuthInput from "../../_components/AuthInput";
 
 const LoginForm = () => {
   console.log("render");
@@ -26,14 +26,14 @@ const LoginForm = () => {
     <>
       <form className="flex w-full flex-col" autoComplete="off" onSubmit={handleLogin}>
         {/* TODO: input design */}
-        <AuthInput id="email" type="email" placeholder="이메일"/>
-        <AuthInput id="password" type="password" placeholder="비밀번호"/>
+        <AuthInput id="email" type="email" placeholder="이메일" />
+        <AuthInput id="password" type="password" placeholder="비밀번호" />
         {/* TODO: 버튼 디자인 */}
-        <button type="submit" className="flex w-full flex-row justify-center gap-4 rounded-2xl bg-white p-4 text-black">
+        <button type="submit" className="flex w-full flex-row justify-center gap-4 rounded-2xl p-4 border">
           로그인
         </button>
       </form>
-      <p>
+      <p className="my-2">
         계정이 없으신가요?{` `}
         <Link href="/signup" className="text-blue-900">
           회원가입

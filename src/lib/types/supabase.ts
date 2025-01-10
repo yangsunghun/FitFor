@@ -45,71 +45,110 @@ export type Database = {
           },
         ]
       }
-      chat_room_members: {
+      chat_fevertime_rooms: {
         Row: {
-          isActive: boolean
-          isAdmin: boolean
-          room_id: string
-          user_id: string
+          chat_per_hour: string | null
+          created_at: string | null
+          id: string
+          room_id: string | null
         }
         Insert: {
-          isActive?: boolean
-          isAdmin?: boolean
-          room_id?: string
-          user_id?: string
+          chat_per_hour?: string | null
+          created_at?: string | null
+          id?: string
+          room_id?: string | null
         }
         Update: {
-          isActive?: boolean
-          isAdmin?: boolean
-          room_id?: string
-          user_id?: string
+          chat_per_hour?: string | null
+          created_at?: string | null
+          id?: string
+          room_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fitfor_chat_room_members_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "chat_fevertime_rooms_room_id_fkey"
+            columns: ["room_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["room_id"]
           },
         ]
       }
-      chat_room_messages: {
+      chat_members: {
         Row: {
-          content: string
-          created_at: string
-          id: string
+          isActive: boolean
+          isAdmin: boolean
+          member_id: string
           room_id: string
-          user_id: string
         }
         Insert: {
-          content: string
-          created_at?: string
-          id?: string
-          room_id?: string
-          user_id?: string
+          isActive?: boolean
+          isAdmin?: boolean
+          member_id: string
+          room_id: string
         }
         Update: {
-          content?: string
-          created_at?: string
-          id?: string
+          isActive?: boolean
+          isAdmin?: boolean
+          member_id?: string
           room_id?: string
-          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "chat_room_messages_room_id_fkey"
-            columns: ["room_id"]
-            isOneToOne: false
-            referencedRelation: "chat_room_members"
-            referencedColumns: ["room_id"]
-          },
-          {
-            foreignKeyName: "chat_room_messages_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "chat_members_member_id_fkey"
+            columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_members_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["room_id"]
+          },
+        ]
+      }
+      chat_messages: {
+        Row: {
+          content: string | null
+          created_at: string
+          image_url: string | null
+          member_id: string
+          message_id: string
+          room_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          image_url?: string | null
+          member_id: string
+          message_id?: string
+          room_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          image_url?: string | null
+          member_id?: string
+          message_id?: string
+          room_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_memeber_id_room_id_fkey"
+            columns: ["member_id", "room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_members"
+            referencedColumns: ["member_id", "room_id"]
+          },
+          {
+            foreignKeyName: "chat_messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["room_id"]
           },
         ]
       }
@@ -117,40 +156,40 @@ export type Database = {
         Row: {
           created_at: string
           isActive: boolean
-          room_admin_id: string
           room_description: string
-          room_hash_tags: string[]
+          room_hashtags: string[]
           room_id: string
           room_subtitle: string
           room_thumbnail_url: string
           room_title: string
+          user_id: string
         }
         Insert: {
           created_at?: string
           isActive?: boolean
-          room_admin_id?: string
           room_description: string
-          room_hash_tags: string[]
+          room_hashtags: string[]
           room_id?: string
           room_subtitle: string
           room_thumbnail_url: string
           room_title: string
+          user_id: string
         }
         Update: {
           created_at?: string
           isActive?: boolean
-          room_admin_id?: string
           room_description?: string
-          room_hash_tags?: string[]
+          room_hashtags?: string[]
           room_id?: string
           room_subtitle?: string
           room_thumbnail_url?: string
           room_title?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "fitfor_chat_rooms_room_admin_id_fkey"
-            columns: ["room_admin_id"]
+            foreignKeyName: "chat_rooms_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -199,32 +238,39 @@ export type Database = {
           },
         ]
       }
-      fever_time_rooms: {
+      likes: {
         Row: {
-          chat_per_hour: string
-          created_at: string
-          id: number
-          room_id: string
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
         }
         Insert: {
-          chat_per_hour: string
-          created_at?: string
-          id?: number
-          room_id: string
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
         }
         Update: {
-          chat_per_hour?: string
-          created_at?: string
-          id?: number
-          room_id?: string
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "fever_time_rooms_room_id_fkey"
-            columns: ["room_id"]
+            foreignKeyName: "likes_post_id_fkey"
+            columns: ["post_id"]
             isOneToOne: false
-            referencedRelation: "chat_rooms"
-            referencedColumns: ["room_id"]
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -236,10 +282,8 @@ export type Database = {
           content: string
           created_at: string | null
           id: string
-          latitude: string | null
           likes: number | null
-          longitude: string | null
-          season_tag: string[] | null
+          tags: string[] | null
           thumbnail: string | null
           title: string
           upload_place: string | null
@@ -253,10 +297,8 @@ export type Database = {
           content: string
           created_at?: string | null
           id?: string
-          latitude?: string | null
           likes?: number | null
-          longitude?: string | null
-          season_tag?: string[] | null
+          tags?: string[] | null
           thumbnail?: string | null
           title: string
           upload_place?: string | null
@@ -270,10 +312,8 @@ export type Database = {
           content?: string
           created_at?: string | null
           id?: string
-          latitude?: string | null
           likes?: number | null
-          longitude?: string | null
-          season_tag?: string[] | null
+          tags?: string[] | null
           thumbnail?: string | null
           title?: string
           upload_place?: string | null

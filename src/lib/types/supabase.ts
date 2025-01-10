@@ -121,6 +121,7 @@ export type Database = {
           room_description: string
           room_hash_tags: string[]
           room_id: string
+          room_subtitle: string
           room_thumbnail_url: string
           room_title: string
         }
@@ -131,6 +132,7 @@ export type Database = {
           room_description: string
           room_hash_tags: string[]
           room_id?: string
+          room_subtitle: string
           room_thumbnail_url: string
           room_title: string
         }
@@ -141,6 +143,7 @@ export type Database = {
           room_description?: string
           room_hash_tags?: string[]
           room_id?: string
+          room_subtitle?: string
           room_thumbnail_url?: string
           room_title?: string
         }
@@ -225,6 +228,42 @@ export type Database = {
           },
         ]
       }
+      likes: {
+        Row: {
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           body_size: number[] | null
@@ -233,10 +272,8 @@ export type Database = {
           content: string
           created_at: string | null
           id: string
-          latitude: string | null
           likes: number | null
-          longitude: string | null
-          season_tag: string[] | null
+          tags: string[] | null
           thumbnail: string | null
           title: string
           upload_place: string | null
@@ -250,10 +287,8 @@ export type Database = {
           content: string
           created_at?: string | null
           id?: string
-          latitude?: string | null
           likes?: number | null
-          longitude?: string | null
-          season_tag?: string[] | null
+          tags?: string[] | null
           thumbnail?: string | null
           title: string
           upload_place?: string | null
@@ -267,10 +302,8 @@ export type Database = {
           content?: string
           created_at?: string | null
           id?: string
-          latitude?: string | null
           likes?: number | null
-          longitude?: string | null
-          season_tag?: string[] | null
+          tags?: string[] | null
           thumbnail?: string | null
           title?: string
           upload_place?: string | null

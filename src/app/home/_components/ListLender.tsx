@@ -1,8 +1,8 @@
 "use client";
 
-import { fetchPosts } from "@/lib/api/post/fetchPost";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
 import type { FetchPostsResponse } from "@/lib/types/post";
+import { fetchPosts } from "@/lib/utils/post/fetchPost";
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { useState } from "react";
 import ListLayout from "./ListLayout";
@@ -36,7 +36,7 @@ const ListLender: React.FC = () => {
 
   const filteredPosts =
     selectedTags.length > 0
-      ? allPosts.filter((post) => selectedTags.some((tag) => post.season_tag?.includes(tag)))
+      ? allPosts.filter((post) => selectedTags.some((tag) => post.tags?.includes(tag)))
       : allPosts;
 
   if (isPending) return <p>로딩...</p>;

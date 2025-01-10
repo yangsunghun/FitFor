@@ -17,10 +17,10 @@ const LoginOptions = () => {
       {!isEmailLogin ? (
         <>
           <button
-            className="flex w-full flex-row justify-center gap-4 rounded-2xl bg-white p-4 text-black"
+            className="flex w-full flex-row justify-center gap-4 mt-8 rounded-2xl bg-white p-4 text-black"
             onClick={showEmailForm}
           >
-            <Image src="/images/default-user-profile.png" width={24} height={24} alt="FitFor login" />
+            <Image src="/images/default-user-profile.png" width={25} height={25} alt="FitFor login" />
             <span>이메일로 시작</span>
           </button>
           <SocialLoginButton provider="google" />

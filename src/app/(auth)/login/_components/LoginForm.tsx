@@ -2,6 +2,7 @@
 import { useAuthStore } from "@/lib/store/authStore";
 import { login } from "@/lib/utils/auth/auth";
 import Link from "next/link";
+import AuthInput from "./AuthInput";
 
 const LoginForm = () => {
   console.log("render");
@@ -25,22 +26,8 @@ const LoginForm = () => {
     <>
       <form className="flex w-full flex-col" autoComplete="off" onSubmit={handleLogin}>
         {/* TODO: input design */}
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          placeholder="이메일"
-          className="border-input placeholder:text-muted-foreground my-4 flex h-9 w-full rounded-2xl border px-3 py-7 leading-6 transition-colors focus-visible:outline-none focus-visible:ring"
-        />
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          placeholder="비밀번호"
-          className="border-input placeholder:text-muted-foreground mb-4 flex h-9 w-full rounded-2xl border px-3 py-7 leading-6 transition-colors focus-visible:outline-none focus-visible:ring"
-        />
+        <AuthInput id="email" type="email" placeholder="이메일"/>
+        <AuthInput id="password" type="password" placeholder="비밀번호"/>
         {/* TODO: 버튼 디자인 */}
         <button type="submit" className="flex w-full flex-row justify-center gap-4 rounded-2xl bg-white p-4 text-black">
           로그인

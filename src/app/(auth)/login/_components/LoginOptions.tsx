@@ -17,7 +17,7 @@ const LoginOptions = () => {
       {!isEmailLogin ? (
         <>
           <button
-            className="flex w-full flex-row justify-center gap-4 mt-8 rounded-2xl bg-white p-4 text-black"
+            className="flex w-full flex-row justify-center gap-4 mt-8 rounded-2xl bg-white p-4 text-black shadow-md"
             onClick={showEmailForm}
           >
             <Image src="/images/default-user-profile.png" width={25} height={25} alt="FitFor login" />

@@ -19,10 +19,10 @@ const RegistrationForm = () => {
   return (
     <>
       <form className="mt-8 flex w-full flex-col" autoComplete="off" onSubmit={handleSignup}>
-        <AuthInput id="nickname" type="text" placeholder="닉네임" />
-        <AuthInput id="email" type="email" placeholder="이메일" />
-        <AuthInput id="password" type="password" placeholder="비밀번호" />
-        <AuthInput id="password" type="password" placeholder="비밀번호 확인" />
+        {/* <AuthInput type="text" placeholder="닉네임" />
+        <AuthInput type="email" placeholder="이메일" />
+        <AuthInput type="password" placeholder="비밀번호" />
+        <AuthInput type="password" placeholder="비밀번호 확인" /> */}
         <button type="submit" className="flex w-full flex-row justify-center gap-4 rounded-2xl p-4 border">
           회원가입
         </button>

@@ -32,3 +32,8 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
     logo: kakaoLogo
   }
 };
+
+export type LoginForm = {
+  email: string;
+  password: string;
+};

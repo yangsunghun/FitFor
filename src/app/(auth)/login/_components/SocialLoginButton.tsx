@@ -17,7 +17,8 @@ const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
   return (
     <button
       onClick={handleSocialLogin}
-      className={`flex flex-row gap-4 rounded-2xl p-4 w-full justify-center ${PROVIDER_CONFIG[provider].bgColor} ${PROVIDER_CONFIG[provider].textColor}`}
+      // TODO: shadow 값 지정되는 즉시 변경 필요
+      className={`flex flex-row gap-4 rounded-2xl p-4 w-full justify-center ${PROVIDER_CONFIG[provider].bgColor} ${PROVIDER_CONFIG[provider].textColor} shadow-md`}
     >
       <Image
         src={PROVIDER_CONFIG[provider].logo}

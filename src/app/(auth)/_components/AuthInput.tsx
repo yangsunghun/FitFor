@@ -1,8 +1,6 @@
-const AuthInput = ({ id, type, placeholder }: { id: string; type: string; placeholder: string }) => {
+const AuthInput = ({type, placeholder }: { name: string; type: string; placeholder: string }) => {
   return (
     <input
-      id={id}
-      name={id}
       type={type}
       required
       placeholder={placeholder}

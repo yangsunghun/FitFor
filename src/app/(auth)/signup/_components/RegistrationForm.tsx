@@ -16,8 +16,8 @@ const RegistrationForm = () => {
   }
 
   return (
-    <div className="h-screen w-full justify-items-center bg-gray-400 p-8">
-      <form className="flex w-2/4 flex-col" autoComplete="off" onSubmit={handleSignup}>
+    <>
+      <form className="flex w-full flex-col" autoComplete="off" onSubmit={handleSignup}>
         <label htmlFor="nickname">닉네임:</label>
         <input id="nickname" name="nickname" type="text" required />
         <label htmlFor="email">이메일:</label>
@@ -34,7 +34,7 @@ const RegistrationForm = () => {
           로그인
         </Link>
       </p>
-    </div>
+    </>
   );
 };
 

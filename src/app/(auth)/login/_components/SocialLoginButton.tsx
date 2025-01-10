@@ -24,7 +24,6 @@ const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
         width={24}
         height={24}
         alt={`${provider}Logo`}
-        className="self-start"
       />
       <span>{PROVIDER_CONFIG[provider].label}</span>
     </button>

@@ -21,15 +21,15 @@ const LoginOptions = () => {
             onClick={showEmailForm}
           >
             <Image src="/images/default-user-profile.png" width={24} height={24} alt="FitFor login" />
-            <span>이메일로 시작하기</span>
+            <span>이메일로 시작</span>
           </button>
           <SocialLoginButton provider="google" />
           <SocialLoginButton provider="kakao" />
         </>
       ) : (
         <>
+          <button onClick={showEmailForm} className="self-start text-gray-500 hover:text-black">{'<- '}뒤로가기</button>
           <LoginForm />
-          <button onClick={showEmailForm}>뒤로가기</button>
         </>
       )}
     </div>

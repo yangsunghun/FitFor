@@ -5,6 +5,7 @@ import AuthInput from "../../_components/AuthInput";
 
 const RegistrationForm = () => {
   // handler 작성
+  // TODO: FormEvent 타입 수정 필요
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

@@ -1,12 +1,11 @@
 "use server";
 
-// 예시 코드
-import { PROVIDER_CONFIG, type Provider } from "@/lib/types/auth";
+import { PROVIDER_CONFIG, type LoginForm, type Provider } from "@/lib/types/auth";
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-// 회원가입 예시 코드
+// 회원가입 코드
 // 받아온 formData에는 email, password, nickname이 존재
 export const signup = async (formData: FormData): Promise<void> => {
   const supabase = await createClient();
@@ -75,13 +74,14 @@ export const insertUserToPublic = async ({
 };
 
 // 일반 로그인 코드
-export const login = async (formData: FormData) => {
+// TODO: 한가지 일로 수정 필요
+export const login = async (formData: LoginForm) => {
   const supabase = await createClient();
 
   // 로그인 폼 데이터 읽어오기
   const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string
+    email: formData.email,
+    password: formData.password
   };
 
   const { data: authData, error } = await supabase.auth.signInWithPassword(data);
@@ -105,6 +105,8 @@ export const login = async (formData: FormData) => {
   return userInfo;
 };
 
+// TODO: 한가지 일을 하는 걸로 변환 
+// 로그인된 유저 정보를 가져오는 코드
 export const fetchUser = async () => {
   const supabase = await createClient();
 

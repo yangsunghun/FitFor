@@ -1,14 +1,16 @@
 "use client";
 
-import { fetchPosts } from "@/lib/api/post/fetchPost";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
 import type { FetchPostsResponse } from "@/lib/types/post";
+import { fetchPosts } from "@/lib/utils/post/fetchPost";
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { useState } from "react";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
 
-const ListLender: React.FC = () => {
+type ListLenderProps = {};
+
+const ListLender = ({}: ListLenderProps) => {
   const { isMasonry, toggleLayout } = useLayoutStore();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
@@ -17,13 +19,14 @@ const ListLender: React.FC = () => {
     setSelectedTags((prevTags) => (prevTags.includes(tag) ? prevTags.filter((t) => t !== tag) : [...prevTags, tag]));
   };
 
-  const { data, fetchNextPage, hasNextPage, isPending, isError, isFetchingNextPage } = useInfiniteQuery<
-    FetchPostsResponse,
-    Error,
-    InfiniteData<FetchPostsResponse>,
-    [string],
-    number
-  >({
+  const {
+    data: posts,
+    fetchNextPage,
+    hasNextPage,
+    isPending,
+    isError,
+    isFetchingNextPage
+  } = useInfiniteQuery<FetchPostsResponse, Error, InfiniteData<FetchPostsResponse>, [string], number>({
     queryKey: ["posts"],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
@@ -32,11 +35,11 @@ const ListLender: React.FC = () => {
     getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.nextPage : undefined)
   });
 
-  const allPosts = data?.pages?.flatMap((page) => page.items) || [];
+  const allPosts = posts?.pages.flatMap((page) => page.items) || [];
 
   const filteredPosts =
     selectedTags.length > 0
-      ? allPosts.filter((post) => selectedTags.some((tag) => post.season_tag?.includes(tag)))
+      ? allPosts.filter((post) => selectedTags.some((tag) => post.tags?.includes(tag)))
       : allPosts;
 
   if (isPending) return <p>로딩...</p>;

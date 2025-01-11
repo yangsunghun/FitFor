@@ -19,7 +19,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
 
   return (
     <div className="mt-6">
-      <h2 className="text-xl mb-4 font-bold">댓글</h2>
+      <p className="text-xl mb-4 font-bold">댓글 {comments.length}개</p>
       <div className="mb-4 flex justify-between">
         <textarea
           value={comment}
@@ -43,7 +43,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
       <ul>
         {comments?.map((comment) => (
           <li key={comment.id} className="mb-4 flex items-center gap-5 border-b pb-4">
-            <div className="relative h-[60px] w-[60px] overflow-hidden rounded-full">
+            <div className="relative h-[50px] w-[50px] overflow-hidden rounded-full">
               <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
             </div>
             <div className="w-[calc(100%-80px)]">

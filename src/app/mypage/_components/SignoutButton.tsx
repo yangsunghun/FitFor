@@ -1,14 +1,24 @@
-"use client"
+"use client";
 
-import { signOut } from '@/lib/utils/auth/auth'
-import React from 'react'
+import { useAuthStore } from "@/lib/store/authStore";
+import { signOut } from "@/lib/utils/auth/auth";
 
 const SignoutButton = () => {
-  return (
-      <button className="border m-4 p-4 rounded-xl" onClick={() => signOut()}>
-        Sign out
-      </button>
-  )
-}
+  const handleSignout = async () => {
+    await signOut();
 
-export default SignoutButton
+    // zustand에서 null 처리
+    useAuthStore.getState().setUser(null);
+
+    // home으로 push
+    window.location.href = "/";
+  };
+
+  return (
+    <button className="m-4 rounded-xl border p-4" onClick={handleSignout}>
+      Sign out
+    </button>
+  );
+};
+
+export default SignoutButton;

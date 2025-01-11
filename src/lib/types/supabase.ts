@@ -199,27 +199,27 @@ export type Database = {
       comments: {
         Row: {
           content: string
-          created_at: string | null
+          created_at: string
           id: string
           post_id: string
-          updated_at: string | null
-          user_id: string | null
+          updated_at: string
+          user_id: string
         }
         Insert: {
           content: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           post_id: string
-          updated_at?: string | null
-          user_id?: string | null
+          updated_at?: string
+          user_id: string
         }
         Update: {
           content?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           post_id?: string
-          updated_at?: string | null
-          user_id?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -366,6 +366,7 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          gender: string
           id: string
           nickname: string
           profile_image: string | null
@@ -373,6 +374,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          gender?: string
           id?: string
           nickname: string
           profile_image?: string | null
@@ -380,6 +382,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          gender?: string
           id?: string
           nickname?: string
           profile_image?: string | null

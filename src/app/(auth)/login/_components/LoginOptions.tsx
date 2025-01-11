@@ -20,7 +20,7 @@ const LoginOptions = () => {
             className="flex w-full flex-row justify-center gap-4 mt-8 rounded-2xl bg-white p-4 text-black shadow-md"
             onClick={showEmailForm}
           >
-            <Image src="/images/default-user-profile.png" width={25} height={25} alt="FitFor login" />
+            <Image src="/images/default-user-profile.png" width={25} height={25} alt="FitFor login" priority/>
             <span>이메일로 시작</span>
           </button>
           <SocialLoginButton provider="google" />

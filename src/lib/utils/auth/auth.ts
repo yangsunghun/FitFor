@@ -74,39 +74,21 @@ export const insertUserToPublic = async ({
 };
 
 // 일반 로그인 코드
-// TODO: 한가지 일로 수정 필요
 export const login = async (formData: LoginForm) => {
   const supabase = await createClient();
+  const email = formData.email
+  const password = formData.password
 
-  // 로그인 폼 데이터 읽어오기
-  const data = {
-    email: formData.email,
-    password: formData.password
-  };
-
-  const { data: authData, error } = await supabase.auth.signInWithPassword(data);
+  const { error } = await supabase.auth.signInWithPassword({email, password});
 
   // 에러 처리
+  // TODO: 에러처리가 필요함
   if (error) {
     console.error("로그인 에러", error);
   }
-
-  // public에 저장된 user 정보 반환
-  const { data: userInfo, error: userFetchError } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", authData.user!.id)
-    .maybeSingle();
-
-  if (userFetchError) {
-    console.error("유저 정보를 불러오지 못했습니다", userFetchError);
-  }
-
-  return userInfo;
 };
 
-// TODO: 한가지 일을 하는 걸로 변환 
-// 로그인된 유저 정보를 가져오는 코드
+// 로그인된 유저의 public users 정보를 가져오는 코드
 export const fetchUser = async () => {
   const supabase = await createClient();
 
@@ -115,8 +97,8 @@ export const fetchUser = async () => {
     error: getUserError
   } = await supabase.auth.getUser();
 
+  // 비로그인 회원원
   if (getUserError) {
-    // 현재 유저가 없는 경우 에러 발생
     // 없는 경우 반환할 값 null
     return null;
   }

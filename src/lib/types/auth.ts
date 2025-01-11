@@ -37,3 +37,11 @@ export type LoginForm = {
   email: string;
   password: string;
 };
+
+export type FormField<T> = {
+  id: keyof T;
+  label: string;
+  type: string;
+  placeholder: string;
+  validation?: object;
+};

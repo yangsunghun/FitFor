@@ -1,19 +1,25 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 type ModalBgProps = {
   children: React.ReactNode;
 };
 
-const ModalBg: React.FC<ModalBgProps> = ({ children }) => {
+const ModalBg = ({ children }: ModalBgProps) => {
   const router = useRouter();
+  const bodyRef = useRef(document.body);
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    if (bodyRef.current) {
+      bodyRef.current.style.overflow = "hidden";
+    }
+
     return () => {
-      document.body.style.overflow = "";
+      if (bodyRef.current) {
+        bodyRef.current.style.overflow = "";
+      }
     };
   }, []);
 

@@ -1,5 +1,6 @@
 import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
-import ButtonWrap from "../_components/ButtonWrap";
+import CommentSection from "../_components/CommentSection";
+import LikeSection from "../_components/LikeSection";
 
 type Props = {
   params: {
@@ -34,13 +35,16 @@ const DetailPage = async ({ params }: Props) => {
           <strong>키:</strong> {post.body_size?.[0]} cm, <strong>몸무게:</strong> {post.body_size?.[1]} kg
         </p>
         <p>
-          <strong>조회수:</strong> {post.view} | <strong>좋아요:</strong> {post.likes} | <strong>북마크:</strong>{" "}
-          {post.bookmarks}
+          <strong>조회수:</strong> {post.view}
         </p>
 
         <div className="mt-4 flex gap-4">
-          <ButtonWrap postId={post.id} />
+          <LikeSection postId={post.id} />
         </div>
+      </div>
+
+      <div className="mt-4">
+        <CommentSection postId={post.id} />
       </div>
     </div>
   );

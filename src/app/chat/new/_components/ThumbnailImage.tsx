@@ -25,7 +25,11 @@ export default function ThumbnailImage({ formData, onNext, onPrev }: ThumbnailIm
         <strong>Subtitle:</strong> {formData.subtitle}
       </p>
 
-      <input type="file" accept="image/*" onChange={(e) => setThumbnail(e.target.files ? e.target.files[0] : null)} />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setThumbnail(e.target.files ? e.target.files[0] : null)}
+      />
       <button onClick={onPrev}>Previous</button>
       <button onClick={handleSubmit}>Next</button>
     </div>

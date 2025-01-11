@@ -7,6 +7,7 @@ import { createChatRoom } from "../_utils/chat"; // Supabase의 함수 import
 import HashTags from "./_components/HashTags";
 import Summary from "./_components/Summary";
 import ThumbnailImage from "./_components/ThumbnailImage";
+import { uploadThumbnail } from "../_utils/uploadThumbnail";
 
 const steps = ["Summary", "Thumbnail", "HashTags"];
 
@@ -48,26 +49,33 @@ export default function Funnel() {
       setError("로그인 상태를 확인해주세요.");
       return;
     }
-
+  
+    if (!formData.thumbnail) {
+      setError("썸네일 파일을 선택해주세요.");
+      return;
+    }
+  
     setLoading(true);
     setError(null);
     setSuccess(false);
-
+  
     try {
-      // const userId = "98c6815b-62ce-4dc8-a36a-5078cb36f0d9"; // 실제 로그인 사용자 ID를 가져와야 함
-
+      // Step 1: 썸네일 업로드
+      const thumbnailUrl = await uploadThumbnail(formData.thumbnail);
+  
+      // Step 2: 채팅방 생성
       const { success, error } = await createChatRoom(currentUser.id, {
         title: formData.title,
         subtitle: formData.subtitle,
         description: formData.description,
         hashtags: formData.hashtags,
-        thumbnailUrl: formData.thumbnail ? URL.createObjectURL(formData.thumbnail) : ""
+        thumbnailUrl, // 업로드된 썸네일 URL 전달
       });
-
+  
       if (!success) {
         throw new Error(error);
       }
-
+  
       setSuccess(true);
     } catch (err) {
       setError(String(err));

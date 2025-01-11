@@ -90,7 +90,7 @@ export const enterAsMember = async (userId: string, roomId: string) => {
       }
 
       // 이미 활성화된 멤버인 경우
-      return { success: false, error: "이미 이 채팅방에 등록된 멤버입니다." };
+      return { success: true };
     }
 
     // Step 2: 멤버 새로 추가

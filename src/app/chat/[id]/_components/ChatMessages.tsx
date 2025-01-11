@@ -27,14 +27,14 @@ export default function ChatMessages({ roomId }: ChatMessagesProps) {
 
   // Realtime 구독 설정
   useEffect(() => {
-    fetchMessages();
-
     const subscription = supabase
       .channel("realtime:chat_messages")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages" }, (payload) => {
         setMessages((prev) => [...prev, payload.new]);
       })
       .subscribe();
+
+    fetchMessages();
 
     return () => {
       supabase.removeChannel(subscription);

@@ -109,6 +109,59 @@ export const enterAsMember = async (userId: string, roomId: string) => {
   }
 };
 
+// 방장 정보 가져오기
+export const getAdminDetails = async (roomId: string) => {
+  try {
+    // Step 1: 방장의 member_id 가져오기
+    const { data: adminMember, error: adminError } = await supabase
+      .from("chat_members")
+      .select("member_id")
+      .eq("room_id", roomId)
+      .eq("isAdmin", true)
+      .single();
+
+    if (adminError || !adminMember) throw adminError || new Error("방장을 찾을 수 없습니다.");
+
+    // Step 2: 방장의 프로필 정보 가져오기 (users 테이블에서 조회)
+    const { data: adminProfile, error: profileError } = await supabase
+      .from("users") // Supabase Auth에서 사용하는 users 테이블
+      .select("id, nickname, profile_image") // 필요한 필드 선택
+      .eq("id", adminMember.member_id)
+      .single();
+
+    if (profileError || !adminProfile) throw profileError || new Error("방장의 프로필 정보를 찾을 수 없습니다.");
+
+    // 방장 정보 반환
+    return {
+      success: true,
+      data: {
+        name: adminProfile.nickname,
+        profileImageUrl: adminProfile.profile_image
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching admin details:", error);
+    return { success: false, error: String(error) };
+  }
+};
+
+// 일반 멤버의 채팅방 퇴장하기(비활성화)
+export const exitChatRoom = async (userId: string, roomId: string) => {
+  try {
+    const { error } = await supabase
+      .from("chat_members")
+      .update({ isActive: false })
+      .match({ member_id: userId, room_id: roomId });
+
+    if (error) throw error;
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+};
+
+
 // 채팅방 일반 멤버로 등록하기(기존)
 // export const enterAsMember = async (userId: string, roomId: string) => {
 //   try {
@@ -143,22 +196,6 @@ export const enterAsMember = async (userId: string, roomId: string) => {
 //     return { success: false, error: String(error) };
 //   }
 // };
-
-// 일반 멤버의 채팅방 퇴장하기(비활성화)
-export const exitChatRoom = async (userId: string, roomId: string) => {
-  try {
-    const { error } = await supabase
-      .from("chat_members")
-      .update({ isActive: false })
-      .match({ member_id: userId, room_id: roomId });
-
-    if (error) throw error;
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: String(error) };
-  }
-};
 
 // 일반 멤버의 채팅방 퇴장하기(데이터 테이블에서 삭제)
 // export const exitChatRoom = async (userId: string, roomId: string) => {

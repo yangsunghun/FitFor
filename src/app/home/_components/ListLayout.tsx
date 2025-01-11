@@ -22,7 +22,7 @@ const ListLayout: React.FC<ListLayoutProps> = ({ posts }) => {
             </figure>
             <div>
               <p>{item.title}</p>
-              <p>{item.season_tag?.join("")}</p>
+              <p>{item.tags?.join("")}</p>
             </div>
           </li>
         ))}

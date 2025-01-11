@@ -1,4 +1,4 @@
-import { fetchPostDetail } from "@/lib/api/post/fetchPostDetail";
+import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
 import ModalBg from "./ModalBg";
 import ModalButton from "./ModalButton";
 
@@ -37,7 +37,7 @@ const DetailModal = async ({ params }: Props) => {
         <p className="text-sm text-gray-700">{post.content.slice(0, 100)}...</p>
         <div className="mt-6">
           <p>
-            <strong>태그:</strong> {post.season_tag?.join(", ")}
+            <strong>태그:</strong> {post.tags?.join(", ")}
           </p>
           <p>
             <strong>키:</strong> {post.body_size?.[0]} cm, <strong>몸무게:</strong> {post.body_size?.[1]} kg

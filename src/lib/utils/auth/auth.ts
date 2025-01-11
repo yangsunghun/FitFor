@@ -1,6 +1,6 @@
 "use server";
 
-import { PROVIDER_CONFIG, type LoginForm, type Provider, type SignupForm } from "@/lib/types/auth";
+import { LoginForm, Provider, PROVIDER_CONFIG, SignupForm } from "@/lib/types/auth";
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -13,9 +13,9 @@ export const signup = async (formData: SignupForm): Promise<void> => {
   // 기본 프로파일 이미지
   const profileImage = "/images/default-user-profile.png";
 
-  const email = formData.email
-  const password = formData.password
-  const nickname = formData.nickname
+  const email = formData.email;
+  const password = formData.password;
+  const nickname = formData.nickname;
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -76,13 +76,12 @@ export const insertUserToPublic = async ({
 // 일반 로그인 코드
 export const login = async (formData: LoginForm) => {
   const supabase = await createClient();
-  const email = formData.email
-  const password = formData.password
+  const email = formData.email;
+  const password = formData.password;
 
-  const { error } = await supabase.auth.signInWithPassword({email, password});
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   // 에러 처리
-  // TODO: 에러처리가 필요함
   if (error) {
     console.error("로그인 에러", error);
   }
@@ -97,7 +96,7 @@ export const fetchUser = async () => {
     error: getUserError
   } = await supabase.auth.getUser();
 
-  // 비로그인 회원원
+  // 비로그인 회원
   if (getUserError) {
     // 없는 경우 반환할 값 null
     return null;

@@ -3,6 +3,7 @@ import { FormDetails } from "../page";
 
 interface HashTagsProps {
   formData: FormDetails;
+  setFormData: React.Dispatch<React.SetStateAction<FormDetails>>;
   onPrev: () => void;
   onCreateChatRoom: () => Promise<void>;
   loading: boolean;
@@ -10,18 +11,44 @@ interface HashTagsProps {
   success: boolean;
 }
 
-export default function HashTags({ formData, onPrev, onCreateChatRoom, loading, error, success }: HashTagsProps) {
+export default function HashTags({
+  formData,
+  setFormData,
+  onPrev,
+  onCreateChatRoom,
+  loading,
+  error,
+  success,
+}: HashTagsProps) {
   const [hashtags, setHashtags] = React.useState<string[]>(formData.hashtags || []);
 
   const handleAddTag = (tag: string) => {
     if (tag && !hashtags.includes(tag)) {
-      setHashtags((prev) => [...prev, tag]);
+      const updatedTags = [...hashtags, tag];
+      setHashtags(updatedTags);
+  
+      // formData 업데이트
+      setFormData((prev) => {
+        const newFormData = { ...prev, hashtags: updatedTags };
+        return newFormData;
+      });
     }
   };
-
+  
   const handleRemoveTag = (tag: string) => {
-    setHashtags((prev) => prev.filter((t) => t !== tag));
+    const updatedTags = hashtags.filter((t) => t !== tag);
+    setHashtags(updatedTags);
+  
+    // formData 업데이트
+      setFormData((prev) => {
+        const newFormData = { ...prev, hashtags: updatedTags };
+        return newFormData;
+      });
   };
+
+  React.useEffect(() => {
+    setHashtags(formData.hashtags || []);
+  }, [formData.hashtags]);
 
   return (
     <div>

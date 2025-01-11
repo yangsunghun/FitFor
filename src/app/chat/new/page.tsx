@@ -3,11 +3,12 @@
 import { useAuthStore } from "@/lib/store/authStore";
 import { useState } from "react";
 import { useFunnel } from "../_hooks/useFunnel";
-import { createChatRoom } from "../_utils/chat"; // Supabase의 함수 import
+import { createChatRoom } from "../_utils/chat"; // Supabase 함수 import
 import HashTags from "./_components/HashTags";
 import Summary from "./_components/Summary";
 import ThumbnailImage from "./_components/ThumbnailImage";
 import { uploadThumbnail } from "../_utils/uploadThumbnail";
+import { createRoomHandler } from "../_utils/createrRoomHandler";
 
 const steps = ["Summary", "Thumbnail", "HashTags"];
 
@@ -28,7 +29,7 @@ export default function Funnel() {
     subtitle: "",
     description: "",
     thumbnail: null,
-    hashtags: []
+    hashtags: [],
   });
 
   const [loading, setLoading] = useState(false);
@@ -44,45 +45,43 @@ export default function Funnel() {
     prev(prevStep);
   };
 
-  const handleCreateChatRoom = async () => {
-    if (!currentUser || !currentUser.id) {
-      setError("로그인 상태를 확인해주세요.");
-      return;
+const handleCreateChatRoom = async () => {
+
+  if (!currentUser || !currentUser.id) {
+    setError("로그인 상태를 확인해주세요.");
+    return;
+  }
+
+  if (!formData.thumbnail) {
+    setError("썸네일 파일을 선택해주세요.");
+    return;
+  }
+
+  setLoading(true);
+  setError(null);
+  setSuccess(false);
+
+  try {
+    // createRoomHandler 호출
+    const { success, error } = await createRoomHandler(currentUser.id, {
+      title: formData.title,
+      subtitle: formData.subtitle,
+      description: formData.description,
+      hashtags: formData.hashtags,
+      thumbnailFile: formData.thumbnail,
+    });
+
+    if (!success) {
+      throw new Error(error);
     }
-  
-    if (!formData.thumbnail) {
-      setError("썸네일 파일을 선택해주세요.");
-      return;
-    }
-  
-    setLoading(true);
-    setError(null);
-    setSuccess(false);
-  
-    try {
-      // Step 1: 썸네일 업로드
-      const thumbnailUrl = await uploadThumbnail(formData.thumbnail);
-  
-      // Step 2: 채팅방 생성
-      const { success, error } = await createChatRoom(currentUser.id, {
-        title: formData.title,
-        subtitle: formData.subtitle,
-        description: formData.description,
-        hashtags: formData.hashtags,
-        thumbnailUrl, // 업로드된 썸네일 URL 전달
-      });
-  
-      if (!success) {
-        throw new Error(error);
-      }
-  
-      setSuccess(true);
-    } catch (err) {
-      setError(String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
+
+    setSuccess(true);
+  } catch (err) {
+    setError(String(err));
+  } finally {
+    setLoading(false);
+  }
+};
 
   const currentStepIndex = steps.indexOf(currentStep);
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
@@ -105,6 +104,7 @@ export default function Funnel() {
           <Step name={steps[2]}>
             <HashTags
               formData={formData}
+              setFormData={setFormData} // formData 업데이트 함수 전달
               onPrev={() => handlePrev(steps[1])}
               onCreateChatRoom={handleCreateChatRoom} // 로직 전달
               loading={loading}
@@ -123,7 +123,7 @@ export default function Funnel() {
             height: "8px",
             backgroundColor: "#e0e0e0",
             borderRadius: "4px",
-            overflow: "hidden"
+            overflow: "hidden",
           }}
         >
           <div
@@ -131,7 +131,7 @@ export default function Funnel() {
               width: `${progress}%`,
               height: "100%",
               backgroundColor: "#000",
-              transition: "width 0.3s ease"
+              transition: "width 0.3s ease",
             }}
           />
         </div>
@@ -141,14 +141,14 @@ export default function Funnel() {
             display: "flex",
             justifyContent: "space-between",
             marginTop: "8px",
-            fontSize: "12px"
+            fontSize: "12px",
           }}
         >
           {steps.map((step, index) => (
             <span
               key={index}
               style={{
-                color: index <= currentStepIndex ? "#000" : "#999"
+                color: index <= currentStepIndex ? "#000" : "#999",
               }}
             >
               {step}

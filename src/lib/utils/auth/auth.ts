@@ -1,21 +1,21 @@
 "use server";
 
-import { PROVIDER_CONFIG, type LoginForm, type Provider } from "@/lib/types/auth";
+import { PROVIDER_CONFIG, type LoginForm, type Provider, type SignupForm } from "@/lib/types/auth";
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 // 회원가입 코드
 // 받아온 formData에는 email, password, nickname이 존재
-export const signup = async (formData: FormData): Promise<void> => {
+export const signup = async (formData: SignupForm): Promise<void> => {
   const supabase = await createClient();
 
   // 기본 프로파일 이미지
   const profileImage = "/images/default-user-profile.png";
 
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const nickname = formData.get("nickname") as string;
+  const email = formData.email
+  const password = formData.password
+  const nickname = formData.nickname
 
   const { data, error } = await supabase.auth.signUp({
     email,

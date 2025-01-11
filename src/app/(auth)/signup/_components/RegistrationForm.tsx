@@ -1,36 +1,11 @@
 "use client";
-import { signup } from "@/lib/utils/auth/auth";
+import { SIGNUP_FIELDS } from "@/lib/validataions/authFields";
+import { signupSchema } from "@/lib/validataions/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm, type FieldValues } from "react-hook-form";
-import { z } from "zod";
-
-const signupSchema = z
-  .object({
-    nickname: z
-      .string({ required_error: "이메일을 입력해주세요." })
-      .max(20, { message: "20자 이하의 닉네임을 설정해주세요." }),
-    email: z
-      .string({ required_error: "이메일을 입력해주세요." })
-      .email({ message: "유효하지 않은 이메일 형식입니다." }),
-    password: z
-      .string({ required_error: "이메일을 입력해주세요." })
-      .regex(
-        new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/),
-        "영문, 숫자, 특수문자 포함 6 ~ 20자로 입력해주세요"
-      ),
-    passwordConfirm: z
-      .string({ required_error: "이메일을 입력해주세요." })
-      .regex(
-        new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/),
-        "영문, 숫자, 특수문자 포함 6 ~ 20자로 입력해주세요"
-      ),
-    gender: z.string().optional()
-  })
-  .refine((data) => data.password === data.passwordConfirm, {
-    message: "비밀번호가 일치하지 않습니다.",
-    path: ["passwordConfirm"]
-  });
+import AuthInput from "../../_components/AuthInput";
+import { signup } from "@/lib/utils/auth/auth";
 
 const RegistrationForm = () => {
   const { register, handleSubmit, formState } = useForm({
@@ -46,44 +21,30 @@ const RegistrationForm = () => {
   });
 
   const handleSignup = async (value: FieldValues) => {
-    alert("서비스 준비 중")
-    // await signup(formData);
+    await signup(signupSchema.parse(value));
 
-    // window.location.href = "/login";
+    window.location.href = "/login";
   };
 
   return (
     <>
       <form className="mt-8 flex w-full flex-col" autoComplete="off" onSubmit={handleSubmit(handleSignup)}>
-        {/* <AuthInput type="text" placeholder="닉네임" />
-        <AuthInput type="email" placeholder="이메일" />
-        <AuthInput type="password" placeholder="비밀번호" />
-        <AuthInput type="password" placeholder="비밀번호 확인" /> */}
-        <input
-          type="text"
-          placeholder="닉네임 (이름)"
-          {...register("nickname")}
-          className="border-input placeholder:text-muted-foreground mb-2 flex h-9 w-full rounded-2xl border px-3 py-7 leading-6 transition-colors focus-visible:outline-none focus-visible:ring"
-        />
-        <input
-          type="email"
-          placeholder="이메일"
-          {...register("email")}
-          className="border-input placeholder:text-muted-foreground mb-2 flex h-9 w-full rounded-2xl border px-3 py-7 leading-6 transition-colors focus-visible:outline-none focus-visible:ring"
-        />
-        <input
-          type="email"
-          placeholder="비밀번호"
-          {...register("password")}
-          className="border-input placeholder:text-muted-foreground mb-2 flex h-9 w-full rounded-2xl border px-3 py-7 leading-6 transition-colors focus-visible:outline-none focus-visible:ring"
-        />
-        <input
-          type="email"
-          placeholder="비밀번호 확인"
-          {...register("passwordConfirm")}
-          className="border-input placeholder:text-muted-foreground mb-2 flex h-9 w-full rounded-2xl border px-3 py-7 leading-6 transition-colors focus-visible:outline-none focus-visible:ring"
-        />
-        <button type="submit" className="flex w-full flex-row justify-center gap-4 rounded-2xl border p-4">
+        {SIGNUP_FIELDS.map((field, index) => (
+          <AuthInput
+            key={field.id}
+            id={field.id}
+            type={field.type}
+            placeholder={field.placeholder}
+            register={register}
+            error={formState.errors[field.id]?.message}
+          />
+        ))}
+        {formState.errors.root && (<span>{formState.errors.root.message}</span>)}
+        <button
+          type="submit"
+          className="flex w-full flex-row justify-center gap-4 rounded-2xl bg-[#FF3365] p-4 font-bold disabled:bg-[#FFD6E0]"
+          disabled={!formState.isValid}
+        >
           회원가입
         </button>
       </form>

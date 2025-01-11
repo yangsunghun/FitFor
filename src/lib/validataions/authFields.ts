@@ -1,4 +1,4 @@
-import type { FormField, LoginForm } from "@/lib/types/auth";
+import type { FormField, LoginForm, SignupForm } from "@/lib/types/auth";
 
 export const LOGIN_FIELDS: FormField<LoginForm>[] = [
   {
@@ -15,7 +15,7 @@ export const LOGIN_FIELDS: FormField<LoginForm>[] = [
   }
 ];
 
-export const SIGNUP_FIELDS = [
+export const SIGNUP_FIELDS: FormField<SignupForm>[] = [
   {
     type: "nickname",
     placeholder: "닉네임(이름)을 입력해주세요.",

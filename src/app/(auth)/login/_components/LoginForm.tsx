@@ -1,17 +1,15 @@
 "use client";
 import { login } from "@/lib/utils/auth/auth";
 import { LOGIN_FIELDS } from "@/lib/validataions/authFields";
+import { loginSchema } from "@/lib/validataions/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { FieldValues, useForm } from "react-hook-form";
-import { z } from "zod";
 import AuthInput from "../../_components/AuthInput";
-import { loginSchema } from "@/lib/validataions/authSchema";
-
 
 // 일반 로그인 폼
 const LoginForm = () => {
-  const { register, handleSubmit, formState} = useForm({
+  const { register, handleSubmit, formState } = useForm({
     mode: "onTouched",
     defaultValues: {
       email: "",
@@ -31,16 +29,14 @@ const LoginForm = () => {
     <>
       <form className="flex w-full flex-col" autoComplete="off" onSubmit={handleSubmit(handleLogin)}>
         {LOGIN_FIELDS.map((field, index) => (
-          <div key={index}>
-            <AuthInput
-              key={field.id}
-              id={field.id}
-              type={field.type}
-              placeholder={field.placeholder}
-              register={register}
-              error={formState.errors[field.id]?.message}
-            />
-          </div>
+          <AuthInput
+            key={field.id}
+            id={field.id}
+            type={field.type}
+            placeholder={field.placeholder}
+            register={register}
+            error={formState.errors[field.id]?.message}
+          />
         ))}
         <button
           type="submit"

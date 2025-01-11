@@ -33,15 +33,23 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
   }
 };
 
-export type LoginForm = {
-  email: string;
-  password: string;
-};
-
 export type FormField<T> = {
   id: keyof T;
   label: string;
   type: string;
   placeholder: string;
   validation?: object;
+};
+
+export type LoginForm = {
+  email: string;
+  password: string;
+};
+
+export type SignupForm = {
+  nickname: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  gender?: string;
 };

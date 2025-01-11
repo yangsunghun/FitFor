@@ -5,11 +5,11 @@ import { useLike } from "@/lib/hooks/detail/useLike";
 import { useAuthStore } from "@/lib/store/authStore";
 import ToggleButton from "./ToggleButton";
 
-type Props = {
+type LikeSectionProps = {
   postId: string;
 };
 
-const ButtonWrap = ({ postId }: Props) => {
+const LikeSection = ({ postId }: LikeSectionProps) => {
   const { user } = useAuthStore();
   const userId = user?.id;
 
@@ -59,4 +59,4 @@ const ButtonWrap = ({ postId }: Props) => {
   );
 };
 
-export default ButtonWrap;
+export default LikeSection;

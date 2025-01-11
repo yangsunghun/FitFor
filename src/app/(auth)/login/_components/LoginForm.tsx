@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthInput from "../../_components/AuthInput";
-import { loginSchema } from "@/lib/validataions/loginSchema";
+import { loginSchema } from "@/lib/validataions/authSchema";
 
 
 // 일반 로그인 폼
@@ -19,21 +19,6 @@ const LoginForm = () => {
     },
     resolver: zodResolver(loginSchema)
   });
-
-  // const inputFields = [
-  //   {
-  //     type: "email",
-  //     placeholder: "이메일",
-  //     name: "email",
-  //     errorMessage: formState.errors.email?.message
-  //   },
-  //   {
-  //     type: "password",
-  //     placeholder: "비밀번호",
-  //     name: "password",
-  //     errorMessage: formState.errors.password?.message
-  //   }
-  // ];
 
   // 로그인 후 홈으로 이동
   const handleLogin = async (value: FieldValues) => {

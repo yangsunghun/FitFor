@@ -9,3 +9,4 @@ export const loginSchema = z.object({
       "영문, 숫자, 특수문자 포함 6 ~ 20자로 입력해주세요"
     )
 });
+

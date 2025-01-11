@@ -1,5 +1,5 @@
 import type { Database } from "@/lib/types/supabase";
-import { createClient } from "../supabase/client";
+import { createClient } from "@/lib/utils/supabase/client";
 
 type LikesInsert = Database["public"]["Tables"]["likes"]["Insert"];
 type BookmarksInsert = Database["public"]["Tables"]["bookmarks"]["Insert"];
@@ -69,39 +69,44 @@ export const removeLike = async (userId: string, postId: string) => {
 export const getLikeCount = async (postId: string) => {
   const supabase = createClient();
 
-  const { data, error } = await supabase.from("posts").select("likes").eq("id", postId).single();
+  const { data: likesCount, error } = await supabase.from("posts").select("likes").eq("id", postId).single();
 
   if (error) {
     throw new Error(`Failed to fetch like count: ${error.message}`);
   }
 
-  return data?.likes || 0; // likes 값 반환, 없으면 0
+  return likesCount?.likes || 0; // likes 값 반환, 없으면 0
 };
 
 // 사용자가 좋아요 했는지 확인
 export const isPostLiked = async (postId: string, userId: string) => {
   const supabase = createClient();
 
-  const { data, error } = await supabase.from("likes").select("*").eq("post_id", postId).eq("user_id", userId).single();
+  const { data: userLike, error } = await supabase
+    .from("likes")
+    .select("*")
+    .eq("post_id", postId)
+    .eq("user_id", userId)
+    .single();
 
   if (error && error.code !== "PGRST116") {
     throw new Error(`Failed to fetch like status: ${error.message}`);
   }
 
-  return !!data;
+  return !!userLike;
 };
 
 // 북마크 추가
 export const addBookmark = async (bookmark: BookmarksInsert) => {
   const supabase = createClient();
 
-  const { data, error } = await supabase.from("bookmarks").insert([bookmark]);
+  const { data: bookmarkData, error } = await supabase.from("bookmarks").insert([bookmark]);
 
   if (error) {
     throw new Error(`Failed to add bookmark: ${error.message}`);
   }
 
-  return data;
+  return bookmarkData;
 };
 
 // 북마크 삭제
@@ -119,7 +124,7 @@ export const removeBookmark = async (userId: string, postId: string) => {
 export const isPostBookmarked = async (postId: string, userId: string) => {
   const supabase = createClient();
 
-  const { data, error } = await supabase
+  const { data: userBookmark, error } = await supabase
     .from("bookmarks")
     .select("*")
     .eq("post_id", postId)
@@ -130,5 +135,5 @@ export const isPostBookmarked = async (postId: string, userId: string) => {
     throw new Error(`Failed to fetch bookmark status: ${error.message}`);
   }
 
-  return !!data;
+  return !!userBookmark;
 };

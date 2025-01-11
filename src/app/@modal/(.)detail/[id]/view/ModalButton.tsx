@@ -8,7 +8,7 @@ type ModalButtonProps = {
   path?: string;
 };
 
-const ModalButton: React.FC<ModalButtonProps> = ({ label, action, path }) => {
+const ModalButton = ({ label, action, path }: ModalButtonProps) => {
   const router = useRouter();
 
   const handleClick = () => {

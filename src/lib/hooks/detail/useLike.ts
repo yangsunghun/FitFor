@@ -5,7 +5,7 @@ export const useLike = (postId: string, userId: string) => {
   const queryClient = useQueryClient();
   const queryKey = ["likes", postId, userId];
 
-  const { data, isPending } = useQuery({
+  const { data: likeData, isPending } = useQuery({
     queryKey,
     queryFn: async () => {
       const isLiked = await isPostLiked(postId, userId);
@@ -40,9 +40,9 @@ export const useLike = (postId: string, userId: string) => {
   });
 
   return {
-    isLiked: data?.isLiked || false,
-    likeCount: data?.likeCount || 0,
+    isLiked: likeData?.isLiked || false,
+    likeCount: likeData?.likeCount || 0,
     isPending,
-    toggleLike: () => mutation.mutate(data?.isLiked || false)
+    toggleLike: () => mutation.mutate(likeData?.isLiked || false)
   };
 };

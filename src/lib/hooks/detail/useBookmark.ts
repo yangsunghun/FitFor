@@ -11,7 +11,7 @@ export const useBookmarks = (postId: string, userId?: string) => {
   const queryKey = ["bookmarks", postId, userId];
 
   // 북마크 상태 가져오기
-  const { data = { isBookmarked: false }, isPending } = useQuery<BookmarkState>({
+  const { data: bookmarkData = { isBookmarked: false }, isPending } = useQuery<BookmarkState>({
     queryKey,
     queryFn: async () => {
       if (!userId) return { isBookmarked: false };
@@ -51,8 +51,8 @@ export const useBookmarks = (postId: string, userId?: string) => {
   });
 
   return {
-    isBookmarked: data.isBookmarked,
+    isBookmarked: bookmarkData.isBookmarked,
     isPending,
-    toggleBookmark: () => mutation.mutate(data.isBookmarked)
+    toggleBookmark: () => mutation.mutate(bookmarkData.isBookmarked)
   };
 };

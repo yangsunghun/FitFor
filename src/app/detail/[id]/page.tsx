@@ -17,7 +17,7 @@ const DetailPage = async ({ params }: Props) => {
 
   return (
     <div className="mx-auto max-w-3xl p-4">
-      <h1 className="mb-4 text-3xl font-bold">{post.title}</h1>
+      <h1 className="text-3xl mb-4 font-bold">{post.title}</h1>
       <p className="mb-2 text-gray-600">작성일: {new Date(post.created_at || "").toLocaleDateString()}</p>
       <p className="mb-4">작성자 ID: {post.user_id}</p>
       <img

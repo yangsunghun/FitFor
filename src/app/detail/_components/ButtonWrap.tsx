@@ -9,7 +9,7 @@ type Props = {
   postId: string;
 };
 
-const ButtonWrap: React.FC<Props> = ({ postId }) => {
+const ButtonWrap = ({ postId }: Props) => {
   const { user } = useAuthStore();
   const userId = user?.id;
 

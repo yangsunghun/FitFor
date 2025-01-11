@@ -9,16 +9,9 @@ type ToggleButtonProps = {
   disabled?: boolean;
 };
 
-const ToggleButton: React.FC<ToggleButtonProps> = ({
-  isActive,
-  count,
-  onClick,
-  activeIcon,
-  inactiveIcon,
-  disabled = false
-}) => {
+const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, disabled = false }: ToggleButtonProps) => {
   return (
-    <button onClick={onClick} className="flex items-center gap-2 text-sm" disabled={disabled}>
+    <button onClick={onClick} className="text-sm flex items-center gap-2" disabled={disabled}>
       <span>{isActive ? activeIcon : inactiveIcon}</span>
       {typeof count === "number" && <span>{count}</span>}
     </button>

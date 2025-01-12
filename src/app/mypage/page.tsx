@@ -8,6 +8,6 @@ const PrivatePage = () => {
       <SignoutButton />
     </div>
   );
-}
+};
 
 export default PrivatePage;

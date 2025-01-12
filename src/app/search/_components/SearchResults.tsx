@@ -4,20 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 
 type SearchResultsProps = {
-  data: { items: PostType[]; total: number } | undefined;
-  isLoading: boolean;
+  Results: { items: PostType[]; total: number } | undefined;
+  isPending: boolean;
   error: any;
 };
 
-const SearchResults = ({ data, isLoading, error }: SearchResultsProps) => {
-  if (isLoading) return <p>검색 중...</p>;
-  if (error) return <p>오류 발생: {error.message}</p>;
+const SearchResults = ({ Results, isPending, error }: SearchResultsProps) => {
+  if (isPending) return <p>로딩</p>;
+  if (error) return <p>검색에 문제가 있습니다 {error.message}</p>;
 
-  if (!data || data.items.length === 0) return <p>검색 결과가 없습니다.</p>;
+  if (!Results || Results.items.length === 0) return <p>검색 결과가 없습니다.</p>;
 
   return (
     <ul className="grid grid-cols-4 gap-5">
-      {data.items.map((post) => (
+      {Results.items.map((post) => (
         <li key={post.id} className="relative">
           <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
           <figure className="relative h-[250px] w-full overflow-hidden bg-gray-200">

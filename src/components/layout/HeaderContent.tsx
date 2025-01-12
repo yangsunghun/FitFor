@@ -1,27 +1,11 @@
 "use client";
 
-import { useAuthStore } from "@/lib/store/authStore";
-import { fetchUser } from "@/lib/utils/auth/auth";
-import { useEffect } from "react";
+import { useUser } from "@/lib/hooks/auth/useUser";
 
 const HeaderContent = () => {
-  // 로그인된 유저가 있다면
-  // store에 유저를 저장하는 로직입니다.
-  // 헤더 부분에서 필요
-  const { setUser } = useAuthStore();
-  useEffect(() => {
-    const fetchPublicUserData = async () => {
-      const user = await fetchUser();
-      // zustand에 저장
-      if (user) {
-        setUser(user);
-      }
-    };
+  useUser();
 
-    fetchPublicUserData();
-  }, [setUser]);
-
-  return <p>HeaderContext</p>;
+  return <p>HeaderContent</p>;
 };
 
 export default HeaderContent;

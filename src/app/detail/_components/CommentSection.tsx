@@ -14,7 +14,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
   const { comments, isPending, addComment, deleteComment } = useComment(postId);
 
   if (isPending) {
-    return <p>댓글을 불러오는 중...</p>;
+    return <p>스켈레톤 ui 추가해야겠지?</p>;
   }
 
   return (

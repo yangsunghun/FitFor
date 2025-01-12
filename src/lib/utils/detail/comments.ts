@@ -19,14 +19,22 @@ export const createComment = async (postId: string, content: string) => {
     throw new Error("로그인이 필요합니다.");
   }
 
-  const { error } = await supabase.from("comments").insert({
+  // 댓글 추가
+  const { error: insertError } = await supabase.from("comments").insert({
     post_id: postId,
     content,
-    user_id: userId // 현재 로그인된 사용자 ID
+    user_id: userId
   });
 
-  if (error) {
-    throw new Error(`댓글 작성 실패: ${error.message}`);
+  if (insertError) {
+    throw new Error(`댓글 작성 실패: ${insertError.message}`);
+  }
+
+  // 댓글 개수 동기화
+  const { error: syncError } = await supabase.rpc("sync_comment_count", { post_id: postId });
+
+  if (syncError) {
+    throw new Error(`댓글 개수 동기화 실패: ${syncError.message}`);
   }
 };
 
@@ -52,11 +60,18 @@ export const fetchComments = async (postId: string) => {
   return PostComments;
 };
 
-// 댓글 삭제
-export const deleteComment = async (commentId: string) => {
-  const { error } = await supabase.from("comments").delete().eq("id", commentId);
+export const deleteComment = async (commentId: string, postId: string) => {
+  // 댓글 삭제
+  const { error: deleteError } = await supabase.from("comments").delete().eq("id", commentId);
 
-  if (error) {
-    throw new Error(`댓글 삭제 실패: ${error.message}`);
+  if (deleteError) {
+    throw new Error(`댓글 삭제 실패: ${deleteError.message}`);
+  }
+
+  // 댓글 개수 동기화
+  const { error: syncError } = await supabase.rpc("sync_comment_count", { post_id: postId });
+
+  if (syncError) {
+    throw new Error(`댓글 개수 동기화 실패: ${syncError.message}`);
   }
 };

@@ -37,7 +37,7 @@ const LikeSection = ({ postId }: LikeSectionProps) => {
   }
 
   if (likePending || bookmarkPending) {
-    return <p>로딩 중...</p>;
+    return <p>스켈레톤 ui 추가해야겠지?</p>;
   }
 
   return (

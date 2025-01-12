@@ -1,3 +1,6 @@
+import ContentsSection from "@/app/detail/_components/ContentsSection";
+import LikeSection from "@/app/detail/_components/LikeSection";
+import ViewCounter from "@/app/detail/_components/ViewCounter";
 import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
 import ModalBg from "./ModalBg";
 import ModalButton from "./ModalButton";
@@ -26,30 +29,15 @@ const DetailModal = async ({ params }: Props) => {
   return (
     <ModalBg>
       <div className="relative w-[400px] rounded-lg bg-white p-6 shadow-lg">
-        <h1 className="mb-4 text-xl font-bold">{post.title}</h1>
-        <p className="mb-2 text-gray-600">작성일: {new Date(post.created_at || "").toLocaleDateString()}</p>
-        <p className="mb-4 text-gray-500">작성자 ID: {post.user_id}</p>
-        <img
-          src={post.thumbnail || "/placeholder.png"}
-          alt={post.title}
-          className="mb-4 h-40 w-full rounded-lg object-cover"
-        />
-        <p className="text-sm text-gray-700">{post.content.slice(0, 100)}...</p>
-        <div className="mt-6">
-          <p>
-            <strong>태그:</strong> {post.tags?.join(", ")}
-          </p>
-          <p>
-            <strong>키:</strong> {post.body_size?.[0]} cm, <strong>몸무게:</strong> {post.body_size?.[1]} kg
-          </p>
-          <p>
-            <strong>조회수:</strong> {post.view} | <strong>좋아요:</strong> {post.likes} | <strong>북마크:</strong>{" "}
-            {post.bookmarks}
-          </p>
+        <ViewCounter postId={postId} />
 
-          <ModalButton label="전체 보기" action="refresh" />
-          <ModalButton label="닫기" action="close" />
+        <ContentsSection postId={postId} />
+        <div className="mt-4 flex gap-4">
+          <LikeSection postId={postId} />
         </div>
+
+        <ModalButton label="전체 보기" action="refresh" />
+        <ModalButton label="닫기" action="close" />
       </div>
     </ModalBg>
   );

@@ -1,27 +1,62 @@
 "use client";
 
+import { useUser } from "@/lib/hooks/auth/useUser";
 import { useAuthStore } from "@/lib/store/authStore";
-import { fetchUser } from "@/lib/utils/auth/auth";
-import { useEffect } from "react";
+import { MagnifyingGlass } from "@phosphor-icons/react";
+import Image from "next/image";
+import Link from "next/link";
 
 const HeaderContent = () => {
-  // 로그인된 유저가 있다면
-  // store에 유저를 저장하는 로직입니다.
-  // 헤더 부분에서 필요
-  const { setUser } = useAuthStore();
-  useEffect(() => {
-    const fetchPublicUserData = async () => {
-      const user = await fetchUser();
-      // zustand에 저장
-      if (user) {
-        setUser(user);
-      }
-    };
+  useUser();
+  const { user } = useAuthStore();
 
-    fetchPublicUserData();
-  }, [setUser]);
+  return (
+    <div className="container mx-auto flex h-full max-w-[1200px] items-center justify-between">
+      <div className="flex items-center gap-4">
+        {/* Logo */}
+        <div className="flex h-12 w-32 items-center justify-center rounded-2xl border-2 border-black">
+          <Link href="/" className="font-bold">
+            FITFOR
+          </Link>
+        </div>
 
-  return <p>HeaderContext</p>;
+        {/* 라이브 버튼 */}
+        <div className="h-[50px] w-[50px] rounded-full bg-black text-white" />
+      </div>
+
+      {/* 검색창 */}
+      <div className="max-w-xl flex-1 items-center justify-center">
+        <div className="flex w-full max-w-lg flex-row items-center gap-4 rounded-xl bg-gray-300 pr-4">
+          <input
+            type="search"
+            placeholder="검색"
+            className="h-12 w-full rounded-l-2xl bg-transparent pl-4 text-black placeholder:text-black focus-visible:outline-gray-400"
+          />
+          <button>
+            <MagnifyingGlass size={30} className="text-black" />
+          </button>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <div className="h-[50px] w-[50px] rounded-full bg-black text-white" />
+        {user ? (
+          <Link href="/mypage">
+            <Image
+              src={user!.profile_image as string}
+              alt={`${user.nickname}'s profile`}
+              width={50}
+              height={50}
+              priority
+              className="rounded-full"
+            />
+          </Link>
+        ) : (
+          <Link href="/login">로그인</Link>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default HeaderContent;

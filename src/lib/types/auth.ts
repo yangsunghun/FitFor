@@ -1,6 +1,7 @@
 import googleLogo from "@/assets/images/google-logo.svg";
 import kakaoLogo from "@/assets/images/kakao-logo.svg";
 import { Database } from "./supabase";
+import type { HTMLInputTypeAttribute } from "react";
 
 export type User = Database["public"]["Tables"]["users"]["Row"];
 
@@ -11,7 +12,6 @@ export type ProviderConfig = {
   bgColor: string;
   textColor: string;
   logo: string;
-  logoClass?: string;
   queryParams?: Record<string, string>;
 };
 
@@ -32,4 +32,25 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
     textColor: "text-[#333333]",
     logo: kakaoLogo
   }
+};
+
+export type FormField<T> = {
+  id: keyof T;
+  label: string;
+  type: HTMLInputTypeAttribute;
+  placeholder: string;
+  validation?: object;
+};
+
+export type LoginForm = {
+  email: string;
+  password: string;
+};
+
+export type SignupForm = {
+  nickname: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  gender?: string;
 };

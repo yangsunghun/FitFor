@@ -28,7 +28,7 @@ const ProfileSection = () => {
         <p className="text-2xl">
           <strong>{user!.nickname}</strong>
         </p>
-        <p className="flex flex-col text-base">
+        <p className="text-base flex flex-col">
           <strong> [유저 디테일 들어가는 자리]</strong>
         </p>
         <button className="max-w-40 rounded-2xl bg-black px-4 py-2 text-white">프로필 수정(x)</button>

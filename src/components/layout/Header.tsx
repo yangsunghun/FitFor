@@ -2,9 +2,9 @@ import HeaderContent from "./HeaderContent";
 
 const Header = () => {
   return (
-    <div className="w-screen bg-white p-8 flex justify-center">
+    <header className="w-full bg-white p-8 flex justify-center shadow-md">
       <HeaderContent />
-    </div>
+    </header>
   );
 };
 

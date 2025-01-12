@@ -397,6 +397,14 @@ export type Database = {
         }
         Returns: undefined
       }
+
+      sync_comment_count: {
+        Args: {
+          post_id: string
+        }
+        Returns: undefined
+      }
+
     }
     Enums: {
       [_ in never]: never

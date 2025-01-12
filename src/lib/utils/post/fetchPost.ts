@@ -10,7 +10,15 @@ export const fetchPosts = async ({ pageParam = 1 }): Promise<FetchPostsResponse>
 
   const { data: postsData, error } = await supabase
     .from("posts")
-    .select("*")
+    .select(
+      `
+      *,
+      users (
+        nickname,
+        profile_image
+      )
+    `
+    )
     .order("created_at", { ascending: false })
     .range(from, to);
 

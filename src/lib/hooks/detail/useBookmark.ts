@@ -7,7 +7,6 @@ type BookmarkState = {
 
 export const useBookmarks = (postId: string, userId?: string) => {
   const queryClient = useQueryClient();
-
   const queryKey = ["bookmarks", postId, userId];
 
   // 북마크 상태 가져오기
@@ -21,7 +20,7 @@ export const useBookmarks = (postId: string, userId?: string) => {
     staleTime: 300000
   });
 
-  // 북마크 토글
+  // 상태에 따라 북마크 토글
   const mutation = useMutation({
     mutationFn: async (isBookmarked: boolean) => {
       if (isBookmarked) {
@@ -35,6 +34,7 @@ export const useBookmarks = (postId: string, userId?: string) => {
 
       const prevState = queryClient.getQueryData<BookmarkState>(queryKey);
 
+      // 낙관적 업데이트
       queryClient.setQueryData(queryKey, (prevState: BookmarkState | undefined) => ({
         ...(prevState || { isBookmarked: false }),
         isBookmarked: !isBookmarked

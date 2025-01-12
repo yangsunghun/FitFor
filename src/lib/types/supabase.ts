@@ -137,7 +137,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "chat_messages_memeber_id_room_id_fkey"
+            foreignKeyName: "chat_messages_member_id_room_id_fkey"
             columns: ["member_id", "room_id"]
             isOneToOne: false
             referencedRelation: "chat_members"
@@ -277,7 +277,6 @@ export type Database = {
       posts: {
         Row: {
           body_size: number[]
-          bookmarks: number
           comments: number
           content: string
           created_at: string
@@ -292,7 +291,6 @@ export type Database = {
         }
         Insert: {
           body_size: number[]
-          bookmarks: number
           comments: number
           content: string
           created_at?: string
@@ -307,7 +305,6 @@ export type Database = {
         }
         Update: {
           body_size?: number[]
-          bookmarks?: number
           comments?: number
           content?: string
           created_at?: string
@@ -394,7 +391,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_view: {
+        Args: {
+          post_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

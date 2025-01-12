@@ -8,7 +8,7 @@ export const useComment = (postId: string) => {
   const { data: comments = [], isPending } = useQuery({
     queryKey: ["comments", postId],
     queryFn: () => fetchComments(postId),
-    staleTime: 300000 // 캐싱 시간
+    staleTime: 10000
   });
 
   // 댓글 추가

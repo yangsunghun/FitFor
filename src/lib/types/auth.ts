@@ -1,6 +1,7 @@
 import googleLogo from "@/assets/images/google-logo.svg";
 import kakaoLogo from "@/assets/images/kakao-logo.svg";
 import { Database } from "./supabase";
+import type { HTMLInputTypeAttribute } from "react";
 
 export type User = Database["public"]["Tables"]["users"]["Row"];
 
@@ -36,7 +37,7 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
 export type FormField<T> = {
   id: keyof T;
   label: string;
-  type: string;
+  type: HTMLInputTypeAttribute;
   placeholder: string;
   validation?: object;
 };

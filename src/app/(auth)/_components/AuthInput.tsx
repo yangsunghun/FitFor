@@ -1,10 +1,11 @@
 "use client";
 
+import type { HTMLInputTypeAttribute } from "react";
 import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
 type InputProps<T extends FieldValues> = {
   id: Path<T>;
-  type: string;
+  type: HTMLInputTypeAttribute;
   placeholder: string;
   register: UseFormRegister<T>;
   error?: string;

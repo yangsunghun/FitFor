@@ -8,7 +8,7 @@
     "start": "next start",
     "s": "next build && next start",
     "lint": "next lint",
-    "gen": "npx supabase login && npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/lib/types/supabase.ts"
+    "gen": "npx supabase gen types typescript --project-id czcbonajmenirmxdslhj --schema public > src/lib/types/supabase.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

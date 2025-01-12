@@ -1,40 +1,60 @@
-"use client"
-import { signup } from "@/lib/utils/auth/auth";
+"use client";
+import { SIGNUP_FIELDS } from "@/lib/validataions/authFields";
+import { signupSchema } from "@/lib/validataions/authSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useForm, type FieldValues } from "react-hook-form";
+import AuthInput from "../../_components/AuthInput";
+import { signup } from "@/lib/utils/auth/auth";
 
 const RegistrationForm = () => {
-  // handler 작성
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const { register, handleSubmit, formState } = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      nickname: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+      gender: ""
+    },
+    resolver: zodResolver(signupSchema)
+  });
 
-    const formData = new FormData(e.currentTarget);
-    await signup(formData)
+  const handleSignup = async (value: FieldValues) => {
+    await signup(signupSchema.parse(value));
 
-    // 회원가입과 동시에 바로 로그인 되는 로직이 필요
-
-    window.location.href = "/login"
-  }
+    window.location.href = "/login";
+  };
 
   return (
-    <div className="h-screen w-full justify-items-center bg-gray-400 p-8">
-      <form className="flex w-2/4 flex-col" autoComplete="off" onSubmit={handleSignup}>
-        <label htmlFor="nickname">닉네임:</label>
-        <input id="nickname" name="nickname" type="text" required />
-        <label htmlFor="email">이메일:</label>
-        <input id="email" name="email" type="email" required />
-        <label htmlFor="password">비밀번호:</label>
-        <input id="password" name="password" type="password" required />
-        <label htmlFor="password-confirm">비밀번호 확인:</label>
-        <input id="password-confirm" name="password-confirm" type="password" required />
-        <button type="submit">회원가입</button>
+    <>
+      <form className="mt-8 flex w-full flex-col" autoComplete="off" onSubmit={handleSubmit(handleSignup)}>
+        {SIGNUP_FIELDS.map((field, index) => (
+          <AuthInput
+            key={field.id}
+            id={field.id}
+            type={field.type}
+            placeholder={field.placeholder}
+            register={register}
+            error={formState.errors[field.id]?.message}
+          />
+        ))}
+        {formState.errors.root && (<span>{formState.errors.root.message}</span>)}
+        <button
+          type="submit"
+          className="flex w-full flex-row justify-center gap-4 rounded-2xl bg-[#FF3365] p-4 font-bold disabled:bg-[#FFD6E0]"
+          disabled={!formState.isValid}
+        >
+          회원가입
+        </button>
       </form>
-      <p>
+      <p className="my-2">
         계정이 있으신가요?{` `}
         <Link href="/login" className="text-blue-900">
           로그인
         </Link>
       </p>
-    </div>
+    </>
   );
 };
 

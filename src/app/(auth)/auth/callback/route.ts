@@ -15,7 +15,6 @@ export async function GET(request: Request) {
     if (!error) {
       // 소셜 로그인 한정
       // 유저 정보 public에 저장
-      // 구글 
       const { data } = await supabase.auth.getUser();
       
       const email = data.user?.email as string;

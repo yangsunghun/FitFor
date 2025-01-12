@@ -11,7 +11,6 @@ export type ProviderConfig = {
   bgColor: string;
   textColor: string;
   logo: string;
-  logoClass?: string;
   queryParams?: Record<string, string>;
 };
 
@@ -32,4 +31,25 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
     textColor: "text-[#333333]",
     logo: kakaoLogo
   }
+};
+
+export type FormField<T> = {
+  id: keyof T;
+  label: string;
+  type: string;
+  placeholder: string;
+  validation?: object;
+};
+
+export type LoginForm = {
+  email: string;
+  password: string;
+};
+
+export type SignupForm = {
+  nickname: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  gender?: string;
 };

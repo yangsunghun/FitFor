@@ -19,14 +19,15 @@ export const createComment = async (postId: string, content: string) => {
     throw new Error("로그인이 필요합니다.");
   }
 
-  const { error } = await supabase.from("comments").insert({
+  // 댓글 추가
+  const { error: insertError } = await supabase.from("comments").insert({
     post_id: postId,
     content,
-    user_id: userId // 현재 로그인된 사용자 ID
+    user_id: userId
   });
 
-  if (error) {
-    throw new Error(`댓글 작성 실패: ${error.message}`);
+  if (insertError) {
+    throw new Error(`댓글 작성 실패: ${insertError.message}`);
   }
 };
 
@@ -54,9 +55,11 @@ export const fetchComments = async (postId: string) => {
 
 // 댓글 삭제
 export const deleteComment = async (commentId: string) => {
-  const { error } = await supabase.from("comments").delete().eq("id", commentId);
+  const supabase = createClient();
 
-  if (error) {
-    throw new Error(`댓글 삭제 실패: ${error.message}`);
+  const { error: deleteError } = await supabase.from("comments").delete().eq("id", commentId);
+
+  if (deleteError) {
+    throw new Error(`댓글 삭제 실패: ${deleteError.message}`);
   }
 };

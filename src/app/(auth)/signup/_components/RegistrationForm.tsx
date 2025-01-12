@@ -1,11 +1,11 @@
 "use client";
+import { signup } from "@/lib/utils/auth/auth";
 import { SIGNUP_FIELDS } from "@/lib/validataions/authFields";
 import { signupSchema } from "@/lib/validataions/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm, type FieldValues } from "react-hook-form";
 import AuthInput from "../../_components/AuthInput";
-import { signup } from "@/lib/utils/auth/auth";
 
 const RegistrationForm = () => {
   const { register, handleSubmit, formState } = useForm({
@@ -29,7 +29,7 @@ const RegistrationForm = () => {
   return (
     <>
       <form className="mt-8 flex w-full flex-col" autoComplete="off" onSubmit={handleSubmit(handleSignup)}>
-        {SIGNUP_FIELDS.map((field, index) => (
+        {SIGNUP_FIELDS.map((field) => (
           <AuthInput
             key={field.id}
             id={field.id}
@@ -39,7 +39,7 @@ const RegistrationForm = () => {
             error={formState.errors[field.id]?.message}
           />
         ))}
-        {formState.errors.root && (<span>{formState.errors.root.message}</span>)}
+        {formState.errors.root && <span>{formState.errors.root.message}</span>}
         <button
           type="submit"
           className="flex w-full flex-row justify-center gap-4 rounded-2xl bg-[#FF3365] p-4 font-bold disabled:bg-[#FFD6E0]"

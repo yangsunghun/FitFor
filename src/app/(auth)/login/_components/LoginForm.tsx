@@ -28,7 +28,7 @@ const LoginForm = () => {
   return (
     <>
       <form className="flex w-full flex-col" autoComplete="off" onSubmit={handleSubmit(handleLogin)}>
-        {LOGIN_FIELDS.map((field, index) => (
+        {LOGIN_FIELDS.map((field) => (
           <AuthInput
             key={field.id}
             id={field.id}

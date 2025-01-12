@@ -17,10 +17,10 @@ const LoginOptions = () => {
       {!isEmailLogin ? (
         <>
           <button
-            className="flex w-full flex-row justify-center gap-4 mt-8 rounded-2xl bg-white p-4 text-black shadow-md"
+            className="mt-8 flex w-full flex-row justify-center gap-4 rounded-2xl bg-white p-4 text-black shadow-md"
             onClick={showEmailForm}
           >
-            <Image src="/images/default-user-profile.png" width={25} height={25} alt="FitFor login" priority/>
+            <Image src="/images/default-user-profile.png" width={25} height={25} alt="FitFor login" priority />
             <span>이메일로 시작</span>
           </button>
           <SocialLoginButton provider="google" />
@@ -28,7 +28,9 @@ const LoginOptions = () => {
         </>
       ) : (
         <>
-          <button onClick={showEmailForm} className="self-start text-gray-500 hover:text-black">{'<- '}뒤로가기</button>
+          <button onClick={showEmailForm} className="self-start text-gray-500 hover:text-black">
+            {"<- "}뒤로가기
+          </button>
           <LoginForm />
         </>
       )}

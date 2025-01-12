@@ -161,6 +161,39 @@ export const exitChatRoom = async (userId: string, roomId: string) => {
   }
 };
 
+// 채팅방 삭제하기 (방장만 가능)
+export const deleteChatRoom = async (userId: string, roomId: string) => {
+  try {
+    // Step 1: 방장이 맞는지 확인
+    const { data: roomData, error: roomError } = await supabase
+      .from("chat_rooms")
+      .select("user_id")
+      .eq("room_id", roomId)
+      .single();
+
+    if (roomError || !roomData) {
+      throw new Error("채팅방을 찾을 수 없습니다.");
+    }
+
+    if (roomData.user_id !== userId) {
+      throw new Error("방장만 채팅방을 삭제할 수 있습니다.");
+    }
+
+    // Step 2: 채팅방 삭제
+    const { error: deleteError } = await supabase
+      .from("chat_rooms")
+      .delete()
+      .eq("room_id", roomId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+};
 
 // 채팅방 일반 멤버로 등록하기(기존)
 // export const enterAsMember = async (userId: string, roomId: string) => {

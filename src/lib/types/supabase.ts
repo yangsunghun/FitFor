@@ -277,7 +277,6 @@ export type Database = {
       posts: {
         Row: {
           body_size: number[]
-          bookmarks: number
           comments: number
           content: string
           created_at: string
@@ -292,7 +291,6 @@ export type Database = {
         }
         Insert: {
           body_size: number[]
-          bookmarks: number
           comments: number
           content: string
           created_at?: string
@@ -307,7 +305,6 @@ export type Database = {
         }
         Update: {
           body_size?: number[]
-          bookmarks?: number
           comments?: number
           content?: string
           created_at?: string
@@ -395,12 +392,6 @@ export type Database = {
     }
     Functions: {
       increment_view: {
-        Args: {
-          post_id: string
-        }
-        Returns: undefined
-      }
-      sync_comment_count: {
         Args: {
           post_id: string
         }

@@ -29,13 +29,6 @@ export const createComment = async (postId: string, content: string) => {
   if (insertError) {
     throw new Error(`댓글 작성 실패: ${insertError.message}`);
   }
-
-  // 댓글 개수 동기화
-  const { error: syncError } = await supabase.rpc("sync_comment_count", { post_id: postId });
-
-  if (syncError) {
-    throw new Error(`댓글 개수 동기화 실패: ${syncError.message}`);
-  }
 };
 
 // 댓글 조회
@@ -60,18 +53,13 @@ export const fetchComments = async (postId: string) => {
   return PostComments;
 };
 
-export const deleteComment = async (commentId: string, postId: string) => {
-  // 댓글 삭제
+// 댓글 삭제
+export const deleteComment = async (commentId: string) => {
+  const supabase = createClient();
+
   const { error: deleteError } = await supabase.from("comments").delete().eq("id", commentId);
 
   if (deleteError) {
     throw new Error(`댓글 삭제 실패: ${deleteError.message}`);
-  }
-
-  // 댓글 개수 동기화
-  const { error: syncError } = await supabase.rpc("sync_comment_count", { post_id: postId });
-
-  if (syncError) {
-    throw new Error(`댓글 개수 동기화 실패: ${syncError.message}`);
   }
 };

@@ -21,7 +21,7 @@ export const useComment = (postId: string) => {
 
   // 댓글 삭제
   const deleteCommentMutation = useMutation({
-    mutationFn: (commentId: string) => deleteComment(commentId, postId),
+    mutationFn: (commentId: string) => deleteComment(commentId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
     }

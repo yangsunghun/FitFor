@@ -1,6 +1,5 @@
-"use client";
-
 import { cn } from "@/lib/utils/common/className";
+import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 
@@ -15,9 +14,9 @@ const buttonVariants = cva(
         disabledLine: "bg-bg-01 border border-line-02 !text-text-02"
       },
       size: {
-        lg: "h-12 px-6 text-subtitle",
-        md: "h-10 px-4 text-title2",
-        sm: "h-8 px-3 text-body"
+        lg: "h-12 leading-12 px-6 text-subtitle",
+        md: "h-10 leading-10 px-4 text-title2",
+        sm: "h-8 leading-8 px-3 text-body"
       }
     },
     defaultVariants: {
@@ -27,11 +26,20 @@ const buttonVariants = cva(
   }
 );
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>;
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  };
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, ...props }, ref) => {
-  return <button ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />;
-});
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ asChild, className, variant, size, onClick, ...props }, ref) => {
+    const Container = asChild ? Slot : "button";
+    return (
+      <Container ref={ref} className={cn(buttonVariants({ variant, size }), className)} onClick={onClick} {...props} />
+    );
+  }
+);
 
 Button.displayName = "Button";
 

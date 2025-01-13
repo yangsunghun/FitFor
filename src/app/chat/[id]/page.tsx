@@ -6,6 +6,8 @@ import ChatMessages from "./_components/ChatMessages";
 import { exitChatRoom, deleteChatRoom } from "../_utils/chat"; // 이미 구현된 공통 함수 사용
 import { useAuthStore } from "@/lib/store/authStore";
 import { createClient } from "@/lib/utils/supabase/client";
+import Tabs from "./_components/Tabs";
+import ChatGallery from "./_components/ChatGallery";
 
 const supabase = createClient(); // Supabase 클라이언트 생성
 
@@ -27,11 +29,7 @@ export default function ChatRoomPage({ params }: ChatRoomPageProps) {
 
       try {
         // 방장의 user_id를 확인
-        const { data, error } = await supabase
-          .from("chat_rooms")
-          .select("user_id")
-          .eq("room_id", roomId)
-          .single();
+        const { data, error } = await supabase.from("chat_rooms").select("user_id").eq("room_id", roomId).single();
 
         if (error || !data) {
           setError("방 정보를 가져올 수 없습니다.");
@@ -99,21 +97,24 @@ export default function ChatRoomPage({ params }: ChatRoomPageProps) {
   };
 
   return (
-    <div className="p-5 max-w-4xl mx-auto">
-      {/* 채팅방 페이지 제목 */}
-      <h1 className="text-2xl font-bold mb-4 text-center">채팅방</h1>
+    <div className="mx-auto max-w-4xl p-5">
+      <h1 className="text-2xl mb-4 text-center font-bold">채팅방</h1>
       {currentUser ? (
-        <>
-          {/* 채팅 메시지 컴포넌트 */}
-          <ChatMessages roomId={roomId} currentUserId={currentUser.id} />
-          {/* 채팅 입력창 컴포넌트 */}
-          <ChatInput roomId={roomId} memberId={currentUser.id} />
-        </>
+        <Tabs labels={["Chat", "Gallery"]}>
+          {/* 탭 1: 채팅 */}
+          <div>
+            <ChatMessages roomId={roomId} currentUserId={currentUser.id} />
+            <ChatInput roomId={roomId} memberId={currentUser.id} />
+          </div>
+          {/* 탭 2: 갤러리 */}
+          <div>
+            <p>채팅방에서 업로드한 이미지들을 표시합니다.</p>
+            {/* 갤러리 컴포넌트 추가 */}
+            <ChatGallery roomId={roomId} />
+          </div>
+        </Tabs>
       ) : (
-        // 로그인되지 않은 경우 안내 메시지 표시
-        <p className="text-center text-gray-500">
-          로그인 후에 메시지를 입력할 수 있습니다.
-        </p>
+        <p className="text-center text-gray-500">로그인 후에 메시지를 입력할 수 있습니다.</p>
       )}
 
       <div className="mt-6 text-center">
@@ -121,13 +122,11 @@ export default function ChatRoomPage({ params }: ChatRoomPageProps) {
         <button
           onClick={handleExitChatRoom}
           disabled={loading}
-          className={`px-6 py-2 text-white font-semibold rounded-md transition-all ${
-            loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "hover:opacity-90"
+          className={`rounded-md px-6 py-2 font-semibold text-white transition-all ${
+            loading ? "cursor-not-allowed bg-gray-400" : "hover:opacity-90"
           }`}
           style={{
-            backgroundColor: "#ff4d4d", // 퇴장 버튼 HEX 색상 유지
+            backgroundColor: "#ff4d4d" // 퇴장 버튼 HEX 색상 유지
           }}
         >
           {loading ? "Leaving..." : "Leave Chat Room"}
@@ -136,22 +135,18 @@ export default function ChatRoomPage({ params }: ChatRoomPageProps) {
           <button
             onClick={handleDeleteChatRoom}
             disabled={loading}
-            className={`ml-4 px-6 py-2 text-white font-semibold rounded-md transition-all ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "hover:opacity-90"
+            className={`ml-4 rounded-md px-6 py-2 font-semibold text-white transition-all ${
+              loading ? "cursor-not-allowed bg-gray-400" : "hover:opacity-90"
             }`}
             style={{
-              backgroundColor: "#ff0000", // 삭제 버튼 HEX 색상 유지
+              backgroundColor: "#ff0000" // 삭제 버튼 HEX 색상 유지
             }}
           >
             {loading ? "Deleting..." : "Delete Chat Room"}
           </button>
         )}
         {/* 에러 메시지 표시 */}
-        {error && (
-          <p className="text-red-500 mt-4 font-medium">{error}</p>
-        )}
+        {error && <p className="mt-4 font-medium text-red-500">{error}</p>}
       </div>
     </div>
   );

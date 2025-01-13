@@ -45,12 +45,20 @@ export default function ChatInput({ roomId, memberId }: ChatInputProps) {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <div>
       <input
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder="메시지를 입력하세요"
         style={{
           padding: "10px",
@@ -60,11 +68,7 @@ export default function ChatInput({ roomId, memberId }: ChatInputProps) {
       />
 
       {/* 사진 업로드 */}
-      <input
-        type="file"
-        onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-        id="file-input"
-      />
+      <input type="file" onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)} id="file-input" />
 
       <button onClick={sendMessage} style={{ padding: "10px" }}>
         전송

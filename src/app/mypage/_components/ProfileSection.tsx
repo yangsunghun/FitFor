@@ -25,14 +25,16 @@ const ProfileSection = () => {
         height={160}
         priority
       />
-      <div className="ml-[150px] flex h-full flex-col justify-between">
-        <p className="text-2xl">
-          <strong>{user!.nickname}</strong>
+      <div className="ml-[150px] flex h-full flex-col justify-between max-w-96">
+        <p className="text-title1 font-bold">
+          {user!.nickname}
         </p>
-        <p className="text-base flex flex-col">
-          <strong> [유저 디테일 들어가는 자리]</strong>
+        <p className="text-body flex flex-col">
+          Lorem ipsum dolor sit amet consectetur. Vitae ultrices semper ullamcorper amet eget aliquet lorem
         </p>
-        <Link href="/mypage/profile-setting" className="max-w-40 rounded-2xl bg-black px-4 py-2 text-white text-center">프로필 수정</Link>
+        <Link href="/mypage/profile-setting" className="max-w-[100px] rounded-2xl bg-black px-3  py-2 text-center text-white text-body">
+          프로필 편집
+        </Link>
       </div>
     </div>
   );

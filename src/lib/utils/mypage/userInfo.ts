@@ -1,5 +1,4 @@
 import type { PostType } from "@/lib/types/post";
-import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 
 const supabase = createClient();

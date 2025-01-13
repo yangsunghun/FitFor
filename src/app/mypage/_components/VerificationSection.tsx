@@ -2,11 +2,10 @@ import { useAuthStore } from "@/lib/store/authStore"
 import { Plus } from "@phosphor-icons/react"
 
 type VerificationSectionProps = {
-  nickname: string
   isVerified: boolean
 }
 
-const VerificationSection = ({ nickname, isVerified }: VerificationSectionProps) => {
+const VerificationSection = ({ isVerified = false }: VerificationSectionProps) => {
   const {user} = useAuthStore();
   return (
     <div className="bg-gray-100 rounded-lg p-8 mb-8">

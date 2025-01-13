@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import AddressModal from './_components/AddressModal';
 import ThumbnailUpload from './_components/ThumbnailUpload';
+import PurchaseModal from './_components/PurchaseModal'; // 추가
 
 const supabase = createClient();
 
@@ -17,10 +18,16 @@ const WritePage = () => {
   const [bodySize, setBodySize] = useState({ height: '', weight: '' });
   const [thumbnail, setThumbnail] = useState('');
   const [tags, setTags] = useState<string[]>([]); // 선택된 태그 상태
-  const [products, setProducts] = useState<string[]>([]); // 상품정보 추가 리스트
+  const [products, setProducts] = useState<any[]>([]); // 상품정보 추가 리스트
   const [isModalOpen, setIsModalOpen] = useState(false); // 주소 검색 모달 상태
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false); // 상품 모달 상태
   const router = useRouter();
   const currentUser = useAuthStore((state) => state.user);
+
+  // 상품 추가 함수
+  const handleAddProduct = (product: { title: string; description: string; price: number; imageUrl: string }) => {
+    setProducts((prevProducts) => [...prevProducts, product]);
+  };
 
   // 게시글 저장 함수
   const handleSubmit = async () => {
@@ -29,14 +36,15 @@ const WritePage = () => {
       alert('모든 항목을 입력해주세요.');
       return;
     }
-
+  
     // 로그인 상태 확인
     if (!currentUser || !currentUser.id) {
       alert('로그인이 필요합니다.');
       return;
     }
-
+  
     try {
+      // 1. 게시글 저장
       const post = {
         title,
         content,
@@ -46,18 +54,39 @@ const WritePage = () => {
         body_size: [parseFloat(bodySize.height) || 0, parseFloat(bodySize.weight) || 0],
         thumbnail: thumbnail || '',
         tags,
-        products, // 추가된 상품 정보 저장
         comments: 0,
         likes: 0,
         view: 0,
       };
-
-      // Supabase에 게시글 저장
-      const { error } = await supabase.from('posts').insert([post]);
-      if (error) throw error;
-
+  
+      const { data: postData, error: postError } = await supabase
+        .from('posts')
+        .insert([post])
+        .select(); // 게시글 ID를 반환받기 위해 select() 사용
+  
+      if (postError) throw postError;
+  
+      const postId = postData[0].id; // 새로 생성된 게시글 ID
+  
+      // 2. 상품 정보 저장
+      if (products.length > 0) {
+        const purchaseData = products.map((product) => ({
+          post_id: postId,
+          title: product.title,
+          description: product.description,
+          price: product.price,
+          image_url: product.imageUrl,
+        }));
+  
+        const { error: purchaseError } = await supabase
+          .from('purchase')
+          .insert(purchaseData);
+  
+        if (purchaseError) throw purchaseError;
+      }
+  
       alert('저장 성공!');
-      router.push('/'); // 저장 후 메인 페이지로 이동 (상세 페이지로 리디렉션 필요 시 수정)
+      router.push('/'); // 저장 후 메인 페이지로 이동
     } catch (error) {
       console.error('게시글 저장 실패:', error);
       alert('저장 실패');
@@ -96,7 +125,7 @@ const WritePage = () => {
           <div className="w-1/2 space-y-6">
             {/* 제목 입력 */}
             <div>
-              <label className="block mb-2 font-bold">제목</label>
+              <label className="block mb-2 font-bold text-[18px]">제목</label>
               <input
                 type="text"
                 value={title}
@@ -108,7 +137,7 @@ const WritePage = () => {
 
             {/* 위치 입력 */}
             <div>
-              <label className="block mb-2 font-bold">위치</label>
+              <label className="block mb-2 font-bold text-[18px]">위치</label>
               <div className="flex items-center gap-4">
                 <input
                   type="text"
@@ -119,7 +148,7 @@ const WritePage = () => {
                 />
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="px-6 py-2 bg-blue-500 text-white rounded-lg"
+                  className="px-6 py-2 bg-black text-white rounded-lg text-[18px]"
                 >
                   검색
                 </button>
@@ -128,7 +157,7 @@ const WritePage = () => {
 
             {/* 체형 입력 */}
             <div>
-              <label className="block mb-2 font-bold">체형</label>
+              <label className="block mb-2 font-bold text-[18px]">체형</label>
               <div className="flex gap-4">
                 <input
                   type="number"
@@ -155,7 +184,7 @@ const WritePage = () => {
 
         {/* 본문 입력 */}
         <div className="mt-8">
-          <label className="block mb-2 font-bold">본문</label>
+          <label className="block mb-2 font-bold text-[24px]">본문</label>
           <textarea
             value={content}
             onChange={(e) => {
@@ -171,10 +200,10 @@ const WritePage = () => {
 
         {/* 상품정보 추가 */}
         <div className="mt-8">
-          <label className="block mb-2 font-bold">목록 구성 상품</label>
+          <label className="block mb-2 font-bold text-[24px]">룩북 구성 상품</label>
           <div className="flex flex-wrap gap-4">
             <button
-              onClick={() => setProducts([...products, '새 상품'])}
+              onClick={() => setIsPurchaseModalOpen(true)}
               className="w-32 h-32 flex items-center justify-center border border-gray-300 rounded-lg text-gray-500"
             >
               + 추가
@@ -184,7 +213,7 @@ const WritePage = () => {
                 key={index}
                 className="w-32 h-32 flex items-center justify-center border border-black rounded-lg text-black"
               >
-                {product}
+                {product.title}
               </div>
             ))}
           </div>
@@ -242,9 +271,15 @@ const WritePage = () => {
         onClose={() => setIsModalOpen(false)}
         onSelectAddress={setAddress}
       />
+
+      {/* 상품 추가 모달 */}
+      <PurchaseModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => setIsPurchaseModalOpen(false)}
+        onAddProduct={handleAddProduct}
+      />
     </div>
   );
 };
-
 
 export default WritePage;

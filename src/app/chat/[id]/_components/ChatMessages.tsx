@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/utils/supabase/client";
-import Image from "next/image";
 
 const supabase = createClient();
 
@@ -44,58 +43,51 @@ export default function ChatMessages({ roomId, currentUserId }: ChatMessagesProp
   }, [roomId]);
 
   return (
-    <div style={{ marginBottom: "20px", display: "flex", flexDirection: "column" }}>
-      <h2>채팅 메시지</h2>
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+    <div className="mb-5 flex flex-col">
+      <h2 className="text-xl mb-3 font-bold">채팅 메시지</h2>
+      <div className="flex flex-col gap-4">
         {messages.map((message) => {
           const isSender = message.member_id === currentUserId;
 
           return (
             <div
               key={message.message_id}
-              style={{
-                display: "flex",
-                justifyContent: isSender ? "flex-end" : "flex-start",
-                padding: "5px 10px"
-              }}
+              className={`flex ${isSender ? "justify-end" : "justify-start"} items-start gap-2`}
             >
-              <div
-                style={{
-                  maxWidth: "60%",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  backgroundColor: isSender ? "#dcf8c6" : "#fff",
-                  color: "#000",
-                  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.2)"
-                }}
-              >
-                <strong>{!isSender && message.member_id}</strong>
+              {/* 왼쪽: 프로필 이미지 (수신자만 표시) */}
+              {!isSender && <div className="h-10 w-10 rounded-full bg-gray-300"></div>}
 
-                {/* 텍스트만 표시 */}
-                {message.content && <p style={{ margin: 0 }}>{message.content}</p>}
-
-                {/* 이미지만 표시 */}
-                {message.image_url && (
-                  <img
-                    src={`${supabase.storage.from("chat-images").getPublicUrl(message.image_url).data.publicUrl}`}
-                    alt="첨부 이미지"
-                    style={{
-                      marginTop: "10px",
-                      maxWidth: "100%",
-                      borderRadius: "10px"
-                    }}
-                  />
+              {/* 중앙: 메시지 내용 */}
+              <div className={`flex flex-col ${isSender ? "items-end" : "items-start"} max-w-[60%]`}>
+                {/* 이름 (수신자만 표시) */}
+                {!isSender && (
+                  <span className="text-sm mb-1 font-bold text-gray-600">
+                    {message.member_name || message.member_id}
+                  </span>
                 )}
 
-                {/* 메시지 내용 표시 */}
-                {/* <p style={{ margin: 0 }}>{message.content}</p> */}
-                {/* 이미지 표시 */}
-                {/* <Image
-                  src={`${supabase.storage.from("chat-images").getPublicUrl(message.image_url).data.publicUrl}`}
-                  alt="이미지"
-                  width={100}
-                  height={100}
-                /> */}
+                {/* 메시지 박스와 작성 시간 */}
+                <div className={`flex ${isSender ? "flex-row-reverse" : "flex-row"} items-center gap-2`}>
+                  {/* 메시지 박스 */}
+                  <div className={`rounded-lg p-3 shadow-sm ${isSender ? "bg-green-100" : "bg-gray-200"} break-words`}>
+                    {message.content && <p className="m-0">{message.content}</p>}
+                    {message.image_url && (
+                      <img
+                        src={`${supabase.storage.from("chat-images").getPublicUrl(message.image_url).data.publicUrl}`}
+                        alt="첨부 이미지"
+                        className="mt-2 max-w-full rounded-lg"
+                      />
+                    )}
+                  </div>
+
+                  {/* 작성 시간 */}
+                  <span className="text-xs mb-1 self-end text-gray-500">
+                    {new Date(message.created_at).toLocaleTimeString("ko-KR", {
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}
+                  </span>
+                </div>
               </div>
             </div>
           );

@@ -9,10 +9,10 @@ type ContentGridProps = {
 
 const ContentList = ({ title, subtitle, posts }: ContentGridProps) => {
   return (
-    <section className="mb-12">
+    <section className="my-12">
       <div className="mb-4">
-        <p className="text-sm text-gray-600">{subtitle}</p>
-        <h2 className="text-2xl font-bold">{title}</h2>
+        <p className="text-body text-gray-600">{subtitle}</p>
+        <h2 className="text-title1 font-bold">{title}</h2>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {posts.map((post) => (
@@ -20,9 +20,8 @@ const ContentList = ({ title, subtitle, posts }: ContentGridProps) => {
             <Image
               src={post.thumbnail || "/placeholder.svg?height=400&width=400"}
               alt={post.title}
-              width={50}
-              height={50}
-              className=""
+              fill
+              className="object-cover"
             />
           </div>
         ))}

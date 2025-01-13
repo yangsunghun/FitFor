@@ -1,16 +1,14 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuthStore } from "@/lib/store/authStore";
 import type { PostType } from "@/lib/types/post";
+import { fetchBookmarks } from "@/lib/utils/mypage/userInfo";
 import { TabsContent } from "@radix-ui/react-tabs";
+import { useQuery } from "@tanstack/react-query";
 import ContentList from "./ContentList";
 import StatsCard from "./StatsCard";
 import VerificationSection from "./VerificationSection";
-
-type TabType = {
-  label: string;
-  content: PostType[];
-};
 
 // 임시 샘플
 const sampleTabs = Array(5)
@@ -23,16 +21,16 @@ const sampleTabs = Array(5)
         (_, j): PostType => ({
           id: `post-${i}-${j}`,
           title: `Post ${j + 1}`,
-          thumbnail: "/images/image-broken.png", // Placeholder image URL
-          body_size: [1024, 768], // Example dimensions
-          comments: Math.floor(Math.random() * 100), // Random comment count
+          thumbnail: "/images/image-broken.png",
+          body_size: [123, 123],
+          comments: Math.floor(Math.random() * 100),
           content: `This is the content of Post ${j + 1}.`,
-          created_at: new Date().toISOString(), // Current timestamp
-          likes: Math.floor(Math.random() * 1000), // Random likes count
-          tags: [`tag${j + 1}`, `label${i + 1}`], // Example tags
-          upload_place: `Location ${j + 1}`, // Example location
-          user_id: `user-${i}`, // Example user ID
-          view: Math.floor(Math.random() * 5000), // Random view count,
+          created_at: new Date().toISOString(),
+          likes: Math.floor(Math.random() * 1000),
+          tags: [`tag${j + 1}`, `label${i + 1}`],
+          upload_place: `Location ${j + 1}`,
+          user_id: `user-${i}`,
+          view: Math.floor(Math.random() * 5000),
           users: { nickname: "random" }
         })
       )
@@ -45,6 +43,16 @@ const sampleStats = {
 };
 
 const MypageMenu = () => {
+  const { user } = useAuthStore();
+  const { data: userBookmarks, isPending: isUserBookmarksPending } = useQuery({
+    queryKey: ["userBookmarks"],
+    queryFn: async () => {
+      return await fetchBookmarks(user!.id);
+    },
+    initialData: [],
+    enabled: !!user // 유저가 존재할때만 실행
+  });
+
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       {/* Tabs Navigation */}
@@ -63,8 +71,10 @@ const MypageMenu = () => {
 
         {/* 0번 탭 */}
         <TabsContent value="tab-0">
-          <ContentList title="TitleTitleTitle" subtitle="Subtitle" posts={sampleTabs[0].content.slice(0, 4)} />
-          <ContentList title="TitleTitleTitle" subtitle="Subtitle" posts={sampleTabs[0].content.slice(4, 8)} />
+          {userBookmarks && (
+            <ContentList title="내가 북마크한 포스트" subtitle="Bookmarks" posts={userBookmarks} />
+          )}
+          <ContentList title="최근 본 포스트" subtitle="Recent" posts={sampleTabs[0].content.slice(4, 8)} />
         </TabsContent>
 
         {/* 1번 탭 */}

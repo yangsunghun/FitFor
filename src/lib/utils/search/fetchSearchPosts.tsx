@@ -7,12 +7,14 @@ export const fetchSearchPosts = async ({
   query,
   page = 1,
   tags = [],
-  perPage = 12
+  perPage = 12,
+  sort = "created_at"
 }: {
   query: string;
   page?: number;
   tags?: string[];
   perPage?: number;
+  sort?: "created_at" | "likes" | "view";
 }) => {
   const from = (page - 1) * perPage;
   const to = from + perPage - 1;
@@ -29,7 +31,7 @@ export const fetchSearchPosts = async ({
       { count: "exact" }
     )
     .ilike("title", `%${query}%`)
-    .order("created_at", { ascending: false })
+    .order(sort, { ascending: false })
     .range(from, to);
 
   // 태그 포함시 결과로 출력

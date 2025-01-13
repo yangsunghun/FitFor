@@ -7,6 +7,7 @@ import { exitChatRoom, deleteChatRoom } from "../_utils/chat"; // 이미 구현�
 import { useAuthStore } from "@/lib/store/authStore";
 import { createClient } from "@/lib/utils/supabase/client";
 import Tabs from "./_components/Tabs";
+import ChatGallery from "./_components/ChatGallery";
 
 const supabase = createClient(); // Supabase 클라이언트 생성
 
@@ -28,11 +29,7 @@ export default function ChatRoomPage({ params }: ChatRoomPageProps) {
 
       try {
         // 방장의 user_id를 확인
-        const { data, error } = await supabase
-          .from("chat_rooms")
-          .select("user_id")
-          .eq("room_id", roomId)
-          .single();
+        const { data, error } = await supabase.from("chat_rooms").select("user_id").eq("room_id", roomId).single();
 
         if (error || !data) {
           setError("방 정보를 가져올 수 없습니다.");
@@ -113,6 +110,7 @@ export default function ChatRoomPage({ params }: ChatRoomPageProps) {
           <div>
             <p>채팅방에서 업로드한 이미지들을 표시합니다.</p>
             {/* 갤러리 컴포넌트 추가 */}
+            <ChatGallery roomId={roomId} />
           </div>
         </Tabs>
       ) : (

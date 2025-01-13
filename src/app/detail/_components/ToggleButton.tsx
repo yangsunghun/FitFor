@@ -6,12 +6,11 @@ type ToggleButtonProps = {
   onClick?: () => void;
   activeIcon: React.ReactNode;
   inactiveIcon: React.ReactNode;
-  disabled?: boolean;
 };
 
-const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, disabled = false }: ToggleButtonProps) => {
+const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon }: ToggleButtonProps) => {
   return (
-    <button onClick={onClick} className="text-sm flex items-center gap-2" disabled={disabled}>
+    <button onClick={onClick} className="text-sm flex items-center gap-2">
       <span>{isActive ? activeIcon : inactiveIcon}</span>
       {typeof count === "number" && <span>{count}</span>}
     </button>

@@ -2,6 +2,7 @@
 
 import sampleImage from "@/assets/images/image_sample.png";
 import { useComment } from "@/lib/hooks/detail/useComment";
+import { useAuthStore } from "@/lib/store/authStore";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -10,6 +11,8 @@ type CommentSectionProps = {
 };
 
 const CommentSection = ({ postId }: CommentSectionProps) => {
+  const { user } = useAuthStore();
+  const userId = user?.id;
   const [comment, setComment] = useState("");
   const { comments, isPending, addComment, deleteComment } = useComment(postId);
 
@@ -31,7 +34,9 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
 
         <button
           onClick={() => {
-            addComment(comment);
+            {
+              userId ? addComment(comment) : alert("로그인이 필요합니다.");
+            }
             setComment("");
           }}
           className="w-[80px] rounded bg-gray-400 py-2 text-white"

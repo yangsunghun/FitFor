@@ -43,6 +43,7 @@ const config: Config = {
           info: "3F8CFD"
         },
         black: {
+          DEFAULT: "#000000",
           "50": "#F1F1F3",
           "100": "#E3E3E8",
           "200": "#C8C8D0",

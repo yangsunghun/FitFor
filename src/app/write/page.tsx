@@ -2,12 +2,12 @@
 
 import { useAuthStore } from "@/lib/store/authStore";
 import { createClient } from "@/lib/utils/supabase/client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AddressModal from "./_components/AddressModal";
-import ThumbnailUpload from "./_components/ThumbnailUpload";
 import PurchaseModal from "./_components/PurchaseModal";
-import Image from "next/image";
+import ThumbnailUpload from "./_components/ThumbnailUpload";
 
 const supabase = createClient();
 
@@ -105,7 +105,7 @@ const WritePage = () => {
     setFormState((prevState) => {
       const updatedBodySize = [...prevState.body_size];
       updatedBodySize[index] = parseFloat(value) || 0;
-  
+
       return {
         ...prevState,
         body_size: updatedBodySize,
@@ -264,39 +264,39 @@ const WritePage = () => {
         </div>
 
         <div className="mt-8">
-  <label className="block mb-2 font-bold text-[24px]">룩북 구성 상품</label>
-  <div className="flex flex-wrap gap-4">
-    {/* 상품 추가 버튼 */}
-    <button
-      onClick={() => setIsPurchaseModalOpen(true)}
-      className="w-32 h-32 flex items-center justify-center border border-gray-300 rounded-lg text-gray-500"
-    >
-      + 추가
-    </button>
+          <label className="block mb-2 font-bold text-[24px]">룩북 구성 상품</label>
+          <div className="flex flex-wrap gap-4">
+            {/* 상품 추가 버튼 */}
+            <button
+              onClick={() => setIsPurchaseModalOpen(true)}
+              className="w-32 h-32 flex items-center justify-center border border-gray-300 rounded-lg text-gray-500"
+            >
+              + 추가
+            </button>
 
-    {/* 추가된 상품 목록 */}
-    {formState.purchases.map((purchase, index) => (
-      <div
-        key={index}
-        className="w-32 h-32 flex flex-col items-center justify-center border border-black rounded-lg text-black p-2"
-      >
-        {/* 상품명 */}
-        <p className="text-sm font-bold text-center mb-2">{purchase.title}</p>
-        {/* 상품 이미지 */}
-        {purchase.image_url && (
-          <div className="relative w-full h-full rounded-md overflow-hidden">
-            <Image
-              src={purchase.image_url}
-              alt={purchase.title}
-              layout="fill"
-              objectFit="cover"
-            />
+            {/* 추가된 상품 목록 */}
+            {formState.purchases.map((purchase, index) => (
+              <div
+                key={index}
+                className="w-32 h-32 flex flex-col items-center justify-center border border-black rounded-lg text-black p-2"
+              >
+                {/* 상품 이미지 */}
+                {purchase.image_url && (
+                  <div className="relative w-full h-full rounded-md overflow-hidden">
+                    <Image
+                      src={purchase.image_url}
+                      alt={purchase.title}
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
+                )}
+                {/* 상품명 */}
+                <p className="text-sm font-bold text-center mb-2">{purchase.title}</p>
+              </div>
+            ))}
           </div>
-        )}
-      </div>
-    ))}
-  </div>
-</div>
+        </div>
 
         <div className="mt-8">
           <label className="block mb-2 font-bold text-[24px]">태그 선택하기</label>
@@ -311,11 +311,10 @@ const WritePage = () => {
                   <button
                     key={tag}
                     onClick={() => toggleTag(tag, group.tags, group.max)}
-                    className={`px-3 py-1 text-sm border rounded-full ${
-                      formState.tags.includes(tag)
+                    className={`px-3 py-1 text-sm border rounded-full ${formState.tags.includes(tag)
                         ? "bg-black text-white border-black"
                         : "bg-white text-black border-gray-300"
-                    }`}
+                      }`}
                   >
                     {tag}
                   </button>

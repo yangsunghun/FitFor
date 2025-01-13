@@ -143,7 +143,8 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
             value={description}
             onChange={handleInputChange}
             placeholder="상품의 설명을 작성해주세요."
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md resize-none"
+            rows={2}
           ></textarea>
         </div>
 

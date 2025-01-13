@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/utils/supabase/client";
+import Image from "next/image";
 
 const supabase = createClient();
 
@@ -69,7 +70,32 @@ export default function ChatMessages({ roomId, currentUserId }: ChatMessagesProp
                 }}
               >
                 <strong>{!isSender && message.member_id}</strong>
-                <p style={{ margin: 0 }}>{message.content}</p>
+
+                {/* 텍스트만 표시 */}
+                {message.content && <p style={{ margin: 0 }}>{message.content}</p>}
+
+                {/* 이미지만 표시 */}
+                {message.image_url && (
+                  <img
+                    src={`${supabase.storage.from("chat-images").getPublicUrl(message.image_url).data.publicUrl}`}
+                    alt="첨부 이미지"
+                    style={{
+                      marginTop: "10px",
+                      maxWidth: "100%",
+                      borderRadius: "10px"
+                    }}
+                  />
+                )}
+
+                {/* 메시지 내용 표시 */}
+                {/* <p style={{ margin: 0 }}>{message.content}</p> */}
+                {/* 이미지 표시 */}
+                {/* <Image
+                  src={`${supabase.storage.from("chat-images").getPublicUrl(message.image_url).data.publicUrl}`}
+                  alt="이미지"
+                  width={100}
+                  height={100}
+                /> */}
               </div>
             </div>
           );
@@ -78,3 +104,5 @@ export default function ChatMessages({ roomId, currentUserId }: ChatMessagesProp
     </div>
   );
 }
+
+// Todo: next image 로 바꾸기

@@ -22,15 +22,19 @@ const LikeSection = ({ postId }: LikeSectionProps) => {
         <ToggleButton
           isActive={false}
           count={0}
+          onClick={() => {
+            alert("로그인이 필요합니다");
+          }}
           activeIcon={<span>좋아요함</span>}
           inactiveIcon={<span>좋아요아직</span>}
-          disabled
         />
         <ToggleButton
           isActive={false}
+          onClick={() => {
+            alert("로그인이 필요합니다");
+          }}
           activeIcon={<span>북마크됨</span>}
           inactiveIcon={<span>북마크아직</span>}
-          disabled
         />
       </div>
     );

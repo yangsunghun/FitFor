@@ -105,7 +105,7 @@ export default function ChatRoomPage({ params }: ChatRoomPageProps) {
       {currentUser ? (
         <>
           {/* 채팅 메시지 컴포넌트 */}
-          <ChatMessages roomId={roomId} />
+          <ChatMessages roomId={roomId} currentUserId={currentUser.id} />
           {/* 채팅 입력창 컴포넌트 */}
           <ChatInput roomId={roomId} memberId={currentUser.id} />
         </>

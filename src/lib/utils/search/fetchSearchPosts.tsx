@@ -1,3 +1,4 @@
+import { postsPerPage } from "@/lib/constants/constants";
 import { createClient } from "@/lib/utils/supabase/client";
 
 const supabase = createClient();
@@ -6,20 +7,20 @@ const supabase = createClient();
 export const fetchSearchPosts = async ({
   query,
   page = 1,
-  perPage = 12
+  tags = [],
+  perPage = postsPerPage,
+  sort = "created_at"
 }: {
   query: string;
   page?: number;
+  tags?: string[];
   perPage?: number;
+  sort?: "created_at" | "likes" | "view";
 }) => {
   const from = (page - 1) * perPage;
   const to = from + perPage - 1;
 
-  const {
-    data: posts,
-    error,
-    count
-  } = await supabase
+  let baseQuery = supabase
     .from("posts")
     .select(
       `
@@ -31,8 +32,15 @@ export const fetchSearchPosts = async ({
       { count: "exact" }
     )
     .ilike("title", `%${query}%`)
-    .order("created_at", { ascending: false })
+    .order(sort, { ascending: false })
     .range(from, to);
+
+  // 태그 포함시 결과로 출력
+  if (tags.length > 0) {
+    baseQuery = baseQuery.overlaps("tags", tags);
+  }
+
+  const { data: posts, error, count } = await baseQuery;
 
   if (error) {
     throw new Error(`검색 결과를 가져오는 중 오류 발생: ${error.message}`);

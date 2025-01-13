@@ -180,7 +180,9 @@ const WritePage = () => {
       }
 
       alert("저장 성공!");
-      router.push("/"); 
+
+      // 상세 페이지로 리디렉션
+      router.push(`/detail/${postId}`);
     } catch (error) {
       console.error("게시글 저장 실패:", error);
       alert("저장 실패");
@@ -310,7 +312,7 @@ const WritePage = () => {
                   </div>
                 )}
                 {/* 상품명 */}
-                <p className="text-sm font-bold text-center mb-2">{purchase.title}</p>
+                <p className="text-sm font-bold text-center">{purchase.title}</p>
               </div>
             ))}
           </div>

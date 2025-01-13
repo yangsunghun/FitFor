@@ -15,9 +15,10 @@ type ProductModalProps = {
   }) => void;
 };
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 최대 업로드 파일 크기 5MB
 
 const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => {
+  // 입력 폼 상태 관리
   const [formState, setFormState] = useState({
     title: "",
     description: "",
@@ -27,26 +28,30 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
 
   const { title, description, price, image_url } = formState;
 
+  // 입력 필드 값 변경 처리
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
-      [name]: name === "price" ? (value === "" ? "" : Number(value)) : value,
+      [name]: name === "price" ? (value === "" ? "" : Number(value)) : value, // 가격은 숫자로 변환
     }));
   };
 
+  // 이미지 업로드 함수
   const uploadImage = async (file: File): Promise<string> => {
     if (file.size > MAX_FILE_SIZE) {
-      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다.");
+      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다."); // 파일 크기 확인
     }
 
+    // 고유 파일 이름 생성
     const timestamp = Date.now();
     const extension = file.name.split(".").pop() || "unknown";
     const uniqueFileName = `${timestamp}.${extension}`;
     const filePath = `purchase/${uniqueFileName}`;
 
+    // Supabase 스토리지에 이미지 업로드
     const { error } = await supabase.storage
       .from("post-images")
       .upload(filePath, file, {
@@ -56,6 +61,7 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
 
     if (error) throw new Error(`이미지 업로드 실패: ${error.message}`);
 
+    // 업로드된 이미지의 공개 URL 반환
     const { publicUrl } = supabase.storage
       .from("post-images")
       .getPublicUrl(filePath).data;
@@ -65,6 +71,7 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
     return publicUrl;
   };
 
+  // 이미지 업로드 핸들러
   const handleImageUpload = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -73,26 +80,30 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
         try {
-          const url = await uploadImage(file);
+          const url = await uploadImage(file); // 이미지 업로드
           setFormState((prevState) => ({ ...prevState, image_url: url }));
         } catch (error: any) {
-          alert(error.message);
+          alert(error.message); // 에러 알림
         }
       }
     };
-    fileInput.click();
+    fileInput.click(); // 파일 선택 창 열기
   };
 
+  // 폼 제출 핸들러
   const handleSubmit = () => {
+    // 필수 입력 항목 확인
     if (!title || !description || !price || !image_url) {
       alert("모든 필드를 입력해주세요.");
       return;
     }
 
+    // 부모 컴포넌트에 상품 데이터 전달
     onAddProduct({ title, description, price: Number(price), image_url });
-    onClose();
+    onClose(); // 모달 닫기
   };
 
+  // 모달이 닫혀 있으면 렌더링하지 않음
   if (!isOpen) return null;
 
   return (

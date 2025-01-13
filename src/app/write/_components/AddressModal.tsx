@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getAddressFromCoordinates, getCurrentPosition } from '../_utils/location';
 
 type AddressModalProps = {
@@ -67,28 +67,46 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-xl font-bold mb-4">주소 검색</h2>
 
-        {/* 주소 검색 */}
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="주소 입력 (예: 서초동)"
-          className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-400"
-        />
+        {/* 검색 입력 필드 */}
+        <div className="relative">
+          {/* 돋보기 아이콘 */}
+          <div className="absolute inset-y-0 left-3 flex items-center">
+            <svg
+              className="w-5 h-5 text-gray-400"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="주소 입력 (예: 서초동)"
+            className="w-full p-3 pl-10 border rounded-md focus:ring-2 focus:ring-black"
+          />
+        </div>
+
+        {/* 검색 버튼 */}
         <button
           onClick={handleSearch}
-          className="w-full p-3 mt-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+          className="w-full p-3 mt-2 bg-black text-white rounded-md"
           disabled={loading}
         >
           {loading ? '검색 중...' : '검색'}
         </button>
 
         {/* 검색 결과 */}
-        <ul className="mt-4">
+        <ul className="mt-4 border rounded-md max-h-60 overflow-y-auto">
           {searchResults.map((result, index) => (
             <li
               key={index}
-              className="p-2 border-b cursor-pointer hover:bg-gray-100"
+              className="p-3 border-b cursor-pointer hover:bg-gray-100 text-gray-700"
               onClick={() => {
                 if (result !== '검색 결과가 없습니다.' && result !== '검색 중 오류가 발생했습니다.') {
                   onSelectAddress(result);
@@ -104,7 +122,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
         {/* 현재 위치 가져오기 */}
         <button
           onClick={handleGetCurrentLocation}
-          className="w-full p-3 bg-green-500 hover:bg-green-600 text-white rounded-md mt-4"
+          className="w-full p-3 bg-black text-white rounded-md mt-4"
           disabled={geoLoading}
         >
           {geoLoading ? '현재 위치 가져오는 중...' : '현재 위치 가져오기'}
@@ -114,7 +132,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
         {/* 닫기 버튼 */}
         <button
           onClick={onClose}
-          className="w-full p-3 mt-4 bg-gray-500 hover:bg-gray-600 text-white rounded-md"
+          className="w-full p-3 mt-4 bg-gray-500 text-white rounded-md"
         >
           닫기
         </button>

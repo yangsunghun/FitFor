@@ -23,7 +23,7 @@ export const useSearchQuery = () => {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setQuery(inputValue);
-    router.push(`?query=${encodeURIComponent(inputValue)}&page=1`); //replace 가 더 적절한지 고민
+    router.push(`/search?query=${encodeURIComponent(inputValue)}&page=1`); //replace 가 더 적절한지 고민
   };
 
   return {

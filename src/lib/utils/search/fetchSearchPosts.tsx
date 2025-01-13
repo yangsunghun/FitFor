@@ -1,3 +1,4 @@
+import { postsPerPage } from "@/lib/constants/constants";
 import { createClient } from "@/lib/utils/supabase/client";
 
 const supabase = createClient();
@@ -7,7 +8,7 @@ export const fetchSearchPosts = async ({
   query,
   page = 1,
   tags = [],
-  perPage = 12,
+  perPage = postsPerPage,
   sort = "created_at"
 }: {
   query: string;

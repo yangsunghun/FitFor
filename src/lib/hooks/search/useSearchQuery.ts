@@ -30,7 +30,7 @@ export const useSearchQuery = () => {
     e.preventDefault();
     if (inputValue !== query || page !== 1 || tags.length > 0 || sort !== sortFromUrl) {
       router.push(
-        `?query=${encodeURIComponent(inputValue)}&page=1&category=${encodeURIComponent(
+        `/search?query=${encodeURIComponent(inputValue)}&page=1&category=${encodeURIComponent(
           JSON.stringify(tags)
         )}&sort=${encodeURIComponent(sort)}`
       );
@@ -43,7 +43,7 @@ export const useSearchQuery = () => {
     if (JSON.stringify(updatedTags) !== JSON.stringify(tags)) {
       setTags(updatedTags);
       router.push(
-        `?query=${encodeURIComponent(query)}&page=1&category=${encodeURIComponent(
+        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeURIComponent(
           JSON.stringify(updatedTags)
         )}&sort=${encodeURIComponent(sort)}`
       );
@@ -55,7 +55,7 @@ export const useSearchQuery = () => {
     if (newSort !== sort) {
       setSort(newSort);
       router.push(
-        `?query=${encodeURIComponent(query)}&page=1&category=${encodeURIComponent(
+        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeURIComponent(
           JSON.stringify(tags)
         )}&sort=${encodeURIComponent(newSort)}`
       );

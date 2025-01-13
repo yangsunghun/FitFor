@@ -75,7 +75,7 @@ const MypageMenu = () => {
             <StatsCard title="총 조회수" value={sampleStats.views} />
           </div>
 
-          <VerificationSection nickname="사용자" isVerified={false} />
+          <VerificationSection nickname={"사용자"} isVerified={false} />
 
           <div className="mb-8 rounded-lg bg-gray-100 p-8">
             <h3 className="mb-4 font-medium">인증배지 발급 종족 요건</h3>

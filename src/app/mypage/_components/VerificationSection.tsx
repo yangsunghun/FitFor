@@ -12,9 +12,8 @@ const VerificationSection = ({ nickname, isVerified }: VerificationSectionProps)
         {nickname}님, 인증배지를 신청할 수 있어요!
       </p>
       <div className="flex justify-center">
-        <button className="gap-2">
-          <Plus className="w-4 h-4" />
-          인증배지 신청하기
+        <button className="gap-2 flex flex-row bg-black text-white rounded-2xl p-4">
+          <Plus size={24}/> 인증배지 신청하기
         </button>
       </div>
     </div>

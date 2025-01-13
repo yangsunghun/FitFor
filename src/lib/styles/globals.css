@@ -8,6 +8,18 @@
   }
 }
 
+@layer components {
+  .btn-style {
+    @apply bg-primary-active inline-block rounded-[5px] text-center text-white;
+
+    @apply h-[56px] w-[192px];
+
+    @apply tb:h-[48px] tb:w-[160px];
+
+    @apply mb:h-[40px] mb:w-[120px];
+  }
+}
+
 /* input type=search x button 제거 */
 /* WebKit browsers */
 input[type="search"]::-webkit-search-cancel-button {

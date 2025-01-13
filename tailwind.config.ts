@@ -44,6 +44,11 @@ const config: Config = {
           "03": "#1A1A1A"
         }
       }
+    },
+    screens: {
+      mb: { max: "480px" },
+      tb: { max: "680px" },
+      pc: { min: "681px" }
     }
   },
   plugins: []

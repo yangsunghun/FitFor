@@ -1,18 +1,61 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  // darkMode: ["class"],
   content: ["./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   // dynamic으로 사용시 필요 리스트
   safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#333333]", "text-[#666666]"],
   theme: {
     fontSize: {
-      heading: ["36px", { lineHeight: "150%", letterSpacing: "-0.25%" }],     // Heading 36px
-      title1: ["24px", { lineHeight: "150%", letterSpacing: "-0.25%" }],      // Title1 24px    
-      subtitle: ["20px", { lineHeight: "150%", letterSpacing: "-0.15%" }],    // Subtitle 20px
-      title2: ["18px", { lineHeight: "150%", letterSpacing: "-0.15%" }],      // Title2 18px
-      body: ["15px", { lineHeight: "150%", letterSpacing: "0%" }],            // Body2 15px
-      caption: ["13px", { lineHeight: "150%", letterSpacing: "0%" }],         // Caption 13px
-      small: ["11px", { lineHeight: "150%", letterSpacing: "0%" }],           // Small1 11px
+      heading: [
+        "36px",
+        {
+          lineHeight: "150%",
+          letterSpacing: "-0.25%"
+        }
+      ],
+      title1: [
+        "24px",
+        {
+          lineHeight: "150%",
+          letterSpacing: "-0.25%"
+        }
+      ],
+      subtitle: [
+        "20px",
+        {
+          lineHeight: "150%",
+          letterSpacing: "-0.15%"
+        }
+      ],
+      title2: [
+        "18px",
+        {
+          lineHeight: "150%",
+          letterSpacing: "-0.15%"
+        }
+      ],
+      body: [
+        "15px",
+        {
+          lineHeight: "150%",
+          letterSpacing: "0%"
+        }
+      ],
+      caption: [
+        "13px",
+        {
+          lineHeight: "150%",
+          letterSpacing: "0%"
+        }
+      ],
+      small: [
+        "11px",
+        {
+          lineHeight: "150%",
+          letterSpacing: "0%"
+        }
+      ]
     },
     extend: {
       colors: {
@@ -24,6 +67,6 @@ const config: Config = {
       }
     }
   },
-  plugins: []
+  plugins: [require("tailwindcss-animate")]
 };
 export default config;

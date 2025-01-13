@@ -1,30 +1,30 @@
 "use client";
 
-import { useUserBookmarks } from "@/lib/hooks/mypage/useUserBookmarks";
+import { useUserLikes } from "@/lib/hooks/mypage/useUserLikes";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import ContentList from "./ContentList";
 import ContentListSkeleton from "./SkeletonContentList";
 
-const BookmarkList = () => {
+const LikeList = () => {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
-  const { userBookmarks, isPending, isFetching } = useUserBookmarks(user?.id || "");
+  const { userLikes, isPending, isFetching } = useUserLikes(user?.id || "");
 
   useEffect(() => {
-    if (user?.id) queryClient.invalidateQueries({ queryKey: ["userBookmarks"] });
+    if (user?.id) queryClient.invalidateQueries({ queryKey: ["userLikes"] });
   }, [queryClient, user?.id]);
 
   return (
     <>
-      {isFetching || isPending ? (
+      {isPending || isFetching ? (
         <ContentListSkeleton />
       ) : (
-        <ContentList title="내가 북마크한 포스트" subtitle="Bookmarks" posts={userBookmarks!} />
+        <ContentList title="좋아요한 포스트" subtitle="Bookmarks" posts={userLikes!} />
       )}
     </>
   );
 };
 
-export default BookmarkList;
+export default LikeList;

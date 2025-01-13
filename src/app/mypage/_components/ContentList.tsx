@@ -15,7 +15,7 @@ const ContentList = ({ title, subtitle, posts }: ContentGridProps) => {
         <h2 className="text-title1 font-bold">{title}</h2>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {posts.map((post) => (
+        {posts ? (posts.map((post) => (
           <div key={post.id} className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden justify-items-center content-center">
             <Image
               src={post.thumbnail || "/placeholder.svg?height=400&width=400"}
@@ -24,7 +24,7 @@ const ContentList = ({ title, subtitle, posts }: ContentGridProps) => {
               className="object-cover"
             />
           </div>
-        ))}
+        ))) : (<p>좋아요한 포스트가 없습니다.</p>)}
         <button className="aspect-square flex items-center justify-center">
           더보기
         </button>

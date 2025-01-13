@@ -1,9 +1,13 @@
+"use server";
+
 import type { PostType } from "@/lib/types/post";
-import { createClient } from "@/lib/utils/supabase/client";
+import { createClient } from "../supabase/server";
 
-const supabase = createClient();
+export const fetchUserBookmarks = async (userId: string) => {
+  if (!userId) return null;
 
-export const fetchBookmarks = async (userId: string) => {
+  const supabase = await createClient();
+
   const { data: userBookmarks, error: userBookmarksError } = await supabase
     .from("bookmarks")
     .select("post_id, posts(*, users(nickname, profile_image))")
@@ -19,4 +23,25 @@ export const fetchBookmarks = async (userId: string) => {
   const bookmarks = userBookmarks.map((bookmark: { posts: PostType }) => bookmark.posts);
 
   return bookmarks;
+};
+
+export const fetchUserLikes = async (userId: string) => {
+  if (!userId) return null;
+
+  const supabase = await createClient();
+
+  const { data: userLikes, error: userLikesError } = await supabase
+    .from("likes")
+    .select("post_id, posts(*, users(nickname, profile_image))")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (userLikesError) {
+    console.error("좋아요 정보 조회 실패:", userLikesError);
+    throw new Error(`좋아요 정보 조회 실패: ${userLikesError.message}`);
+  }
+
+  // 가져온 데이터 형태 정리 (post 데이터만 가져오도록)
+  const likes = userLikes.map((bookmark: { posts: PostType }) => bookmark.posts);
+  return likes;
 };

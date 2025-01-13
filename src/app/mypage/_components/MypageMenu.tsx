@@ -5,6 +5,7 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import BookmarkList from "./BookmarkList";
 import StatsCard from "./StatsCard";
 import VerificationSection from "./VerificationSection";
+import LikeList from "./LikeList";
 
 // 임시 샘플
 const sampleTabs = ["Posts", "Stats"];
@@ -35,7 +36,7 @@ const MypageMenu = () => {
         {/* 0번 탭 */}
         <TabsContent value="tab-0">
           <BookmarkList />
-          <BookmarkList />
+          <LikeList />
           {/* <ContentList title="최근 본 포스트" subtitle="Recent" posts={sampleTabs[0].content.slice(4, 8)} /> */}
         </TabsContent>
 

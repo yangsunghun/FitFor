@@ -20,6 +20,13 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
     return <p>스켈레톤 ui 추가해야겠지?</p>;
   }
 
+  const handleDeleteComment = (id: string) => {
+    if (confirm("삭제하시겠습니까?")) {
+      alert("삭제되었습니다.");
+      deleteComment(id);
+    }
+  };
+
   return (
     <div className="mt-6">
       <p className="text-xl mb-4 font-bold">댓글 {comments.length}개</p>
@@ -56,9 +63,11 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
                 <p>{comment.users.nickname || "알 수 없음"}</p>
                 <div className="items-items-center flex gap-4">
                   <p className="text-[14px] text-gray-500">{new Date(comment.created_at).toLocaleString()}</p>
-                  <button onClick={() => deleteComment(comment.id)} className="text-[14px] text-red-500">
-                    삭제
-                  </button>
+                  {userId === comment.user_id && (
+                    <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
+                      삭제
+                    </button>
+                  )}
                 </div>
               </div>
 

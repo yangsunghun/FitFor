@@ -1,8 +1,10 @@
 "use server";
 
 import type { FetchPostsResponse, PostType } from "@/lib/types/post";
+import type { ProfileEditForm } from "@/lib/types/profile";
 import { createClient } from "../supabase/server";
 
+// 유저의 북마크 정보를 가져오는 로직
 export const fetchUserBookmarks = async ({
   userId,
   pageParam = 1
@@ -38,6 +40,7 @@ export const fetchUserBookmarks = async ({
   };
 };
 
+// 유저의 좋아요 정보를 가져오는 로직
 export const fetchUserLikes = async ({
   userId,
   pageParam = 1
@@ -71,4 +74,32 @@ export const fetchUserLikes = async ({
     nextPage: likes.length === perPage ? pageParam + 1 : undefined,
     hasMore: likes.length === perPage
   };
+};
+
+// 유저 정보 업데이트 하는 로직
+export const updateUserProfile = async ({
+  userId,
+  imageFileURL,
+  editForm
+}: {
+  userId: string;
+  imageFileURL: string | null;
+  editForm: ProfileEditForm;
+}) => {
+  const supabase = await createClient();
+
+  // db의 유저 데이터 업데이트
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({
+      nickname: editForm.nickname,
+      introduction: editForm.introduction,
+      gender: editForm.gender,
+      profile_image: imageFileURL // 새로운 파일 있다면 업로드
+    })
+    .eq("id", userId);
+
+  if (updateError) {
+    throw new Error(`프로필 업데이트 실패: ${updateError.message}`);
+  }
 };

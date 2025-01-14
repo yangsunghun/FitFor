@@ -210,13 +210,13 @@ const WritePage = () => {
     <div className="relative bg-white min-h-screen p-10">
       <div className="w-full max-w-[1200px] mx-auto border border-gray-300 rounded-md shadow-lg p-8">
         {/* 상단 버튼 */}
-        <div className="flex justify-end items-center mb-8 gap-10">
-          <button className="px-6 py-2 bg-gray-200 border border-gray-300 rounded-lg">
+        <div className="flex justify-end items-center mb-8 gap-6">
+          <button className="w-28 h-12 px-6 py-2 border border-black rounded-lg">
             임시저장
           </button>
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 bg-black text-white rounded-lg"
+            className="w-28 h-12 px-6 py-2 bg-black text-white rounded-lg"
           >
             완료
           </button>
@@ -224,20 +224,31 @@ const WritePage = () => {
 
         <div className="w-full space-y-6">
           {/* 제목 입력 */}
-          <div>
-            <label className="block mb-2 font-bold text-[18px]">제목</label>
-            <input
-              type="text"
-              value={formState.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              placeholder="제목을 입력하세요."
-            />
+          <div className="flex items-center border border-gray-300 rounded-lg p-4">
+            {/* 왼쪽 아이콘 */}
+            <div className="w-8 h-8 bg-yellow-500 rounded-lg m-4"></div>
+
+            {/* 제목 (고정 텍스트) */}
+            <div className="text-2xl font-bold text-black mr-4" style={{ fontSize: "36px" }}>
+              Title
+            </div>
+
+            {/* 인풋 필드 */}
+            <div className="flex-1">
+              <input
+                type="text"
+                value={formState.title}
+                onChange={(e) => handleChange("title", e.target.value)}
+                className="w-full border-none focus:outline-none text-gray-500 text-sm placeholder-gray-400"
+                placeholder="Lorem ipsum dolor sit amet consectetur."
+              />
+            </div>
           </div>
+
 
           {/* 위치 입력 */}
           <div>
-            <label className="block mb-2 font-bold text-[18px]">위치</label>
+            <label className="block mb-2 font-bold text-[24px]">위치 입력</label>
             <div className="flex items-center gap-4">
               <input
                 type="text"
@@ -331,13 +342,16 @@ const WritePage = () => {
               <label className="block mb-2 font-bold text-[24px]">본문</label>
               <textarea
                 value={formState.content}
-                onChange={(e) => handleChange("content", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none"
+                onChange={(e) => {
+                  handleChange("content", e.target.value); // formState.content 업데이트
+                  e.target.style.height = "auto"; // 기존 높이 초기화
+                  e.target.style.height = `${e.target.scrollHeight}px`; // 내용에 따라 높이 조정
+                }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg overflow-hidden resize-none"
                 rows={6}
                 placeholder="본문 내용을 입력하세요."
               />
             </div>
-
 
             {/* 체형 입력 */}
             <div>
@@ -392,8 +406,8 @@ const WritePage = () => {
                       key={tag}
                       onClick={() => toggleTag(tag, group.tags, group.max)}
                       className={`px-3 py-1 text-sm border rounded-full ${formState.tags.includes(tag)
-                          ? "bg-black text-white border-black"
-                          : "bg-white text-black border-gray-300"
+                        ? "bg-black text-white border-black"
+                        : "bg-white text-black border-gray-300"
                         }`}
                     >
                       {tag}

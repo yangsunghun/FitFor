@@ -1,5 +1,6 @@
 "use client";
 
+import { Tags } from "@/components/ui/Tags";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { formatDateTime } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots } from "@phosphor-icons/react";
@@ -11,10 +12,10 @@ type Props = {
 };
 
 const ContentsSection = ({ postId }: Props) => {
-  const { post, isPending, error } = usePostDetail(postId);
+  const { post, isPending, isError } = usePostDetail(postId);
 
   if (isPending) return <div>스켈레톤 ui 추가해야겠지?</div>;
-  if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  if (isError) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 
   if (!post) {
     return <div>게시물을 찾을 수 없습니다.</div>;
@@ -34,7 +35,7 @@ const ContentsSection = ({ postId }: Props) => {
   } = post!;
 
   return (
-    <section className="contents-section">
+    <>
       {/* <p className="text-3xl mb-4 font-bold">{title}</p> */}
 
       <article className="flex items-center justify-between">
@@ -60,32 +61,34 @@ const ContentsSection = ({ postId }: Props) => {
         <Image src={thumbnail} alt={title || "게시글 이미지"} width={1000} height={1600} className="object-cover" />
       </div>
 
-      <div className="mt-4 flex gap-4 text-title2 font-medium leading-7">
-        <span className="item-center pointer-events-none flex gap-1">
+      <div className="relative mt-8 flex gap-4 text-title2 font-medium leading-7">
+        <span className="item-center pointer-events-none absolute left-[4.5rem] flex gap-1">
           <ChatCircleDots size={28} className="text-text-03" />
           {comments}
         </span>
         <LikeSection postId={postId} styleType="detail" />
       </div>
 
-      <p className="text-lg mb-6 leading-relaxed">{content}</p>
+      <p className="mt-8 p-4 text-subtitle leading-relaxed">{content}</p>
 
       <div className="text-sm mt-6 space-y-2 text-gray-800">
         {tags.length > 0 && (
-          <p>
-            <strong>태그:</strong> {tags.join(", ")}
-          </p>
+          <div className="flex gap-2">
+            {tags.map((tag) => (
+              <Tags variant="primary" size="md" label={tag} />
+            ))}
+          </div>
         )}
-        {body_size.length === 2 && (
+        {/* {body_size.length === 2 && (
           <p>
             <strong>키:</strong> {body_size[0]} cm, <strong>몸무게:</strong> {body_size[1]} kg
           </p>
         )}
         <p>
           <strong>조회수:</strong> {view}
-        </p>
+        </p> */}
       </div>
-    </section>
+    </>
   );
 };
 

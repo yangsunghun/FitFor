@@ -331,6 +331,7 @@ export type Database = {
         Row: {
           description: string | null
           id: string
+          image_url: string | null
           post_id: string
           price: number | null
           title: string
@@ -338,6 +339,7 @@ export type Database = {
         Insert: {
           description?: string | null
           id?: string
+          image_url?: string | null
           post_id: string
           price?: number | null
           title: string
@@ -345,6 +347,7 @@ export type Database = {
         Update: {
           description?: string | null
           id?: string
+          image_url?: string | null
           post_id?: string
           price?: number | null
           title?: string
@@ -397,14 +400,6 @@ export type Database = {
         }
         Returns: undefined
       }
-
-      sync_comment_count: {
-        Args: {
-          post_id: string
-        }
-        Returns: undefined
-      }
-
     }
     Enums: {
       [_ in never]: never

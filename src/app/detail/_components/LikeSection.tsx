@@ -21,7 +21,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
 
   const containerClass = cn({
     "flex gap-3": styleType === "masonry",
-    "text-title2 flex gap-1": styleType === "list"
+    " flex gap-4": styleType === "list" || "detail"
   });
 
   const buttonClass = cn("flex justify-center items-center ", {
@@ -52,7 +52,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
             }}
             inactiveIcon={
               <span className="text-text-03">
-                <BookmarkSimple size={20} />
+                {styleType === "masonry" ? <BookmarkSimple size={20} /> : <BookmarkSimple size={28} />}
               </span>
             }
           />
@@ -88,12 +88,16 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
           onClick={toggleBookmark}
           activeIcon={
             <span className="text-status-info">
-              <BookmarkSimple weight="fill" size={20} />
+              {styleType === "masonry" ? (
+                <BookmarkSimple weight="fill" size={20} />
+              ) : (
+                <BookmarkSimple weight="fill" size={28} />
+              )}
             </span>
           }
           inactiveIcon={
             <span className="text-text-03">
-              <BookmarkSimple size={20} />
+              {styleType === "masonry" ? <BookmarkSimple size={20} /> : <BookmarkSimple size={28} />}
             </span>
           }
         />

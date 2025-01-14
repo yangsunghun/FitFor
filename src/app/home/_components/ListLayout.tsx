@@ -3,6 +3,7 @@
 import LikeSection from "@/app/detail/_components/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import type { PostType } from "@/lib/types/post";
+import { formatDate } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,7 +41,7 @@ const ListLayout = ({ posts }: ListLayoutProps) => {
               <p className="absolute bottom-4 right-4 flex gap-1 text-body">
                 <span>조회수: {item.view}</span>
                 <span>·</span>
-                <span>{new Date(item.created_at).toLocaleDateString()}</span>
+                <span>{formatDate(item.created_at)}</span>
               </p>
             </div>
           </li>

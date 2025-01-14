@@ -28,7 +28,7 @@ export default function RootLayout({
       <TQProviders>
         <body className={`${pretendard.className} mx-auto w-[1200px] text-text-04`}>
           <Header />
-          <main>{children}</main>
+          <main className="pt-10">{children}</main>
           {modal && <div>{modal}</div>}
         </body>
       </TQProviders>

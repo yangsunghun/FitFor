@@ -1,7 +1,9 @@
 "use client";
 
-import sampleImage from "@/assets/images/image_sample.png";
+import LikeSection from "@/app/detail/_components/LikeSection";
+import { Tags } from "@/components/ui/Tags";
 import type { PostType } from "@/lib/types/post";
+import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,27 +14,34 @@ type ListLayoutProps = {
 const ListLayout = ({ posts }: ListLayoutProps) => {
   return (
     <>
-      <ul className="flex flex-wrap gap-5">
+      <ul>
         {posts.map((item) => (
-          <li key={item.id} className="relative flex w-[48%] items-center gap-10">
+          <li key={item.id} className="relative mb-6 flex gap-6 py-4">
             <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
-            <figure className="relative h-[150px] w-[150px] overflow-hidden bg-gray-200">
-              <Image src={item.thumbnail || sampleImage} alt={item.title} width={150} height={150} />
+            <figure className="relative h-[11.25rem] w-[11.25rem] overflow-hidden rounded-[1rem] bg-gray-200">
+              <Image src={item.thumbnail} alt={item.title} fill={true} className="object-cover object-center" />
             </figure>
-            <div>
-              <div className="flex items-center gap-4">
-                <div className="relative h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 bg-gray-100">
-                  <Image
-                    src={item.users.profile_image || sampleImage}
-                    alt={`${item.users.nickname}의 프로필 이미지`}
-                    fill={true}
-                    className="h-8 w-8 rounded-full"
-                  />
-                </div>
-                <p>{item.users.nickname}</p>
+            <div className="relative w-[calc(100%-12.75rem)]">
+              <div className="flex gap-2">
+                {item.tags.map((tag) => (
+                  <Tags variant="primary" size="md" label={tag} />
+                ))}
               </div>
-              <p>{item.title}</p>
-              <p>{item.tags?.join("")}</p>
+              <p className="clear-both mt-2 line-clamp-2 overflow-hidden text-ellipsis break-words text-title1 font-bold text-text-04">
+                {item.title}
+              </p>
+              <div className="absolute bottom-0 left-0 z-20 flex gap-4 leading-7">
+                <LikeSection postId={item.id} styleType="list" />
+                <span className="item-center flex gap-1 font-medium">
+                  <ChatCircleDots size={28} className="text-text-03" />
+                  {item.comments}
+                </span>
+              </div>
+              <p className="absolute bottom-4 right-4 flex gap-1 text-body">
+                <span>조회수: {item.view}</span>
+                <span>·</span>
+                <span>{new Date(item.created_at).toLocaleDateString()}</span>
+              </p>
             </div>
           </li>
         ))}

@@ -122,6 +122,12 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
             onChange={handleInputChange}
             placeholder="주소 입력 (예: 서초동)"
             className="w-full p-3 pl-10 border rounded-md focus:ring-2 focus:ring-black"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault(); // 기본 Enter 동작 방지
+                handleSearch(); // 검색 함수 실행
+              }
+            }}
           />
         </div>
 

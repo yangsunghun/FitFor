@@ -156,6 +156,7 @@ export type Database = {
         Row: {
           created_at: string
           isActive: boolean
+          room_category: string
           room_description: string
           room_hashtags: string[]
           room_id: string
@@ -167,6 +168,7 @@ export type Database = {
         Insert: {
           created_at?: string
           isActive?: boolean
+          room_category: string
           room_description: string
           room_hashtags: string[]
           room_id?: string
@@ -178,6 +180,7 @@ export type Database = {
         Update: {
           created_at?: string
           isActive?: boolean
+          room_category?: string
           room_description?: string
           room_hashtags?: string[]
           room_id?: string
@@ -394,6 +397,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_fever_rooms: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       increment_view: {
         Args: {
           post_id: string

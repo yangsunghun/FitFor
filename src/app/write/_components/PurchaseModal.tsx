@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import type { PurchaseInsert } from "../page";
 
 const supabase = createClient();
+const genUniqueId = () => {
+  return crypto.randomUUID(); // 고유 ID 생성
+};
 
 type ProductModalProps = {
   isOpen: boolean;
@@ -133,12 +136,15 @@ const PurchaseModal = ({
       return;
     }
 
+
+    // 새로운 상품 데이터 생성
+    const product = { title, description, price: Number(price), image_url };
     if (mode === "add") {
       // 추가 모드
-      onAddProduct({ title, description, price: Number(price), image_url });
+      onAddProduct({ ...product, id: genUniqueId() });
     } else if (mode === "edit" && onEditProduct) {
       // 수정 모드
-      onEditProduct({ title, description, price: Number(price), image_url });
+      onEditProduct({ ...product, id: productToEdit?.id });
     }
 
     resetForm(); // 입력 폼 초기화

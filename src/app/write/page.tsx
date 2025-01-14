@@ -10,6 +10,9 @@ import PurchaseModal from "./_components/PurchaseModal";
 import ThumbnailUpload from "./_components/ThumbnailUpload";
 
 const supabase = createClient();
+const genUniqueId = () => {
+  return crypto.randomUUID(); // 고유 ID 생성
+};
 
 // 타입 정의
 type PostInsert = {
@@ -27,6 +30,7 @@ type PostInsert = {
 };
 
 export type PurchaseInsert = {
+  id?: string; // 고유 ID 추가
   title: string;
   description?: string | null;
   price?: number | null;
@@ -81,14 +85,22 @@ const WritePage = () => {
 
   // 상품 추가 핸들러
   const handleAddPurchase = (purchase: PurchaseInsert) => {
-    handleChange("purchases", [...formState.purchases, purchase]);
+    const newPurchase = { ...purchase, id: genUniqueId() }; // 고유 ID 생성
+    handleChange("purchases", [...formState.purchases, newPurchase]);
   };
 
   // 상품 수정 핸들러
   const handleEditPurchase = (updatedProduct: PurchaseInsert) => {
-    handleChange("purchases", formState.purchases.map((p) =>
-      p.title === updatedProduct.title ? updatedProduct : p
-    ));
+    console.log("Updated Product ID:", updatedProduct.id); // 수정 요청된 상품의 ID 로그 출력
+    formState.purchases.forEach((p) => console.log("Existing Product ID:", p.id)); // 기존 상품 목록의 각 상품 ID 로그 출력
+
+    // 상품 목록 업데이트
+    const updatedPurchases = formState.purchases.map((p) =>
+      // 수정 요청된 상품의 ID, 기존 상품 ID 비교 - (일치하면 수정된 상품, 불일치시 기존상품 유지)
+      p.id === updatedProduct.id ? { ...updatedProduct } : { ...p }
+    );
+
+    handleChange("purchases", [...updatedPurchases]); // 새로운 배열로 상태 변경
     setProductToEdit(null); // 수정 모드 초기화
   };
 
@@ -245,7 +257,6 @@ const WritePage = () => {
             </div>
           </div>
 
-
           {/* 위치 입력 */}
           <div>
             <label className="block mb-2 font-bold text-[24px]">위치 입력</label>
@@ -389,7 +400,6 @@ const WritePage = () => {
               </div>
             </div>
           </div>
-
 
           {/* 태그 선택 */}
           <div className="mt-8">

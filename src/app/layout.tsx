@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className="min-h-full">
       <TQProviders>
-        <body className={`${pretendard.className} text-slate-900`}>
+        <body className={`${pretendard.className} mx-auto w-[1200px] text-text-04`}>
           <Header />
           <main>{children}</main>
           {modal && <div>{modal}</div>}

@@ -2,7 +2,7 @@ import ListLender from "./_components/ListLender";
 
 const MainPage = () => {
   return (
-    <div className="mx-auto w-full max-w-[1200px]">
+    <div className="inner">
       <ListLender />
     </div>
   );

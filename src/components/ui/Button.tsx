@@ -11,12 +11,13 @@ const buttonVariants = cva(
         primary: "bg-primary-default !text-black-50 hover:bg-primary-light active:bg-primary-strong",
         primaryLine: "bg-white border border-primary-default !text-primary-default hover:bg-pink-50 active:bg-pink-100",
         disabled: "bg-bg-02 !text-text-01",
-        disabledLine: "bg-bg-01 border border-line-02 !text-text-02"
+        disabledLine: "bg-bg-01 border border-line-02 !text-text-02",
+        whiteLine: "bg-bg-01 border border-line-03 !text-text-04"
       },
       size: {
-        lg: "h-12 leading-12 px-6 text-subtitle",
-        md: "h-10 leading-10 px-4 text-title2",
-        sm: "h-8 leading-8 px-3 text-body"
+        lg: "h-14 leading-[3.5rem] px-6 text-subtitle",
+        md: "h-12 leading-[3rem] px-5 text-title2",
+        sm: "h-11 leading-[2.75rem] px-4 text-body"
       }
     },
     defaultVariants: {

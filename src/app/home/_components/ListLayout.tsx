@@ -32,7 +32,7 @@ const ListLayout = ({ posts }: ListLayoutProps) => {
               </p>
               <div className="absolute bottom-0 left-0 z-20 flex gap-4 leading-7">
                 <LikeSection postId={item.id} styleType="list" />
-                <span className="item-center flex gap-1 font-medium">
+                <span className="item-center pointer-events-none flex gap-1 font-medium">
                   <ChatCircleDots size={28} className="text-text-03" />
                   {item.comments}
                 </span>

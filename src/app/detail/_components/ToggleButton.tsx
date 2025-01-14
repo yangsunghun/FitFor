@@ -2,7 +2,7 @@
 
 type ToggleButtonProps = {
   isActive: boolean;
-  count?: number;
+  count?: number | null;
   onClick?: () => void;
   activeIcon?: React.ReactNode;
   inactiveIcon: React.ReactNode;

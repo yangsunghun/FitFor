@@ -37,10 +37,10 @@ const config: Config = {
           light: "#464653"
         },
         status: {
-          success: "00F050",
-          danger: "E74646",
-          warning: "FFCD38",
-          info: "3F8CFD"
+          success: "#00F050",
+          danger: "#E74646",
+          warning: "#FFCD38",
+          info: "#3F8CFD"
         },
         black: {
           DEFAULT: "#000000",

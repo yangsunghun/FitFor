@@ -11,10 +11,12 @@ type ToggleButtonProps = {
 
 const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, btnStyle }: ToggleButtonProps) => {
   return (
-    <button onClick={onClick} className={btnStyle}>
-      <span>{isActive ? activeIcon : inactiveIcon}</span>
-      {/* {typeof count === "number" && <span>{count}</span>} */}
-    </button>
+    <>
+      <button onClick={onClick} className={btnStyle}>
+        <span>{isActive ? activeIcon : inactiveIcon}</span>
+      </button>
+      {typeof count === "number" && <span>{count}</span>}
+    </>
   );
 };
 

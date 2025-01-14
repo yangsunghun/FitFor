@@ -21,12 +21,12 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
 
   const containerClass = cn({
     "flex gap-3": styleType === "masonry",
-    "mt-4 flex gap-2": styleType === "list"
+    "text-title2 flex gap-1": styleType === "list"
   });
 
-  const buttonClass = cn("flex justify-center items-center", {
+  const buttonClass = cn("flex justify-center items-center ", {
     "w-7 h-7 rounded-[0.5rem] bg-bg-01": styleType === "masonry",
-    "hover:bg-gray-100": styleType === "list"
+    "": styleType === "list"
   });
 
   if (!userId) {
@@ -40,23 +40,23 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
             alert("로그인이 필요합니다");
           }}
           inactiveIcon={
-            <span className="text-text-03">
-              <Heart size={20} />
-            </span>
+            <span className="text-text-03">{styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}</span>
           }
         />
-        <ToggleButton
-          btnStyle={buttonClass}
-          isActive={false}
-          onClick={() => {
-            alert("로그인이 필요합니다");
-          }}
-          inactiveIcon={
-            <span className="text-text-03">
-              <BookmarkSimple size={20} />
-            </span>
-          }
-        />
+        {styleType !== "list" && (
+          <ToggleButton
+            btnStyle={buttonClass}
+            isActive={false}
+            onClick={() => {
+              alert("로그인이 필요합니다");
+            }}
+            inactiveIcon={
+              <span className="text-text-03">
+                <BookmarkSimple size={20} />
+              </span>
+            }
+          />
+        )}
       </div>
     );
   }
@@ -74,30 +74,30 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
         onClick={toggleLike}
         activeIcon={
           <span className="text-primary-default">
-            <Heart weight="fill" size={20} />
+            {styleType === "masonry" ? <Heart weight="fill" size={20} /> : <Heart weight="fill" size={28} />}
           </span>
         }
         inactiveIcon={
-          <span className="text-text-03">
-            <Heart size={20} />
-          </span>
+          <span className="text-text-03">{styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}</span>
         }
       />
-      <ToggleButton
-        btnStyle={buttonClass}
-        isActive={isBookmarked}
-        onClick={toggleBookmark}
-        activeIcon={
-          <span className="text-status-info">
-            <BookmarkSimple weight="fill" size={20} />
-          </span>
-        }
-        inactiveIcon={
-          <span className="text-text-03">
-            <BookmarkSimple size={20} />
-          </span>
-        }
-      />
+      {styleType !== "list" && (
+        <ToggleButton
+          btnStyle={buttonClass}
+          isActive={isBookmarked}
+          onClick={toggleBookmark}
+          activeIcon={
+            <span className="text-status-info">
+              <BookmarkSimple weight="fill" size={20} />
+            </span>
+          }
+          inactiveIcon={
+            <span className="text-text-03">
+              <BookmarkSimple size={20} />
+            </span>
+          }
+        />
+      )}
     </div>
   );
 };

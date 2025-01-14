@@ -9,12 +9,12 @@ export const createRoomHandler = async (
     description: string;
     category: string; // 카테고리 추가함!!
     hashtags: string[];
-    thumbnailFile: File; // 추가: 썸네일 파일
+    thumbnail: File; // 추가: 썸네일 파일
   }
 ) => {
   try {
     // Step 1: 썸네일 업로드 및 URL 생성
-    const thumbnailUrl = await uploadThumbnail(roomDetails.thumbnailFile);
+    const thumbnailUrl = await uploadThumbnail(roomDetails.thumbnail);
 
     // Step 2: 기존 createChatRoom 호출
     const response = await createChatRoom(userId, {

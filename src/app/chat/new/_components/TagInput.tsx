@@ -1,49 +1,45 @@
-import React, { useEffect, useState } from "react";
-import { FormDetails } from "../page"; // 부모 컴포넌트에서 사용하는 FormDetails 타입
-
-interface HashTagsProps {
-  formData: FormDetails;
-  setFormData: React.Dispatch<React.SetStateAction<FormDetails>>;
-  onCreateChatRoom: () => Promise<void>;
-  onPrev: () => void;
-  loading: boolean;
-  error: string | null;
-  success: boolean;
-}
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import { FormDetails } from "../page";
 
 const CATEGORY_OPTIONS = ["Label1", "Label2", "Label3", "Label4", "Label5"];
 
-const Tags: React.FC<HashTagsProps> = ({ formData, setFormData, onPrev, onCreateChatRoom, loading }) => {
-  const [category, setCategory] = useState<string>(formData.category || "");
-  const [hashtags, setHashtags] = useState<string[]>(formData.hashtags || []);
+const Tags = () => {
+  const {
+    register,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useFormContext<FormDetails>();
+
+  const category = watch("category");
+  const hashtags = watch("hashtags") || [];
 
   // 카테고리 선택 핸들러
   const handleCategorySelect = (selectedCategory: string) => {
-    setCategory(selectedCategory);
-    setFormData((prev) => ({ ...prev, category: selectedCategory }));
+    setValue("category", selectedCategory);
   };
 
   // 해시태그 추가 핸들러
   const handleAddHashtag = (tag: string) => {
     if (tag && !hashtags.includes(tag)) {
-      const updatedHashtags = [...hashtags, tag];
-      setHashtags(updatedHashtags);
-      setFormData((prev) => ({ ...prev, hashtags: updatedHashtags }));
+      setValue("hashtags", [...hashtags, tag]);
     }
   };
 
   // 해시태그 제거 핸들러
   const handleRemoveHashtag = (tag: string) => {
-    const updatedHashtags = hashtags.filter((t) => t !== tag);
-    setHashtags(updatedHashtags);
-    setFormData((prev) => ({ ...prev, hashtags: updatedHashtags }));
+    setValue(
+      "hashtags",
+      hashtags.filter((t) => t !== tag)
+    );
   };
 
-  // formData로 초기 상태 설정
-  useEffect(() => {
-    setCategory(formData.category);
-    setHashtags(formData.hashtags);
-  }, [formData]);
+  // React Hook Form에 필드 등록
+  register("category", {
+    required: "카테고리를 선택해주세요."
+  });
+  register("hashtags"); // 선택 사항으로 등록만 처리
 
   return (
     <div className="p-6">
@@ -63,6 +59,7 @@ const Tags: React.FC<HashTagsProps> = ({ formData, setFormData, onPrev, onCreate
             </button>
           ))}
         </div>
+        {errors.category && <p className="text-sm mt-1 text-red-500">{errors.category.message}</p>}
       </div>
 
       {/* 해시태그 입력 섹션 */}
@@ -93,16 +90,6 @@ const Tags: React.FC<HashTagsProps> = ({ formData, setFormData, onPrev, onCreate
             </span>
           ))}
         </div>
-      </div>
-
-      {/* 하단 버튼 */}
-      <div className="mt-8 flex justify-between">
-        <button onClick={onPrev} className="rounded-lg bg-gray-200 px-6 py-2 text-black" disabled={loading}>
-          이전
-        </button>
-        <button onClick={onCreateChatRoom} className="rounded-lg bg-black px-6 py-2 text-white" disabled={loading}>
-          다음
-        </button>
       </div>
     </div>
   );

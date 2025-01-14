@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  // darkMode: ["class"],
   content: ["./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   // dynamic으로 사용시 필요 리스트
   safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#333333]", "text-[#666666]"],
@@ -137,6 +138,6 @@ const config: Config = {
       }
     }
   },
-  plugins: []
+  plugins: [require("tailwindcss-animate")]
 };
 export default config;

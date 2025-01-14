@@ -38,3 +38,10 @@ input[type="search"]::-moz-search-cancel-button {
 input[type="search"]::-ms-clear {
   display: none;
 }
+
+/* shadcn용 radius 변경시 수정 */
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}

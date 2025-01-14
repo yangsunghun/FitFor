@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { EnvelopeSimple } from "@phosphor-icons/react";
 import { useState } from "react";
 import LoginForm from "./LoginForm";
 import SocialLoginButton from "./SocialLoginButton";
@@ -13,18 +13,19 @@ const LoginOptions = () => {
   };
 
   return (
-    <div className="flex w-full flex-col items-center gap-2">
+    <div className="flex w-full flex-col items-center gap-2 pt-8">
       {!isEmailLogin ? (
         <>
-          <button
-            className="mt-8 flex w-full flex-row justify-center gap-4 rounded-2xl bg-white p-4 text-black shadow-md"
-            onClick={showEmailForm}
-          >
-            <Image src="/images/default-user-profile.png" width={25} height={25} alt="FitFor login" priority />
-            <span>이메일로 시작</span>
-          </button>
           <SocialLoginButton provider="google" />
           <SocialLoginButton provider="kakao" />
+          {/* 1차 피드백 이후의 도전 기능 */}
+          <button
+            className="flex hidden w-full flex-row justify-center gap-4 rounded-2xl bg-white p-4 text-black shadow-md"
+            onClick={showEmailForm}
+          >
+            <EnvelopeSimple size={25} />
+            <span>이메일로 시작</span>
+          </button>
         </>
       ) : (
         <>

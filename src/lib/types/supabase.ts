@@ -284,6 +284,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          isSaved: boolean
           likes: number
           tags: string[]
           thumbnail: string
@@ -298,6 +299,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          isSaved?: boolean
           likes: number
           tags: string[]
           thumbnail: string
@@ -312,6 +314,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          isSaved?: boolean
           likes?: number
           tags?: string[]
           thumbnail?: string
@@ -371,6 +374,7 @@ export type Database = {
           email: string
           gender: string
           id: string
+          introduction: string
           nickname: string
           profile_image: string | null
         }
@@ -379,6 +383,7 @@ export type Database = {
           email: string
           gender?: string
           id?: string
+          introduction?: string
           nickname: string
           profile_image?: string | null
         }
@@ -387,6 +392,7 @@ export type Database = {
           email?: string
           gender?: string
           id?: string
+          introduction?: string
           nickname?: string
           profile_image?: string | null
         }

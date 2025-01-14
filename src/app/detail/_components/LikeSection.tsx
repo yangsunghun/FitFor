@@ -3,38 +3,59 @@
 import { useBookmarks } from "@/lib/hooks/detail/useBookmark";
 import { useLike } from "@/lib/hooks/detail/useLike";
 import { useAuthStore } from "@/lib/store/authStore";
+import { cn } from "@/lib/utils/common/className";
+import { BookmarkSimple, Heart } from "@phosphor-icons/react";
 import ToggleButton from "./ToggleButton";
 
 type LikeSectionProps = {
   postId: string;
+  styleType?: "masonry" | "list" | "detail";
 };
 
-const LikeSection = ({ postId }: LikeSectionProps) => {
+const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
   const { user } = useAuthStore();
   const userId = user?.id;
 
   const { isLiked, likeCount, isPending: likePending, toggleLike } = useLike(postId, userId ?? "");
   const { isBookmarked, isPending: bookmarkPending, toggleBookmark } = useBookmarks(postId, userId ?? "");
 
+  const containerClass = cn({
+    "flex gap-3": styleType === "masonry",
+    "mt-4 flex gap-2": styleType === "list"
+  });
+
+  const buttonClass = cn("flex justify-center items-center", {
+    "w-7 h-7 rounded-[0.5rem] bg-bg-01": styleType === "masonry",
+    "hover:bg-gray-100": styleType === "list"
+  });
+
   if (!userId) {
     return (
-      <div className="mt-4 flex gap-4">
+      <div className={containerClass}>
         <ToggleButton
+          btnStyle={buttonClass}
           isActive={false}
           count={0}
           onClick={() => {
             alert("로그인이 필요합니다");
           }}
-          activeIcon={<span>좋아요함</span>}
-          inactiveIcon={<span>좋아요아직</span>}
+          inactiveIcon={
+            <span className="text-text-03">
+              <Heart size={20} />
+            </span>
+          }
         />
         <ToggleButton
+          btnStyle={buttonClass}
           isActive={false}
           onClick={() => {
             alert("로그인이 필요합니다");
           }}
-          activeIcon={<span>북마크됨</span>}
-          inactiveIcon={<span>북마크아직</span>}
+          inactiveIcon={
+            <span className="text-text-03">
+              <BookmarkSimple size={20} />
+            </span>
+          }
         />
       </div>
     );
@@ -45,19 +66,37 @@ const LikeSection = ({ postId }: LikeSectionProps) => {
   }
 
   return (
-    <div className="mt-4 flex gap-4">
+    <div className={containerClass}>
       <ToggleButton
+        btnStyle={buttonClass}
         isActive={isLiked}
         count={likeCount}
         onClick={toggleLike}
-        activeIcon={<span>좋아요함</span>}
-        inactiveIcon={<span>좋아요아직</span>}
+        activeIcon={
+          <span className="text-primary-default">
+            <Heart weight="fill" size={20} />
+          </span>
+        }
+        inactiveIcon={
+          <span className="text-text-03">
+            <Heart size={20} />
+          </span>
+        }
       />
       <ToggleButton
+        btnStyle={buttonClass}
         isActive={isBookmarked}
         onClick={toggleBookmark}
-        activeIcon={<span>북마크함</span>}
-        inactiveIcon={<span>북마크아직</span>}
+        activeIcon={
+          <span className="text-status-info">
+            <BookmarkSimple weight="fill" size={20} />
+          </span>
+        }
+        inactiveIcon={
+          <span className="text-text-03">
+            <BookmarkSimple size={20} />
+          </span>
+        }
       />
     </div>
   );

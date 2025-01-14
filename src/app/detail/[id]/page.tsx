@@ -42,7 +42,7 @@ export const DetailPage = async ({ params }: DetailPageProps) => {
   const postId = params.id;
 
   return (
-    <div className="mx-auto max-w-3xl p-4">
+    <div className="inner">
       <ViewCounter postId={postId} />
 
       <ContentsSection postId={postId} />

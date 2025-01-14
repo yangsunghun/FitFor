@@ -2,7 +2,7 @@ import type { FetchPostsResponse } from "@/lib/types/post";
 import { createClient } from "@/lib/utils/supabase/client";
 
 export const fetchPosts = async ({ pageParam = 1 }): Promise<FetchPostsResponse> => {
-  const perPage = 8;
+  const perPage = 16;
   const from = (pageParam - 1) * perPage;
   const to = from + perPage - 1;
 

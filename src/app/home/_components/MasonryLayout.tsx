@@ -1,7 +1,8 @@
 "use client";
 
-import sampleImage from "@/assets/images/image_sample.png";
+import LikeSection from "@/app/detail/_components/LikeSection";
 import type { PostType } from "@/lib/types/post";
+import { formatDate } from "@/lib/utils/common/formatDateTime";
 import Image from "next/image";
 import Link from "next/link";
 import Masonry from "react-layout-masonry";
@@ -18,23 +19,22 @@ const MasonryLayout = ({ posts }: MasonryLayoutProps) => {
           <div key={item.id} className="masonry-item group relative overflow-hidden rounded-[1rem]">
             <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
             <figure className="relative w-full">
-              <Image src={item.thumbnail || sampleImage} alt={item.title} width={500} height={1000} />
+              <Image
+                src={item.thumbnail}
+                alt={item.title}
+                width={500}
+                height={700}
+                className="object-cover object-center"
+              />
             </figure>
             <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100">
-              <div className="flex items-center gap-4">
-                <div className="relative h-[40px] w-[40px] items-center overflow-hidden rounded-full bg-gray-300">
-                  <Image
-                    src={item.users.profile_image || sampleImage}
-                    alt={`${item.users.nickname}의 프로필 이미지`}
-                    fill={true}
-                    className="h-8 w-8 rounded-full"
-                  />
-                </div>
-                <p>{item.users.nickname}</p>
+              <div className="absolute right-4 top-4 z-20">
+                <LikeSection postId={item.id} styleType="masonry" />
               </div>
-              <p>{item.title}</p>
-              <p>
+              <p className="absolute bottom-4 left-4 flex gap-1 text-caption text-text-01">
                 <span>조회수: {item.view}</span>
+                <span>·</span>
+                <span>{formatDate(item.created_at)}</span>
               </p>
             </div>
           </div>

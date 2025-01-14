@@ -2,29 +2,27 @@
 
 import { useUserBookmarks } from "@/lib/hooks/mypage/useUserBookmarks";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import ContentList from "./ContentList";
 import ContentListSkeleton from "./SkeletonContentList";
-import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 
 const BookmarkList = () => {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
-  const { userBookmarks, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, isError, isRefetching } = useUserBookmarks(
-    user?.id || ""
-  );
+  const { userBookmarks, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, isError, isRefetching } =
+    useUserBookmarks(user?.id || "");
 
   useEffect(() => {
     if (user?.id) queryClient.invalidateQueries({ queryKey: ["userBookmarks"] });
   }, [queryClient, user?.id]);
 
-  if (isError) return <p>오류 발생 ...</p>;
-  console.log("bookmark list 다음 페이지 존재", hasNextPage)
+  if (isError) return <p>북마크 불러오기 오류 발생 ...</p>;
 
   return (
     <>
       {isPending || isRefetching ? (
-        <ContentListSkeleton />
+        <ContentListSkeleton title="내가 북마크한 포스트" subtitle="Bookmarks" />
       ) : (
         <ContentList
           title="내가 북마크한 포스트"

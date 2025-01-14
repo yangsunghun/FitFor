@@ -15,8 +15,6 @@ type ContentGridProps = {
 };
 
 const ContentList = ({ title, subtitle, posts, hasNextPage, isFetchingNextPage, fetchNextPage }: ContentGridProps) => {
-  console.log("content list 다음 페이지 존재", hasNextPage)
-
   return (
     <section className="my-12">
       <div className="mb-4">

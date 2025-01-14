@@ -10,7 +10,6 @@ export const fetchUserBookmarks = async ({
   userId: string;
   pageParam: number;
 }): Promise<FetchPostsResponse> => {
-
   const supabase = await createClient();
 
   const perPage = 5;
@@ -39,16 +38,25 @@ export const fetchUserBookmarks = async ({
   };
 };
 
-export const fetchUserLikes = async (userId: string) => {
-  if (!userId) return null;
-
+export const fetchUserLikes = async ({
+  userId,
+  pageParam = 1
+}: {
+  userId: string;
+  pageParam: number;
+}): Promise<FetchPostsResponse> => {
   const supabase = await createClient();
+
+  const perPage = 5;
+  const from = (pageParam - 1) * perPage;
+  const to = from + perPage - 1;
 
   const { data: userLikes, error: userLikesError } = await supabase
     .from("likes")
     .select("post_id, posts(*, users(nickname, profile_image))")
     .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (userLikesError) {
     console.error("좋아요 정보 조회 실패:", userLikesError);
@@ -57,5 +65,10 @@ export const fetchUserLikes = async (userId: string) => {
 
   // 가져온 데이터 형태 정리 (post 데이터만 가져오도록)
   const likes = userLikes.map((bookmark: { posts: PostType }) => bookmark.posts);
-  return likes;
+
+  return {
+    items: likes || [],
+    nextPage: likes.length === perPage ? pageParam + 1 : undefined,
+    hasMore: likes.length === perPage
+  };
 };

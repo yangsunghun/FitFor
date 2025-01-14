@@ -10,18 +10,30 @@ import ContentListSkeleton from "./SkeletonContentList";
 const LikeList = () => {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
-  const { userLikes, isPending, isFetching } = useUserLikes(user?.id || "");
+  const { userLikes, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, isError, isRefetching } = useUserLikes(
+    user?.id || ""
+  );
 
   useEffect(() => {
     if (user?.id) queryClient.invalidateQueries({ queryKey: ["userLikes"] });
   }, [queryClient, user?.id]);
 
+  if (isError) return <p>좋아요 불러오기 오류 발생 ...</p>;
+
   return (
     <>
-      {isPending || isFetching ? (
-        <ContentListSkeleton />
+      {isPending || isRefetching ? (
+        <ContentListSkeleton title="좋아요한 포스트" subtitle="Likes" />
       ) : (
-        <ContentList title="좋아요한 포스트" subtitle="Bookmarks" posts={userLikes!} />
+        // <ContentList title="좋아요한 포스트" subtitle="Bookmarks" posts={userLikes!} />
+        <ContentList
+          title="좋아요한 포스트"
+          subtitle="Likes"
+          posts={userLikes}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+        />
       )}
     </>
   );

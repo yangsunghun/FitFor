@@ -3,7 +3,7 @@ import { fetchUserBookmarks } from "@/lib/utils/mypage/userInfo";
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 
 export const useUserBookmarks = (userId: string) => {
-  const queryKey = ["userBookmarks", userId];
+  const queryKey = ["bookmarks", userId];
   // 유저의 북마크 데이터 가져오기
   const {
     data: userBookmarks, // 가져온 모든 페이지 데이터
@@ -20,7 +20,6 @@ export const useUserBookmarks = (userId: string) => {
       return fetchUserBookmarks({ userId, pageParam });
     },
     getNextPageParam: (lastPage) => {
-      console.log("Next Page:", lastPage.nextPage);
       return lastPage.nextPage;
     },
     enabled: Boolean(userId) // 유저 아이디가 "", null, undefined일때 실행 X

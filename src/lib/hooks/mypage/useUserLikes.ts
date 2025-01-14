@@ -1,25 +1,41 @@
+import type { FetchPostsResponse } from "@/lib/types/post";
 import { fetchUserLikes } from "@/lib/utils/mypage/userInfo";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 
 export const useUserLikes = (userId: string) => {
-  const queryKey = ["userLikes"];
+  const queryKey = ["userLikes", userId];
 
-  // 유저의 좋아요 정보 가져오기
+  // 유저의 좋아요 데이터 가져오기
   const {
-    data: userLikes,
-    isPending,
-    isFetching
-  } = useQuery({
+    data: userLikes, // 가져온 모든 페이지 데이터
+    fetchNextPage, // 다음 페이지 데이터를 가져오는 함수
+    hasNextPage, // 다음 페이지가 존재하는지 여부
+    isFetchingNextPage, // 다음 페이지를 가져오는 중인지 여부
+    isPending, // 첫 로딩 상태 여부
+    isError, // 에러 발생 여부
+    isRefetching
+  } = useInfiniteQuery<FetchPostsResponse, Error, InfiniteData<FetchPostsResponse>, string[], number>({
     queryKey,
-    queryFn: async () => {
-      return fetchUserLikes(userId);
+    initialPageParam: 1,
+    queryFn: async ({ pageParam = 1 }) => {
+      return fetchUserLikes({ userId, pageParam });
     },
-    enabled: !!userId
+    getNextPageParam: (lastPage) => {
+      return lastPage.nextPage;
+    },
+    enabled: Boolean(userId) // 유저 아이디가 "", null, undefined일때 실행 X
   });
 
+  // 가져온 데이터 정리
+  const allLikes = userLikes?.pages.flatMap((page) => page.items) || [];
+
   return {
-    userLikes,
+    userLikes: allLikes,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isPending,
-    isFetching
+    isError,
+    isRefetching
   };
 };

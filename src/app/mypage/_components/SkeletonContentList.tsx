@@ -1,17 +1,18 @@
-const ContentListSkeleton = () => {
+const ContentListSkeleton = ({ title, subtitle }: { title: string; subtitle: string }) => {
   return (
-    <section className="my-12 animate-pulse">
-      {/* Title and Subtitle */}
+    <section className="my-12">
       <div className="mb-4">
-        <div className="mb-2 h-4 w-24 rounded bg-gray-300"></div>
-        <div className="h-6 w-48 rounded bg-gray-300"></div>
+        <p className="text-body text-gray-600">{subtitle}</p>
+        <h2 className="text-title1 font-bold">{title}</h2>
       </div>
-
-      {/* Skeleton Grid */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-        {/* Placeholder Boxes */}
-        {[...Array(5)].map((_, index) => (
-          <div key={index} className="aspect-square rounded-lg bg-gray-200"></div>
+      <div className="flex flex-row gap-8 overflow-x-auto scroll-smooth pb-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:h-2">
+        {[...Array(6)].map((_, index) => (
+          <div
+            key={index}
+            className="relative aspect-square h-[216px] w-[180px] flex-shrink-0 animate-pulse content-center justify-items-center overflow-hidden rounded-lg bg-gray-200"
+          >
+            <div className="relative h-full w-full bg-gray-300" />
+          </div>
         ))}
       </div>
     </section>

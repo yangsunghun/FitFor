@@ -9,6 +9,7 @@ export const createChatRoom = async (
     title: string;
     subtitle: string;
     description: string;
+    category: string;
     hashtags: string[];
     thumbnailUrl: string;
   }
@@ -22,6 +23,7 @@ export const createChatRoom = async (
         room_title: roomDetails.title,
         room_subtitle: roomDetails.subtitle,
         room_description: roomDetails.description,
+        room_category: roomDetails.category,
         room_hashtags: roomDetails.hashtags,
         room_thumbnail_url: roomDetails.thumbnailUrl,
         isActive: true

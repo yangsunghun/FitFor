@@ -1,6 +1,7 @@
 "use client";
 
 import sampleImage from "@/assets/images/image_sample.png";
+import { Tags } from "@/components/ui/Tags";
 import type { PostType } from "@/lib/types/post";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,11 +21,11 @@ const ListLayout = ({ posts }: ListLayoutProps) => {
               <Image src={item.thumbnail} alt={item.title} fill={true} className="object-cover object-center" />
             </figure>
             <div>
-              <p>
+              <div className="flex gap-2">
                 {item.tags.map((tag) => (
-                  <span>{tag}</span>
+                  <Tags variant="primary" size="md" label={tag} />
                 ))}
-              </p>
+              </div>
               <div className="flex items-center gap-4">
                 <div className="relative h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 bg-gray-100">
                   <Image

@@ -2,7 +2,9 @@
 
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { formatDateTime } from "@/lib/utils/common/formatDateTime";
+import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
+import LikeSection from "./LikeSection";
 
 type Props = {
   postId: string;
@@ -18,7 +20,18 @@ const ContentsSection = ({ postId }: Props) => {
     return <div>게시물을 찾을 수 없습니다.</div>;
   }
 
-  const { title, users, created_at, thumbnail, content, tags = [], body_size = [], view } = post!;
+  const {
+    title,
+    users,
+    created_at,
+    thumbnail,
+    content,
+    tags = [],
+    body_size = [],
+    view,
+    upload_place,
+    comments
+  } = post!;
 
   return (
     <section className="contents-section">
@@ -34,7 +47,10 @@ const ContentsSection = ({ postId }: Props) => {
               className="object-cover"
             />
           </figure>
-          <p className="text-lg font-medium">{users?.nickname || "익명"}</p>
+          <div>
+            <p className="text-lg font-medium">{users?.nickname || "익명"}</p>
+            <p>{upload_place}</p>
+          </div>
         </div>
 
         <p className="text-body text-text-03">{formatDateTime(created_at)}</p>
@@ -42,6 +58,14 @@ const ContentsSection = ({ postId }: Props) => {
 
       <div className="mb-4">
         <Image src={thumbnail} alt={title || "게시글 이미지"} width={1000} height={1600} className="object-cover" />
+      </div>
+
+      <div className="mt-4 flex gap-4 text-title2 font-medium leading-7">
+        <span className="item-center pointer-events-none flex gap-1">
+          <ChatCircleDots size={28} className="text-text-03" />
+          {comments}
+        </span>
+        <LikeSection postId={postId} styleType="detail" />
       </div>
 
       <p className="text-lg mb-6 leading-relaxed">{content}</p>

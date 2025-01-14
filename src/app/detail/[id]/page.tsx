@@ -2,7 +2,6 @@ import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
 import type { Metadata } from "next";
 import CommentSection from "../_components/CommentSection";
 import ContentsSection from "../_components/ContentsSection";
-import LikeSection from "../_components/LikeSection";
 import ViewCounter from "../_components/ViewCounter";
 
 type DetailPageProps = {
@@ -46,9 +45,6 @@ export const DetailPage = async ({ params }: DetailPageProps) => {
       <ViewCounter postId={postId} />
 
       <ContentsSection postId={postId} />
-      <div className="mt-4 flex gap-4">
-        <LikeSection postId={postId} />
-      </div>
 
       <div className="mt-4">
         <CommentSection postId={postId} />

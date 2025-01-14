@@ -6,13 +6,13 @@ const supabase = createClient();
 
 type ProductModalProps = {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: () => void; // 모달 닫기 함수
   onAddProduct: (product: {
     title: string;
     description: string;
     price: number;
     image_url: string;
-  }) => void;
+  }) => void; // 부모 컴포넌트로 데이터 전달
 };
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 최대 업로드 파일 크기 5MB
@@ -90,6 +90,16 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
     fileInput.click(); // 파일 선택 창 열기
   };
 
+  // 폼 초기화 함수 (모달이 닫힐 때 호출)
+  const resetForm = () => {
+    setFormState({
+      title: "",
+      description: "",
+      price: "",
+      image_url: "",
+    });
+  };
+
   // 폼 제출 핸들러
   const handleSubmit = () => {
     // 필수 입력 항목 확인
@@ -100,6 +110,14 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
 
     // 부모 컴포넌트에 상품 데이터 전달
     onAddProduct({ title, description, price: Number(price), image_url });
+
+    resetForm(); // 입력 폼 초기화
+    onClose(); // 모달 닫기
+  };
+
+  // 모달 닫기 핸들러 (취소 버튼 클릭 시)
+  const handleClose = () => {
+    resetForm(); // 입력 폼 초기화
     onClose(); // 모달 닫기
   };
 
@@ -176,13 +194,13 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
         <div className="flex justify-end gap-4">
           <button
             className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
-            onClick={onClose}
+            onClick={handleClose} // 폼 초기화 및 모달 닫기
           >
             취소
           </button>
           <button
             className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
-            onClick={handleSubmit}
+            onClick={handleSubmit} // 데이터 저장 및 모달 닫기
           >
             완료
           </button>

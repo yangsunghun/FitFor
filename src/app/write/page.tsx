@@ -333,8 +333,8 @@ const WritePage = () => {
                     key={tag}
                     onClick={() => toggleTag(tag, group.tags, group.max)}
                     className={`px-3 py-1 text-sm border rounded-full ${formState.tags.includes(tag)
-                        ? "bg-black text-white border-black"
-                        : "bg-white text-black border-gray-300"
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black border-gray-300"
                       }`}
                   >
                     {tag}
@@ -356,8 +356,8 @@ const WritePage = () => {
       {/* 상품 추가 모달 */}
       <PurchaseModal
         isOpen={isPurchaseModalOpen}
-        onClose={() => setIsPurchaseModalOpen(false)}
-        onAddProduct={handleAddPurchase}
+        onClose={() => setIsPurchaseModalOpen(false)} // 모달 닫기
+        onAddProduct={(purchase) => handleAddPurchase(purchase)} // 상품 추가 핸들러
       />
     </div>
   );

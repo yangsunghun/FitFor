@@ -1,6 +1,7 @@
 "use client";
 
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
+import { formatDateTime } from "@/lib/utils/common/formatDateTime";
 import Image from "next/image";
 
 type Props = {
@@ -20,33 +21,27 @@ const ContentsSection = ({ postId }: Props) => {
   const { title, users, created_at, thumbnail, content, tags = [], body_size = [], view } = post!;
 
   return (
-    <div className="contents-section">
-      <p className="text-3xl mb-4 font-bold">{title}</p>
+    <section className="contents-section">
+      {/* <p className="text-3xl mb-4 font-bold">{title}</p> */}
 
-      <div className="mb-4 flex items-center gap-4">
-        <div className="relative h-10 w-10 overflow-hidden rounded-full border-2 bg-gray-100">
-          <Image
-            src={users?.profile_image || "/placeholder-profile.png"}
-            alt={`${users?.nickname || "익명"}의 프로필 이미지`}
-            fill
-            className="object-cover"
-          />
+      <article className="flex items-center justify-between">
+        <div className="mb-4 flex items-center gap-4">
+          <figure className="relative h-10 w-10 overflow-hidden rounded-full border-2 bg-gray-100">
+            <Image
+              src={users?.profile_image || ""}
+              alt={`${users?.nickname || "익명"}의 프로필 이미지`}
+              fill
+              className="object-cover"
+            />
+          </figure>
+          <p className="text-lg font-medium">{users?.nickname || "익명"}</p>
         </div>
-        <p className="text-lg font-medium">{users?.nickname || "익명"}</p>
-      </div>
 
-      <p className="text-sm mb-2 text-gray-600">
-        작성일: {created_at ? new Date(created_at).toLocaleDateString() : "알 수 없음"}
-      </p>
+        <p className="text-body text-text-03">{formatDateTime(created_at)}</p>
+      </article>
 
       <div className="mb-4">
-        <Image
-          src={thumbnail || "/placeholder.png"}
-          alt={title || "게시글 이미지"}
-          width={800}
-          height={400}
-          className="h-64 w-full rounded-lg object-cover"
-        />
+        <Image src={thumbnail} alt={title || "게시글 이미지"} width={1000} height={1600} className="object-cover" />
       </div>
 
       <p className="text-lg mb-6 leading-relaxed">{content}</p>
@@ -66,7 +61,7 @@ const ContentsSection = ({ postId }: Props) => {
           <strong>조회수:</strong> {view}
         </p>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -1,8 +1,8 @@
 "use client";
 
 import LikeSection from "@/app/detail/_components/LikeSection";
-import sampleImage from "@/assets/images/image_sample.png";
 import type { PostType } from "@/lib/types/post";
+import { formatDate } from "@/lib/utils/common/formatDateTime";
 import Image from "next/image";
 import Link from "next/link";
 import Masonry from "react-layout-masonry";
@@ -19,7 +19,13 @@ const MasonryLayout = ({ posts }: MasonryLayoutProps) => {
           <div key={item.id} className="masonry-item group relative overflow-hidden rounded-[1rem]">
             <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
             <figure className="relative w-full">
-              <Image src={item.thumbnail || sampleImage} alt={item.title} width={500} height={1000} />
+              <Image
+                src={item.thumbnail}
+                alt={item.title}
+                width={500}
+                height={700}
+                className="object-cover object-center"
+              />
             </figure>
             <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100">
               <div className="absolute right-4 top-4 z-20">
@@ -28,7 +34,7 @@ const MasonryLayout = ({ posts }: MasonryLayoutProps) => {
               <p className="absolute bottom-4 left-4 flex gap-1 text-caption text-text-01">
                 <span>조회수: {item.view}</span>
                 <span>·</span>
-                <span>{new Date(item.created_at).toLocaleDateString()}</span>
+                <span>{formatDate(item.created_at)}</span>
               </p>
             </div>
           </div>

@@ -3,6 +3,7 @@
 import LikeSection from "@/app/detail/_components/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import type { PostType } from "@/lib/types/post";
+import { formatDate } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,7 +33,7 @@ const ListLayout = ({ posts }: ListLayoutProps) => {
               </p>
               <div className="absolute bottom-0 left-0 z-20 flex gap-4 leading-7">
                 <LikeSection postId={item.id} styleType="list" />
-                <span className="item-center flex gap-1 font-medium">
+                <span className="item-center pointer-events-none flex gap-1 font-medium">
                   <ChatCircleDots size={28} className="text-text-03" />
                   {item.comments}
                 </span>
@@ -40,7 +41,7 @@ const ListLayout = ({ posts }: ListLayoutProps) => {
               <p className="absolute bottom-4 right-4 flex gap-1 text-body">
                 <span>조회수: {item.view}</span>
                 <span>·</span>
-                <span>{new Date(item.created_at).toLocaleDateString()}</span>
+                <span>{formatDate(item.created_at)}</span>
               </p>
             </div>
           </li>

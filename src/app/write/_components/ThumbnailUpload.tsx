@@ -13,10 +13,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const BUCKET_NAME = "post-images"; // 버킷 이름
 const THUMBNAIL_PATH = "thumbnail"; // 썸네일 파일 경로
 
-const ThumbnailUpload: React.FC<ThumbnailUploadProps> = ({
-  thumbnail,
-  onThumbnailUpload,
-}) => {
+function ThumbnailUpload({ thumbnail, onThumbnailUpload }: ThumbnailUploadProps) {
   // 파일 업로드 로직
   const uploadThumbnail = async (file: File): Promise<string> => {
     try {

@@ -5,9 +5,9 @@ import { createClient } from "@/lib/utils/supabase/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import AddressModal from "./_components/AddressModal";
-import PurchaseModal from "./_components/PurchaseModal";
-import ThumbnailUpload from "./_components/ThumbnailUpload";
+import AddressModal from "../_components/AddressModal";
+import PurchaseModal from "../_components/PurchaseModal";
+import ThumbnailUpload from "../_components/ThumbnailUpload";
 
 const supabase = createClient();
 

@@ -1,9 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
 import { usePosts } from "@/lib/hooks/home/usePosts";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
-import Link from "next/link";
 import LayoutToggle from "./LayoutToggle";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
@@ -22,20 +20,6 @@ const ListLender = ({}: ListLenderProps) => {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          alert("함수 전달");
-        }}
-        variant="primaryLine"
-        size="md"
-      >
-        함수 사용
-      </Button>
-      <Button asChild variant="primaryLine" size="md">
-        <Link href="/chat" className="block">
-          Link로 사용
-        </Link>
-      </Button>
       <section>
         <TagsFilter tags={["봄", "여름", "가을", "겨울"]} selectedTags={selectedTags} onToggleTag={toggleTag} />
       </section>

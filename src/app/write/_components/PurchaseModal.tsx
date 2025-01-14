@@ -1,23 +1,28 @@
 import { createClient } from "@/lib/utils/supabase/client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { PurchaseInsert } from "../page";
 
 const supabase = createClient();
 
 type ProductModalProps = {
   isOpen: boolean;
-  onClose: () => void; // 모달 닫기 함수
-  onAddProduct: (product: {
-    title: string;
-    description: string;
-    price: number;
-    image_url: string;
-  }) => void; // 부모 컴포넌트로 데이터 전달
+  onClose: () => void;
+  onAddProduct: (product: PurchaseInsert) => void;
+  onEditProduct?: (product: PurchaseInsert) => void;
+  productToEdit?: PurchaseInsert | null; // null 허용
+  mode: "add" | "edit";
 };
-
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 최대 업로드 파일 크기 5MB
 
-const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => {
+const PurchaseModal = ({
+  isOpen,
+  onClose,
+  onAddProduct,
+  onEditProduct,
+  productToEdit,
+  mode,
+}: ProductModalProps) => {
   // 입력 폼 상태 관리
   const [formState, setFormState] = useState({
     title: "",
@@ -27,6 +32,26 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
   });
 
   const { title, description, price, image_url } = formState;
+
+  useEffect(() => {
+    if (productToEdit) {
+      // 수정 모드에서 데이터 초기화
+      setFormState({
+        title: productToEdit.title,
+        description: productToEdit.description || "",
+        price: productToEdit.price || "",
+        image_url: productToEdit.image_url || "",
+      });
+    } else {
+      // 추가 모드에서 초기 상태로 리셋
+      setFormState({
+        title: "",
+        description: "",
+        price: "",
+        image_url: "",
+      });
+    }
+  }, [productToEdit]);
 
   // 입력 필드 값 변경 처리
   const handleInputChange = (
@@ -90,7 +115,7 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
     fileInput.click(); // 파일 선택 창 열기
   };
 
-  // 폼 초기화 함수 (모달이 닫힐 때 호출)
+  // 폼 초기화 함수
   const resetForm = () => {
     setFormState({
       title: "",
@@ -108,8 +133,13 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
       return;
     }
 
-    // 부모 컴포넌트에 상품 데이터 전달
-    onAddProduct({ title, description, price: Number(price), image_url });
+    if (mode === "add") {
+      // 추가 모드
+      onAddProduct({ title, description, price: Number(price), image_url });
+    } else if (mode === "edit" && onEditProduct) {
+      // 수정 모드
+      onEditProduct({ title, description, price: Number(price), image_url });
+    }
 
     resetForm(); // 입력 폼 초기화
     onClose(); // 모달 닫기
@@ -127,29 +157,31 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">상품 정보 입력</h2>
+        <h2 className="text-xl font-bold mb-4">
+          {mode === "add" ? "상품 추가" : "상품 수정"}
+        </h2>
 
         {/* 이미지 업로드 */}
-        <div className="mb-4">
-          <label className="block font-bold mb-2">상품 이미지</label>
-          <div
-            className="w-32 h-32 border border-gray-300 flex items-center justify-center rounded-lg cursor-pointer"
-            onClick={handleImageUpload}
-          >
-            {image_url ? (
+        <div
+          className="w-32 h-32 border border-gray-300 rounded-lg overflow-hidden bg-gray-100 cursor-pointer"
+          onClick={handleImageUpload}
+        >
+          {image_url ? (
+            <div className="relative w-full h-full">
               <Image
                 src={image_url}
                 alt="Uploaded"
-                width={128}
-                height={128}
-                objectFit="cover"
-                className="rounded-lg"
+                layout="fill" // 부모 요소를 기준으로 채움
+                objectFit="cover" // 이미지 비율 유지하며 영역을 꽉 채움
               />
-            ) : (
-              <span className="text-gray-400">+ 추가</span>
-            )}
-          </div>
+            </div>
+          ) : (
+            <span className="text-gray-400 flex items-center justify-center h-full">
+              + 추가
+            </span>
+          )}
         </div>
+
 
         {/* 상품명 */}
         <div className="mb-4">
@@ -202,7 +234,7 @@ const PurchaseModal = ({ isOpen, onClose, onAddProduct }: ProductModalProps) => 
             className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
             onClick={handleSubmit} // 데이터 저장 및 모달 닫기
           >
-            완료
+            {mode === "add" ? "추가 완료" : "수정 완료"}
           </button>
         </div>
       </div>

@@ -26,7 +26,7 @@ type PostInsert = {
   view: number;
 };
 
-type PurchaseInsert = {
+export type PurchaseInsert = {
   title: string;
   description?: string | null;
   price?: number | null;
@@ -46,7 +46,7 @@ type FormState = {
 
 // 태그 그룹 정의
 const TAG_GROUPS = [
-  { title: "성별", tags: ["남성", "여성", "유니섹스"], max: 1 },
+  { title: "성별", tags: ["남성", "여성", "성별무관"], max: 1 },
   { title: "계절 (최대 2개)", tags: ["봄", "여름", "가을", "겨울"], max: 2 },
   { title: "스타일 태그 (최대 2개)", tags: ["캐주얼", "스트릿", "걸리시", "미니멀", "스포티", "시크", "시티보이", "로맨틱", "고프코어", "워크웨어", "레트로", "클래식", "프레피", "에스닉", "리조트", "드뮤어"], max: 2 },
   { title: "TPO (최대 2개)", tags: ["데일리", "데이트", "캠퍼스", "여행", "캠핑", "카페", "피크닉", "페스티벌", "바다", "러닝", "헬스", "등산", "요가", "소개팅", "출근", "결혼식", "면접", "상견례", "등교"], max: 2 },
@@ -66,6 +66,7 @@ const WritePage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 주소 검색 모달 상태
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false); // 상품 추가 모달 상태
+  const [productToEdit, setProductToEdit] = useState<PurchaseInsert | null>(null); // 수정할 상품 데이터
 
   const router = useRouter(); // 페이지 이동 관리
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
@@ -81,6 +82,22 @@ const WritePage = () => {
   // 상품 추가 핸들러
   const handleAddPurchase = (purchase: PurchaseInsert) => {
     handleChange("purchases", [...formState.purchases, purchase]);
+  };
+
+  // 상품 수정 핸들러
+  const handleEditPurchase = (updatedProduct: PurchaseInsert) => {
+    handleChange("purchases", formState.purchases.map((p) =>
+      p.title === updatedProduct.title ? updatedProduct : p
+    ));
+    setProductToEdit(null); // 수정 모드 초기화
+  };
+
+  // 상품 삭제 핸들러
+  const handleDeletePurchase = (indexToRemove: number) => {
+    handleChange(
+      "purchases",
+      formState.purchases.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   // 태그 선택 핸들러
@@ -288,31 +305,59 @@ const WritePage = () => {
           <div className="flex flex-wrap gap-4">
             {/* 상품 추가 버튼 */}
             <button
-              onClick={() => setIsPurchaseModalOpen(true)}
-              className="w-32 h-32 flex items-center justify-center border border-gray-300 rounded-lg text-gray-500"
+              onClick={() => {
+                setProductToEdit(null); // 추가 모드 초기화
+                setIsPurchaseModalOpen(true); // 추가 모달 열기
+              }}
+              className="w-32 h-32 flex flex-col items-center justify-center border border-gray-300 rounded-lg text-gray-500"
             >
-              + 추가
+              <span className="text-2xl font-bold">+</span>
+              {/* 현재 상품 개수/최대 개수 표시 */}
+              <span className="text-sm text-gray-500 mt-1">
+                {formState.purchases.length}/10
+              </span>
             </button>
 
             {/* 추가된 상품 목록 */}
             {formState.purchases.map((purchase, index) => (
-              <div
-                key={index}
-                className="w-32 h-32 flex flex-col items-center justify-center border border-black rounded-lg text-black p-2"
-              >
-                {/* 상품 이미지 */}
-                {purchase.image_url && (
-                  <div className="relative w-full h-full rounded-md overflow-hidden">
+              <div key={index} className="flex flex-col items-center">
+                {/* 상품 카드 */}
+                <div
+                  className="relative w-32 h-32 border border-black rounded-lg overflow-hidden cursor-pointer"
+                  onClick={() => {
+                    setProductToEdit(purchase); // 수정할 데이터 설정
+                    setIsPurchaseModalOpen(true); // 수정 모달 열기
+                  }}
+                >
+                  {/* 삭제 버튼 */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // 수정 모달 열리지 않도록 이벤트 중단
+                      handleDeletePurchase(index); // 인덱스를 기반으로 삭제 처리
+                    }}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10"
+                    title="삭제"
+                  >
+                    X
+                  </button>
+
+                  {/* 상품 이미지 */}
+                  {purchase.image_url ? (
                     <Image
                       src={purchase.image_url}
                       alt={purchase.title}
                       layout="fill"
                       objectFit="cover"
                     />
-                  </div>
-                )}
-                {/* 상품명 */}
-                <p className="text-sm font-bold text-center">{purchase.title}</p>
+                  ) : (
+                    <div className="bg-gray-200 w-full h-full flex items-center justify-center">
+                      <p className="text-gray-400 text-sm">이미지 없음</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* 상품명 (카드 아래 표시) */}
+                <p className="text-sm font-bold text-center mt-2">{purchase.title || "상품 상세 정보"}</p>
               </div>
             ))}
           </div>
@@ -356,8 +401,14 @@ const WritePage = () => {
       {/* 상품 추가 모달 */}
       <PurchaseModal
         isOpen={isPurchaseModalOpen}
-        onClose={() => setIsPurchaseModalOpen(false)} // 모달 닫기
-        onAddProduct={(purchase) => handleAddPurchase(purchase)} // 상품 추가 핸들러
+        onClose={() => {
+          setProductToEdit(null); // 수정 모드 초기화
+          setIsPurchaseModalOpen(false); // 모달 닫기
+        }}
+        onAddProduct={handleAddPurchase}
+        onEditProduct={handleEditPurchase}
+        productToEdit={productToEdit}
+        mode={productToEdit ? "edit" : "add"}
       />
     </div>
   );

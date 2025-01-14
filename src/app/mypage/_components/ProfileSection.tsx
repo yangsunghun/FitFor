@@ -18,7 +18,7 @@ const ProfileSection = () => {
   return (
     <div className="flex h-[160px] w-[996px] flex-row items-center">
       <Image
-        className="rounded-full bg-white"
+        className="rounded-full bg-white object-cover"
         src={user.profile_image || "/images/default-user-profile"}
         alt={`${user.nickname} profile image`}
         width={160}

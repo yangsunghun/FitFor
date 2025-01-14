@@ -75,6 +75,8 @@ const ProfileSettingsForm = () => {
       editForm: profileSettingSchema.parse(value),
       imageFileURL: profileImageUrl
     });
+
+    console.log("완료 후: ", result);
   };
 
   // 이미지 업로드 (파일 선택)

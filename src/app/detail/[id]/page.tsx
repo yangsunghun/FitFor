@@ -1,15 +1,44 @@
+import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
+import type { Metadata } from "next";
 import CommentSection from "../_components/CommentSection";
 import ContentsSection from "../_components/ContentsSection";
 import LikeSection from "../_components/LikeSection";
 import ViewCounter from "../_components/ViewCounter";
 
-type Props = {
+type DetailPageProps = {
   params: {
     id: string;
   };
 };
 
-const DetailPage = async ({ params }: Props) => {
+export const generateMetadata = async ({ params }: DetailPageProps): Promise<Metadata> => {
+  const postId = params.id;
+  const post = await fetchPostDetail(postId);
+
+  if (!post) {
+    return {
+      title: "게시글을 찾을 수 없습니다.",
+      description: "존재하지 않는 게시글입니다.",
+      openGraph: {
+        title: "게시글을 찾을 수 없습니다.",
+        description: "존재하지 않는 게시글입니다.",
+        url: `https://localhost:3000/detail/${params.id}`
+      }
+    };
+  }
+
+  return {
+    title: `${post.title} - fit4`,
+    description: `${post.content}`,
+    openGraph: {
+      title: `${post.title} - fit4`,
+      description: `${post.content}`,
+      url: `https://localhost:3000/detail/${params.id}`
+    }
+  };
+};
+
+export const DetailPage = async ({ params }: DetailPageProps) => {
   const postId = params.id;
 
   return (

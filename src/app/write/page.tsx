@@ -210,7 +210,7 @@ const WritePage = () => {
     <div className="relative bg-white min-h-screen p-10">
       <div className="w-full max-w-[1200px] mx-auto border border-gray-300 rounded-md shadow-lg p-8">
         {/* 상단 버튼 */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-end items-center mb-8 gap-10">
           <button className="px-6 py-2 bg-gray-200 border border-gray-300 rounded-lg">
             임시저장
           </button>
@@ -222,172 +222,187 @@ const WritePage = () => {
           </button>
         </div>
 
-        {/* 썸네일 업로드 및 기본 정보 입력 */}
-        <div className="flex gap-8">
-          <div className="w-1/2">
-            <ThumbnailUpload
-              thumbnail={formState.thumbnail}
-              onThumbnailUpload={(url) => handleChange("thumbnail", url)}
+        <div className="w-full space-y-6">
+          {/* 제목 입력 */}
+          <div>
+            <label className="block mb-2 font-bold text-[18px]">제목</label>
+            <input
+              type="text"
+              value={formState.title}
+              onChange={(e) => handleChange("title", e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              placeholder="제목을 입력하세요."
             />
           </div>
 
-          <div className="w-1/2 space-y-6">
-            {/* 제목 입력 */}
-            <div>
-              <label className="block mb-2 font-bold text-[18px]">제목</label>
+          {/* 위치 입력 */}
+          <div>
+            <label className="block mb-2 font-bold text-[18px]">위치</label>
+            <div className="flex items-center gap-4">
               <input
                 type="text"
-                value={formState.title}
-                onChange={(e) => handleChange("title", e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                placeholder="제목을 입력하세요."
+                value={formState.address}
+                readOnly
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                placeholder="검색 버튼을 눌러 주소를 입력해주세요."
+              />
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-2 bg-black text-white rounded-lg text-[18px]"
+              >
+                검색
+              </button>
+            </div>
+          </div>
+
+          {/* 썸네일 업로드 및 기본 정보 입력 */}
+          <div className="flex flex-col gap-8">
+            <div className="w-1/2">
+              <ThumbnailUpload
+                thumbnail={formState.thumbnail}
+                onThumbnailUpload={(url) => handleChange("thumbnail", url)}
               />
             </div>
 
-            {/* 위치 입력 */}
-            <div>
-              <label className="block mb-2 font-bold text-[18px]">위치</label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="text"
-                  value={formState.address}
-                  readOnly
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
-                  placeholder="검색 버튼을 눌러 주소를 입력해주세요."
-                />
+            {/* 룩북 구성 상품 */}
+            <div className="mt-8">
+              <label className="block mb-2 font-bold text-[24px]">
+                룩북 구성 상품
+              </label>
+              <div className="flex flex-wrap gap-4">
+                {/* 상품 추가 버튼 */}
                 <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="px-6 py-2 bg-black text-white rounded-lg text-[18px]"
-                >
-                  검색
-                </button>
-              </div>
-            </div>
-
-            {/* 체형 입력 */}
-            <div>
-              <label className="block mb-2 font-bold text-[18px]">체형</label>
-              <div className="flex gap-4">
-                <input
-                  type="number"
-                  value={formState.body_size[0] || ""}
-                  onChange={(e) => handleBodySizeChange(0, e.target.value)}
-                  className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg"
-                  placeholder="키 (cm)"
-                />
-                <input
-                  type="number"
-                  value={formState.body_size[1] || ""}
-                  onChange={(e) => handleBodySizeChange(1, e.target.value)}
-                  className="w-1/2 px-4 py-2 border border-gray-300 rounded-lg"
-                  placeholder="몸무게 (kg)"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 본문 입력 */}
-        <div className="mt-8">
-          <label className="block mb-2 font-bold text-[24px]">본문</label>
-          <textarea
-            value={formState.content}
-            onChange={(e) => handleChange("content", e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none"
-            rows={6}
-            placeholder="본문 내용을 입력하세요."
-          />
-        </div>
-
-        {/* 룩북 구성 상품 */}
-        <div className="mt-8">
-          <label className="block mb-2 font-bold text-[24px]">룩북 구성 상품</label>
-          <div className="flex flex-wrap gap-4">
-            {/* 상품 추가 버튼 */}
-            <button
-              onClick={() => {
-                setProductToEdit(null); // 추가 모드 초기화
-                setIsPurchaseModalOpen(true); // 추가 모달 열기
-              }}
-              className="w-32 h-32 flex flex-col items-center justify-center border border-gray-300 rounded-lg text-gray-500"
-            >
-              <span className="text-2xl font-bold">+</span>
-              {/* 현재 상품 개수/최대 개수 표시 */}
-              <span className="text-sm text-gray-500 mt-1">
-                {formState.purchases.length}/10
-              </span>
-            </button>
-
-            {/* 추가된 상품 목록 */}
-            {formState.purchases.map((purchase, index) => (
-              <div key={index} className="flex flex-col items-center">
-                {/* 상품 카드 */}
-                <div
-                  className="relative w-32 h-32 border border-black rounded-lg overflow-hidden cursor-pointer"
                   onClick={() => {
-                    setProductToEdit(purchase); // 수정할 데이터 설정
-                    setIsPurchaseModalOpen(true); // 수정 모달 열기
+                    setProductToEdit(null); // 추가 모드 초기화
+                    setIsPurchaseModalOpen(true); // 추가 모달 열기
                   }}
+                  className="w-32 h-32 flex flex-col items-center justify-center border border-gray-300 rounded-lg text-gray-500"
                 >
-                  {/* 삭제 버튼 */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // 수정 모달 열리지 않도록 이벤트 중단
-                      handleDeletePurchase(index); // 인덱스를 기반으로 삭제 처리
-                    }}
-                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10"
-                    title="삭제"
-                  >
-                    X
-                  </button>
+                  <span className="text-2xl font-bold">+</span>
+                  <span className="text-sm text-gray-500 mt-1">
+                    {formState.purchases.length}/10
+                  </span>
+                </button>
 
-                  {/* 상품 이미지 */}
-                  {purchase.image_url ? (
-                    <Image
-                      src={purchase.image_url}
-                      alt={purchase.title}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  ) : (
-                    <div className="bg-gray-200 w-full h-full flex items-center justify-center">
-                      <p className="text-gray-400 text-sm">이미지 없음</p>
+                {/* 추가된 상품 목록 */}
+                {formState.purchases.map((purchase, index) => (
+                  <div key={index} className="flex flex-col items-center">
+                    <div
+                      className="relative w-32 h-32 border border-black rounded-lg overflow-hidden cursor-pointer"
+                      onClick={() => {
+                        setProductToEdit(purchase);
+                        setIsPurchaseModalOpen(true);
+                      }}
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeletePurchase(index);
+                        }}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10"
+                        title="삭제"
+                      >
+                        X
+                      </button>
+
+                      {purchase.image_url ? (
+                        <Image
+                          src={purchase.image_url}
+                          alt={purchase.title}
+                          layout="fill"
+                          objectFit="cover"
+                        />
+                      ) : (
+                        <div className="bg-gray-200 w-full h-full flex items-center justify-center">
+                          <p className="text-gray-400 text-sm">이미지 없음</p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-
-                {/* 상품명 (카드 아래 표시) */}
-                <p className="text-sm font-bold text-center mt-2">{purchase.title || "상품 상세 정보"}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 태그 선택 */}
-        <div className="mt-8">
-          <label className="block mb-2 font-bold text-[24px]">태그 선택하기</label>
-          <p className="text-sm text-gray-600 mb-4">
-            게시물에 어울리는 태그를 선택하세요.
-          </p>
-          {TAG_GROUPS.map((group) => (
-            <div key={group.title} className="mb-6">
-              <p className="font-bold text-[18px] mb-2">{group.title}</p>
-              <div className="flex flex-wrap gap-2">
-                {group.tags.map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => toggleTag(tag, group.tags, group.max)}
-                    className={`px-3 py-1 text-sm border rounded-full ${formState.tags.includes(tag)
-                      ? "bg-black text-white border-black"
-                      : "bg-white text-black border-gray-300"
-                      }`}
-                  >
-                    {tag}
-                  </button>
+                    <p className="text-sm font-bold text-center mt-2">
+                      {purchase.title || "상품 상세 정보"}
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
-          ))}
+
+            {/* 본문 입력 */}
+            <div className="mt-8">
+              <label className="block mb-2 font-bold text-[24px]">본문</label>
+              <textarea
+                value={formState.content}
+                onChange={(e) => handleChange("content", e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none"
+                rows={6}
+                placeholder="본문 내용을 입력하세요."
+              />
+            </div>
+
+
+            {/* 체형 입력 */}
+            <div>
+              <label className="block mb-4 font-bold text-[24px]">체형</label>
+              <div className="flex flex-col gap-6">
+                {/* 키 입력 */}
+                <div>
+                  <label className="block mb-2 text-black font-medium text-[18px]">키</label>
+                  <div className="relative">
+                    <input
+                      value={formState.body_size[0] || ""}
+                      onChange={(e) => handleBodySizeChange(0, e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                    />
+                    <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black">
+                      cm
+                    </span>
+                  </div>
+                </div>
+
+                {/* 몸무게 입력 */}
+                <div>
+                  <label className="block mb-2 text-black font-medium text-[18px]">몸무게</label>
+                  <div className="relative">
+                    <input
+                      value={formState.body_size[1] || ""}
+                      onChange={(e) => handleBodySizeChange(1, e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                    />
+                    <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black">
+                      kg
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          {/* 태그 선택 */}
+          <div className="mt-8">
+            <label className="block mb-2 font-bold text-[24px]">태그 선택하기</label>
+            <p className="text-sm text-gray-600 mb-4">
+              게시물에 어울리는 태그를 선택하세요.
+            </p>
+            {TAG_GROUPS.map((group) => (
+              <div key={group.title} className="mb-6">
+                <p className="font-bold text-[18px] mb-2">{group.title}</p>
+                <div className="flex flex-wrap gap-2">
+                  {group.tags.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => toggleTag(tag, group.tags, group.max)}
+                      className={`px-3 py-1 text-sm border rounded-full ${formState.tags.includes(tag)
+                          ? "bg-black text-white border-black"
+                          : "bg-white text-black border-gray-300"
+                        }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -402,8 +417,8 @@ const WritePage = () => {
       <PurchaseModal
         isOpen={isPurchaseModalOpen}
         onClose={() => {
-          setProductToEdit(null); // 수정 모드 초기화
-          setIsPurchaseModalOpen(false); // 모달 닫기
+          setProductToEdit(null);
+          setIsPurchaseModalOpen(false);
         }}
         onAddProduct={handleAddPurchase}
         onEditProduct={handleEditPurchase}

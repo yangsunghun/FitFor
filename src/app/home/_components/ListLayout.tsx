@@ -12,14 +12,19 @@ type ListLayoutProps = {
 const ListLayout = ({ posts }: ListLayoutProps) => {
   return (
     <>
-      <ul className="flex flex-wrap gap-5">
+      <ul>
         {posts.map((item) => (
-          <li key={item.id} className="relative flex w-[48%] items-center gap-10">
+          <li key={item.id} className="relative mb-6 flex gap-10">
             <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
-            <figure className="relative h-[150px] w-[150px] overflow-hidden bg-gray-200">
-              <Image src={item.thumbnail || sampleImage} alt={item.title} width={150} height={150} />
+            <figure className="relative h-[11.25rem] w-[11.25rem] overflow-hidden rounded-[1rem] bg-gray-200">
+              <Image src={item.thumbnail} alt={item.title} fill={true} className="object-cover object-center" />
             </figure>
             <div>
+              <p>
+                {item.tags.map((tag) => (
+                  <span>{tag}</span>
+                ))}
+              </p>
               <div className="flex items-center gap-4">
                 <div className="relative h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 bg-gray-100">
                   <Image
@@ -32,7 +37,6 @@ const ListLayout = ({ posts }: ListLayoutProps) => {
                 <p>{item.users.nickname}</p>
               </div>
               <p>{item.title}</p>
-              <p>{item.tags?.join("")}</p>
             </div>
           </li>
         ))}

@@ -25,7 +25,7 @@ const ListLender = ({}: ListLenderProps) => {
       <section>
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
 
-        {isMasonry ? <MasonryLayout posts={posts} /> : <ListLayout posts={posts} />}
+        {isMasonry ? <ListLayout posts={posts} /> : <MasonryLayout posts={posts} />}
 
         {hasNextPage && (
           <button

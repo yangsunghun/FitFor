@@ -46,7 +46,7 @@ export default function ChatInput({ roomId, memberId }: ChatInputProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && e.nativeEvent.isComposing === false) {
       e.preventDefault();
       sendMessage();
     }

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer utilities {
+  .inner {
+    @apply mx-auto w-[83%];
+  }
+
   .click-box {
     @apply absolute left-0 top-0 block h-full w-full;
   }

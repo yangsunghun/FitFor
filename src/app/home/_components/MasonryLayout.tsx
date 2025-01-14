@@ -13,12 +13,12 @@ type MasonryLayoutProps = {
 const MasonryLayout = ({ posts }: MasonryLayoutProps) => {
   return (
     <>
-      <Masonry columns={{ 1200: 4, 768: 3, 480: 2 }} gap={16} className="flex">
+      <Masonry columns={{ 1200: 4, 768: 3, 480: 2 }} gap={24} className="flex">
         {posts.map((item) => (
-          <div key={item.id} className="masonry-item group relative">
+          <div key={item.id} className="masonry-item group relative overflow-hidden rounded-[1rem]">
             <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
             <figure className="relative w-full">
-              <Image src={item.thumbnail || sampleImage} alt={item.title} width={500} height={500} />
+              <Image src={item.thumbnail || sampleImage} alt={item.title} width={500} height={1000} />
             </figure>
             <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100">
               <div className="flex items-center gap-4">

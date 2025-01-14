@@ -6,10 +6,10 @@ const config: Config = {
   safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#333333]", "text-[#666666]"],
   theme: {
     fontSize: {
-      heading: ["36px", { lineHeight: "150%", letterSpacing: "-0.0025em" }], // Heading 36px
-      title1: ["24px", { lineHeight: "150%", letterSpacing: "-0.0025em" }], // Title1 24px
-      subtitle: ["20px", { lineHeight: "150%", letterSpacing: "-0.0015em" }], // Subtitle 20px
-      title2: ["18px", { lineHeight: "150%", letterSpacing: "-0.0015em" }], // Title2 18px
+      heading: ["36px", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Heading 36px
+      title1: ["24px", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Title1 24px
+      subtitle: ["20px", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Subtitle 20px
+      title2: ["18px", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Title2 18px
       body: ["15px", { lineHeight: "150%", letterSpacing: "0" }], // Body2 15px
       caption: ["13px", { lineHeight: "150%", letterSpacing: "0" }], // Caption 13px
       small: ["11px", { lineHeight: "150%", letterSpacing: "0" }] // Small1 11px

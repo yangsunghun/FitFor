@@ -10,6 +10,14 @@
   .click-box {
     @apply absolute left-0 top-0 block h-full w-full;
   }
+
+  .ellip1 {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+
+  .ellip2 {
+    @apply clear-both line-clamp-2 overflow-hidden text-ellipsis break-words;
+  }
 }
 
 @layer components {

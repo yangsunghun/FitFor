@@ -59,8 +59,8 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
               <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
             </div>
             <div className="w-[calc(100%-80px)]">
-              <div className="flex w-full justify-between">
-                <p>{comment.users.nickname || "알 수 없음"}</p>
+              <div className="flex w-full justify-b etween">
+                <p>{comment.users.nickname}</p>
                 <div className="items-items-center flex gap-4">
                   <p className="text-[14px] text-gray-500">{new Date(comment.created_at).toLocaleString()}</p>
                   {userId === comment.user_id && (

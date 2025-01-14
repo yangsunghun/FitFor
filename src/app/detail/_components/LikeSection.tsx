@@ -35,7 +35,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
         <ToggleButton
           btnStyle={buttonClass}
           isActive={false}
-          count={0}
+          count={styleType !== "masonry" ? 0 : null}
           onClick={() => {
             alert("로그인이 필요합니다");
           }}
@@ -70,7 +70,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
       <ToggleButton
         btnStyle={buttonClass}
         isActive={isLiked}
-        count={likeCount}
+        count={styleType !== "masonry" ? likeCount : null}
         onClick={toggleLike}
         activeIcon={
           <span className="text-primary-default">

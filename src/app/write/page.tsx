@@ -357,7 +357,7 @@ const WritePage = () => {
                         </div>
                       )}
                     </div>
-                    <p className="text-sm font-bold text-center mt-2">
+                    <p className="text-sm font-bold text-center mt-2 truncate w-32">
                       {purchase.title || "상품 상세 정보"}
                     </p>
                   </div>

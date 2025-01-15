@@ -72,57 +72,104 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
 
   // 파일 선택 버튼 클릭 처리
   const handleFileInput = () => {
-    if (images.length >= MAX_IMAGES - 1 && thumbnail) {
+    if (images.length >= MAX_IMAGES && thumbnail) {
       alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
       return;
     }
-
+  
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "image/*";
+    fileInput.multiple = true; // 다중 파일 허용
     fileInput.onchange = async (event: Event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        try {
-          if (!thumbnail && images.length === 0) {
-            // 썸네일로 업로드
-            const imageUrl = await uploadImage(file, true);
-            setThumbnail(imageUrl);
-          } else {
-            // 나머지 이미지로 업로드
-            const imageUrl = await uploadImage(file, false);
-            setImages([...images, imageUrl]);
-          }
-        } catch (error: any) {
-          alert(error.message);
+      const files = Array.from((event.target as HTMLInputElement).files || []);
+  
+      try {
+        // 중복 파일 제거
+        const filteredFiles = files.filter(
+          (file) => !images.includes(file.name) // file.name이 중복되지 않도록 필터링
+        );
+  
+        if (filteredFiles.length < files.length) {
+          alert("중복된 파일은 업로드할 수 없습니다.");
         }
+  
+        // 파일 업로드
+        const uploadedUrls = await Promise.allSettled(
+          filteredFiles.map((file) =>
+            uploadImage(file, !thumbnail && images.length === 0)
+          )
+        );
+  
+        // 성공한 URL만 추출
+        const successfulUrls = uploadedUrls
+          .filter((result) => result.status === "fulfilled")
+          .map((result) => (result as PromiseFulfilledResult<string>).value);
+  
+        // 중복 제거 후 상태 업데이트
+        const updatedImages = Array.from(
+          new Set([...images, ...successfulUrls])
+        );
+  
+        if (!thumbnail && successfulUrls.length > 0) {
+          setThumbnail(successfulUrls[0]); // 첫 번째 이미지를 썸네일로 설정
+          setImages(updatedImages.slice(1)); // 나머지 이미지만 추가
+        } else {
+          setImages(updatedImages);
+        }
+      } catch (error: any) {
+        alert(error.message);
       }
     };
+  
     fileInput.click();
   };
 
   // 드래그 앤 드롭 처리
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    if (images.length >= MAX_IMAGES - 1 && thumbnail) {
+    if (images.length >= MAX_IMAGES && thumbnail) {
       alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
       return;
     }
-    const file = event.dataTransfer.files[0];
-    if (file) {
-      try {
-        if (!thumbnail && images.length === 0) {
-          // 썸네일로 업로드
-          const imageUrl = await uploadImage(file, true);
-          setThumbnail(imageUrl);
-        } else {
-          // 나머지 이미지로 업로드
-          const imageUrl = await uploadImage(file, false);
-          setImages([...images, imageUrl]);
-        }
-      } catch (error: any) {
-        alert(error.message);
+  
+    const files = Array.from(event.dataTransfer.files);
+  
+    try {
+      // 중복 파일 제거
+      const filteredFiles = files.filter(
+        (file) => !images.includes(file.name)
+      );
+  
+      if (filteredFiles.length < files.length) {
+        alert("중복된 파일은 업로드할 수 없습니다.");
       }
+  
+      // 파일 업로드
+      const uploadedUrls = await Promise.allSettled(
+        filteredFiles.map((file) =>
+          uploadImage(file, !thumbnail && images.length === 0)
+        )
+      );
+  
+      // 성공한 URL만 추출
+      const successfulUrls = uploadedUrls
+        .filter((result) => result.status === "fulfilled")
+        .map((result) => (result as PromiseFulfilledResult<string>).value);
+  
+      // 중복 제거 후 상태 업데이트
+      const updatedImages = Array.from(
+        new Set([...images, ...successfulUrls])
+      );
+  
+      if (!thumbnail && successfulUrls.length > 0) {
+        setThumbnail(successfulUrls[0]); // 첫 번째 이미지를 썸네일로 설정
+        setImages(updatedImages.slice(1)); // 나머지 이미지만 추가
+      } else {
+        setImages(updatedImages);
+      }
+    } catch (error: any) {
+      alert(error.message);
     }
   };
 

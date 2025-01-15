@@ -16,7 +16,7 @@ const ProfileSection = () => {
   }
 
   return (
-    <div className="flex h-[160px] w-[996px] flex-row items-center">
+    <div className="flex h-40 w-[40.5rem] flex-row items-center my-20">
       <Image
         className="rounded-full bg-white object-cover"
         src={user.profile_image || "/images/default-user-profile"}
@@ -30,7 +30,7 @@ const ProfileSection = () => {
           {user!.nickname}
         </p>
         <p className="text-body flex flex-col">
-          Lorem ipsum dolor sit amet consectetur. Vitae ultrices semper ullamcorper amet eget aliquet lorem
+          {user!.introduction || "아직 한 줄 소개가 없습니다."}
         </p>
         <Link href="/mypage/profile-setting" className="max-w-[100px] rounded-2xl bg-black px-3  py-2 text-center text-white text-body">
           프로필 편집

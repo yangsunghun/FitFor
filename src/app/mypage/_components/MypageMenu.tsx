@@ -1,6 +1,6 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs1";
 import MyPosts from "./MyPosts";
 import RecentViewPosts from "./RecentViewPosts";
 import VerificationSection from "./VerificationSection";
@@ -17,7 +17,7 @@ const MypageMenu = () => {
             <TabsTrigger
               key={`tab-${index}`}
               value={`tab-${index}`}
-              className="w-1/4 rounded-none border-t-2 border-transparent px-6 py-2 data-[state=active]:border-black data-[state=active]:shadow-none"
+              className="w-1/4 rounded-none border-t-2 border-transparent px-6 py-2 data-[state=active]:border-black data-[state=active]:shadow-none text-title2"
             >
               {tab}
             </TabsTrigger>

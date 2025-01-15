@@ -1,5 +1,4 @@
 import { useAuthStore } from "@/lib/store/authStore";
-import { Plus } from "@phosphor-icons/react";
 import StatsCard from "./StatsCard";
 
 type VerificationSectionProps = {
@@ -16,7 +15,8 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
   const { user } = useAuthStore();
   return (
     <>
-      <div className="my-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <h3 className="mb-6 mt-10 text-subtitle">내 통계 리포트</h3>
+      <div className="my-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         <StatsCard title="작성한 게시물 수" value={sampleStats.posts} />
         <StatsCard title="받은 좋아요 수" value={sampleStats.likes} />
         <StatsCard title="총 조회수" value={sampleStats.views} />
@@ -24,9 +24,7 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
       <div className="mb-8 rounded-lg bg-gray-100 p-8">
         <p className="mb-4 text-center">{user?.nickname}님, 인증배지를 신청할 수 있어요!</p>
         <div className="flex justify-center">
-          <button className="flex flex-row gap-2 rounded-2xl bg-black p-4 text-white">
-            <Plus size={24} /> 인증배지 신청하기
-          </button>
+          <button className="flex flex-row gap-2 rounded-2xl bg-black p-4 text-white">인증 유저 신청하기</button>
         </div>
       </div>
       <div className="mb-8 rounded-lg bg-gray-100 p-8">

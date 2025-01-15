@@ -1,9 +1,9 @@
-import LikeSection from "@/app/detail/_components/LikeSection";
 import sampleImage from "@/assets/images/image_sample.png";
 import type { PostType } from "@/lib/types/post";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import LikeSection from "./LikeSection";
 
 type Props = {
   post: PostType;

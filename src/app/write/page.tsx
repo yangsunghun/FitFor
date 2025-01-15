@@ -290,13 +290,13 @@ const WritePage = () => {
           {/* 썸네일 업로드 및 기본 정보 입력 */}
           <div className="flex flex-col gap-8">
             <div className="w-full">
-            <ThumbnailUpload
-  thumbnail={formState.thumbnail}
-  images={formState.images}
-  setThumbnail={(thumbnail) => handleChange("thumbnail", thumbnail)}
-  setImages={(images) => handleChange("images", images)}
-  onThumbnailUpload={(url: string) => console.log("Thumbnail Uploaded:", url)}
-/>
+              <ThumbnailUpload
+                thumbnail={formState.thumbnail}
+                images={formState.images}
+                setThumbnail={(thumbnail) => handleChange("thumbnail", thumbnail)}
+                setImages={(images) => handleChange("images", images)}
+                onThumbnailUpload={(url: string) => console.log("Thumbnail Uploaded:", url)}
+              />
             </div>
 
             {/* 룩북 구성 상품 */}
@@ -308,6 +308,10 @@ const WritePage = () => {
                 {/* 상품 추가 버튼 */}
                 <button
                   onClick={() => {
+                    if (formState.purchases.length >= 5) {
+                      alert("상품은 최대 5개까지만 추가할 수 있습니다.");
+                      return;
+                    }
                     setProductToEdit(null); // 추가 모드 초기화
                     setIsPurchaseModalOpen(true); // 추가 모달 열기
                   }}
@@ -315,7 +319,7 @@ const WritePage = () => {
                 >
                   <span className="text-2xl font-bold">+</span>
                   <span className="text-sm text-gray-500 mt-1">
-                    {formState.purchases.length}/10
+                    {formState.purchases.length}/5
                   </span>
                 </button>
 
@@ -461,6 +465,7 @@ const WritePage = () => {
         onEditProduct={handleEditPurchase}
         productToEdit={productToEdit}
         mode={productToEdit ? "edit" : "add"}
+        purchasesLength={formState.purchases.length} // 현재 상품 개수 전달
       />
     </div>
   );

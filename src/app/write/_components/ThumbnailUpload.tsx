@@ -1,27 +1,25 @@
-import React, { useState } from "react";
-import Image from "next/image";
 import { createClient } from "@/lib/utils/supabase/client";
+import Image from "next/image";
+import React from "react";
 
 const supabase = createClient();
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGES = 5; // 최대 업로드 가능한 이미지 개수
-const BUCKET_NAME = "post-images"; // 버킷 이름
-const IMAGE_PATH = "images"; // 이미지 파일 경로
 
 type ThumbnailUploadProps = {
   thumbnail: string; // 대표 썸네일
   images: string[]; // 나머지 이미지 배열
   setThumbnail: (thumbnail: string) => void; // 썸네일 업데이트 함수
   setImages: (images: string[]) => void; // 이미지 배열 업데이트 함수
-  onThumbnailUpload?: (url: string) => void; // 썸네일 업로드 완료 시 호출되는 함수 (옵션)
+  onThumbnailUpload?: (url: string) => void;
 };
 
 function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: ThumbnailUploadProps) {
   // 파일 업로드 로직
-  const uploadImage = async (file: File): Promise<string> => {
+  const uploadImage = async (file: File, isThumbnail: boolean): Promise<string> => {
     try {
       validateFile(file);
-      const filePath = generateFilePath(file);
+      const filePath = generateFilePath(file, isThumbnail);
       await uploadToSupabase(file, filePath);
       return getPublicUrl(filePath);
     } catch (error) {
@@ -38,16 +36,17 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
   };
 
   // 고유 파일 경로 생성
-  const generateFilePath = (file: File): string => {
+  const generateFilePath = (file: File, isThumbnail: boolean): string => {
     const timestamp = Date.now();
     const extension = file.name.split(".").pop() || "unknown";
-    return `${IMAGE_PATH}/${timestamp}.${extension}`;
+    const folder = isThumbnail ? "thumbnail" : "images";
+    return `${folder}/${timestamp}.${extension}`;
   };
 
   // Supabase 스토리지에 파일 업로드
   const uploadToSupabase = async (file: File, filePath: string) => {
     const { error } = await supabase.storage
-      .from(BUCKET_NAME)
+      .from("post-images")
       .upload(filePath, file, {
         cacheControl: "3600",
         upsert: false,
@@ -61,7 +60,7 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
   // 업로드된 파일의 공개 URL 가져오기
   const getPublicUrl = (filePath: string): string => {
     const { publicUrl } = supabase.storage
-      .from(BUCKET_NAME)
+      .from("post-images")
       .getPublicUrl(filePath).data;
 
     if (!publicUrl) {
@@ -85,10 +84,13 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
         try {
-          const imageUrl = await uploadImage(file);
-          if (!thumbnail) {
+          if (!thumbnail && images.length === 0) {
+            // 썸네일로 업로드
+            const imageUrl = await uploadImage(file, true);
             setThumbnail(imageUrl);
           } else {
+            // 나머지 이미지로 업로드
+            const imageUrl = await uploadImage(file, false);
             setImages([...images, imageUrl]);
           }
         } catch (error: any) {
@@ -109,10 +111,13 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
     const file = event.dataTransfer.files[0];
     if (file) {
       try {
-        const imageUrl = await uploadImage(file);
-        if (!thumbnail) {
+        if (!thumbnail && images.length === 0) {
+          // 썸네일로 업로드
+          const imageUrl = await uploadImage(file, true);
           setThumbnail(imageUrl);
         } else {
+          // 나머지 이미지로 업로드
+          const imageUrl = await uploadImage(file, false);
           setImages([...images, imageUrl]);
         }
       } catch (error: any) {
@@ -120,7 +125,7 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
       }
     }
   };
-  
+
   return (
     <div className="flex gap-4">
       {/* 왼쪽 업로드 섹션 */}
@@ -177,7 +182,7 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
           </>
         )}
       </div>
-  
+
       {/* 오른쪽 이미지 섹션 */}
       <div className="grid grid-cols-2 gap-4 flex-1">
         {images.map((url, index) => (
@@ -206,11 +211,15 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
               <button
                 className="px-4 py-2 bg-white text-black rounded-lg font-medium"
                 onClick={() => {
-                  setThumbnail(url); // 선택된 이미지를 썸네일로 지정
-                  setImages(images.filter((_, i) => i !== index)); // 해당 이미지는 images에서 제거
+                  const previousThumbnail = thumbnail; // 현재 대표 이미지 저장
+                  setThumbnail(url); // 선택된 이미지를 대표 이미지로 설정
+                  setImages([
+                    ...images.filter((_, i) => i !== index), // 선택된 이미지는 images에서 제거
+                    ...(previousThumbnail ? [previousThumbnail] : []), // 이전 대표 이미지가 있으면 추가
+                  ]);
                 }}
               >
-                썸네일로 지정
+                대표 사진으로 등록
               </button>
             </div>
           </div>

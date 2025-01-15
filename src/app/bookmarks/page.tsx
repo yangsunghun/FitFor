@@ -1,7 +1,11 @@
 import BookmarkList from "./_components/BookmarkList";
 
 const BookmarksPage = () => {
-  return <BookmarkList />;
+  return (
+    <div className="inner">
+      <BookmarkList />
+    </div>
+  );
 };
 
 export default BookmarksPage;

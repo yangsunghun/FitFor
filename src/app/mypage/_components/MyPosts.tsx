@@ -4,7 +4,7 @@ import Cardpost from "@/components/shared/CardPost";
 import { useUserPosts } from "@/lib/hooks/mypage/useUserPosts";
 import { useEffect, useRef } from "react";
 
-const MyPostsData = () => {
+const MyPosts = () => {
   const { userPosts, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, isError } = useUserPosts();
   const observerRef = useRef(null);
 
@@ -40,4 +40,4 @@ const MyPostsData = () => {
   );
 };
 
-export default MyPostsData;
+export default MyPosts;

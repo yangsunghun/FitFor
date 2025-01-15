@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MyPostsData from "./MyPostsData";
+import MyPosts from "./MyPosts";
 import StatsCard from "./StatsCard";
 import VerificationSection from "./VerificationSection";
 
@@ -32,7 +32,7 @@ const MypageMenu = () => {
 
         {/* 내 게시물 */}
         <TabsContent value="tab-0">
-          <MyPostsData />
+          <MyPosts />
         </TabsContent>
 
         {/* 1번 탭 */}

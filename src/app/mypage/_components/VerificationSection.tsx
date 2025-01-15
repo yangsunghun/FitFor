@@ -15,24 +15,26 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
   const { user } = useAuthStore();
   return (
     <>
-      <h3 className="mb-6 mt-10 text-subtitle">내 통계 리포트</h3>
-      <div className="my-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-        <StatsCard title="작성한 게시물 수" value={sampleStats.posts} />
-        <StatsCard title="받은 좋아요 수" value={sampleStats.likes} />
-        <StatsCard title="총 조회수" value={sampleStats.views} />
-      </div>
-      <div className="mb-8 rounded-lg bg-gray-100 p-8">
-        <p className="mb-4 text-center">{user?.nickname}님, 인증배지를 신청할 수 있어요!</p>
-        <div className="flex justify-center">
-          <button className="flex flex-row gap-2 rounded-2xl bg-black p-4 text-white">인증 유저 신청하기</button>
+      <div className="flex flex-col">
+        <h3 className="mb-6 mt-10 text-subtitle">내 통계 리포트</h3>
+        <div className="my-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <StatsCard title="작성한 게시물 수" value={sampleStats.posts} />
+          <StatsCard title="받은 좋아요 수" value={sampleStats.likes} />
+          <StatsCard title="총 조회수" value={sampleStats.views} />
+        </div>
+        <div className="flex flex-col gap-3 rounded-2xl text-center">
+          <button className="flex flex-row justify-center gap-2 rounded-2xl bg-black px-6 py-4 text-white">
+            <span className="text-subtitle font-medium">인증 유저 신청하기</span>
+          </button>
+          <p className="text-title2 text-text-03">스타일 멘토가 되어 조언이 필요한 유저들의 코디를 도와주세요!</p>
         </div>
       </div>
-      <div className="mb-8 rounded-lg bg-gray-100 p-8">
-        <h3 className="mb-4 font-medium">인증배지 발급 종족 요건</h3>
-        <ul className="list-disc space-y-4 pl-5">
-          <li>Lorem ipsum dolor sit amet consectetur. Proin purus amet nec tristique nulla congue.</li>
-          <li>Lorem ipsum dolor sit amet consectetur. Proin purus amet nec tristique nulla congue.</li>
-          <li>Lorem ipsum dolor sit amet consectetur. Proin purus amet nec tristique nulla congue.</li>
+      <div className="mt-20">
+        <h3 className="mb-6 text-subtitle text-text-04 font-medium">인증 유저 요건</h3>
+        <ul className="text-title2 text-text-03 list-disc space-y-3 pl-5">
+          <li>위 기준을 충족해야만 인증 유저로 활동할 수 있어요.</li>
+          <li>인증 유저가 되면 Live 채팅방에 입장할 수 있어요.</li>
+          <li>신청 후 24시간 뒤, 관리자 확인 후 인증 유저로 활동 가능해요.</li>
         </ul>
       </div>
     </>

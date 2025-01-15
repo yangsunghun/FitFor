@@ -20,14 +20,14 @@ const ImageGallery = ({ images }: Props) => {
       </div>
       <Carousel slidesPerView={4} spaceBetween={16} arrow={false}>
         {images.map((image, index) => (
-          <SwiperSlide
-            key={index}
-            className={clsx("relative aspect-square overflow-hidden rounded-[0.5rem] border-2 transition", {
-              "border-primary-default": selectedImage === image,
-              "border-transparent": selectedImage !== image
-            })}
-          >
-            <button className="thumbnail h-full w-full" onClick={() => setSelectedImage(image)}>
+          <SwiperSlide key={index} className="relative aspect-square overflow-hidden rounded-[0.5rem]">
+            <button className="thumbnail click-box" onClick={() => setSelectedImage(image)}>
+              <div
+                className={clsx("click-box z-10 bg-black transition", {
+                  "opacity-0": selectedImage === image,
+                  "opacity-50": selectedImage !== image
+                })}
+              ></div>
               <Image src={image} alt={`이미지 ${index + 1}`} fill={true} />
             </button>
           </SwiperSlide>

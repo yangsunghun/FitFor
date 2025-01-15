@@ -1,9 +1,11 @@
 "use client";
 
+import sampleImage from "@/assets/images/image_sample.png";
 import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
-import { formatDateTime } from "@/lib/utils/common/formatDateTime";
+import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { Export } from "@phosphor-icons/react";
 import Image from "next/image";
 import ImageGallery from "./ImageGallery";
 
@@ -31,8 +33,7 @@ const ContentsSection = ({ postId }: Props) => {
     body_size = [],
     view,
     images = [],
-    upload_place,
-    comments
+    upload_place
   } = post!;
 
   const allImages = [thumbnail, ...images];
@@ -44,12 +45,12 @@ const ContentsSection = ({ postId }: Props) => {
       <article className="flex items-start justify-between">
         <ImageGallery images={allImages} />
 
-        <div className="w-[48%]">
+        <div className="w-[46%]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <figure className="relative h-12 w-12 overflow-hidden rounded-full border bg-gray-100">
                 <Image
-                  src={users?.profile_image || ""}
+                  src={users?.profile_image || sampleImage}
                   alt={`${users?.nickname || "익명"}의 프로필 이미지`}
                   fill
                   className="object-cover"
@@ -61,28 +62,26 @@ const ContentsSection = ({ postId }: Props) => {
               </div>
             </div>
 
-            <p className="text-text-03">{formatDateTime(created_at)}</p>
+            <p className="text-text-03">{relativeTimeDay(created_at)}</p>
           </div>
 
-          <p className="mt-10 pb-16 text-title2">{content}</p>
-
-          <p className="font-medium text-text-03">조회수 {view}</p>
-          {body_size.length === 2 && (
-            <p className="mt-4 font-medium text-text-03">
-              {body_size[0]}cm · {body_size[1]}kg
-            </p>
-          )}
+          <p className="mt-6 h-[8.5rem] overflow-auto text-title2 font-medium">{content}</p>
 
           {tags.length > 0 && (
-            <div className="mt-3 flex gap-2">
+            <div className="mt-10 flex gap-2">
               {tags.map((tag) => (
                 <Tags variant="black" size="md" label={tag} />
               ))}
             </div>
           )}
+          <p className="mt-4 font-medium text-text-03">조회수 {view}</p>
 
-          <div className="relative mt-12 flex gap-10/sp font-medium">
+          <div className="relative mt-[6.35rem] flex gap-10 font-medium">
             <LikeSection postId={postId} styleType="detail" />
+            <button className="flex flex-col gap-2">
+              <Export size={28} />
+              <span>공유</span>
+            </button>
           </div>
         </div>
       </article>

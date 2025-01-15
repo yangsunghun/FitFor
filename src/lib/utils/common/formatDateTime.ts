@@ -38,7 +38,20 @@ export const formatDateTime = (dateString: string): string => {
   return `${formattedDate} ${formattedTime}`;
 };
 
-export const relativeTime = (createdAt: string) => {
+export const relativeTimeDay = (createdAt: string) => {
+  const createdDate = new Date(createdAt);
+  const now = new Date();
+
+  const minutesDiff = differenceInMinutes(now, createdDate);
+  const hoursDiff = differenceInHours(now, createdDate);
+
+  if (minutesDiff < 1) return "방금 전";
+  if (minutesDiff < 60) return `${minutesDiff}분 전`;
+  if (hoursDiff < 24) return `${hoursDiff}시간 전`;
+  return createdDate.toLocaleDateString();
+};
+
+export const relativeTimeWeek = (createdAt: string) => {
   const createdDate = new Date(createdAt);
   const now = new Date();
 
@@ -51,7 +64,7 @@ export const relativeTime = (createdAt: string) => {
   if (minutesDiff < 1) return "방금 전";
   if (minutesDiff < 60) return `${minutesDiff}분 전`;
   if (hoursDiff < 24) return `${hoursDiff}시간 전`;
-  // if (daysDiff < 30) return `${daysDiff}일 전`;
+  if (daysDiff < 7) return `${daysDiff}일 전`;
   // if (monthsDiff < 12) return `${monthsDiff}개월 전`;
   return createdDate.toLocaleDateString();
 };

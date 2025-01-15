@@ -4,7 +4,7 @@ import sampleImage from "@/assets/images/image_sample.png";
 import { Button } from "@/components/ui/Button";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
-import { relativeTime } from "@/lib/utils/common/formatDateTime";
+import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -43,7 +43,6 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
             className="scrollbar-hide w-full max-w-[calc(100%-5rem)] resize-none outline-none"
             placeholder="댓글을 작성해주세요."
           />
-          {/* 디자인 나오면 컴포넌트 분리 예정 max-length */}
 
           <Button
             onClick={() => {
@@ -71,7 +70,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
                 <p className="text-title1 font-bold">{comment.users.nickname}</p>
               </div>
               <div className="items-items-center flex gap-4">
-                <p className="text-text-03">{relativeTime(comment.created_at)}</p>
+                <p className="text-text-03">{relativeTimeDay(comment.created_at)}</p>
                 {userId === comment.user_id && (
                   <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
                     삭제

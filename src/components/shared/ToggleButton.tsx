@@ -11,11 +11,11 @@ type ToggleButtonProps = {
 
 const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, btnStyle }: ToggleButtonProps) => {
   return (
-    <span className="flex items-center gap-1">
+    <span>
       <button onClick={onClick} className={btnStyle}>
-        <span>{isActive ? activeIcon : inactiveIcon}</span>
+        {isActive ? activeIcon : inactiveIcon}
+        {typeof count === "number" && count}
       </button>
-      {typeof count === "number" && <span>{count}</span>}
     </span>
   );
 };

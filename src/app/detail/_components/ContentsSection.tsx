@@ -4,7 +4,6 @@ import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { formatDateTime } from "@/lib/utils/common/formatDateTime";
-import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
 import ImageGallery from "./ImageGallery";
 
@@ -65,35 +64,28 @@ const ContentsSection = ({ postId }: Props) => {
             <p className="text-text-03">{formatDateTime(created_at)}</p>
           </div>
 
-          <p className="mt-10 text-title2">{content}</p>
+          <p className="mt-10 pb-16 text-title2">{content}</p>
+
+          <p className="font-medium text-text-03">조회수 {view}</p>
+          {body_size.length === 2 && (
+            <p className="mt-4 font-medium text-text-03">
+              {body_size[0]}cm · {body_size[1]}kg
+            </p>
+          )}
+
+          {tags.length > 0 && (
+            <div className="mt-3 flex gap-2">
+              {tags.map((tag) => (
+                <Tags variant="primary" size="md" label={tag} />
+              ))}
+            </div>
+          )}
+
+          <div className="relative mt-12 flex gap-10 font-medium">
+            <LikeSection postId={postId} styleType="detail" />
+          </div>
         </div>
       </article>
-
-      <div className="relative mt-8 flex gap-4 text-title2 font-medium leading-7">
-        <span className="item-center pointer-events-none absolute left-[4.5rem] flex gap-1">
-          <ChatCircleDots size={28} className="text-text-03" />
-          {comments}
-        </span>
-        <LikeSection postId={postId} styleType="detail" />
-      </div>
-
-      <div className="text-sm mt-6 space-y-2 text-gray-800">
-        {tags.length > 0 && (
-          <div className="flex gap-2">
-            {tags.map((tag) => (
-              <Tags variant="primary" size="md" label={tag} />
-            ))}
-          </div>
-        )}
-        {/* {body_size.length === 2 && (
-          <p>
-            <strong>키:</strong> {body_size[0]} cm, <strong>몸무게:</strong> {body_size[1]} kg
-          </p>
-        )}
-        <p>
-          <strong>조회수:</strong> {view}
-        </p> */}
-      </div>
     </>
   );
 };

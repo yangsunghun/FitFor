@@ -21,13 +21,14 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
 
   const containerClass = cn({
     "flex gap-3": styleType === "masonry",
-    "flex gap-4": styleType === "list",
-    "w-full flex justify-between": styleType === "detail"
+    "flex gap-2": styleType === "list",
+    "flex gap-10": styleType === "detail"
   });
 
   const buttonClass = cn("flex justify-center items-center ", {
     "w-7 h-7 rounded-[0.5rem] bg-bg-01": styleType === "masonry",
-    "": styleType === "list"
+    "gap-1": styleType === "list",
+    "flex-col": styleType === "detail"
   });
 
   if (!userId) {

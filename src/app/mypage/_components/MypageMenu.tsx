@@ -1,10 +1,9 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TabsContent } from "@radix-ui/react-tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MyPostsData from "./MyPostsData";
 import StatsCard from "./StatsCard";
 import VerificationSection from "./VerificationSection";
-import MyPostsData from "./MyPostsData";
 
 const menuTabs = ["내 게시물", "히스토리", "인증", "계정 관리"];
 

@@ -19,13 +19,13 @@ export const addLike = async (like: LikesInsert) => {
     .from("posts")
     .select("likes")
     .eq("id", like.post_id)
-    .single();
+    .maybeSingle();
 
   if (fetchError) {
     throw new Error(`Failed to fetch post likes: ${fetchError.message}`);
   }
 
-  const updatedLikes = (post.likes || 0) + 1;
+  const updatedLikes = (post?.likes || 0) + 1;
 
   const { error: updateError } = await supabase.from("posts").update({ likes: updatedLikes }).eq("id", like.post_id);
 
@@ -48,13 +48,13 @@ export const removeLike = async (userId: string, postId: string) => {
   }
 
   // posts 테이블의 likes 값 감소
-  const { data: post, error: fetchError } = await supabase.from("posts").select("likes").eq("id", postId).single();
+  const { data: post, error: fetchError } = await supabase.from("posts").select("likes").eq("id", postId).maybeSingle();
 
   if (fetchError) {
     throw new Error(`Failed to fetch post likes: ${fetchError.message}`);
   }
 
-  const updatedLikes = Math.max((post.likes || 0) - 1, 0);
+  const updatedLikes = Math.max((post?.likes || 0) - 1, 0);
 
   const { error: updateError } = await supabase.from("posts").update({ likes: updatedLikes }).eq("id", postId);
 
@@ -69,7 +69,7 @@ export const removeLike = async (userId: string, postId: string) => {
 export const getLikeCount = async (postId: string) => {
   const supabase = createClient();
 
-  const { data: likesCount, error } = await supabase.from("posts").select("likes").eq("id", postId).single();
+  const { data: likesCount, error } = await supabase.from("posts").select("likes").eq("id", postId).maybeSingle();
 
   if (error) {
     throw new Error(`Failed to fetch like count: ${error.message}`);
@@ -87,7 +87,7 @@ export const isPostLiked = async (postId: string, userId: string) => {
     .select("*")
     .eq("post_id", postId)
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
   if (error && error.code !== "PGRST116") {
     throw new Error(`Failed to fetch like status: ${error.message}`);
@@ -129,7 +129,7 @@ export const isPostBookmarked = async (postId: string, userId: string) => {
     .select("*")
     .eq("post_id", postId)
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
   if (error && error.code !== "PGRST116") {
     throw new Error(`Failed to fetch bookmark status: ${error.message}`);

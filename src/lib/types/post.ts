@@ -9,3 +9,5 @@ export type FetchPostsResponse = {
   nextPage?: number;
   hasMore: boolean;
 };
+
+export type Purchase = Database["public"]["Tables"]["purchase"]["Row"];

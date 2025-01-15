@@ -9,13 +9,13 @@ import TagFilters from "./_components/TagFilters";
 
 const SearchPage = () => {
   const { query, page, tags, sort, handleSort } = useSearchQuery();
-  const { data: Results, isPending, error } = useSearchPosts(query, page, tags, sort);
+  const { data: Results, isPending, isError } = useSearchPosts(query, page, tags, sort);
 
   return (
     <div className="mx-auto w-full max-w-[1200px]">
       <TagFilters />
       <SortPosts sort={sort} handleSort={handleSort} />
-      <SearchResults Results={Results} isPending={isPending} error={error} />
+      <SearchResults Results={Results} isPending={isPending} error={isError} />
       <Pagination Results={Results} />
     </div>
   );

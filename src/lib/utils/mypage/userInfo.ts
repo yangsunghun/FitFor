@@ -1,6 +1,6 @@
 "use server";
 
-import type { FetchOwnPostsResponse, FetchPostsResponse, OwnPostType, PostType } from "@/lib/types/post";
+import type { FetchPostsResponse, PostType } from "@/lib/types/post";
 import type { ProfileEditForm } from "@/lib/types/profile";
 import { createClient } from "../supabase/server";
 
@@ -105,7 +105,13 @@ export const updateUserProfile = async ({
 };
 
 // 유저의 게시물 데이터 가져오는 로직
-export const fetchUserPosts = async ({ userId, pageParam }: { userId: string, pageParam: number }): Promise<FetchPostsResponse> => {
+export const fetchUserPosts = async ({
+  userId,
+  pageParam
+}: {
+  userId: string;
+  pageParam: number;
+}): Promise<FetchPostsResponse> => {
   const supabase = await createClient();
 
   const perPage = 16;
@@ -120,7 +126,7 @@ export const fetchUserPosts = async ({ userId, pageParam }: { userId: string, pa
     .range(from, to);
 
   if (userPostsError) {
-    throw new Error(`[게시물 불러오기] 유저 게시물 가져오기 실패: ${userPostsError.message}`);
+    throw new Error(`[게시물 불러오기 실패] ${userPostsError.message}`);
   }
 
   return {
@@ -128,4 +134,26 @@ export const fetchUserPosts = async ({ userId, pageParam }: { userId: string, pa
     nextPage: userPosts.length === perPage ? pageParam + 1 : undefined,
     hasMore: userPosts.length === perPage
   };
+};
+
+export const fetchRecentViewPosts = async (postIds: string[]) => {
+  if (postIds.length === 0) {
+    return [];
+  }
+
+  const supabase = await createClient();
+
+  const { data: recentPosts, error: recentPostsError } = await supabase
+    .from("posts")
+    .select("*, users(nickname, profile_image)")
+    .in("id", postIds);
+
+  if (recentPostsError) {
+    throw new Error(`[최근 조회 포스트 불러오기 실패] ${recentPostsError.message}`);
+  }
+
+  // 데이터베이스에 등록된 순으로 post를 가져오기 때문에 최근 본 순으로 정렬 필요
+  const idMap = new Map(postIds.map((id, index) => [id, index]));
+
+  return recentPosts.sort((a, b) => (idMap.get(a.id) ?? 0) - (idMap.get(b.id) ?? 0));
 };

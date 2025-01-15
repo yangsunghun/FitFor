@@ -22,8 +22,9 @@ type PostInsert = {
   created_at?: string;
   user_id: string;
   body_size: number[];
-  thumbnail: string;
+  thumbnail: string; // 단일 썸네일로 변경
   tags: string[];
+  images: string[]; // 추가 이미지 배열
   comments: number;
   likes: number;
   view: number;
@@ -43,9 +44,13 @@ type FormState = {
   title: string;
   content: string;
   body_size: number[];
-  thumbnail: string;
+  thumbnail: string; // 단일 문자열
+  images: string[]; // 추가 이미지 배열
   tags: string[];
   purchases: PurchaseInsert[];
+  isModalOpen: boolean; // 추가
+  isPurchaseModalOpen: boolean; // 추가
+  productToEdit: PurchaseInsert | null; // 추가
 };
 
 // 태그 그룹 정의
@@ -63,9 +68,13 @@ const WritePage = () => {
     title: "",
     content: "",
     body_size: [], // 키와 몸무게를 빈 배열로 초기화
-    thumbnail: "",
+    thumbnail: "", // 썸네일은 단일 문자열로 초기화
+    images: [], // 추가 이미지 배열
     tags: [],
     purchases: [],
+    isModalOpen: false, // 주소 검색 모달 상태
+    isPurchaseModalOpen: false, // 상품 추가 모달 상태
+    productToEdit: null, // 수정할 상품 데이터
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 주소 검색 모달 상태
@@ -80,7 +89,7 @@ const WritePage = () => {
     key: T,
     value: FormState[T]
   ) => {
-    setFormState((prevState) => ({ ...prevState, [key]: value }));
+    setFormState((prev) => ({ ...prev, [key]: value }));
   };
 
   // 상품 추가 핸들러
@@ -149,7 +158,7 @@ const WritePage = () => {
 
   // 폼 제출 핸들러
   const handleSubmit = async () => {
-    const { title, content, address, body_size, thumbnail, tags, purchases } =
+    const { title, content, address, body_size, thumbnail, images, tags, purchases } =
       formState;
 
     // 필수 입력 값 확인
@@ -166,14 +175,15 @@ const WritePage = () => {
 
     try {
       // 게시글 데이터 생성
-      const post: PostInsert = {
+      const post: Omit<PostInsert, "thumbnail"> & { thumbnail: string } = {
         title,
         content,
         upload_place: address,
         created_at: new Date().toISOString(),
         user_id: currentUser.id,
-        body_size: body_size,
-        thumbnail,
+        body_size,
+        thumbnail, // 단일 썸네일
+        images, // 추가 이미지 배열
         tags,
         comments: 0,
         likes: 0,
@@ -279,11 +289,14 @@ const WritePage = () => {
 
           {/* 썸네일 업로드 및 기본 정보 입력 */}
           <div className="flex flex-col gap-8">
-            <div className="w-1/2">
-              <ThumbnailUpload
-                thumbnail={formState.thumbnail}
-                onThumbnailUpload={(url) => handleChange("thumbnail", url)}
-              />
+            <div className="w-full">
+            <ThumbnailUpload
+  thumbnail={formState.thumbnail}
+  images={formState.images}
+  setThumbnail={(thumbnail) => handleChange("thumbnail", thumbnail)}
+  setImages={(images) => handleChange("images", images)}
+  onThumbnailUpload={(url: string) => console.log("Thumbnail Uploaded:", url)}
+/>
             </div>
 
             {/* 룩북 구성 상품 */}

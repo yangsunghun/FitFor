@@ -76,12 +76,12 @@ const ContentsSection = ({ postId }: Props) => {
           {tags.length > 0 && (
             <div className="mt-3 flex gap-2">
               {tags.map((tag) => (
-                <Tags variant="primary" size="md" label={tag} />
+                <Tags variant="black" size="md" label={tag} />
               ))}
             </div>
           )}
 
-          <div className="relative mt-12 flex gap-10 font-medium">
+          <div className="relative mt-12 flex gap-10/sp font-medium">
             <LikeSection postId={postId} styleType="detail" />
           </div>
         </div>

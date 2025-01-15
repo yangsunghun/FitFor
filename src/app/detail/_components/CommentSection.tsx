@@ -4,6 +4,7 @@ import sampleImage from "@/assets/images/image_sample.png";
 import { Button } from "@/components/ui/Button";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
+import { relativeTime } from "@/lib/utils/common/formatDateTime";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -70,7 +71,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
                 <p className="text-title1 font-bold">{comment.users.nickname}</p>
               </div>
               <div className="items-items-center flex gap-4">
-                <p className="text-text-03">{new Date(comment.created_at).toLocaleString()}</p>
+                <p className="text-text-03">{relativeTime(comment.created_at)}</p>
                 {userId === comment.user_id && (
                   <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
                     삭제

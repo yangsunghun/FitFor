@@ -20,8 +20,8 @@ const Listpost = ({ post }: Props) => {
 
       <div className="relative w-[calc(100%-12.75rem)]">
         <div className="flex gap-2">
-          {post.tags.map((tag) => (
-            <Tags variant="primary" size="md" label={tag} />
+          {post.tags.map((tag, index) => (
+            <Tags key={index} variant="primary" size="md" label={tag} />
           ))}
         </div>
         <p className="clear-both mt-2 line-clamp-2 overflow-hidden text-ellipsis break-words text-title1 font-bold text-text-04">

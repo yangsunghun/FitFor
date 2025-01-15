@@ -2,6 +2,7 @@ import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
 import type { Metadata } from "next";
 import CommentSection from "../_components/CommentSection";
 import ContentsSection from "../_components/ContentsSection";
+import PurchaseList from "../_components/PurchaseList";
 import ViewCounter from "../_components/ViewCounter";
 
 type DetailPageProps = {
@@ -44,11 +45,15 @@ export const DetailPage = async ({ params }: DetailPageProps) => {
     <div className="inner">
       <ViewCounter postId={postId} />
 
-      <ContentsSection postId={postId} />
-
-      <div className="mt-4">
+      <section>
+        <ContentsSection postId={postId} />
+      </section>
+      <section className="mt-[6.25rem]">
+        <PurchaseList postId={postId} />
+      </section>
+      <section className="mt-6">
         <CommentSection postId={postId} />
-      </div>
+      </section>
     </div>
   );
 };

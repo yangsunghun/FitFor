@@ -21,6 +21,13 @@
 }
 
 @layer components {
+  .thumbnail {
+    @apply relative overflow-hidden rounded-[1rem];
+  }
+
+  .thumbnail > img {
+    @apply object-cover object-center;
+  }
 }
 
 /* input type=search x button 제거 */

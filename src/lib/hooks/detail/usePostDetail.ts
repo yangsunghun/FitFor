@@ -3,7 +3,7 @@ import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
 import { useQuery } from "@tanstack/react-query";
 
 export const usePostDetail = (postId: string, initialPost?: PostType) => {
-  const { data, isPending, error } = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: ["postDetail", postId],
     queryFn: () => fetchPostDetail(postId),
     initialData: initialPost,
@@ -14,6 +14,6 @@ export const usePostDetail = (postId: string, initialPost?: PostType) => {
   return {
     post: data,
     isPending,
-    error
+    isError
   };
 };

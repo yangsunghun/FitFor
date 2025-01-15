@@ -15,7 +15,7 @@ interface ChatRoomPageProps {
   params: { id: string }; // App Router에서 제공하는 동적 경로 파라미터
 }
 
-export default function ChatRoomPage({ params }: ChatRoomPageProps) {
+const ChatRoomPage= ({ params }: ChatRoomPageProps) => {
   const { id: roomId } = params; // URL에서 가져온 동적 채팅방 ID
   const currentUser = useAuthStore((state) => state.user); // 현재 로그인된 사용자 정보
 
@@ -151,3 +151,5 @@ export default function ChatRoomPage({ params }: ChatRoomPageProps) {
     </div>
   );
 }
+
+export default ChatRoomPage;

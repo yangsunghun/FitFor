@@ -1,54 +1,46 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/utils/supabase/client";
-
-const supabase = createClient();
+import { sendMessage } from "../../_utils/chat";
+import { useMutation } from "@tanstack/react-query";
 
 interface ChatInputProps {
   roomId: string;
   memberId: string;
 }
 
-export default function ChatInput({ roomId, memberId }: ChatInputProps) {
+const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  const sendMessage = async () => {
-    if (!message.trim() && !file) return;
-
-    let fileUrl = null;
-
-    if (file) {
-      const { data, error: uploadError } = await supabase.storage
-        .from("chat-images") // "chat-images"는 Supabase 버킷 이름입니다.
-        .upload(`rooms/${roomId}/${Date.now()}-${file.name}`, file); // rooms 폴더에 저장
-
-      if (uploadError) {
-        console.error("File upload error:", uploadError.message);
-        return;
-      }
-      fileUrl = data?.path;
-    }
-
-    const { error } = await supabase.from("chat_messages").insert({
-      content: message || null,
-      member_id: memberId,
-      room_id: roomId,
-      image_url: fileUrl || null,
-      created_at: new Date().toISOString()
-    });
-
-    if (!error) {
+  // useMutation 설정
+  const mutation = useMutation({
+    mutationFn: (newMessage: { message: string; file: File | null }) =>
+      sendMessage({
+        message: newMessage.message,
+        file: newMessage.file,
+        roomId,
+        memberId
+      }),
+    onSuccess: () => {
+      // 성공 후 입력 필드 초기화
       setMessage("");
       setFile(null);
+    },
+    onError: (error: Error) => {
+      console.error("메시지 전송 실패:", error.message);
     }
+  });
+
+  const handleSendMessage = () => {
+    if (!message.trim() && !file) return;
+    mutation.mutate({ message, file });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && e.nativeEvent.isComposing === false) {
       e.preventDefault();
-      sendMessage();
+      handleSendMessage();
     }
   };
 
@@ -70,9 +62,11 @@ export default function ChatInput({ roomId, memberId }: ChatInputProps) {
       {/* 사진 업로드 */}
       <input type="file" onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)} id="file-input" />
 
-      <button onClick={sendMessage} style={{ padding: "10px" }}>
+      <button onClick={handleSendMessage} style={{ padding: "10px" }}>
         전송
       </button>
     </div>
   );
-}
+};
+
+export default ChatInput;

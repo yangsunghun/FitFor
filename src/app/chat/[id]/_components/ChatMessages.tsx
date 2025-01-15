@@ -1,52 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createClient } from "@/lib/utils/supabase/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchMessages } from "@/lib/utils/chat/fetchMessages";
 
 const supabase = createClient();
 
-interface ChatMessagesProps {
+type ChatMessagesProps = {
   roomId: string;
   currentUserId: string; // 현재 로그인한 사용자의 ID
-}
+};
 
-export default function ChatMessages({ roomId, currentUserId }: ChatMessagesProps) {
-  const [messages, setMessages] = useState<any[]>([]);
+const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
+  const queryClient = useQueryClient();
 
-  // Supabase에서 메시지 가져오기
-  const fetchMessages = async () => {
-    const { data, error } = await supabase
-      .from("chat_messages")
-      .select("*")
-      .eq("room_id", roomId)
-      .order("created_at", { ascending: true });
+  // 메시지 쿼리
+  const {
+    data: messages = [],
+    isLoading,
+    isError
+  } = useQuery({
+    queryKey: ["chatMessages", roomId],
+    queryFn: () => fetchMessages(roomId),
+    staleTime: 1000 * 60 // 1분간 캐시 유지
+  });
 
-    if (!error) {
-      setMessages(data || []);
-    }
-  };
-
-  // Realtime 구독 설정
+  // 실시간 구독
   useEffect(() => {
     const subscription = supabase
       .channel("realtime:chat_messages")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages" }, (payload) => {
-        setMessages((prev) => [...prev, payload.new]);
+        // 새 메시지가 생기면 쿼리 무효화
+        queryClient.invalidateQueries({
+          queryKey: ["chatMessages", roomId]
+        });
       })
       .subscribe();
-
-    fetchMessages();
 
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [roomId]);
+  }, [roomId, queryClient]);
+
+  if (isLoading) return <div>로딩 중...</div>;
+  if (isError) return <div>메시지를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
     <div className="mb-5 flex flex-col">
       <h2 className="text-xl mb-3 font-bold">채팅 메시지</h2>
       <div className="flex flex-col gap-4">
-        {messages.map((message) => {
+        {messages.map((message: any) => {
           const isSender = message.member_id === currentUserId;
 
           return (
@@ -97,4 +101,4 @@ export default function ChatMessages({ roomId, currentUserId }: ChatMessagesProp
   );
 }
 
-// Todo: next image 로 바꾸기
+export default ChatMessages;

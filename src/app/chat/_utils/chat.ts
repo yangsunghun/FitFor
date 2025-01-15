@@ -197,6 +197,45 @@ export const deleteChatRoom = async (userId: string, roomId: string) => {
   }
 };
 
+export const sendMessage = async ({
+  message,
+  file,
+  roomId,
+  memberId
+}: {
+  message: string;
+  file: File | null;
+  roomId: string;
+  memberId: string;
+}) => {
+  let fileUrl = null;
+
+  // 파일 업로드
+  if (file) {
+    const { data, error: uploadError } = await supabase.storage
+      .from("chat-images")
+      .upload(`rooms/${roomId}/${Date.now()}-${file.name}`, file);
+
+    if (uploadError) {
+      throw new Error(uploadError.message);
+    }
+    fileUrl = data?.path;
+  }
+
+  // 메시지 저장
+  const { error } = await supabase.from("chat_messages").insert({
+    content: message || null,
+    member_id: memberId,
+    room_id: roomId,
+    image_url: fileUrl || null,
+    created_at: new Date().toISOString()
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
 // 채팅방 일반 멤버로 등록하기(기존)
 // export const enterAsMember = async (userId: string, roomId: string) => {
 //   try {

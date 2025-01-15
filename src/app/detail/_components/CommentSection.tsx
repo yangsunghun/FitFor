@@ -70,7 +70,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
                 <p className="text-title1 font-bold">{comment.users.nickname}</p>
               </div>
               <div className="items-items-center flex gap-4">
-                <p className="text-[14px] text-gray-500">{new Date(comment.created_at).toLocaleString()}</p>
+                <p className="text-text-03">{new Date(comment.created_at).toLocaleString()}</p>
                 {userId === comment.user_id && (
                   <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
                     삭제

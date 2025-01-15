@@ -34,7 +34,7 @@ const Listpost = ({ post }: Props) => {
             {post.comments}
           </span>
         </div>
-        <p className="absolute bottom-4 right-4 flex gap-1 text-body">
+        <p className="absolute bottom-4 right-4 flex gap-1">
           <span>조회수: {post.view}</span>
           <span>·</span>
           <span>{formatDate(post.created_at)}</span>

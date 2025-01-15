@@ -29,7 +29,7 @@ const Cardpost = ({ post, isMasonry }: Props) => {
               fill={true}
             />
           </div>
-          <p className="text-body text-text-01">{post.users.nickname}</p>
+          <p className="text-text-01">{post.users.nickname}</p>
         </div>
       </div>
     </div>

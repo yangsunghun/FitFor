@@ -11,11 +11,12 @@ type Props = {
 };
 
 const Cardpost = ({ post, isMasonry }: Props) => {
+  const imageProps = isMasonry ? { width: 500, height: 700 } : { fill: true };
   return (
-    <div className={clsx("relative overflow-hidden rounded-[1rem]", isMasonry && "masonry-post group")}>
+    <div className={clsx("masonry-post group relative overflow-hidden rounded-[1rem]", isMasonry || "aspect-square")}>
       <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
-      <figure className="relative w-full">
-        <Image src={post.thumbnail} alt={post.title} width={500} height={700} className="object-cover object-center" />
+      <figure className="relative h-full w-full">
+        <Image src={post.thumbnail} alt={post.title} {...imageProps} className="object-cover object-center" />
       </figure>
       <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100">
         <div className="absolute right-4 top-4 z-20">

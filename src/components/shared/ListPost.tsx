@@ -1,10 +1,10 @@
-import LikeSection from "@/app/detail/_components/LikeSection";
 import type { PostType } from "@/lib/types/post";
 import { formatDate } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Tags } from "../ui/Tags";
+import LikeSection from "./LikeSection";
 
 type Props = {
   post: PostType;

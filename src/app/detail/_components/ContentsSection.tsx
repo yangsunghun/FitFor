@@ -1,11 +1,11 @@
 "use client";
 
+import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { formatDateTime } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
-import LikeSection from "./LikeSection";
 
 type Props = {
   postId: string;

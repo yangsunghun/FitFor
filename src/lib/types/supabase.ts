@@ -161,7 +161,7 @@ export type Database = {
           room_hashtags: string[]
           room_id: string
           room_subtitle: string
-          room_thumbnail_url: string
+          room_thumbnail_url: string | null
           room_title: string
           user_id: string
         }
@@ -173,7 +173,7 @@ export type Database = {
           room_hashtags: string[]
           room_id?: string
           room_subtitle: string
-          room_thumbnail_url: string
+          room_thumbnail_url?: string | null
           room_title: string
           user_id: string
         }
@@ -185,7 +185,7 @@ export type Database = {
           room_hashtags?: string[]
           room_id?: string
           room_subtitle?: string
-          room_thumbnail_url?: string
+          room_thumbnail_url?: string | null
           room_title?: string
           user_id?: string
         }

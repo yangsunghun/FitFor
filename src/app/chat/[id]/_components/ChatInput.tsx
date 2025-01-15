@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { sendMessage } from "../../_utils/chat";
 import { useMutation } from "@tanstack/react-query";
+import { Image } from "@phosphor-icons/react";
 
 interface ChatInputProps {
   roomId: string;
@@ -45,27 +46,41 @@ const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="메시지를 입력하세요"
-        style={{
-          padding: "10px",
-          width: "calc(100% - 60px)",
-          marginRight: "10px"
-        }}
-      />
+    <footer className="flex h-[131px] w-[996px] flex-col justify-between border-t border-[#e8e8e8] p-4">
+      {/* 메시지 입력 필드 */}
+      <div className="flex items-center">
+        <input
+          className="text-sm flex-1 rounded-lg px-4 py-2 placeholder-gray-500 outline-none"
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="OOO(으)로 메시지 작성"
+        />
+      </div>
 
-      {/* 사진 업로드 */}
-      <input type="file" onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)} id="file-input" />
+      {/* 파일 업로드와 전송 버튼 */}
+      <div className="mt-2 flex items-center justify-between">
+        {/* 파일 업로드 버튼 */}
+        <label htmlFor="file-input" className="flex h-[28px] w-[28px] cursor-pointer items-center justify-center">
+          <input
+            type="file"
+            id="file-input"
+            className="hidden"
+            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+          />
+          <Image alt="image" width={28} height={28} className="text-gray-600"/>
+        </label>
 
-      <button onClick={handleSendMessage} style={{ padding: "10px" }}>
-        전송
-      </button>
-    </div>
+        {/* 전송 버튼 */}
+        <button
+          onClick={handleSendMessage}
+          className="rounded-lg border border-neutral-100 bg-neutral-100 px-4 py-2 text-[15px] font-medium text-gray-300"
+        >
+          보내기
+        </button>
+      </div>
+    </footer>
   );
 };
 

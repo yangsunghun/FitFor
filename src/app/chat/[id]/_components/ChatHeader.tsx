@@ -1,17 +1,17 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { getAdminDetails } from "@/app/chat/_utils/chat";
 import { createClient } from "@/lib/utils/supabase/client";
+import React, { useEffect, useState } from "react";
+import { getAdminDetails } from "../../_utils/chat";
+import Image from "next/image";
+import { List } from "@phosphor-icons/react";
 
 const supabase = createClient();
 
-interface ChatRoomHeaderProps {
+type ChatHeaderProps = {
   roomId: string;
-}
+};
 
-const ChatHeader = ({ roomId }: ChatRoomHeaderProps) => {
+const ChatHeader = ({ roomId }: ChatHeaderProps) => {
   const [roomData, setRoomData] = useState<{
     room_title: string;
     room_thumbnail_url: string;
@@ -23,7 +23,7 @@ const ChatHeader = ({ roomId }: ChatRoomHeaderProps) => {
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        // Step 1: 채팅방 정보 가져오기
+        // 채팅방 정보 가져오기
         const { data: room, error: roomError } = await supabase
           .from("chat_rooms")
           .select("room_title, room_thumbnail_url")
@@ -32,11 +32,11 @@ const ChatHeader = ({ roomId }: ChatRoomHeaderProps) => {
 
         if (roomError || !room) throw roomError || new Error("채팅방 정보를 찾을 수 없습니다.");
 
-        // Step 2: 방장 정보 가져오기
+        // 채팅방 관리자 정보 가져오기
         const adminResult = await getAdminDetails(roomId);
         if (!adminResult.success || !adminResult.data) throw new Error(adminResult.error);
 
-        // Step 3: 참여자 수 가져오기
+        // 채팅방 참여자 수 가져오기
         const { data: participants, error: participantsError } = await supabase
           .from("chat_members")
           .select("member_id", { count: "exact" })
@@ -44,13 +44,13 @@ const ChatHeader = ({ roomId }: ChatRoomHeaderProps) => {
 
         if (participantsError) throw participantsError;
 
-        // Step 4: State 업데이트
+        // State 업데이트하기
         setRoomData({
           room_title: room.room_title,
-          room_thumbnail_url: room.room_thumbnail_url || "", // 기본값 설정
-          admin_name: adminResult.data.name || "Unknown Admin", // 기본값 설정
-          admin_profile_url: adminResult.data.profileImageUrl || "", // 기본값 설정
-          participant_count: participants?.length || 0,
+          room_thumbnail_url: room.room_thumbnail_url || "",
+          admin_name: adminResult.data.name || "알 수 없는 관리자",
+          admin_profile_url: adminResult.data.profileImageUrl || "",
+          participant_count: participants?.length || 0
         });
       } catch (error) {
         console.error("Error fetching room data:", error);
@@ -63,44 +63,35 @@ const ChatHeader = ({ roomId }: ChatRoomHeaderProps) => {
   if (!roomData) {
     return <div>Loading...</div>;
   }
+  
+ return (
+   <header className="flex h-[96px] w-[1200px] items-center justify-between bg-white px-[102px]">
+     <div className="flex items-center gap-[12px]">
+       {/* 채팅방 썸네일 이미지 */}
+       {roomData.room_thumbnail_url && (
+         <div className="h-[40px] w-[40px] overflow-hidden rounded-full">
+           <Image
+             src={roomData.room_thumbnail_url}
+             alt="Profile"
+             width={40} // Next.js Image는 px 단위 사용
+             height={40}
+             className="h-[40px] w-[40px] rounded-full"
+           />
+         </div>
+       )}
+       {/* 채팅방 정보 */}
+       <div className="flex flex-col">
+         <div className="text-[18px] font-bold leading-[27px] text-black">{roomData.room_title}</div>
+         <div className="text-[13px] font-medium leading-tight text-black">
+           {roomData.participant_count}명이 채팅에 참여 중
+         </div>
+       </div>
+     </div>
+     {/* 채팅방 삭제 버튼 연결해야함 */}
+     <List className="h-[32px] w-[32px] text-gray-950"/>
+   </header>
+ );
 
-  return (
-    <header className="w-full max-w-[1200px] bg-gray-100 p-6 shadow-md">
-      <div className="flex items-center gap-4">
-        {/* 방 썸네일 */}
-        {roomData.room_thumbnail_url && (
-          <Image
-            src={roomData.room_thumbnail_url}
-            alt={`${roomData.room_title} Thumbnail`}
-            width={80}
-            height={80}
-            className="h-20 w-20 rounded-full object-cover"
-          />
-        )}
-        {/* 방 정보 */}
-        <div className="flex flex-col">
-          <h1 className="text-2xl font-bold">{roomData.room_title}</h1>
-          <p className="text-sm text-gray-600 flex items-center">
-            {/* 방장 프로필 이미지 */}
-            {roomData.admin_profile_url && (
-              <Image
-                src={roomData.admin_profile_url}
-                alt={`${roomData.admin_name}'s profile`}
-                width={24}
-                height={24}
-                className="mr-2 h-6 w-6 rounded-full object-cover"
-              />
-            )}
-            방장: <span className="font-medium ml-1">{roomData.admin_name}</span>
-          </p>
-          <p className="text-sm text-gray-600">
-            참여 인원:{" "}
-            <span className="font-medium">{roomData.participant_count}명</span>
-          </p>
-        </div>
-      </div>
-    </header>
-  );
 };
 
 export default ChatHeader;

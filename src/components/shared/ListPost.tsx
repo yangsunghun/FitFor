@@ -1,10 +1,10 @@
-import LikeSection from "@/app/detail/_components/LikeSection";
 import type { PostType } from "@/lib/types/post";
 import { formatDate } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Tags } from "../ui/Tags";
+import LikeSection from "./LikeSection";
 
 type Props = {
   post: PostType;
@@ -34,7 +34,7 @@ const Listpost = ({ post }: Props) => {
             {post.comments}
           </span>
         </div>
-        <p className="absolute bottom-4 right-4 flex gap-1 text-body">
+        <p className="absolute bottom-4 right-4 flex gap-1">
           <span>조회수: {post.view}</span>
           <span>·</span>
           <span>{formatDate(post.created_at)}</span>

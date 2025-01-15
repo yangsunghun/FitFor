@@ -1,6 +1,6 @@
 "use server";
 
-import type { FetchPostsResponse, PostType } from "@/lib/types/post";
+import type { FetchOwnPostsResponse, FetchPostsResponse, OwnPostType, PostType } from "@/lib/types/post";
 import type { ProfileEditForm } from "@/lib/types/profile";
 import { createClient } from "../supabase/server";
 
@@ -67,7 +67,7 @@ export const fetchUserLikes = async ({
   }
 
   // 가져온 데이터 형태 정리 (post 데이터만 가져오도록)
-  const likes = userLikes.map((bookmark: { posts: PostType }) => bookmark.posts);
+  const likes = userLikes.map((like: { posts: PostType }) => like.posts);
 
   return {
     items: likes || [],
@@ -102,4 +102,30 @@ export const updateUserProfile = async ({
   if (updateError) {
     throw new Error(`프로필 업데이트 실패: ${updateError.message}`);
   }
+};
+
+// 유저의 게시물 데이터 가져오는 로직
+export const fetchUserPosts = async ({ userId, pageParam }: { userId: string, pageParam: number }): Promise<FetchPostsResponse> => {
+  const supabase = await createClient();
+
+  const perPage = 16;
+  const from = (pageParam - 1) * perPage;
+  const to = from + perPage - 1;
+
+  const { data: userPosts, error: userPostsError } = await supabase
+    .from("posts")
+    .select("*, users(nickname, profile_image)")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (userPostsError) {
+    throw new Error(`[게시물 불러오기] 유저 게시물 가져오기 실패: ${userPostsError.message}`);
+  }
+
+  return {
+    items: userPosts || [],
+    nextPage: userPosts.length === perPage ? pageParam + 1 : undefined,
+    hasMore: userPosts.length === perPage
+  };
 };

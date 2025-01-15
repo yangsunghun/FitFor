@@ -9,7 +9,7 @@ type PurchaseListProps = {
 };
 
 const PurchaseList = ({ postId }: PurchaseListProps) => {
-  const { data: purchases, isPending, isError } = usePurchases(postId);
+  const { purchases, isPending, isError } = usePurchases(postId);
 
   if (isPending) {
     return <p>스켈레톤</p>;

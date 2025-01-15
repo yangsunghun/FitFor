@@ -6,12 +6,12 @@ import Link from "next/link";
 type SearchResultsProps = {
   Results: { items: PostType[]; total: number } | undefined;
   isPending: boolean;
-  error: any;
+  isError: any;
 };
 
-const SearchResults = ({ Results, isPending, error }: SearchResultsProps) => {
+const SearchResults = ({ Results, isPending, isError }: SearchResultsProps) => {
   if (isPending) return <p>로딩</p>;
-  if (error) return <p>검색에 문제가 있습니다 {error.message}</p>;
+  if (isError) return <p>검색에 문제가 있습니다 {isError.message}</p>;
 
   if (!Results || Results.items.length === 0) return <p>검색 결과가 없습니다.</p>;
 

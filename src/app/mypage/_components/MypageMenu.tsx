@@ -1,14 +1,11 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TabsContent } from "@radix-ui/react-tabs";
-import BookmarkList from "./BookmarkList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MyPosts from "./MyPosts";
 import StatsCard from "./StatsCard";
 import VerificationSection from "./VerificationSection";
-import LikeList from "./LikeList";
 
-// 임시 샘플
-const sampleTabs = ["Posts", "Stats"];
+const menuTabs = ["내 게시물", "히스토리", "인증", "계정 관리"];
 
 const sampleStats = {
   posts: 42,
@@ -22,7 +19,7 @@ const MypageMenu = () => {
       {/* Tabs Navigation */}
       <Tabs defaultValue="tab-0" className="w-full">
         <TabsList className="h-auto w-full justify-start rounded-none border-b bg-transparent p-0">
-          {sampleTabs.map((tab, index) => (
+          {menuTabs.map((tab, index) => (
             <TabsTrigger
               key={`tab-${index}`}
               value={`tab-${index}`}
@@ -33,15 +30,13 @@ const MypageMenu = () => {
           ))}
         </TabsList>
 
-        {/* 0번 탭 */}
+        {/* 내 게시물 */}
         <TabsContent value="tab-0">
-          <BookmarkList />
-          <LikeList />
-          {/* <ContentList title="최근 본 포스트" subtitle="Recent" posts={sampleTabs[0].content.slice(4, 8)} /> */}
+          <MyPosts />
         </TabsContent>
 
         {/* 1번 탭 */}
-        <TabsContent value="tab-1">
+        <TabsContent value="tab-2">
           <div className="my-8 grid grid-cols-1 gap-4 md:grid-cols-3">
             <StatsCard title="작성한 게시물 수" value={sampleStats.posts} />
             <StatsCard title="받은 좋아요 수" value={sampleStats.likes} />

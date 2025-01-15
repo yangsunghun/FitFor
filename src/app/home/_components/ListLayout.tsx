@@ -1,6 +1,6 @@
 "use client";
 
-import ListItem from "@/components/shared/ListItem";
+import Listpost from "@/components/shared/ListPost";
 import type { PostType } from "@/lib/types/post";
 
 type ListLayoutProps = {
@@ -12,7 +12,7 @@ const ListLayout = ({ posts }: ListLayoutProps) => {
     <>
       <ul>
         {posts.map((post) => (
-          <ListItem key={post.id} post={post} />
+          <Listpost key={post.id} post={post} />
         ))}
       </ul>
     </>

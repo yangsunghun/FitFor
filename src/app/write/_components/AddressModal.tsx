@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getAddressFromCoordinates, getCurrentPosition } from '../_utils/location';
 
 type AddressModalProps = {
@@ -26,6 +26,24 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
       [name]: value,
     }));
   };
+
+  // 상태 초기화 함수 (모달이 닫힐 때 호출)
+  const resetForm = () => {
+    setState({
+      searchTerm: '',
+      searchResults: [],
+      loading: false,
+      geoLoading: false,
+      errorMessage: '',
+    });
+  };
+
+  // 모달이 열릴 때 상태 초기화
+  useEffect(() => {
+    if (isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
 
   // 주소 검색 처리 함수
   const handleSearch = async () => {
@@ -104,6 +122,12 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
             onChange={handleInputChange}
             placeholder="주소 입력 (예: 서초동)"
             className="w-full p-3 pl-10 border rounded-md focus:ring-2 focus:ring-black"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault(); // 기본 Enter 동작 방지
+                handleSearch(); // 검색 함수 실행
+              }
+            }}
           />
         </div>
 
@@ -148,7 +172,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
 
         {/* 닫기 버튼 */}
         <button
-          onClick={onClose}
+          onClick={onClose} // 상태 초기화 및 모달 닫기
           className="w-full p-3 mt-4 bg-gray-500 text-white rounded-md"
         >
           닫기

@@ -1,6 +1,6 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs1";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import MyPosts from "./MyPosts";
 import RecentViewPosts from "./RecentViewPosts";
 import VerificationSection from "./VerificationSection";

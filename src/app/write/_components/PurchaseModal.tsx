@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import type { PurchaseInsert } from "../page";
 
 const supabase = createClient();
+const genUniqueId = () => {
+  return crypto.randomUUID(); // 고유 ID 생성
+};
 
 type ProductModalProps = {
   isOpen: boolean;
@@ -12,6 +15,7 @@ type ProductModalProps = {
   onEditProduct?: (product: PurchaseInsert) => void;
   productToEdit?: PurchaseInsert | null; // null 허용
   mode: "add" | "edit";
+  purchasesLength: number; // 현재 상품 개수
 };
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 최대 업로드 파일 크기 5MB
 
@@ -22,6 +26,7 @@ const PurchaseModal = ({
   onEditProduct,
   productToEdit,
   mode,
+  purchasesLength
 }: ProductModalProps) => {
   // 입력 폼 상태 관리
   const [formState, setFormState] = useState({
@@ -127,20 +132,27 @@ const PurchaseModal = ({
 
   // 폼 제출 핸들러
   const handleSubmit = () => {
+    // 5개 제한 확인
+    if (mode === "add" && purchasesLength >= 5) {
+      alert("상품은 최대 5개까지만 추가할 수 있습니다.");
+      return;
+    }
+  
     // 필수 입력 항목 확인
     if (!title || !description || !price || !image_url) {
       alert("모든 필드를 입력해주세요.");
       return;
     }
-
+  
+    const product = { title, description, price: Number(price), image_url };
     if (mode === "add") {
       // 추가 모드
-      onAddProduct({ title, description, price: Number(price), image_url });
+      onAddProduct({ ...product, id: genUniqueId() });
     } else if (mode === "edit" && onEditProduct) {
       // 수정 모드
-      onEditProduct({ title, description, price: Number(price), image_url });
+      onEditProduct({ ...product, id: productToEdit?.id });
     }
-
+  
     resetForm(); // 입력 폼 초기화
     onClose(); // 모달 닫기
   };

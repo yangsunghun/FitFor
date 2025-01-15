@@ -19,8 +19,8 @@ const ListLayout = ({ posts }: ListLayoutProps) => {
         {posts.map((item) => (
           <li key={item.id} className="relative mb-6 flex gap-6 py-4">
             <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
-            <figure className="relative h-[11.25rem] w-[11.25rem] overflow-hidden rounded-[1rem] bg-gray-200">
-              <Image src={item.thumbnail} alt={item.title} fill={true} className="object-cover object-center" />
+            <figure className="thumbnail h-[11.25rem] w-[11.25rem] bg-gray-200">
+              <Image src={item.thumbnail} alt={item.title} fill={true} />
             </figure>
             <div className="relative w-[calc(100%-12.75rem)]">
               <div className="flex gap-2">

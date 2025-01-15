@@ -1,11 +1,12 @@
 "use client";
 
+import Cardpost from "@/components/shared/CardPost";
 import { useUserPosts } from "@/lib/hooks/mypage/useUserPosts";
 import { useEffect, useRef } from "react";
 
 const MyPostsData = () => {
   const { userPosts, fetchNextPage, hasNextPage, isFetchingNextPage, isPending, isError } = useUserPosts();
-  const observerRef = useRef();
+  const observerRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,17 +23,19 @@ const MyPostsData = () => {
 
   if (isPending) return <p>로딩 중...</p>;
   if (isError) return <p>내 게시물 불러오기 에러...</p>;
-  console.log("MyPostsData pages items", userPosts!.pages[0].items);
 
   return (
     <div>
       {userPosts?.pages.map((page, i) => (
-        <div key={i}>
+        <div className="mt-8 grid grid-cols-4 gap-6" key={`${page}_${i}`}>
           {page.items.map((post) => (
-            <p key={post.id}>post</p>
+            <Cardpost key={post.id} post={post} isMasonry />
           ))}
         </div>
       ))}
+      <div ref={observerRef} className="h-5">
+        {hasNextPage && (isFetchingNextPage ? <p>로딩 중...</p> : <p>더 보기</p>)}
+      </div>
     </div>
   );
 };

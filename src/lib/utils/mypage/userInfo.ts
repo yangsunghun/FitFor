@@ -105,7 +105,7 @@ export const updateUserProfile = async ({
 };
 
 // 유저의 게시물 데이터 가져오는 로직
-export const fetchUserPosts = async ({ userId, pageParam }: { userId: string, pageParam: number }): Promise<FetchOwnPostsResponse> => {
+export const fetchUserPosts = async ({ userId, pageParam }: { userId: string, pageParam: number }): Promise<FetchPostsResponse> => {
   const supabase = await createClient();
 
   const perPage = 16;
@@ -114,7 +114,7 @@ export const fetchUserPosts = async ({ userId, pageParam }: { userId: string, pa
 
   const { data: userPosts, error: userPostsError } = await supabase
     .from("posts")
-    .select("*")
+    .select("*, users(nickname, profile_image)")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .range(from, to);

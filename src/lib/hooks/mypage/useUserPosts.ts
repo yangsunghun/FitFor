@@ -24,8 +24,6 @@ export const useUserPosts = () => {
     enabled: !!user
   });
 
-  console.log("userUserPost", userPosts);
-
   return {
     userPosts,
     fetchNextPage,

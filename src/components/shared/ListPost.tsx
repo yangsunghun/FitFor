@@ -27,11 +27,11 @@ const Listpost = ({ post }: Props) => {
         <p className="clear-both mt-2 line-clamp-2 overflow-hidden text-ellipsis break-words text-title1 font-bold text-text-04">
           {post.title}
         </p>
-        <div className="absolute bottom-0 left-0 z-20 flex gap-4 text-title2 font-medium leading-7">
+        <div className="absolute bottom-0 left-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03">
           <LikeSection postId={post.id} styleType="list" />
           <span className="post-center pointer-events-none flex gap-1">
             <ChatCircleDots size={28} className="text-text-03" />
-            {post.comments}
+            <span className="text-text-04">{post.comments}</span>
           </span>
         </div>
         <p className="absolute bottom-4 right-4 flex gap-1">

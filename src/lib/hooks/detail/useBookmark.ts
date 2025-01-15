@@ -1,4 +1,4 @@
-import { addBookmark, isPostBookmarked, removeBookmark } from "@/lib/utils/detail/toggleState";
+import { addBookmark, isPostBookmarked, removeBookmark } from "@/lib/utils/detail/bookmarkActions";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 type BookmarkState = {

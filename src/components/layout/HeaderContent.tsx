@@ -22,7 +22,7 @@ const HeaderContent = () => {
       <nav className="w-44">
         <ul className="flex w-full text-title2 font-medium">
           <li className="w-1/2 text-center">
-            <a href="">북마크</a>
+            <Link href="/bookmarks">북마크</Link>
           </li>
           <li className="w-1/2 text-center">
             <a href="">라이브</a>

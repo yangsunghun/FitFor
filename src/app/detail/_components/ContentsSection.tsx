@@ -54,7 +54,7 @@ const ContentsSection = ({ postId }: Props) => {
           </div>
         </div>
 
-        <p className="text-body text-text-03">{formatDateTime(created_at)}</p>
+        <p className="text-text-03">{formatDateTime(created_at)}</p>
       </article>
 
       <div className="mb-4">

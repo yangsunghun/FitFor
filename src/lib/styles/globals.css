@@ -28,6 +28,14 @@
   .thumbnail > img {
     @apply object-cover object-center;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* input type=search x button 제거 */

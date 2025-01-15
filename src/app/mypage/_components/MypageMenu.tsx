@@ -2,17 +2,10 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MyPosts from "./MyPosts";
-import StatsCard from "./StatsCard";
-import VerificationSection from "./VerificationSection";
 import RecentViewPosts from "./RecentViewPosts";
+import VerificationSection from "./VerificationSection";
 
 const menuTabs = ["내 게시물", "히스토리", "인증", "계정 관리"];
-
-const sampleStats = {
-  posts: 42,
-  likes: 128,
-  views: 1337
-};
 
 const MypageMenu = () => {
   return (
@@ -24,7 +17,7 @@ const MypageMenu = () => {
             <TabsTrigger
               key={`tab-${index}`}
               value={`tab-${index}`}
-              className="data-[state=active]:border-black data-[state=active]:shadow-none w-1/4 rounded-none border-t-2 border-transparent px-6 py-2"
+              className="w-1/4 rounded-none border-t-2 border-transparent px-6 py-2 data-[state=active]:border-black data-[state=active]:shadow-none"
             >
               {tab}
             </TabsTrigger>
@@ -43,30 +36,13 @@ const MypageMenu = () => {
 
         {/* 인증 */}
         <TabsContent value="tab-2">
-          <div className="my-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-            <StatsCard title="작성한 게시물 수" value={sampleStats.posts} />
-            <StatsCard title="받은 좋아요 수" value={sampleStats.likes} />
-            <StatsCard title="총 조회수" value={sampleStats.views} />
-          </div>
-
           <VerificationSection isVerified={false} />
-
-          <div className="mb-8 rounded-lg bg-gray-100 p-8">
-            <h3 className="mb-4 font-medium">인증배지 발급 종족 요건</h3>
-            <ul className="list-disc space-y-4 pl-5">
-              <li>Lorem ipsum dolor sit amet consectetur. Proin purus amet nec tristique nulla congue.</li>
-              <li>Lorem ipsum dolor sit amet consectetur. Proin purus amet nec tristique nulla congue.</li>
-              <li>Lorem ipsum dolor sit amet consectetur. Proin purus amet nec tristique nulla congue.</li>
-            </ul>
-          </div>
         </TabsContent>
 
-        {/* 나머지 */}
-        {/* {sampleTabs.slice(2).map((tab, index) => (
-          <TabsContent key={`content-${index + 2}`} value={`tab-${index + 2}`}>
-            <p>Content for {tab.label}</p>
-          </TabsContent>
-        ))} */}
+        {/* 계정 관리 */}
+        <TabsContent value="tab-3">
+          <p>계정 관리</p>
+        </TabsContent>
       </Tabs>
     </div>
   );

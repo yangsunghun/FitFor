@@ -1,4 +1,4 @@
-import { addLike, getLikeCount, isPostLiked, removeLike } from "@/lib/utils/detail/toggleState";
+import { addLike, getLikeCount, isPostLiked, removeLike } from "@/lib/utils/detail/likeActions";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useLike = (postId: string, userId: string) => {

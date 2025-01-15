@@ -1,5 +1,6 @@
 "use client";
 
+import { FloatingButton } from "@/components/ui/FloatingButton";
 import { usePosts } from "@/lib/hooks/home/usePosts";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
 import LayoutToggle from "./LayoutToggle";
@@ -37,6 +38,8 @@ const ListLender = ({}: ListLenderProps) => {
           </button>
         )}
       </section>
+
+      <FloatingButton variant="primary" href="/write" />
     </>
   );
 };

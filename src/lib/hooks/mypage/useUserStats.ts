@@ -10,6 +10,7 @@ export const useUserStats = () => {
   const {
     data: userPostsStats,
     isPending,
+    isFetching,
     isError
   } = useQuery({
     queryKey: ["postsStats"],
@@ -29,5 +30,5 @@ export const useUserStats = () => {
     );
   }
 
-  return { userPostsStats, allStats, isPending, isError };
+  return { userPostsStats, allStats, isPending, isFetching, isError };
 };

@@ -1,11 +1,18 @@
 "use client";
 
 import { useRecentViewPosts } from "@/lib/hooks/mypage/useRecentViewPosts";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const RecentViewPosts = () => {
   const { recentPosts, isPending, isError } = useRecentViewPosts();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["recentPosts"] });
+  }, []);
 
   if (isError) {
     return <p>최근 조회된 포스트를 불러오지 못했습니다.</p>;

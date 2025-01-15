@@ -22,7 +22,7 @@
 
 @layer components {
   .thumbnail {
-    @apply relative overflow-hidden rounded-[1rem];
+    @apply relative overflow-hidden;
   }
 
   .thumbnail > img {

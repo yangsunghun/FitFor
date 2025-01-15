@@ -1,3 +1,11 @@
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInMonths,
+  differenceInYears
+} from "date-fns";
+
 export const formatDate = (dateInput: string | Date): string => {
   const date = new Date(dateInput);
 
@@ -28,4 +36,35 @@ export const formatDateTime = (dateString: string): string => {
   const formattedTime = `${timeParts[1]} ${timeParts[0]}`;
 
   return `${formattedDate} ${formattedTime}`;
+};
+
+export const relativeTimeDay = (createdAt: string) => {
+  const createdDate = new Date(createdAt);
+  const now = new Date();
+
+  const minutesDiff = differenceInMinutes(now, createdDate);
+  const hoursDiff = differenceInHours(now, createdDate);
+
+  if (minutesDiff < 1) return "방금 전";
+  if (minutesDiff < 60) return `${minutesDiff}분 전`;
+  if (hoursDiff < 24) return `${hoursDiff}시간 전`;
+  return createdDate.toLocaleDateString();
+};
+
+export const relativeTimeWeek = (createdAt: string) => {
+  const createdDate = new Date(createdAt);
+  const now = new Date();
+
+  const minutesDiff = differenceInMinutes(now, createdDate);
+  const hoursDiff = differenceInHours(now, createdDate);
+  const daysDiff = differenceInDays(now, createdDate);
+  const monthsDiff = differenceInMonths(now, createdDate);
+  const yearsDiff = differenceInYears(now, createdDate);
+
+  if (minutesDiff < 1) return "방금 전";
+  if (minutesDiff < 60) return `${minutesDiff}분 전`;
+  if (hoursDiff < 24) return `${hoursDiff}시간 전`;
+  if (daysDiff < 7) return `${daysDiff}일 전`;
+  // if (monthsDiff < 12) return `${monthsDiff}개월 전`;
+  return createdDate.toLocaleDateString();
 };

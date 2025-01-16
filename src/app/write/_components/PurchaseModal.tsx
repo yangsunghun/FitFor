@@ -142,7 +142,7 @@ const PurchaseModal = ({
     }
 
     // 필수 입력 항목 확인
-    if (!title || !description || !buy_link || !image_url) {
+    if (!title || !image_url) {
       alert("모든 필드를 입력해주세요.");
       return;
     }

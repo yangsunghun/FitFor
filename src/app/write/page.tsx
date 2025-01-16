@@ -28,8 +28,6 @@ type FormState = {
   productToEdit: Database["public"]["Tables"]["purchase"]["Insert"] | null; // 추가
 };
 
-
-
 const WritePage = () => {
   // 폼 상태 관리
   const [formState, setFormState] = useState<FormState>({

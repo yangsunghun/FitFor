@@ -197,6 +197,64 @@ export const deleteChatRoom = async (userId: string, roomId: string) => {
   }
 };
 
+export const sendMessage = async ({
+  message,
+  file,
+  roomId,
+  memberId
+}: {
+  message: string;
+  file: File | null;
+  roomId: string;
+  memberId: string;
+}) => {
+  let fileUrl = null;
+
+  // 파일 용량 제한 (예: 5MB)
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "gif"]; // 허용된 확장자
+
+  if (file) {
+    // 파일 용량 검증
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error("파일 용량은 5mb를 초과할 수 없습니다..");
+    }
+
+    // 파일 확장자 검증
+    const fileExtension = file.name.split(".").pop()?.toLowerCase();
+    if (!ALLOWED_EXTENSIONS.includes(fileExtension || "")) {
+      throw new Error(`허용되지 않는 파일 유형입니다. allowed extensions: ${ALLOWED_EXTENSIONS.join(", ")}`);
+    }
+
+    // 한글 파일 이름 처리
+    const sanitizedFileName = `${Date.now()}-${memberId}.${fileExtension}`;
+
+    // 파일 업로드
+    const { data, error: uploadError } = await supabase.storage
+      .from("chat-images")
+      .upload(`rooms/${roomId}/${sanitizedFileName}`, file);
+
+    if (uploadError) {
+      throw new Error(uploadError.message);
+    }
+    fileUrl = data?.path;
+  }
+
+  // 메시지 저장
+  const { error } = await supabase.from("chat_messages").insert({
+    content: message || null,
+    member_id: memberId,
+    room_id: roomId,
+    image_url: fileUrl || null,
+    created_at: new Date().toISOString()
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
+
 // 채팅방 일반 멤버로 등록하기(기존)
 // export const enterAsMember = async (userId: string, roomId: string) => {
 //   try {

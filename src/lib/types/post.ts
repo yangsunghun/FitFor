@@ -9,3 +9,13 @@ export type FetchPostsResponse = {
   nextPage?: number;
   hasMore: boolean;
 };
+
+export type Purchase = Database["public"]["Tables"]["purchase"]["Row"];
+
+export type OwnPostType = Database["public"]["Tables"]["posts"]["Row"];
+
+export type FetchOwnPostsResponse = {
+  items: OwnPostType[];
+  nextPage?: number;
+  hasMore: boolean;
+};

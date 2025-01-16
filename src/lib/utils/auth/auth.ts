@@ -1,6 +1,6 @@
 "use server";
 
-import { LoginForm, Provider, PROVIDER_CONFIG, SignupForm } from "@/lib/types/auth";
+import { LoginForm, Provider, PROVIDER_CONFIG, SignupForm, type User } from "@/lib/types/auth";
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -88,7 +88,7 @@ export const login = async (formData: LoginForm) => {
 };
 
 // 로그인된 유저의 public users 정보를 가져오는 코드
-export const fetchUser = async () => {
+export const fetchUser = async (): Promise<User | null> => {
   const supabase = await createClient();
 
   const {
@@ -111,7 +111,7 @@ export const fetchUser = async () => {
 
     if (userDetailsError || !userDetails) {
       console.error("public 테이블에 유저 정보가 없습니다");
-      return;
+      throw new Error("public 테이블에 유저 정보가 없습니다");
     }
 
     return userDetails;

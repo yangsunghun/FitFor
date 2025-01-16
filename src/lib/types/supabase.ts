@@ -284,6 +284,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          images: string[]
           isSaved: boolean
           likes: number
           tags: string[]
@@ -299,6 +300,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          images: string[]
           isSaved?: boolean
           likes: number
           tags: string[]
@@ -314,6 +316,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          images?: string[]
           isSaved?: boolean
           likes?: number
           tags?: string[]

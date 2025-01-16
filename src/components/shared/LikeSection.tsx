@@ -21,12 +21,14 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
 
   const containerClass = cn({
     "flex gap-3": styleType === "masonry",
-    " flex gap-4": styleType === "list" || "detail"
+    "flex gap-2": styleType === "list",
+    "flex gap-10": styleType === "detail"
   });
 
   const buttonClass = cn("flex justify-center items-center ", {
     "w-7 h-7 rounded-[0.5rem] bg-bg-01": styleType === "masonry",
-    "": styleType === "list"
+    "gap-1": styleType === "list",
+    "flex-col gap-2": styleType === "detail"
   });
 
   if (!userId) {
@@ -42,6 +44,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
           inactiveIcon={
             <span className="text-text-03">{styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}</span>
           }
+          text={false}
         />
         {styleType !== "list" && (
           <ToggleButton
@@ -55,6 +58,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
                 {styleType === "masonry" ? <BookmarkSimple size={20} /> : <BookmarkSimple size={28} />}
               </span>
             }
+            text={styleType === "detail" ? true : false}
           />
         )}
       </div>
@@ -77,9 +81,8 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
             {styleType === "masonry" ? <Heart weight="fill" size={20} /> : <Heart weight="fill" size={28} />}
           </span>
         }
-        inactiveIcon={
-          <span className="text-text-03">{styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}</span>
-        }
+        inactiveIcon={<span>{styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}</span>}
+        text={false}
       />
       {styleType !== "list" && (
         <ToggleButton
@@ -96,10 +99,9 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
             </span>
           }
           inactiveIcon={
-            <span className="text-text-03">
-              {styleType === "masonry" ? <BookmarkSimple size={20} /> : <BookmarkSimple size={28} />}
-            </span>
+            <span>{styleType === "masonry" ? <BookmarkSimple size={20} /> : <BookmarkSimple size={28} />}</span>
           }
+          text={styleType === "detail" ? true : false}
         />
       )}
     </div>

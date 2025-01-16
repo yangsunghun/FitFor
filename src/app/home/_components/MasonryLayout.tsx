@@ -1,10 +1,7 @@
 "use client";
 
-import LikeSection from "@/app/detail/_components/LikeSection";
+import Cardpost from "@/components/shared/CardPost";
 import type { PostType } from "@/lib/types/post";
-import { formatDate } from "@/lib/utils/common/formatDateTime";
-import Image from "next/image";
-import Link from "next/link";
 import Masonry from "react-layout-masonry";
 
 type MasonryLayoutProps = {
@@ -15,29 +12,8 @@ const MasonryLayout = ({ posts }: MasonryLayoutProps) => {
   return (
     <>
       <Masonry columns={{ 1200: 4, 768: 3, 480: 2 }} gap={24} className="flex">
-        {posts.map((item) => (
-          <div key={item.id} className="masonry-item group relative overflow-hidden rounded-[1rem]">
-            <Link href={`/detail/${item.id}/view`} className="click-box z-20"></Link>
-            <figure className="relative w-full">
-              <Image
-                src={item.thumbnail}
-                alt={item.title}
-                width={500}
-                height={700}
-                className="object-cover object-center"
-              />
-            </figure>
-            <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100">
-              <div className="absolute right-4 top-4 z-20">
-                <LikeSection postId={item.id} styleType="masonry" />
-              </div>
-              <p className="absolute bottom-4 left-4 flex gap-1 text-caption text-text-01">
-                <span>조회수: {item.view}</span>
-                <span>·</span>
-                <span>{formatDate(item.created_at)}</span>
-              </p>
-            </div>
-          </div>
+        {posts.map((post) => (
+          <Cardpost key={post.id} post={post} isMasonry={true} />
         ))}
       </Masonry>
     </>

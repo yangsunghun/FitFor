@@ -7,15 +7,19 @@ type ToggleButtonProps = {
   activeIcon?: React.ReactNode;
   inactiveIcon: React.ReactNode;
   btnStyle: string;
+  text?: boolean;
 };
 
-const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, btnStyle }: ToggleButtonProps) => {
+const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, btnStyle, text }: ToggleButtonProps) => {
   return (
-    <span className="flex items-center gap-1">
+    <span>
       <button onClick={onClick} className={btnStyle}>
-        <span>{isActive ? activeIcon : inactiveIcon}</span>
+        {isActive ? activeIcon : inactiveIcon}
+        <span className="text-text-04">
+          {typeof count === "number" && count}
+          {text && "북마크"}
+        </span>
       </button>
-      {typeof count === "number" && <span>{count}</span>}
     </span>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { postsPerPage } from "@/lib/constants/constants";
+import { POSTS_PER_PAGE } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import { useRouter } from "next/navigation";
 
@@ -18,7 +18,7 @@ const Pagination = ({ Results }: PaginationProps) => {
 
   if (!Results || Results.total === 0) return null;
 
-  const totalPages = Math.ceil(Results.total / postsPerPage);
+  const totalPages = Math.ceil(Results.total / POSTS_PER_PAGE);
 
   const maxPagesToShow = 5; // 보여줄 페이지 번호 개수
   const startPage = Math.max(1, page - Math.floor(maxPagesToShow / 2));

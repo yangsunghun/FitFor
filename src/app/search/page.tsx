@@ -12,7 +12,7 @@ const SearchPage = () => {
   const { Results, isPending, isError } = useSearchPosts(query, page, tags, sort);
 
   return (
-    <div className="inner">
+    <div className="inner pb-40">
       <TagFilters />
       <SortPosts sort={sort} handleSort={handleSort} />
       <SearchResults Results={Results} isPending={isPending} isError={isError} />

@@ -29,7 +29,7 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
       <p className="mb-4 text-title1 font-bold text-black">상품 정보</p>
       <ul className="grid grid-cols-4 gap-6">
         {purchases.map((purchase: Purchase) => (
-          <li key={purchase.id}>
+          <li key={purchase.id} className="relative">
             {purchase.buy_link && <Link href={purchase.buy_link} title={purchase.title}></Link>}
             {purchase.image_url && (
               <figure className="thumbnail aspect-square w-full rounded-[0.5rem] border border-line-02">

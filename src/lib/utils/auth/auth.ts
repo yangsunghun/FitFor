@@ -1,6 +1,6 @@
 "use server";
 
-import { LoginForm, Provider, PROVIDER_CONFIG, SignupForm, type User } from "@/lib/types/auth";
+import { LoginForm, Provider, PROVIDER_CONFIG, SignupForm, type UserType } from "@/lib/types/auth";
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -107,19 +107,12 @@ export const login = async (formData: LoginForm) => {
 };
 
 // 로그인된 유저의 public users 정보를 가져오는 코드
-export const fetchUser = async (): Promise<User | null> => {
+export const fetchUser = async (): Promise<UserType | null> => {
   const supabase = await createClient();
 
   const {
-    data: { user },
-    error: getUserError
+    data: { user }
   } = await supabase.auth.getUser();
-
-  // 비로그인 회원
-  if (getUserError) {
-    // 없는 경우 반환할 값 null
-    return null;
-  }
 
   if (user) {
     const { data: userDetails, error: userDetailsError } = await supabase
@@ -128,6 +121,7 @@ export const fetchUser = async (): Promise<User | null> => {
       .eq("id", user!.id)
       .maybeSingle();
 
+    // 에러처리 필요
     if (userDetailsError || !userDetails) {
       console.error("public 테이블에 유저 정보가 없습니다");
       throw new Error("public 테이블에 유저 정보가 없습니다");
@@ -146,7 +140,7 @@ export const socialLogin = async (provider: Provider) => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`,
       queryParams: PROVIDER_CONFIG[provider].queryParams
     }
   });
@@ -156,8 +150,9 @@ export const socialLogin = async (provider: Provider) => {
     console.error("소셜 로그인 에러", error);
   }
 
+  // oAuth 리다이렉션
   if (data.url) {
-    redirect(data.url); // use the redirect API for your server framework
+    redirect(data.url);
   }
 };
 

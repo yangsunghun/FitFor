@@ -156,11 +156,8 @@ export type Database = {
         Row: {
           created_at: string
           isActive: boolean
-          room_category: string
-          room_description: string
           room_hashtags: string[]
           room_id: string
-          room_subtitle: string
           room_thumbnail_url: string | null
           room_title: string
           user_id: string
@@ -168,11 +165,8 @@ export type Database = {
         Insert: {
           created_at?: string
           isActive?: boolean
-          room_category: string
-          room_description: string
           room_hashtags: string[]
           room_id?: string
-          room_subtitle: string
           room_thumbnail_url?: string | null
           room_title: string
           user_id: string
@@ -180,11 +174,8 @@ export type Database = {
         Update: {
           created_at?: string
           isActive?: boolean
-          room_category?: string
-          room_description?: string
           room_hashtags?: string[]
           room_id?: string
-          room_subtitle?: string
           room_thumbnail_url?: string | null
           room_title?: string
           user_id?: string

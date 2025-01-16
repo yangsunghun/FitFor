@@ -8,16 +8,22 @@ import { SwiperSlide } from "swiper/react";
 
 type Props = {
   images: string[];
+  writerSpec: number[];
 };
 
-const ImageGallery = ({ images }: Props) => {
+const ImageGallery = ({ images, writerSpec }: Props) => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
 
   return (
     <div className="w-[48%]">
-      <div className="thumbnail mb-4 aspect-square w-full rounded-[1rem]">
+      <figure className="thumbnail mb-4 aspect-square w-full rounded-[1rem]">
         <Image src={selectedImage} alt="Selected" fill={true} />
-      </div>
+        {writerSpec.length === 2 && (
+          <p className="absolute bottom-4 left-4 rounded-[0.5rem] bg-bg-01 bg-opacity-80 px-2 py-1 text-caption font-medium text-text-03">
+            {writerSpec[0]}cm · {writerSpec[1]}kg
+          </p>
+        )}
+      </figure>
       <Carousel slidesPerView={4} spaceBetween={16} arrow={false}>
         {images.map((image, index) => (
           <SwiperSlide key={index} className="relative aspect-square overflow-hidden rounded-[0.5rem]">

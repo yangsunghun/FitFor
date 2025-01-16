@@ -17,8 +17,8 @@ const DetailModal = async ({ params }: Props) => {
   if (!post) {
     return (
       <ModalBg>
-        <div className="relative w-[400px] rounded-lg bg-white p-6 shadow-lg">
-          <h2 className="text-lg font-bold">게시글을 찾을 수 없습니다.</h2>
+        <div className="inner relative max-w-[996px] rounded-lg bg-bg-01 p-8 shadow-lg">
+          <p className="text-titke font-bold">게시글을 찾을 수 없습니다.</p>
           <ModalButton label="닫기" action="close" />
         </div>
       </ModalBg>
@@ -27,13 +27,13 @@ const DetailModal = async ({ params }: Props) => {
 
   return (
     <ModalBg>
-      <div className="relative w-[400px] rounded-lg bg-white p-6 shadow-lg">
+      <div className="inner relative max-w-[1080px] rounded-[1rem] bg-bg-01 p-8 shadow-lg">
         <ViewCounter postId={postId} />
-
         <ContentsSection postId={postId} />
-
-        <ModalButton label="전체 보기" action="refresh" />
-        <ModalButton label="닫기" action="close" />
+        <div className="mt-4 flex justify-end gap-2">
+          <ModalButton label="전체 보기" action="refresh" />
+          <ModalButton label="닫기" action="close" />
+        </div>
       </div>
     </ModalBg>
   );

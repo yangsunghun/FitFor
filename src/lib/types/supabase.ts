@@ -335,7 +335,7 @@ export type Database = {
       }
       purchase: {
         Row: {
-          by_link: string | null
+          buy_link: string | null
           description: string | null
           id: string
           image_url: string | null
@@ -343,7 +343,7 @@ export type Database = {
           title: string
         }
         Insert: {
-          by_link?: string | null
+          buy_link?: string | null
           description?: string | null
           id?: string
           image_url?: string | null
@@ -351,7 +351,7 @@ export type Database = {
           title: string
         }
         Update: {
-          by_link?: string | null
+          buy_link?: string | null
           description?: string | null
           id?: string
           image_url?: string | null

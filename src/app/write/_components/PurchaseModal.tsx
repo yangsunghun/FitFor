@@ -32,12 +32,12 @@ const PurchaseModal = ({
   const [formState, setFormState] = useState({
     title: "",
     description: "",
-    by_link: "",
+    buy_link: "",
     image_url: "",
     post_id: "", // post_id 추가
   });
 
-  const { title, description, by_link, image_url, post_id } = formState;
+  const { title, description, buy_link, image_url, post_id } = formState;
 
   useEffect(() => {
     if (productToEdit) {
@@ -45,7 +45,7 @@ const PurchaseModal = ({
       setFormState({
         title: productToEdit.title,
         description: productToEdit.description || "",
-        by_link: productToEdit.by_link || "",
+        buy_link: productToEdit.buy_link || "",
         image_url: productToEdit.image_url || "",
         post_id: productToEdit.post_id || "",
       });
@@ -54,7 +54,7 @@ const PurchaseModal = ({
       setFormState({
         title: "",
         description: "",
-        by_link: "",
+        buy_link: "",
         image_url: "",
         post_id: "", // 기본값으로 설정
       });
@@ -68,7 +68,7 @@ const PurchaseModal = ({
     const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
-      [name]: name === "price" ? (value === "" ? "" : Number(value)) : value, // 가격은 숫자로 변환
+      [name]: value, // 모든 입력 값을 문자열로 처리
     }));
   };
 
@@ -128,7 +128,7 @@ const PurchaseModal = ({
     setFormState({
       title: "",
       description: "",
-      by_link: "",
+      buy_link: "",
       image_url: "",
       post_id: "",
     });
@@ -143,12 +143,12 @@ const PurchaseModal = ({
     }
 
     // 필수 입력 항목 확인
-    if (!title || !description || !by_link || !image_url ) {
+    if (!title || !description || !buy_link || !image_url) {
       alert("모든 필드를 입력해주세요.");
       return;
     }
 
-    const product = { title, description, by_link, image_url, post_id };
+    const product = { title, description, buy_link, image_url, post_id };
     if (mode === "add") {
       // 추가 모드
       onAddProduct({ ...product, id: genUniqueId() });
@@ -229,9 +229,9 @@ const PurchaseModal = ({
         <div className="mb-4">
           <label className="block font-bold mb-2">상품 링크</label>
           <input
-            type="url" // URL 입력 필드
-            name="by_link"
-            value={formState.by_link || ""} // 링크 상태를 사용
+            type="url"
+            name="buy_link"
+            value={formState.buy_link || ""}
             onChange={handleInputChange}
             placeholder="상품 구매 링크를 입력해주세요."
             className="w-full p-2 border rounded-md"

@@ -55,22 +55,41 @@ export const insertUserToPublic = async ({
 }) => {
   const supabase = await createClient();
 
-  // public 유저 테이블에 저장
-  const { data, error } = await supabase.from("users").upsert(
-    {
+  try {
+    // 유저가 기존에 로그인한적이 있는지 확인
+    const { data: existingUser, error: selectError } = await supabase.from("users").select("id").eq("id", id).single();
+
+    // 없는 경우(에러)를 제외한 에러 처리
+    if (selectError && selectError.code !== "PGRST116") {
+      console.error("[기존 유저 체크 오류]", selectError.message);
+      throw selectError;
+    }
+
+    // 로그인 했던 유저라면
+    // 새로 추가 X
+    if (existingUser) {
+      return null;
+    }
+
+    // 처음 로그인한 유저는 public.users에 추가
+    const { data, error: insertError } = await supabase.from("users").insert({
       email,
       id,
       nickname,
       profile_image
-    },
-    { onConflict: "id" }
-  );
+    });
 
-  if (error) {
-    console.error("유저 테이블 upsert 에러", error);
+    // 추가 에러시 처리
+    if (insertError) {
+      console.error("[유저 정보 데이터베이스 저장 오류]", insertError.message);
+      throw insertError;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("insertUserToPublic error:", error);
+    throw error;
   }
-
-  return data;
 };
 
 // 일반 로그인 코드

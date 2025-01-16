@@ -1,7 +1,8 @@
 import { useAuthStore } from "@/lib/store/authStore";
-import { fetchUserPosts } from "@/lib/utils/mypage/userInfo";
+import { fetchUserPostsPerPage } from "@/lib/utils/mypage/userInfo";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+// 유저 게시물 데이터 (무한스크롤)
 export const useUserPosts = () => {
   // enabled 활용하기
   const { user } = useAuthStore();
@@ -18,7 +19,7 @@ export const useUserPosts = () => {
     queryKey: ["userPosts"],
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
-      return fetchUserPosts({ userId: user!.id, pageParam });
+      return fetchUserPostsPerPage({ userId: user!.id, pageParam });
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
     enabled: !!user

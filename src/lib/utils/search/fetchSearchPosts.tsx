@@ -31,7 +31,7 @@ export const fetchSearchPosts = async ({
     `,
       { count: "exact" }
     )
-    .ilike("title", `%${query}%`)
+    .ilike("content", `%${query}%`)
     .order(sort, { ascending: false })
     .range(from, to);
 

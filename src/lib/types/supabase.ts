@@ -285,12 +285,10 @@ export type Database = {
           created_at: string
           id: string
           images: string[]
-          isSaved: boolean
+          is_saved: boolean
           likes: number
           tags: string[]
-          thumbnail: string
-          title: string
-          upload_place: string
+          upload_place: string | null
           user_id: string
           view: number
         }
@@ -301,12 +299,10 @@ export type Database = {
           created_at?: string
           id?: string
           images: string[]
-          isSaved?: boolean
+          is_saved?: boolean
           likes: number
           tags: string[]
-          thumbnail: string
-          title: string
-          upload_place: string
+          upload_place?: string | null
           user_id: string
           view: number
         }
@@ -317,12 +313,10 @@ export type Database = {
           created_at?: string
           id?: string
           images?: string[]
-          isSaved?: boolean
+          is_saved?: boolean
           likes?: number
           tags?: string[]
-          thumbnail?: string
-          title?: string
-          upload_place?: string
+          upload_place?: string | null
           user_id?: string
           view?: number
         }
@@ -338,27 +332,27 @@ export type Database = {
       }
       purchase: {
         Row: {
+          buy_link: string | null
           description: string | null
           id: string
           image_url: string | null
           post_id: string
-          price: number | null
           title: string
         }
         Insert: {
+          buy_link?: string | null
           description?: string | null
           id?: string
           image_url?: string | null
           post_id: string
-          price?: number | null
           title: string
         }
         Update: {
+          buy_link?: string | null
           description?: string | null
           id?: string
           image_url?: string | null
           post_id?: string
-          price?: number | null
           title?: string
         }
         Relationships: [
@@ -378,6 +372,7 @@ export type Database = {
           gender: string
           id: string
           introduction: string
+          is_verified: boolean
           nickname: string
           profile_image: string | null
         }
@@ -387,6 +382,7 @@ export type Database = {
           gender?: string
           id?: string
           introduction?: string
+          is_verified?: boolean
           nickname: string
           profile_image?: string | null
         }
@@ -396,6 +392,7 @@ export type Database = {
           gender?: string
           id?: string
           introduction?: string
+          is_verified?: boolean
           nickname?: string
           profile_image?: string | null
         }

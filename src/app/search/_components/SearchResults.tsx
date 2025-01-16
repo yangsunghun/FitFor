@@ -16,21 +16,21 @@ const SearchResults = ({ Results, isPending, isError }: SearchResultsProps) => {
   if (!Results || Results.items.length === 0) return <p>검색 결과가 없습니다.</p>;
 
   return (
-    <ul className="grid grid-cols-4 gap-5">
+    <ul className="grid grid-cols-4 gap-6">
       {Results.items.map((post) => (
         <li key={post.id} className="relative">
           <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
           <figure className="relative h-[250px] w-full overflow-hidden bg-gray-200">
             <Image
-              src={post.thumbnail || sampleImage}
-              alt={post.title}
+              src={post.images[0] || sampleImage}
+              alt={post.content}
               width={300}
               height={300}
               className="object-cover"
             />
           </figure>
 
-          <p className="text-lg font-bold">{post.title}</p>
+          <p className="text-lg font-bold">{post.content}</p>
           <p className="text-sm text-gray-500">작성자: {post.users?.nickname || "익명"}</p>
         </li>
       ))}

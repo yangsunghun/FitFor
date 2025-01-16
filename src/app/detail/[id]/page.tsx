@@ -28,10 +28,10 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
   }
 
   return {
-    title: `${post.title} - fit4`,
+    title: `${post.users.nickname}님의 룩북 - fit4`,
     description: `${post.content}`,
     openGraph: {
-      title: `${post.title} - fit4`,
+      title: `${post.users.nickname}님의 룩북 - fit4`,
       description: `${post.content}`,
       url: `https://localhost:3000/detail/${params.id}`
     }
@@ -42,16 +42,18 @@ export const DetailPage = async ({ params }: DetailPageProps) => {
   const postId = params.id;
 
   return (
-    <div className="inner">
+    <div className="inner pb-40">
       <ViewCounter postId={postId} />
 
       <section>
         <ContentsSection postId={postId} />
       </section>
-      <section className="mt-[6.25rem]">
+      <hr className="my-[3.75rem] border-line-02" />
+      <section>
         <PurchaseList postId={postId} />
       </section>
-      <section className="mt-6">
+      <hr className="my-[3.75rem] border-line-02" />
+      <section>
         <CommentSection postId={postId} />
       </section>
     </div>

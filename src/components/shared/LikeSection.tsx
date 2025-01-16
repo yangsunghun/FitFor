@@ -81,7 +81,9 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
             {styleType === "masonry" ? <Heart weight="fill" size={20} /> : <Heart weight="fill" size={28} />}
           </span>
         }
-        inactiveIcon={<span>{styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}</span>}
+        inactiveIcon={
+          <span className="text-text-03">{styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}</span>
+        }
         text={false}
       />
       {styleType !== "list" && (
@@ -99,7 +101,9 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
             </span>
           }
           inactiveIcon={
-            <span>{styleType === "masonry" ? <BookmarkSimple size={20} /> : <BookmarkSimple size={28} />}</span>
+            <span className="text-text-03">
+              {styleType === "masonry" ? <BookmarkSimple size={20} /> : <BookmarkSimple size={28} />}
+            </span>
           }
           text={styleType === "detail" ? true : false}
         />

@@ -69,7 +69,7 @@ const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
             className="hidden"
             onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
           />
-          <Image alt="image" width={28} height={28} className="text-gray-600"/>
+          <Image alt="사진 전송하기" width={28} height={28} className="text-gray-600"/>
         </label>
 
         {/* 전송 버튼 */}

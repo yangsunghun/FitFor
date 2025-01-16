@@ -12,17 +12,13 @@ type ListLenderProps = {};
 const ListLender = ({}: ListLenderProps) => {
   const { isMasonry, toggleLayout } = useLayoutStore();
 
-  const { posts, selectedTags, toggleTag, fetchNextPage, hasNextPage, isPending, isFetchingNextPage, isError } =
-    usePosts();
+  const { posts, fetchNextPage, hasNextPage, isPending, isFetchingNextPage, isError } = usePosts();
 
   if (isPending) return <p>로딩...</p>;
   if (isError) return <p>오류 발생</p>;
 
   return (
     <>
-      {/* <section>
-        <TagsFilter tags={["봄", "여름", "가을", "겨울"]} selectedTags={selectedTags} onToggleTag={toggleTag} />
-      </section> */}
       <section>
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
 

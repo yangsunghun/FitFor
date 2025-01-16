@@ -7,8 +7,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AddressModal from "./_components/AddressModal";
+import ImageUpload from "./_components/ImageUpload";
 import PurchaseModal from "./_components/PurchaseModal";
-import ThumbnailUpload from "./_components/ThumbnailUpload";
 
 const supabase = createClient();
 const genUniqueId = () => {
@@ -19,7 +19,6 @@ type FormState = {
   address: string;
   content: string;
   body_size: number[];
-  thumbnail: string; // 단일 문자열
   images: string[]; // 추가 이미지 배열
   tags: string[];
   purchases: Database["public"]["Tables"]["purchase"]["Insert"][];
@@ -42,7 +41,6 @@ const WritePage = () => {
     address: "",
     content: "",
     body_size: [], // 키와 몸무게를 빈 배열로 초기화
-    thumbnail: "", // 썸네일은 단일 문자열로 초기화
     images: [], // 추가 이미지 배열
     tags: [],
     purchases: [],
@@ -124,11 +122,11 @@ const WritePage = () => {
 
   // 폼 제출 핸들러
   const handleSubmit = async () => {
-    const { content, address, body_size, thumbnail, images, tags, purchases } =
+    const { content, address, body_size, images, tags, purchases } =
       formState;
 
     // 필수 입력 값 확인
-    if (!content || !address) {
+    if (!content) {
       alert("모든 항목을 입력해주세요.");
       return;
     }
@@ -147,7 +145,6 @@ const WritePage = () => {
         created_at: new Date().toISOString(),
         user_id: currentUser.id,
         body_size,
-        thumbnail,
         images,
         tags,
         comments: 0,
@@ -207,6 +204,22 @@ const WritePage = () => {
 
         <div className="w-full space-y-6">
 
+          {/* 본문 입력 */}
+          <div className="mt-8">
+            <label className="block mb-2 font-bold text-[24px]">본문</label>
+            <textarea
+              value={formState.content}
+              onChange={(e) => {
+                handleChange("content", e.target.value); // formState.content 업데이트
+                e.target.style.height = "auto"; // 기존 높이 초기화
+                e.target.style.height = `${e.target.scrollHeight}px`; // 내용에 따라 높이 조정
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg overflow-hidden resize-none"
+              rows={6}
+              placeholder="본문 내용을 입력하세요."
+            />
+          </div>
+
           {/* 위치 입력 */}
           <div>
             <label className="block mb-2 font-bold text-[24px]">위치 입력</label>
@@ -227,98 +240,79 @@ const WritePage = () => {
             </div>
           </div>
 
-          {/* 썸네일 업로드 및 기본 정보 입력 */}
+          {/* 이미지 업로드 및 기본 정보 입력 */}
           <div className="flex flex-col gap-8">
             <div className="w-full">
-              <ThumbnailUpload
-                thumbnail={formState.thumbnail}
+              <ImageUpload
                 images={formState.images}
-                setThumbnail={(thumbnail) => handleChange("thumbnail", thumbnail)}
                 setImages={(images) => handleChange("images", images)}
-                onThumbnailUpload={(url: string) => console.log("Thumbnail Uploaded:", url)}
               />
             </div>
+          </div>
 
-            {/* 룩북 구성 상품 */}
-            <div className="mt-8">
-              <label className="block mb-2 font-bold text-[24px]">
-                룩북 구성 상품
-              </label>
-              <div className="flex flex-wrap gap-4">
-                {/* 상품 추가 버튼 */}
-                <button
-                  onClick={() => {
-                    if (formState.purchases.length >= 5) {
-                      alert("상품은 최대 5개까지만 추가할 수 있습니다.");
-                      return;
-                    }
-                    handleChange("productToEdit", null); // 추가 모드 초기화
-                    handleChange("isPurchaseModalOpen", true); // 추가 모달 열기
-                  }}
-                  className="w-32 h-32 flex flex-col items-center justify-center border border-gray-300 rounded-lg text-gray-500"
-                >
-                  <span className="text-2xl font-bold">+</span>
-                  <span className="text-sm text-gray-500 mt-1">
-                    {formState.purchases.length}/5
-                  </span>
-                </button>
-
-                {/* 추가된 상품 목록 */}
-                {formState.purchases.map((purchase, index) => (
-                  <div key={index} className="flex flex-col items-center">
-                    <div
-                      className="relative w-32 h-32 border border-black rounded-lg overflow-hidden cursor-pointer"
-                      onClick={() => {
-                        handleChange("productToEdit", purchase);
-                        handleChange("isPurchaseModalOpen", true);
-                      }}
-                    >
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeletePurchase(index);
-                        }}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10"
-                        title="삭제"
-                      >
-                        X
-                      </button>
-
-                      {purchase.image_url ? (
-                        <Image
-                          src={purchase.image_url}
-                          alt={purchase.title}
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      ) : (
-                        <div className="bg-gray-200 w-full h-full flex items-center justify-center">
-                          <p className="text-gray-400 text-sm">이미지 없음</p>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-sm font-bold text-center mt-2 truncate w-32">
-                      {purchase.title || "상품 상세 정보"}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 본문 입력 */}
-            <div className="mt-8">
-              <label className="block mb-2 font-bold text-[24px]">본문</label>
-              <textarea
-                value={formState.content}
-                onChange={(e) => {
-                  handleChange("content", e.target.value); // formState.content 업데이트
-                  e.target.style.height = "auto"; // 기존 높이 초기화
-                  e.target.style.height = `${e.target.scrollHeight}px`; // 내용에 따라 높이 조정
+          {/* 룩북 구성 상품 */}
+          <div className="mt-8">
+            <label className="block mb-2 font-bold text-[24px]">
+              룩북 구성 상품
+            </label>
+            <div className="flex flex-wrap gap-4">
+              {/* 상품 추가 버튼 */}
+              <button
+                onClick={() => {
+                  if (formState.purchases.length >= 5) {
+                    alert("상품은 최대 5개까지만 추가할 수 있습니다.");
+                    return;
+                  }
+                  handleChange("productToEdit", null); // 추가 모드 초기화
+                  handleChange("isPurchaseModalOpen", true); // 추가 모달 열기
                 }}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg overflow-hidden resize-none"
-                rows={6}
-                placeholder="본문 내용을 입력하세요."
-              />
+                className="w-32 h-32 flex flex-col items-center justify-center border border-gray-300 rounded-lg text-gray-500"
+              >
+                <span className="text-2xl font-bold">+</span>
+                <span className="text-sm text-gray-500 mt-1">
+                  {formState.purchases.length}/5
+                </span>
+              </button>
+
+              {/* 추가된 상품 목록 */}
+              {formState.purchases.map((purchase, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div
+                    className="relative w-32 h-32 border border-black rounded-lg overflow-hidden cursor-pointer"
+                    onClick={() => {
+                      handleChange("productToEdit", purchase);
+                      handleChange("isPurchaseModalOpen", true);
+                    }}
+                  >
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeletePurchase(index);
+                      }}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10"
+                      title="삭제"
+                    >
+                      X
+                    </button>
+
+                    {purchase.image_url ? (
+                      <Image
+                        src={purchase.image_url}
+                        alt={purchase.title}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    ) : (
+                      <div className="bg-gray-200 w-full h-full flex items-center justify-center">
+                        <p className="text-gray-400 text-sm">이미지 없음</p>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm font-bold text-center mt-2 truncate w-32">
+                    {purchase.title || "상품 상세 정보"}
+                  </p>
+                </div>
+              ))}
             </div>
 
             {/* 체형 입력 */}
@@ -407,7 +401,7 @@ const WritePage = () => {
         mode={formState.productToEdit ? "edit" : "add"}
         purchasesLength={formState.purchases.length}
       />
-    </div>
+    </div >
   );
 };
 

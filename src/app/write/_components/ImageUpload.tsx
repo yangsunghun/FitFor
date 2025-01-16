@@ -6,30 +6,19 @@ const supabase = createClient();
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGES = 4; // 최대 업로드 가능한 이미지 개수
 
-type ThumbnailUploadProps = {
-  thumbnail: string; // 대표 썸네일
+type ImageUploadProps = {
   images: string[]; // 나머지 이미지 배열
-  setThumbnail: (thumbnail: string) => void; // 썸네일 업데이트 함수
   setImages: (images: string[]) => void; // 이미지 배열 업데이트 함수
-  onThumbnailUpload?: (url: string) => void;
 };
 
-function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: ThumbnailUploadProps) {
-
-  // 파일 크기 확인
-  const validateFile = (file: File) => {
-    if (file.size > MAX_FILE_SIZE) {
-      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다.");
-    }
-  };
+function ImageUpload({ images, setImages }: ImageUploadProps) {
 
   // 고유 파일 경로 생성
-  const generateFilePath = (file: File, isThumbnail: boolean): string => {
+  const generateFilePath = (file: File): string => {
     const timestamp = Date.now(); // 고유 타임스탬프 추가
-    const randomSuffix = Math.random().toString(36).substring(2, 8); // 랜덤 문자열 추가
     const extension = file.name.split(".").pop() || "unknown";
-    const folder = isThumbnail ? "thumbnail" : "images";
-    return `${folder}/${timestamp}-${randomSuffix}.${extension}`;
+    const folder = "images";
+    return `${folder}/${timestamp}.${extension}`;
   };
 
   // Supabase 스토리지에 파일 업로드
@@ -60,14 +49,14 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
   };
 
   // 파일 업로드 로직
-  const uploadImage = async (file: File, isThumbnail: boolean): Promise<string> => {
+  const uploadImage = async (file: File): Promise<string> => {
     try {
       validateFile(file);
-      const filePath = generateFilePath(file, isThumbnail);
+      const filePath = generateFilePath(file);
       await uploadToSupabase(file, filePath);
       return getPublicUrl(filePath);
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("이미지 업로드 에러:", error);
       throw error;
     }
   };
@@ -78,30 +67,25 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
       alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
       return;
     }
-  
+
     try {
       const uploadedUrls = await Promise.all(
         files.map((file) =>
-          uploadImage(file, !thumbnail && images.length === 0).catch((error) => {
-            console.error(`Error uploading ${file.name}:`, error);
+          uploadImage(file).catch((error) => {
+            console.error(`${file.name} 업로드 중 이슈 발생 :`, error);
             return null;
           })
         )
       );
       const validUrls = uploadedUrls.filter((url): url is string => url !== null);
-      // 중복 제거: 파일 이름 기반 중복 제거
       const existingUrls = new Set(images);
       const newUrls = validUrls.filter((url) => !existingUrls.has(url));
-  
-      setImages([...images, ...newUrls])
-      if (!thumbnail && validUrls.length > 0) {
-        setThumbnail(validUrls[0]);
-      }
+      setImages([...images, ...newUrls]);
     } catch (error: any) {
       alert(error.message);
     }
   };
-  
+
   // 버튼 클릭 시
   const handleFileInput = () => {
     const fileInput = document.createElement("input");
@@ -114,12 +98,19 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
     };
     fileInput.click();
   };
-  
+
   // 드래그 앤 드롭 시
   const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
     handleFiles(files);
+  };
+
+  // 파일 크기 확인
+  const validateFile = (file: File) => {
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다.");
+    }
   };
 
   return (
@@ -164,11 +155,7 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
                 className="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center z-10"
                 onClick={() => {
                   const updatedImages = images.filter((_, i) => i !== index);
-                  setImages(updatedImages)
-                  // 썸네일이 삭제되었을 때
-                  if (index === 0) {
-                    setThumbnail(updatedImages.length > 0 ? updatedImages[0] : "");
-                  }
+                  setImages(updatedImages);
                 }}
               >
                 X
@@ -177,11 +164,11 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
                 <button
                   className="px-2 py-1 bg-white text-black rounded-lg"
                   onClick={() => {
-                    setThumbnail(url);
-                    setImages([
+                    const updatedImages = [
                       url,
-                      ...images.filter((_, i) => i !== index),
-                    ]);
+                      ...images.filter((img, i) => i !== index),
+                    ];
+                    setImages(updatedImages);
                   }}
                 >
                   대표로 설정
@@ -195,4 +182,4 @@ function ThumbnailUpload({ thumbnail, setThumbnail, images, setImages, }: Thumbn
   );
 }
 
-export default ThumbnailUpload;
+export default ImageUpload;

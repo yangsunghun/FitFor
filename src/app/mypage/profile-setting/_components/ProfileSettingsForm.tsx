@@ -6,6 +6,7 @@ import { createClient } from "@/lib/utils/supabase/client";
 import { profileSettingSchema } from "@/lib/validataions/profileSettingSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "@phosphor-icons/react";
+import Image from "next/image";
 import { useEffect, useState, type ChangeEvent, type DragEvent } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
 
@@ -38,7 +39,7 @@ const ProfileSettingsForm = () => {
         gender: user.gender || "none"
       });
     }
-  }, [user?.profile_image, user]);
+  }, [user?.profile_image, user, reset]);
 
   // 제출 함수
   const onSubmit = async (value: FieldValues) => {
@@ -112,7 +113,7 @@ const ProfileSettingsForm = () => {
       >
         {/* 이미지 preview */}
         {imagePreview ? (
-          <img src={imagePreview} alt="Preview" className="h-full w-full rounded-full object-cover" />
+          <Image src={imagePreview} alt="Preview" fill className="h-full w-full rounded-full object-cover" />
         ) : (
           <Plus size={48} />
         )}

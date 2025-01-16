@@ -3,8 +3,38 @@
 @tailwind utilities;
 
 @layer utilities {
+  .inner {
+    @apply mx-auto w-[83%];
+  }
+
   .click-box {
     @apply absolute left-0 top-0 block h-full w-full;
+  }
+
+  .ellip1 {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+
+  .ellip2 {
+    @apply clear-both line-clamp-2 overflow-hidden text-ellipsis break-words;
+  }
+}
+
+@layer components {
+  .thumbnail {
+    @apply relative overflow-hidden;
+  }
+
+  .thumbnail > img {
+    @apply object-cover object-center;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -22,4 +52,11 @@ input[type="search"]::-moz-search-cancel-button {
 /* Edge */
 input[type="search"]::-ms-clear {
   display: none;
+}
+
+/* shadcn용 radius 변경시 수정 */
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
 }

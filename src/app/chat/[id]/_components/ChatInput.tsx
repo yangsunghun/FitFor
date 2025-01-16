@@ -1,49 +1,87 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/utils/supabase/client";
-
-const supabase = createClient();
+import { sendMessage } from "../../_utils/chat";
+import { useMutation } from "@tanstack/react-query";
+import { Image } from "@phosphor-icons/react";
 
 interface ChatInputProps {
   roomId: string;
   memberId: string;
 }
 
-export default function ChatInput({ roomId, memberId }: ChatInputProps) {
+const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
   const [message, setMessage] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
-  const sendMessage = async () => {
-    if (!message.trim()) return;
-
-    const { error } = await supabase.from("chat_messages").insert({
-      content: message,
-      member_id: memberId,
-      room_id: roomId,
-      created_at: new Date().toISOString()
-    });
-
-    if (!error) {
+  // useMutation 설정
+  const mutation = useMutation({
+    mutationFn: (newMessage: { message: string; file: File | null }) =>
+      sendMessage({
+        message: newMessage.message,
+        file: newMessage.file,
+        roomId,
+        memberId
+      }),
+    onSuccess: () => {
+      // 성공 후 입력 필드 초기화
       setMessage("");
+      setFile(null);
+    },
+    onError: (error: Error) => {
+      console.error("메시지 전송 실패:", error.message);
+    }
+  });
+
+  const handleSendMessage = () => {
+    if (!message.trim() && !file) return;
+    mutation.mutate({ message, file });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && e.nativeEvent.isComposing === false) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="메시지를 입력하세요"
-        style={{
-          padding: "10px",
-          width: "calc(100% - 60px)",
-          marginRight: "10px"
-        }}
-      />
-      <button onClick={sendMessage} style={{ padding: "10px" }}>
-        전송
-      </button>
-    </div>
+    <footer className="flex h-[131px] w-[996px] flex-col justify-between border-t border-[#e8e8e8] p-4">
+      {/* 메시지 입력 필드 */}
+      <div className="flex items-center">
+        <input
+          className="text-sm flex-1 rounded-lg px-4 py-2 placeholder-gray-500 outline-none"
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="OOO(으)로 메시지 작성"
+        />
+      </div>
+
+      {/* 파일 업로드와 전송 버튼 */}
+      <div className="mt-2 flex items-center justify-between">
+        {/* 파일 업로드 버튼 */}
+        <label htmlFor="file-input" className="flex h-[28px] w-[28px] cursor-pointer items-center justify-center">
+          <input
+            type="file"
+            id="file-input"
+            className="hidden"
+            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+          />
+          <Image alt="image" width={28} height={28} className="text-gray-600"/>
+        </label>
+
+        {/* 전송 버튼 */}
+        <button
+          onClick={handleSendMessage}
+          className="rounded-lg border border-neutral-100 bg-neutral-100 px-4 py-2 text-[15px] font-medium text-gray-300"
+        >
+          보내기
+        </button>
+      </div>
+    </footer>
   );
-}
+};
+
+export default ChatInput;

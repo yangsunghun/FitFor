@@ -2,6 +2,7 @@
 
 import { useAuthStore } from "@/lib/store/authStore";
 import Image from "next/image";
+import Link from "next/link";
 
 const ProfileSection = () => {
   const user = useAuthStore((state) => state.user);
@@ -15,23 +16,25 @@ const ProfileSection = () => {
   }
 
   return (
-    <div className="flex h-[160px] w-[996px] flex-row items-center">
+    <div className="flex h-40 w-[40.5rem] flex-row items-center my-20">
       <Image
-        className="rounded-full bg-white"
+        className="rounded-full bg-white object-cover"
         src={user.profile_image || "/images/default-user-profile"}
         alt={`${user.nickname} profile image`}
         width={160}
         height={160}
         priority
       />
-      <div className="ml-[150px] flex h-full flex-col justify-between">
-        <p className="text-2xl">
-          <strong>{user!.nickname}</strong>
+      <div className="ml-[150px] flex h-full flex-col justify-between max-w-96">
+        <p className="text-title1 font-bold">
+          {user!.nickname}
         </p>
-        <p className="text-base flex flex-col">
-          <strong> [유저 디테일 들어가는 자리]</strong>
+        <p className="text-body flex flex-col">
+          {user!.introduction || "아직 한 줄 소개가 없습니다."}
         </p>
-        <button className="max-w-40 rounded-2xl bg-black px-4 py-2 text-white">프로필 수정(x)</button>
+        <Link href="/mypage/profile-setting" className="max-w-[100px] rounded-2xl bg-black px-3  py-2 text-center text-white text-body">
+          프로필 편집
+        </Link>
       </div>
     </div>
   );

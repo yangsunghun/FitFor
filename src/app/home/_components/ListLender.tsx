@@ -1,11 +1,11 @@
 "use client";
 
+import { FloatingButton } from "@/components/ui/FloatingButton";
 import { usePosts } from "@/lib/hooks/home/usePosts";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
 import LayoutToggle from "./LayoutToggle";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
-import TagsFilter from "./TagsFilter";
 
 type ListLenderProps = {};
 
@@ -20,13 +20,13 @@ const ListLender = ({}: ListLenderProps) => {
 
   return (
     <>
-      <section>
+      {/* <section>
         <TagsFilter tags={["봄", "여름", "가을", "겨울"]} selectedTags={selectedTags} onToggleTag={toggleTag} />
-      </section>
+      </section> */}
       <section>
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
 
-        {isMasonry ? <MasonryLayout posts={posts} /> : <ListLayout posts={posts} />}
+        {isMasonry ? <ListLayout posts={posts} /> : <MasonryLayout posts={posts} />}
 
         {hasNextPage && (
           <button
@@ -38,6 +38,8 @@ const ListLender = ({}: ListLenderProps) => {
           </button>
         )}
       </section>
+
+      <FloatingButton variant="primary" href="/write" />
     </>
   );
 };

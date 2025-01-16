@@ -1,14 +1,14 @@
 "use client";
 
-import { useAuthStore } from "@/lib/store/authStore";
-import { useState } from "react";
-import { useFunnel } from "../_hooks/useFunnel";
-import { createChatRoom } from "../_utils/chat"; // Supabase 함수 import
-import HashTags from "./_components/HashTags";
+import React from "react";
+import { useForm, FormProvider } from "react-hook-form";
 import Summary from "./_components/Summary";
 import ThumbnailImage from "./_components/ThumbnailImage";
-import { uploadThumbnail } from "../_utils/uploadThumbnail";
-import { createRoomHandler } from "../_utils/createrRoomHandler";
+import Tags from "./_components/TagInput";
+import { useFunnel } from "../_hooks/useFunnel";
+import ProgressBar from "./_components/ProgressBar";
+import { createRoomHandler } from "../_utils/createRoomHandler";
+import { useAuthStore } from "@/lib/store/authStore";
 
 const steps = ["Summary", "Thumbnail", "HashTags"];
 
@@ -16,249 +16,101 @@ export interface FormDetails {
   title: string;
   subtitle: string;
   description: string;
-  thumbnail: File | null;
+  thumbnail: File;
   hashtags: string[];
+  category: string;
 }
 
-export default function Funnel() {
+const Funnel = () => {
   const currentUser = useAuthStore((state) => state.user);
-
   const { Funnel, Step, next, prev, currentStep } = useFunnel(steps[0]);
-  const [formData, setFormData] = useState<FormDetails>({
-    title: "",
-    subtitle: "",
-    description: "",
-    thumbnail: null,
-    hashtags: [],
+  const methods = useForm<FormDetails>({
+    defaultValues: {
+      title: "",
+      subtitle: "",
+      description: "",
+      thumbnail: undefined,
+      hashtags: [],
+      category: ""
+    }
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const currentStepIndex = steps.indexOf(currentStep);
 
-  const handleNext = (data: Partial<FormDetails>, nextStep: string) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    next(nextStep);
+  const handleNextStep = methods.handleSubmit(() => {
+    next(steps[currentStepIndex + 1]); // 다음 단계로 이동
+  });
+
+  const handlePrevStep = () => {
+    prev(steps[currentStepIndex - 1]); // 이전 단계로 이동
   };
 
-  const handlePrev = (prevStep: string) => {
-    prev(prevStep);
-  };
-
-const handleCreateChatRoom = async () => {
-
-  if (!currentUser || !currentUser.id) {
-    setError("로그인 상태를 확인해주세요.");
-    return;
-  }
-
-  if (!formData.thumbnail) {
-    setError("썸네일 파일을 선택해주세요.");
-    return;
-  }
-
-  setLoading(true);
-  setError(null);
-  setSuccess(false);
-
-  try {
-    // createRoomHandler 호출
-    const { success, error } = await createRoomHandler(currentUser.id, {
-      title: formData.title,
-      subtitle: formData.subtitle,
-      description: formData.description,
-      hashtags: formData.hashtags,
-      thumbnailFile: formData.thumbnail,
-    });
-
-    if (!success) {
-      throw new Error(error);
+  const handleFormSubmit = methods.handleSubmit(async (data) => {
+    // 로그인 여부 확인
+    if (!currentUser || !currentUser.id) {
+      alert("로그인 상태를 확인해주세요.");
+      return;
     }
 
-    setSuccess(true);
-  } catch (err) {
-    setError(String(err));
-  } finally {
-    setLoading(false);
-  }
-};
+    // 썸네일 파일 확인
+    if (!data.thumbnail) {
+      alert("썸네일 파일을 선택해주세요.");
+      return;
+    }
 
-  const currentStepIndex = steps.indexOf(currentStep);
-  const progress = ((currentStepIndex + 1) / steps.length) * 100;
+    try {
+      // 채팅방 생성 요청
+      const { success, error } = await createRoomHandler(currentUser.id, data);
+
+      if (!success) {
+        throw new Error(error);
+      }
+
+      // 성공 처리
+      alert("채팅방이 성공적으로 생성되었습니다!");
+    } catch (error) {
+      // 에러 처리
+      console.error("채팅방 생성 실패:", error);
+    }
+  });
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      {/* 컨텐츠 영역 */}
-      <div style={{ flex: 1 }}>
-        <Funnel>
-          <Step name={steps[0]}>
-            <Summary formData={formData} onNext={(data) => handleNext(data, steps[1])} />
-          </Step>
-          <Step name={steps[1]}>
-            <ThumbnailImage
-              formData={formData}
-              onNext={(data) => handleNext(data, steps[2])}
-              onPrev={() => handlePrev(steps[0])}
-            />
-          </Step>
-          <Step name={steps[2]}>
-            <HashTags
-              formData={formData}
-              setFormData={setFormData} // formData 업데이트 함수 전달
-              onPrev={() => handlePrev(steps[1])}
-              onCreateChatRoom={handleCreateChatRoom} // 로직 전달
-              loading={loading}
-              error={error}
-              success={success}
-            />
-          </Step>
-        </Funnel>
-      </div>
+    <FormProvider {...methods}>
+      <div className="flex h-screen flex-col">
+        <div className="flex-1 p-4">
+          <Funnel>
+            <Step name={steps[0]}>
+              <Summary />
+            </Step>
+            <Step name={steps[1]}>
+              <ThumbnailImage />
+            </Step>
+            <Step name={steps[2]}>
+              <Tags />
+            </Step>
+          </Funnel>
+        </div>
 
-      {/* 진행도 UI */}
-      <div style={{ padding: "16px" }}>
-        <div
-          style={{
-            width: "100%",
-            height: "8px",
-            backgroundColor: "#e0e0e0",
-            borderRadius: "4px",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              width: `${progress}%`,
-              height: "100%",
-              backgroundColor: "#000",
-              transition: "width 0.3s ease",
-            }}
-          />
-        </div>
-        {/* 단계 표시 */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: "8px",
-            fontSize: "12px",
-          }}
-        >
-          {steps.map((step, index) => (
-            <span
-              key={index}
-              style={{
-                color: index <= currentStepIndex ? "#000" : "#999",
-              }}
-            >
-              {step}
-            </span>
-          ))}
+        <ProgressBar currentStepIndex={currentStepIndex} steps={steps} />
+
+        <div className="flex justify-between p-4">
+          <button
+            onClick={handlePrevStep}
+            className="rounded-lg bg-gray-200 px-6 py-2 text-black"
+            disabled={currentStepIndex === 0}
+          >
+            이전
+          </button>
+          <button
+            onClick={currentStepIndex === steps.length - 1 ? handleFormSubmit : handleNextStep}
+            className="rounded-lg bg-black px-6 py-2 text-white"
+          >
+            {currentStepIndex === steps.length - 1 ? "완료" : "다음"}
+          </button>
         </div>
       </div>
-    </div>
+    </FormProvider>
   );
-}
+};
 
-// "use client";
-
-// import React from "react";
-// import { useFunnel } from "./useFunnel";
-// import { useForm } from "react-hook-form";
-// import { useRouter } from "next/navigation";
-// import { uploadProfileImage } from "./uploadProfileImage";
-// import { createChatRoom } from "./createChatRoom";
-// import TitleStep from "./_components/TitleStep";
-// import ThumbnailStep from "./_components/ThumbnailStep";
-// import HashTagsStep from "./_components/HashTagsStep";
-// import CompletionStep from "./_components/CompletionStep";
-// import MoveActions from "./_components/MoveActions";
-
-// const steps = {
-//   order: ["title", "thumbnail", "hashTags", "completion"],
-//   getNextStep: (currentStep: string) => {
-//     const index = steps.order.indexOf(currentStep);
-//     return steps.order[index + 1] || null;
-//   },
-//   getPrevStep: (currentStep: string) => {
-//     const index = steps.order.indexOf(currentStep);
-//     return steps.order[index - 1] || null;
-//   }
-// };
-
-// const CreateChatRoom = () => {
-//   const { Funnel, Step, next, prev, currentStep } = useFunnel(steps.order[0]);
-//   const formReturn = useForm({ mode: "onSubmit" });
-//   const { trigger } = formReturn;
-//   const router = useRouter();
-
-//   const handleNext = async () => {
-//     const nextStep = steps.getNextStep(currentStep);
-//     if (nextStep && (await trigger())) next(nextStep);
-//   };
-
-//   const handlePrev = () => {
-//     const prevStep = steps.getPrevStep(currentStep);
-//     if (prevStep) prev(prevStep);
-//   };
-
-//   const submitFormData = async () => {
-//     const { title, subtitle, description, hashTags, thumbnailFile } = formReturn.getValues();
-
-//     // 프로필 이미지 업로드
-//     const thumbnail_url = await uploadProfileImage({
-//       type: "chat-thumbnail",
-//       file: thumbnailFile[0]
-//     });
-
-//     // Supabase에 데이터 업로드
-//     await createChatRoom({
-//       room_title: title,
-//       room_subtitle: subtitle,
-//       room_description: description,
-//       room_hash_tags: hashTags,
-//       room_thumbnail_url: thumbnail_url,
-//       isActive: true
-//     });
-
-//     router.push("/chat"); // 채팅방 리스트로 이동
-//   };
-
-//   const onSubmit = () => {
-//     formReturn.handleSubmit(submitFormData)();
-//   };
-
-//   return (
-//     <div className="mt-16 h-lvh">
-//       <form className="flex flex-col items-center">
-//         <Funnel>
-//           <Step name="title">
-//             <TitleStep formReturn={formReturn} />
-//           </Step>
-//           <Step name="thumbnail">
-//             <ThumbnailStep formReturn={formReturn} />
-//           </Step>
-//           <Step name="hashTags">
-//             <HashTagsStep formReturn={formReturn} />
-//           </Step>
-//           <Step name="completion">
-//             <CompletionStep />
-//           </Step>
-//         </Funnel>
-//         {currentStep === "completion" ? (
-//           <button
-//             type="button"
-//             onClick={onSubmit}
-//             className="bg-main hover:bg-main-hover mx-auto block min-w-[100px] rounded px-8 py-2 text-white transition-all"
-//           >
-//             채팅방 생성
-//           </button>
-//         ) : (
-//           <MoveActions onNext={handleNext} onPrev={handlePrev} currentStep={currentStep} isPending={false} />
-//         )}
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default CreateChatRoom;
+export default Funnel;

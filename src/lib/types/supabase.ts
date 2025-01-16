@@ -156,33 +156,36 @@ export type Database = {
         Row: {
           created_at: string
           isActive: boolean
+          room_category: string
           room_description: string
           room_hashtags: string[]
           room_id: string
           room_subtitle: string
-          room_thumbnail_url: string
+          room_thumbnail_url: string | null
           room_title: string
           user_id: string
         }
         Insert: {
           created_at?: string
           isActive?: boolean
+          room_category: string
           room_description: string
           room_hashtags: string[]
           room_id?: string
           room_subtitle: string
-          room_thumbnail_url: string
+          room_thumbnail_url?: string | null
           room_title: string
           user_id: string
         }
         Update: {
           created_at?: string
           isActive?: boolean
+          room_category?: string
           room_description?: string
           room_hashtags?: string[]
           room_id?: string
           room_subtitle?: string
-          room_thumbnail_url?: string
+          room_thumbnail_url?: string | null
           room_title?: string
           user_id?: string
         }
@@ -281,6 +284,8 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          images: string[]
+          isSaved: boolean
           likes: number
           tags: string[]
           thumbnail: string
@@ -295,6 +300,8 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          images: string[]
+          isSaved?: boolean
           likes: number
           tags: string[]
           thumbnail: string
@@ -309,6 +316,8 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          images?: string[]
+          isSaved?: boolean
           likes?: number
           tags?: string[]
           thumbnail?: string
@@ -331,6 +340,7 @@ export type Database = {
         Row: {
           description: string | null
           id: string
+          image_url: string | null
           post_id: string
           price: number | null
           title: string
@@ -338,6 +348,7 @@ export type Database = {
         Insert: {
           description?: string | null
           id?: string
+          image_url?: string | null
           post_id: string
           price?: number | null
           title: string
@@ -345,6 +356,7 @@ export type Database = {
         Update: {
           description?: string | null
           id?: string
+          image_url?: string | null
           post_id?: string
           price?: number | null
           title?: string
@@ -365,6 +377,7 @@ export type Database = {
           email: string
           gender: string
           id: string
+          introduction: string
           nickname: string
           profile_image: string | null
         }
@@ -373,6 +386,7 @@ export type Database = {
           email: string
           gender?: string
           id?: string
+          introduction?: string
           nickname: string
           profile_image?: string | null
         }
@@ -381,6 +395,7 @@ export type Database = {
           email?: string
           gender?: string
           id?: string
+          introduction?: string
           nickname?: string
           profile_image?: string | null
         }
@@ -391,20 +406,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_fever_rooms: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       increment_view: {
         Args: {
           post_id: string
         }
         Returns: undefined
       }
-
-      sync_comment_count: {
-        Args: {
-          post_id: string
-        }
-        Returns: undefined
-      }
-
     }
     Enums: {
       [_ in never]: never

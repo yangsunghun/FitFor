@@ -1,8 +1,10 @@
 "use client";
 
 import sampleImage from "@/assets/images/image_sample.png";
+import { Button } from "@/components/ui/Button";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
+import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -28,55 +30,59 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
   };
 
   return (
-    <div className="mt-6">
-      <p className="text-xl mb-4 font-bold">댓글 {comments.length}개</p>
-      <div className="mb-4 flex justify-between">
-        <textarea
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          className="w-[calc(100%-90px)] rounded border p-2"
-          placeholder="댓글을 작성해주세요."
-        />
-        {/* 디자인 나오면 컴포넌트 분리 예정 max-length */}
+    <>
+      <p className="mb-4 text-title1 font-bold">댓글 {comments.length}개</p>
+      <div className="mb-4 flex items-center justify-between">
+        <figure className="relative h-12 w-12 overflow-hidden rounded-full">
+          <Image src={(user && user.profile_image) || sampleImage} alt={user ? user.nickname : "비회원"} fill={true} />
+        </figure>
+        <div className="relative flex w-[calc(100%-4rem)] gap-4 rounded-[1rem] border border-line-02 px-4 py-2">
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="scrollbar-hide w-full max-w-[calc(100%-5rem)] resize-none outline-none"
+            placeholder="댓글을 작성해주세요."
+          />
 
-        <button
-          onClick={() => {
-            {
-              userId ? addComment(comment) : alert("로그인이 필요합니다.");
-            }
-            setComment("");
-          }}
-          className="w-[80px] rounded bg-gray-400 py-2 text-white"
-          disabled={!comment.trim()}
-        >
-          작성
-        </button>
+          <Button
+            onClick={() => {
+              {
+                userId ? addComment(comment) : alert("로그인이 필요합니다.");
+              }
+              setComment("");
+            }}
+            variant="primary"
+            className="whitespace-nowrap"
+            disabled={!comment.trim()}
+          >
+            입력
+          </Button>
+        </div>
       </div>
-      <ul>
+      <ul className="mt-10">
         {comments?.map((comment) => (
-          <li key={comment.id} className="mb-4 flex items-center gap-5 border-b pb-4">
-            <div className="relative h-[50px] w-[50px] overflow-hidden rounded-full">
-              <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
-            </div>
-            <div className="w-[calc(100%-80px)]">
-              <div className="flex w-full justify-between">
-                <p>{comment.users.nickname || "알 수 없음"}</p>
-                <div className="items-items-center flex gap-4">
-                  <p className="text-[14px] text-gray-500">{new Date(comment.created_at).toLocaleString()}</p>
-                  {userId === comment.user_id && (
-                    <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
-                      삭제
-                    </button>
-                  )}
-                </div>
+          <li key={comment.id} className="mb-4 pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <figure className="relative h-12 w-12 overflow-hidden rounded-full">
+                  <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
+                </figure>
+                <p className="text-title1 font-bold">{comment.users.nickname}</p>
               </div>
-
-              <p>{comment.content}</p>
+              <div className="items-items-center flex gap-4">
+                <p className="text-text-03">{relativeTimeDay(comment.created_at)}</p>
+                {userId === comment.user_id && (
+                  <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
+                    삭제
+                  </button>
+                )}
+              </div>
             </div>
+            <p className="mt-2 text-title2 font-medium">{comment.content}</p>
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 };
 

@@ -1,5 +1,4 @@
 import ContentsSection from "@/app/detail/_components/ContentsSection";
-import LikeSection from "@/app/detail/_components/LikeSection";
 import ViewCounter from "@/app/detail/_components/ViewCounter";
 import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
 import ModalBg from "./ModalBg";
@@ -32,9 +31,6 @@ const DetailModal = async ({ params }: Props) => {
         <ViewCounter postId={postId} />
 
         <ContentsSection postId={postId} />
-        <div className="mt-4 flex gap-4">
-          <LikeSection postId={postId} />
-        </div>
 
         <ModalButton label="전체 보기" action="refresh" />
         <ModalButton label="닫기" action="close" />

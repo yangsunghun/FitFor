@@ -16,13 +16,13 @@ const ChatRoomLayout = ({ children, params }: ChatRoomLayoutProps) => {
   }
 
   return (
-    <main className="flex flex-col items-center">
+    <div className="flex flex-col items-center">
       {/* 헤더 컴포넌트 */}
       <ChatHeader roomId={roomId} />
 
       {/* 채팅방 콘텐츠 */}
       <section className="mt-4 w-full max-w-[1200px]">{children}</section>
-    </main>
+    </div>
   );
 };
 

@@ -34,10 +34,10 @@ const RecentViewPosts = () => {
             <li key={post.id} className="relative">
               <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
               <figure className="relative h-[250px] w-full overflow-hidden bg-gray-200">
-                <Image src={post.thumbnail} alt={post.title} width={300} height={300} className="object-cover" />
+                <Image src={post.images[0]} alt={post.content} width={300} height={300} className="object-cover" />
               </figure>
 
-              <p className="text-lg font-bold">{post.title}</p>
+              <p className="text-lg font-bold">{post.content}</p>
               <p className="text-sm text-gray-500">작성자: {post.users?.nickname || "익명"}</p>
             </li>
           ))}

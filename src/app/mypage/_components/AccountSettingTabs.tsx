@@ -16,10 +16,15 @@ const menuItems = [
 ];
 
 const AccountSettingTabs = () => {
+  const handleClick = () => {
+    alert("서비스 준비 중입니다.")
+  }
+
   return (
-    <div className="flex w-full flex-col">
+    <div className="mt-10 flex w-full flex-col">
       {menuItems.map((item) => (
         <button
+          onClick={handleClick}
           key={item.title}
           className="flex items-center justify-between px-6 py-4 text-title2 font-medium text-text-04 hover:bg-gray-50"
         >

@@ -8,13 +8,9 @@ import { useEffect, useState } from "react";
 import CardsSkeleton from "./CardsSkeleton";
 import StatsCard from "./StatsCard";
 
-// 추후에 로직이 필요
-type VerificationSectionProps = {
-  isVerified: boolean;
-};
-
-const VerificationSection = ({ isVerified = false }: VerificationSectionProps) => {
-  const { userPostsStats, allStats, isPending, isFetching, isError } = useUserStats();
+// 유저 인증 섹션
+const VerificationSection = () => {
+  const { userPostsStats, allStats, isPending, isError, userVerified } = useUserStats();
   const queryClient = useQueryClient();
   const [applicationAvailable, setApplicationAvailable] = useState(false);
 
@@ -23,7 +19,7 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
     queryClient.invalidateQueries({ queryKey: ["postsStats"] });
     if (userPostsStats && allStats) {
       const available = verifyUser({ postNum: userPostsStats.length, likes: allStats.likes, views: allStats.view });
-      setApplicationAvailable(available);
+      setApplicationAvailable(available && !userVerified);
     }
   }, []);
 
@@ -37,7 +33,7 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
     <>
       <div className="flex flex-col">
         <h3 className="mb-6 mt-10 text-subtitle">내 통계 리포트</h3>
-        {isPending || isFetching ? (
+        {isPending ? (
           <CardsSkeleton />
         ) : (
           <div className="my-6 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -47,14 +43,13 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
           </div>
         )}
         <div className="flex flex-col gap-3 rounded-2xl text-center">
-          {/* 비활성화 디자인 논의 */}
           <Button
             onClick={handleApplication}
             variant={!applicationAvailable ? "disabled" : "primary"}
             className="flex h-[3.5rem] flex-row items-center justify-center gap-2 rounded-2xl px-6 py-4"
             disabled={!applicationAvailable}
           >
-            <span className="text-subtitle">{!isVerified ? "인증 유저 신청하기" : "이미 인증 되었습니다"}</span>
+            <span className="text-subtitle">{!userVerified ? "인증 유저 신청하기" : "이미 인증 되었습니다"}</span>
           </Button>
           <p className="text-title2 text-text-03">스타일 멘토가 되어 조언이 필요한 유저들의 코디를 도와주세요!</p>
         </div>

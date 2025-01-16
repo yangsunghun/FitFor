@@ -37,7 +37,7 @@ const MypageMenu = () => {
 
         {/* 인증 */}
         <TabsContent value="tab-2">
-          <VerificationSection isVerified={false} />
+          <VerificationSection />
         </TabsContent>
 
         {/* 계정 관리 */}

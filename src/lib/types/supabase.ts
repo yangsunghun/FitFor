@@ -1,3 +1,6 @@
+Need to install the following packages:
+supabase@2.6.8
+Ok to proceed? (y) 
 export type Json =
   | string
   | number
@@ -285,11 +288,10 @@ export type Database = {
           created_at: string
           id: string
           images: string[]
-          isSaved: boolean
+          is_saved: boolean
           likes: number
           tags: string[]
-          thumbnail: string
-          upload_place: string
+          upload_place: string | null
           user_id: string
           view: number
         }
@@ -300,11 +302,10 @@ export type Database = {
           created_at?: string
           id?: string
           images: string[]
-          isSaved?: boolean
+          is_saved?: boolean
           likes: number
           tags: string[]
-          thumbnail: string
-          upload_place: string
+          upload_place?: string | null
           user_id: string
           view: number
         }
@@ -315,11 +316,10 @@ export type Database = {
           created_at?: string
           id?: string
           images?: string[]
-          isSaved?: boolean
+          is_saved?: boolean
           likes?: number
           tags?: string[]
-          thumbnail?: string
-          upload_place?: string
+          upload_place?: string | null
           user_id?: string
           view?: number
         }

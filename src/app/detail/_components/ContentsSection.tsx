@@ -57,7 +57,7 @@ const ContentsSection = ({ postId }: Props) => {
           {tags.length > 0 && (
             <div className="mt-10 flex gap-2">
               {tags.map((tag) => (
-                <Tags variant="black" size="md" label={tag} />
+                <Tags key={tag} variant="black" size="md" label={tag} />
               ))}
             </div>
           )}

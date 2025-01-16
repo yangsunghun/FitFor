@@ -1,9 +1,11 @@
 'use client';
 
+import { Button } from '@/components/ui/Button';
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useAuthStore } from "@/lib/store/authStore";
 import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
+import { MagnifyingGlass, UploadSimple } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -180,7 +182,7 @@ const WritePage = () => {
   };
 
   return (
-    <div className="max-w-[636px] pt-10 space-y-10 mx-auto">
+    <div className="max-w-[700px] pt-10 space-y-10 mx-auto">
       {/* 페이지 제목 */}
       <div className="space-y-2">
         <h1 className="text-title1 font-bold text-text-04 leading-[150%]">
@@ -192,7 +194,7 @@ const WritePage = () => {
       </div>
 
       {/* 작성 폼 */}
-      <div className="p-9 bg-bg-01 border border-line-02 rounded-2xl space-y-10">
+      <div className="py-9 px-8 bg-bg-01 border border-line-02 rounded-2xl space-y-10">
         {/* 본문 입력 섹션 */}
         <div className="space-y-2">
           {/* 제목 */}
@@ -209,7 +211,7 @@ const WritePage = () => {
               e.target.style.height = `${e.target.scrollHeight}px`; // 내용에 따라 높이 조정
             }}
             rows={6}
-            className="w-full h-[152px] p-4 bg-bg-02 rounded-lg text-body text-text-02 font-medium placeholder-text-02 resize-none"
+            className="w-full h-38 p-4 bg-bg-02 rounded-lg text-body text-text-02 font-medium placeholder-text-02 resize-none"
             placeholder="예시 - 소개팅 가야하는데 도와주세요"
           />
         </div>
@@ -251,21 +253,25 @@ const WritePage = () => {
               </div>
               {/* 위치 입력 필드 */}
               <div className="h-14 p-4 bg-bg-02 rounded-lg flex items-center">
+                <MagnifyingGlass size={24} className="text-text-03" />
                 <input
                   type="text"
                   value={formState.address}
                   readOnly
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
-                  placeholder="검색 버튼을 눌러 주소를 입력해주세요."
+                  className="flex-1 px-4 py-2 rounded-lg text-text-03 bg-transparent placeholder:text-text-03"
+                  placeholder="주소를 입력해주세요."
                 />
-                <button
-                  onClick={() => handleChange("isModalOpen", true)}
-                  className="px-6 py-2 bg-black text-white rounded-lg text-[18px]"
-                >
-                  검색
-                </button>
               </div>
             </div>
+            {/* 검색 버튼 */}
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={() => handleChange("isModalOpen", true)}
+              className="w-full text-[18px]"
+            >
+              검색
+            </Button>
           </div>
 
           {/* 키와 몸무게 입력 섹션 */}
@@ -300,10 +306,19 @@ const WritePage = () => {
         </div>
 
         {/* 룩북 구성 상품 */}
-        <div className="mt-8">
-          <label className="block mb-2 font-bold text-[24px]">
-            룩북 구성 상품
-          </label>
+        <div className="space-y-4 mt-8">
+          {/* 제목 및 설명 */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1">
+              <span className="text-title2 font-bold text-text-04">
+                상품정보 입력
+              </span>
+              <span className="text-title2 font-bold text-primary-default">*</span>
+            </div>
+            <p className="text-caption text-text-03 font-medium">
+              다양한 각도에서 찍은 이미지가 있다면 추가해주세요. (최대 5개)
+            </p>
+          </div>
           <div className="flex flex-wrap gap-4">
             {/* 상품 추가 버튼 */}
             <button
@@ -315,12 +330,9 @@ const WritePage = () => {
                 handleChange("productToEdit", null); // 추가 모드 초기화
                 handleChange("isPurchaseModalOpen", true); // 추가 모달 열기
               }}
-              className="w-32 h-32 flex flex-col items-center justify-center border border-gray-300 rounded-lg text-gray-500"
+              className="w-32 h-32 flex flex-col items-center justify-center border border-line-02 rounded-lg text-text-03"
             >
-              <span className="text-2xl font-bold">+</span>
-              <span className="text-sm text-gray-500 mt-1">
-                {formState.purchases.length}/5
-              </span>
+              <UploadSimple size={24} />
             </button>
 
             {/* 추가된 상품 목록 */}
@@ -363,10 +375,11 @@ const WritePage = () => {
               </div>
             ))}
           </div>
+
           {/* 태그 선택 */}
           <div className="mt-8">
-            <label className="block mb-2 font-bold text-[24px]">태그 선택하기</label>
-            <p className="text-sm text-gray-600 mb-4">
+            <label className="block mb-2 font-bold text-text-04">태그 선택하기</label>
+            <p className="text-gray-600 mb-4 text-text-03">
               게시물에 어울리는 태그를 선택하세요.
             </p>
             {TAG_GROUPS.map((group) => (

@@ -31,7 +31,7 @@ const HeaderContent = () => {
       </nav>
       {/* 검색창 */}
       <div className="max-w-xl flex-1 items-center justify-center">
-        <form onSubmit={handleSearch} className="flex w-full flex-row items-center rounded-[1rem] bg-bg-02 pl-6">
+        <form onSubmit={handleSearch} className="flex w-full flex-row items-center rounded-2xl bg-bg-02 pl-6">
           <button type="submit">
             <MagnifyingGlass size={24} className="text-text-03" />
           </button>

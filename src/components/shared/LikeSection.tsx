@@ -26,7 +26,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
   });
 
   const buttonClass = cn("flex justify-center items-center ", {
-    "w-7 h-7 rounded-[0.5rem] bg-bg-01": styleType === "masonry",
+    "w-7 h-7 rounded-lg bg-bg-01": styleType === "masonry",
     "gap-1": styleType === "list",
     "flex-col gap-2": styleType === "detail"
   });

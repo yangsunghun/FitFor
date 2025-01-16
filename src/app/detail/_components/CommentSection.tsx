@@ -36,7 +36,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
         <figure className="relative h-12 w-12 overflow-hidden rounded-full">
           <Image src={(user && user.profile_image) || sampleImage} alt={user ? user.nickname : "비회원"} fill={true} />
         </figure>
-        <div className="relative flex h-16 w-[calc(100%-4rem)] gap-4 overflow-hidden rounded-[1rem] border border-line-02">
+        <div className="relative flex h-16 w-[calc(100%-4rem)] gap-4 overflow-hidden rounded-2xl border border-line-02">
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}

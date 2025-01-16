@@ -1,4 +1,5 @@
 import sampleImage from "@/assets/images/image_sample.png";
+import { Tags } from "@/components/ui/Tags";
 import type { PostType } from "@/lib/types/post";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,20 +19,18 @@ const SearchResults = ({ Results, isPending, isError }: SearchResultsProps) => {
   return (
     <ul className="grid grid-cols-4 gap-6">
       {Results.items.map((post) => (
-        <li key={post.id} className="relative">
+        <li key={post.id} className="relative mb-4">
           <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
-          <figure className="relative h-[250px] w-full overflow-hidden bg-gray-200">
-            <Image
-              src={post.images[0] || sampleImage}
-              alt={post.content}
-              width={300}
-              height={300}
-              className="object-cover"
-            />
+          <figure className="thumbnail aspect-square rounded-2xl">
+            <Image src={post.images[0] || sampleImage} alt={post.content} fill={true} />
           </figure>
 
-          <p className="text-lg font-bold">{post.content}</p>
-          <p className="text-sm text-gray-500">작성자: {post.users?.nickname || "익명"}</p>
+          <p className="ellip2 mt-4 text-title2 font-medium">{post.content}</p>
+          <div className="mt-3">
+            {post.tags.map((tag, index) => (
+              <Tags key={index} variant="grayLine" size="md" label={tag} />
+            ))}
+          </div>
         </li>
       ))}
     </ul>

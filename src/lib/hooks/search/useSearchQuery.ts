@@ -10,13 +10,13 @@ export const useSearchQuery = () => {
   const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
   const tagsFromUrl = searchParams.get("category")
     ? JSON.parse(decodeURIComponent(searchParams.get("category") || "[]"))
-    : [];
+    : { gender: [], season: [], style: [], tpo: [] };
   const sortFromUrl = searchParams.get("sort") || "created_at";
 
   const [inputValue, setInputValue] = useState(queryFromUrl);
   const [query, setQuery] = useState(queryFromUrl);
   const [page, setPage] = useState(pageFromUrl);
-  const [tags, setTags] = useState<string[]>(tagsFromUrl || []);
+  const [tags, setTags] = useState<{ [key: string]: string[] }>(tagsFromUrl);
   const [sort, setSort] = useState(sortFromUrl);
 
   // URL 변경 시 상태 동기화
@@ -28,16 +28,17 @@ export const useSearchQuery = () => {
   }, [queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
 
   // JSON을 URL-safe한 배열 표현으로 변환하는 헬퍼 함수
-  const encodeArrayForUrl = (array: string[]): string => {
-    return `%5B${array.map((item) => `"${item}"`).join(",")}%5D`;
+  const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => {
+    const flatTags = Object.values(tags).flat();
+    return `%5B${flatTags.map((tag) => `"${tag}"`).join(",")}%5D`;
   };
 
   // 검색 실행
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (inputValue !== query || page !== 1 || tags.length > 0 || sort !== sortFromUrl) {
+    if (inputValue !== query || page !== 1 || Object.values(tags).flat().length > 0 || sort !== sortFromUrl) {
       router.push(
-        `/search?query=${encodeURIComponent(inputValue)}&page=1&category=${encodeArrayForUrl(
+        `/search?query=${encodeURIComponent(inputValue)}&page=1&category=${encodeTagsForUrl(
           tags
         )}&sort=${encodeURIComponent(sort)}`
       );
@@ -45,16 +46,34 @@ export const useSearchQuery = () => {
   };
 
   // 태그 토글
-  const handleToggleTag = (tag: string) => {
-    const updatedTags = tags.includes(tag) ? tags.filter((t) => t !== tag) : [...tags, tag];
-    if (JSON.stringify(updatedTags) !== JSON.stringify(tags)) {
-      setTags(updatedTags);
-      router.push(
-        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeArrayForUrl(
-          updatedTags
-        )}&sort=${encodeURIComponent(sort)}`
-      );
+  const handleToggleTag = (key: string, tag: string) => {
+    const updatedTags = { ...tags };
+
+    // 키에 해당하는 배열이 없는 경우 빈 배열로 초기화
+    if (!Array.isArray(updatedTags[key])) {
+      updatedTags[key] = [];
     }
+
+    if (updatedTags[key].includes(tag)) {
+      // 이미 선택된 태그라면 제거
+      updatedTags[key] = updatedTags[key].filter((t) => t !== tag);
+    } else {
+      // 새 태그를 추가하려고 할 때 최대 2개로 제한
+      if (updatedTags[key].length >= 2) {
+        alert("태그는 최대 2개까지만 선택할 수 있습니다.");
+        return;
+      }
+      updatedTags[key] = [...updatedTags[key], tag];
+    }
+
+    setTags(updatedTags);
+
+    // URL 동기화
+    router.push(
+      `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeURIComponent(
+        JSON.stringify(updatedTags)
+      )}&sort=${encodeURIComponent(sort)}`
+    );
   };
 
   // 정렬 변경
@@ -62,7 +81,7 @@ export const useSearchQuery = () => {
     if (newSort !== sort) {
       setSort(newSort);
       router.push(
-        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeArrayForUrl(
+        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
           tags
         )}&sort=${encodeURIComponent(newSort)}`
       );

@@ -27,7 +27,7 @@ const DetailModal = async ({ params }: Props) => {
 
   return (
     <ModalBg>
-      <div className="inner relative max-w-[1080px] rounded-[1rem] bg-bg-01 p-8 shadow-lg">
+      <div className="inner relative max-w-[1080px] rounded-2xl bg-bg-01 p-8 shadow-lg">
         <ViewCounter postId={postId} />
         <ContentsSection postId={postId} />
         <div className="mt-4 flex justify-end gap-2">

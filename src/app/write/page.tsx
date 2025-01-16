@@ -17,7 +17,6 @@ const genUniqueId = () => {
 
 type FormState = {
   address: string;
-  title: string;
   content: string;
   body_size: number[];
   thumbnail: string; // 단일 문자열
@@ -41,7 +40,6 @@ const WritePage = () => {
   // 폼 상태 관리
   const [formState, setFormState] = useState<FormState>({
     address: "",
-    title: "",
     content: "",
     body_size: [], // 키와 몸무게를 빈 배열로 초기화
     thumbnail: "", // 썸네일은 단일 문자열로 초기화
@@ -126,11 +124,11 @@ const WritePage = () => {
 
   // 폼 제출 핸들러
   const handleSubmit = async () => {
-    const { title, content, address, body_size, thumbnail, images, tags, purchases } =
+    const { content, address, body_size, thumbnail, images, tags, purchases } =
       formState;
 
     // 필수 입력 값 확인
-    if (!title || !content || !address) {
+    if (!content || !address) {
       alert("모든 항목을 입력해주세요.");
       return;
     }
@@ -144,7 +142,6 @@ const WritePage = () => {
     // 게시글 데이터 생성
     try {
       const post: Omit<Database["public"]["Tables"]["posts"]["Insert"], "id"> & { id?: string } = {
-        title,
         content,
         upload_place: address,
         created_at: new Date().toISOString(),
@@ -173,10 +170,6 @@ const WritePage = () => {
         const purchaseData = purchases.map((purchase) => ({
           ...purchase,
           post_id: postId,
-          title: purchase.title,
-          description: purchase.description,
-          price: purchase.price,
-          image_url: purchase.image_url
         }));
 
         const { error: purchaseError } = await supabase
@@ -213,27 +206,6 @@ const WritePage = () => {
         </div>
 
         <div className="w-full space-y-6">
-          {/* 제목 입력 */}
-          <div className="flex items-center border border-gray-300 rounded-lg p-4">
-            {/* 왼쪽 아이콘 */}
-            <div className="w-8 h-8 bg-yellow-500 rounded-lg m-4"></div>
-
-            {/* 제목 (고정 텍스트) */}
-            <div className="text-2xl font-bold text-black mr-4" style={{ fontSize: "36px" }}>
-              Title
-            </div>
-
-            {/* 인풋 필드 */}
-            <div className="flex-1">
-              <input
-                type="text"
-                value={formState.title}
-                onChange={(e) => handleChange("title", e.target.value)}
-                className="w-full border-none focus:outline-none text-gray-500 text-sm placeholder-gray-400"
-                placeholder="Lorem ipsum dolor sit amet consectetur."
-              />
-            </div>
-          </div>
 
           {/* 위치 입력 */}
           <div>

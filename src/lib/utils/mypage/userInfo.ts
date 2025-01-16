@@ -32,8 +32,8 @@ export const updateUserProfile = async ({
   }
 };
 
-// 유저의 게시물 데이터 가져오는 로직
-export const fetchUserPosts = async ({
+// 유저의 게시물 데이터 페이지 가져오는 로직 (무한스크롤)
+export const fetchUserPostsPerPage = async ({
   userId,
   pageParam
 }: {
@@ -62,6 +62,17 @@ export const fetchUserPosts = async ({
     nextPage: userPosts.length === perPage ? pageParam + 1 : undefined,
     hasMore: userPosts.length === perPage
   };
+};
+
+// 유저의 모든 좋아요수, 조회수 불러오는 로직
+export const fetchUserPostsStats = async (userId: string) => {
+  const supabase = await createClient();
+
+  const { data: userPostsStats, error } = await supabase.from("posts").select("view, likes").eq("user_id", userId);
+
+  if (error) throw new Error(`[인증 조건 불러오기 실패] ${error.message}`);
+
+  return userPostsStats;
 };
 
 // 유저의 최근 조회 게시물 가져오는 로직

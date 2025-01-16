@@ -1,6 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import AccountSettingTabs from "./AccountSettingTabs";
 import MyPosts from "./MyPosts";
 import RecentViewPosts from "./RecentViewPosts";
 import VerificationSection from "./VerificationSection";
@@ -17,7 +18,7 @@ const MypageMenu = () => {
             <TabsTrigger
               key={`tab-${index}`}
               value={`tab-${index}`}
-              className="w-1/4 rounded-none border-t-2 border-transparent px-6 py-2 data-[state=active]:border-black data-[state=active]:shadow-none text-title2"
+              className="w-1/4 rounded-none border-t-2 border-transparent px-6 py-2 text-title2 data-[state=active]:border-black data-[state=active]:shadow-none"
             >
               {tab}
             </TabsTrigger>
@@ -36,12 +37,12 @@ const MypageMenu = () => {
 
         {/* 인증 */}
         <TabsContent value="tab-2">
-          <VerificationSection isVerified={false} />
+          <VerificationSection />
         </TabsContent>
 
         {/* 계정 관리 */}
         <TabsContent value="tab-3">
-          <p>계정 관리</p>
+          <AccountSettingTabs />
         </TabsContent>
       </Tabs>
     </div>

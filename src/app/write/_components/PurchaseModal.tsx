@@ -81,8 +81,7 @@ const PurchaseModal = ({
     // 고유 파일 이름 생성
     const timestamp = Date.now();
     const extension = file.name.split(".").pop() || "unknown";
-    const uniqueFileName = `${timestamp}.${extension}`;
-    const filePath = `purchase/${uniqueFileName}`;
+    const filePath = `purchase/${timestamp}.${extension}`;
 
     // Supabase 스토리지에 이미지 업로드
     const { error } = await supabase.storage

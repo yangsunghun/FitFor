@@ -58,35 +58,43 @@ function ImageUpload({ images, setImages }: ImageUploadProps) {
 
   // 파일 업로드와 중복 제거 로직
   const handleFiles = async (files: File[]) => {
-    if (images.length >= MAX_IMAGES) {
+    const existingCount = images.length;
+  
+    // 최대 업로드 제한 확인
+    if (existingCount >= MAX_IMAGES) {
       alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
       return;
     }
+  
+    // 새로 추가된 이미지 관련 변수
+    const newImages: string[] = [];
+    const newHashes: string[] = [];
+  
+    for (const file of files) {
+      const hash = await genFileHash(file);
 
-    try {
-      const newImages: string[] = [];
-      const newHashes: string[] = [];
-
-      for (const file of files) {
-        const hash = await genFileHash(file);
-
-        // 기존 해시 확인
-        if (imageHashes.has(hash)) {
-          alert("이미 업로드된 이미지입니다.");
-          continue;
-        }
-
-        // 새 이미지를 업로드
-        const url = await uploadImage(file);
-        newImages.push(url);
-        newHashes.push(hash);
+      // 기존 해시 확인
+      if (imageHashes.has(hash)) {
+        alert("이미 업로드된 이미지입니다.");
+        return;
       }
 
-      // 상태 업데이트
+      // 새 이미지를 업로드
+      const url = await uploadImage(file);
+      newImages.push(url);
+      newHashes.push(hash);
+  
+      // 최대 업로드 제한에 도달하면 작업 중단
+      if (existingCount + newImages.length > MAX_IMAGES) {
+        alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
+        return;
+      }
+    }
+  
+    // 상태 업데이트
+    if (newImages.length > 0) {
       setImages([...images, ...newImages]);
       setImageHashes((prev) => new Set([...Array.from(prev), ...newHashes]));
-    } catch (error: any) {
-      alert(error.message);
     }
   };
 

@@ -17,7 +17,6 @@ export const useUserStats = () => {
     queryFn: async () => fetchUserPostsStats(user!.id),
     enabled: !!user
   });
-  console.log(userPostsStats);
 
   if (userPostsStats) {
     allStats = userPostsStats.reduce(

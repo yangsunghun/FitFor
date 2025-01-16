@@ -25,7 +25,14 @@ const MyPosts = () => {
   if (isError) return <p>내 게시물 불러오기 에러...</p>;
 
   return (
-    <div>
+    <>
+      {/* 작성한 게시물 없는 경우 */}
+      {userPosts?.pages[0].items.length === 0 && (
+        <div className="mt-32 flex items-center justify-center">
+          <p className="text-title2 font-medium text-text-03">작성한 게시물이 없습니다.</p>
+        </div>
+      )}
+      {/* 작성한 게시물 무한 스크롤 */}
       {userPosts?.pages.map((page, i) => (
         <div className="mt-8 grid grid-cols-4 gap-6" key={`${page}_${i}`}>
           {page.items.map((post) => (
@@ -33,10 +40,12 @@ const MyPosts = () => {
           ))}
         </div>
       ))}
-      <div ref={observerRef} className="h-5">
-        {hasNextPage && (isFetchingNextPage ? <p>로딩 중...</p> : <p>더 보기</p>)}
-      </div>
-    </div>
+      {hasNextPage && (
+        <div ref={observerRef} className="h-5">
+          {isFetchingNextPage ? <p>로딩 중...</p> : <p>더 보기</p>}
+        </div>
+      )}
+    </>
   );
 };
 

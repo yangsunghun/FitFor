@@ -8,7 +8,7 @@ const menuItems = [
     title: "개인정보 처리방침"
   },
   {
-    title: "웹 버전"
+    title: "모바일 버전"
   },
   {
     title: "탈퇴 하기"

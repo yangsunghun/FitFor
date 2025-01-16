@@ -9,13 +9,17 @@ import TagFilters from "./_components/TagFilters";
 
 const SearchPage = () => {
   const { query, page, tags, sort, handleSort } = useSearchQuery();
-  const { Results, isPending, isError } = useSearchPosts(query, page, tags, sort);
+  const { Results, isPending, isError } = useSearchPosts(query, page, Object.values(tags).flat(), sort);
 
   return (
     <div className="inner pb-40">
-      <TagFilters />
+      <section>
+        <TagFilters />
+      </section>
       <SortPosts sort={sort} handleSort={handleSort} />
-      <SearchResults Results={Results} isPending={isPending} isError={isError} />
+      <section className="mt-10">
+        <SearchResults Results={Results} isPending={isPending} isError={isError} />
+      </section>
       <Pagination Results={Results} />
     </div>
   );

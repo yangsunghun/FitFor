@@ -1,10 +1,13 @@
 export const POSTS_PER_PAGE = 12; // 페이지 당 게시물 개수
 
+export const VERIFICATION_THRESHOLD = 500;
+
 // 태그 그룹 정의
 export const TAG_GROUPS = [
-  { title: "성별", tags: ["남성", "여성", "성별무관"], max: 1 },
-  { title: "계절 (최대 2개)", tags: ["봄", "여름", "가을", "겨울"], max: 2 },
+  { key: "gender", title: "성별", tags: ["남성", "여성", "성별무관"], max: 1 },
+  { key: "season", title: "계절 (최대 2개)", tags: ["봄", "여름", "가을", "겨울"], max: 2 },
   {
+    key: "style",
     title: "스타일 태그 (최대 2개)",
     tags: [
       "캐주얼",
@@ -27,6 +30,7 @@ export const TAG_GROUPS = [
     max: 2
   },
   {
+    key: "tpo",
     title: "TPO (최대 2개)",
     tags: [
       "데일리",

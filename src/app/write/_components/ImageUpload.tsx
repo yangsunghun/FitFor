@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/utils/supabase/client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 const supabase = createClient();
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -12,31 +12,39 @@ type ImageUploadProps = {
 };
 
 function ImageUpload({ images, setImages }: ImageUploadProps) {
+  const [imageHashes, setImageHashes] = useState<Set<string>>(new Set()); // 업로드된 이미지 해시 추적
 
   // 고유 파일 경로 생성
-  const generateFilePath = (file: File): string => {
+  const genFilePath = (file: File): string => {
     const timestamp = Date.now(); // 고유 타임스탬프 추가
     const extension = file.name.split(".").pop() || "unknown";
     const folder = "images";
     return `${folder}/${timestamp}.${extension}`;
   };
 
-  // Supabase 스토리지에 파일 업로드
-  const uploadToSupabase = async (file: File, filePath: string) => {
+  // 파일 해시 생성 (SHA-256)
+  const genFileHash = async (file: File): Promise<string> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  };
+
+  // Supabase에 파일 업로드
+  const uploadImage = async (file: File): Promise<string> => {
+    validateFile(file);
+
+    // 고유 파일 경로 생성
+    const filePath = genFilePath(file);
+
     const { error } = await supabase.storage
       .from("post-images")
-      .upload(filePath, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+      .upload(filePath, file, { cacheControl: "3600", upsert: false });
 
     if (error) {
       throw new Error(`이미지 업로드 실패: ${error.message}`);
     }
-  };
 
-  // 업로드된 파일의 공개 URL 가져오기
-  const getPublicUrl = (filePath: string): string => {
     const { publicUrl } = supabase.storage
       .from("post-images")
       .getPublicUrl(filePath).data;
@@ -48,20 +56,7 @@ function ImageUpload({ images, setImages }: ImageUploadProps) {
     return publicUrl;
   };
 
-  // 파일 업로드 로직
-  const uploadImage = async (file: File): Promise<string> => {
-    try {
-      validateFile(file);
-      const filePath = generateFilePath(file);
-      await uploadToSupabase(file, filePath);
-      return getPublicUrl(filePath);
-    } catch (error) {
-      console.error("이미지 업로드 에러:", error);
-      throw error;
-    }
-  };
-
-  // 동일한 파일 추가 로직 병합
+  // 파일 업로드와 중복 제거 로직
   const handleFiles = async (files: File[]) => {
     if (images.length >= MAX_IMAGES) {
       alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
@@ -69,21 +64,42 @@ function ImageUpload({ images, setImages }: ImageUploadProps) {
     }
 
     try {
-      const uploadedUrls = await Promise.all(
-        files.map((file) =>
-          uploadImage(file).catch((error) => {
-            console.error(`${file.name} 업로드 중 이슈 발생 :`, error);
-            return null;
-          })
-        )
-      );
-      const validUrls = uploadedUrls.filter((url): url is string => url !== null);
-      const existingUrls = new Set(images);
-      const newUrls = validUrls.filter((url) => !existingUrls.has(url));
-      setImages([...images, ...newUrls]);
+      const newImages: string[] = [];
+      const newHashes: string[] = [];
+
+      for (const file of files) {
+        const hash = await genFileHash(file);
+
+        // 기존 해시 확인
+        if (imageHashes.has(hash)) {
+          alert("이미 업로드된 이미지입니다.");
+          continue;
+        }
+
+        // 새 이미지를 업로드
+        const url = await uploadImage(file);
+        newImages.push(url);
+        newHashes.push(hash);
+      }
+
+      // 상태 업데이트
+      setImages([...images, ...newImages]);
+      setImageHashes((prev) => new Set([...Array.from(prev), ...newHashes]));
     } catch (error: any) {
       alert(error.message);
     }
+  };
+
+  const handleDelete = (index: number) => {
+    const updatedImages = images.filter((_, i) => i !== index);
+    setImages(updatedImages);
+
+    // 해시도 제거
+    setImageHashes((prev) => {
+      const updatedHashes = Array.from(prev);
+      updatedHashes.splice(index, 1);
+      return new Set(updatedHashes);
+    });
   };
 
   // 버튼 클릭 시
@@ -144,19 +160,11 @@ function ImageUpload({ images, setImages }: ImageUploadProps) {
             key={index}
             className="relative border border-gray-200 rounded-lg overflow-hidden h-36 w-36"
           >
-            <Image
-              src={url}
-              alt={`Image ${index + 1}`}
-              fill
-              className="object-cover"
-            />
+            <Image src={url} alt={`Uploaded Image ${index + 1}`} layout="fill" className="object-cover" />
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
               <button
-                className="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center z-10"
-                onClick={() => {
-                  const updatedImages = images.filter((_, i) => i !== index);
-                  setImages(updatedImages);
-                }}
+                onClick={() => handleDelete(index)}
+                className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6"
               >
                 X
               </button>

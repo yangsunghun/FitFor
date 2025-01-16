@@ -33,9 +33,7 @@ const BookmarkList = () => {
         <span className="text-title2 font-medium">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{ownBookmarks.length}개</span>
       </h2>
       <ul className="square-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {ownBookmarks.map((post) => (
-          <Cardpost key={post.id} post={post} isMasonry={false} />
-        ))}
+        {ownBookmarks.map((post) => (post ? <Cardpost key={post.id} post={post} isMasonry={false} /> : null))}
       </ul>
     </>
   );

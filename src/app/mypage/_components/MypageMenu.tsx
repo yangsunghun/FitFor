@@ -9,9 +9,12 @@ import VerificationSection from "./VerificationSection";
 const menuTabs = ["내 게시물", "히스토리", "인증", "계정 관리"];
 
 const MypageMenu = () => {
+  // const { activeTab, handleTabChange } = useActiveTab("0");
+  // value={`tab-${activeTab}`} onValueChange={(value) => handleTabChange(value.replace('tab-', ''))}
+
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
-      {/* Tabs Navigation */}
+      {/* 탭 네비게이션 */}
       <Tabs defaultValue="tab-0" className="w-full">
         <TabsList className="h-auto w-full justify-start rounded-none border-t bg-transparent p-0">
           {menuTabs.map((tab, index) => (

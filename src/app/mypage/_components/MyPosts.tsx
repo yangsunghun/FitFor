@@ -29,7 +29,7 @@ const MyPosts = () => {
       {userPosts?.pages.map((page, i) => (
         <div className="mt-8 grid grid-cols-4 gap-6" key={`${page}_${i}`}>
           {page.items.map((post) => (
-            <Cardpost key={post.id} post={post} isMasonry />
+            <Cardpost key={post.id} post={post} isMasonry={false} />
           ))}
         </div>
       ))}

@@ -54,7 +54,7 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
             className="flex h-[3.5rem] flex-row items-center justify-center gap-2 rounded-2xl px-6 py-4"
             disabled={!applicationAvailable}
           >
-            <span className="text-subtitle">인증 유저 신청하기</span>
+            <span className="text-subtitle">{!isVerified ? "인증 유저 신청하기" : "이미 인증 되었습니다"}</span>
           </Button>
           <p className="text-title2 text-text-03">스타일 멘토가 되어 조언이 필요한 유저들의 코디를 도와주세요!</p>
         </div>

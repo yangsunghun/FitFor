@@ -1,17 +1,15 @@
 "use client";
 
 import { useUser } from "@/lib/hooks/auth/useUser";
-import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import { useAuthStore } from "@/lib/store/authStore";
-import { MagnifyingGlass } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/Button";
+import SearchBar from "./SearchBar";
 
 const HeaderContent = () => {
   useUser();
   const { user } = useAuthStore();
-  const { inputValue, setInputValue, handleSearch } = useSearchQuery();
 
   return (
     <div className="container mx-auto flex h-full max-w-[1200px] items-center justify-between">
@@ -30,20 +28,7 @@ const HeaderContent = () => {
         </ul>
       </nav>
       {/* 검색창 */}
-      <div className="max-w-xl flex-1 items-center justify-center">
-        <form onSubmit={handleSearch} className="flex w-full flex-row items-center rounded-2xl bg-bg-02 pl-6">
-          <button type="submit">
-            <MagnifyingGlass size={24} className="text-text-03" />
-          </button>
-          <input
-            type="search"
-            placeholder="textfield"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="h-14 w-full bg-transparent pl-2 text-title2 font-medium outline-none placeholder:text-text-03"
-          />
-        </form>
-      </div>
+      <SearchBar />
 
       <div className="flex items-center gap-4">
         {user ? (

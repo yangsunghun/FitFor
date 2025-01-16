@@ -29,10 +29,10 @@ const ContentsSection = ({ postId }: Props) => {
     <>
       {/* <p className="text-3xl mb-4 font-bold">{title}</p> */}
 
-      <article className="flex items-start justify-between">
+      <article className="flex justify-between">
         <ImageGallery images={images} writerSpec={body_size} />
 
-        <div className="w-[46%]">
+        <div className="relative w-[46%]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <figure className="relative h-12 w-12 overflow-hidden rounded-full border bg-gray-100">
@@ -55,7 +55,7 @@ const ContentsSection = ({ postId }: Props) => {
           <p className="mt-6 h-[8.5rem] overflow-auto text-title2 font-medium">{content}</p>
 
           {tags.length > 0 && (
-            <div className="mt-10 flex gap-2">
+            <div className="mt-10 flex flex-wrap gap-2">
               {tags.map((tag) => (
                 <Tags key={tag} variant="black" size="md" label={tag} />
               ))}
@@ -63,7 +63,7 @@ const ContentsSection = ({ postId }: Props) => {
           )}
           <p className="mt-4 font-medium text-text-03">조회수 {view}</p>
 
-          <div className="relative mt-[6.35rem] flex gap-10 font-medium">
+          <div className="absolute bottom-[6.75rem] left-0 mt-[6.35rem] flex gap-10 font-medium">
             <LikeSection postId={postId} styleType="detail" />
             <button className="flex flex-col gap-2">
               <Export size={28} />

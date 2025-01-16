@@ -38,7 +38,7 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
   };
 };
 
-export const DetailPage = async ({ params }: DetailPageProps) => {
+const DetailPage = async ({ params }: DetailPageProps) => {
   const postId = params.id;
 
   return (

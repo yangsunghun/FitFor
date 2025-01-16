@@ -1,5 +1,5 @@
 "use client";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { ReactNode, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -48,10 +48,10 @@ const Carousel = ({ children, slidesPerView = 5, spaceBetween = 30, arrow }: Car
       {arrow && (
         <>
           <button className="slide-arrow prev" onClick={handlePrev} disabled={isBeginning}>
-            <ChevronLeft />
+            <CaretLeft />
           </button>
           <button className="slide-arrow next" onClick={handleNext} disabled={isEnd}>
-            <ChevronRight />
+            <CaretRight />
           </button>
         </>
       )}

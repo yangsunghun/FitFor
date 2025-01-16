@@ -3,6 +3,7 @@
 import { FloatingButton } from "@/components/ui/FloatingButton";
 import { usePosts } from "@/lib/hooks/home/usePosts";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
+import { useEffect, useRef } from "react";
 import LayoutToggle from "./LayoutToggle";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
@@ -12,31 +13,34 @@ type ListLenderProps = {};
 const ListLender = ({}: ListLenderProps) => {
   const { isMasonry, toggleLayout } = useLayoutStore();
 
-  const { posts, selectedTags, toggleTag, fetchNextPage, hasNextPage, isPending, isFetchingNextPage, isError } =
-    usePosts();
+  const { posts, fetchNextPage, hasNextPage, isPending, isFetchingNextPage, isError } = usePosts();
+
+  const observerRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    if (observerRef.current) observer.observe(observerRef.current);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage]);
 
   if (isPending) return <p>로딩...</p>;
   if (isError) return <p>오류 발생</p>;
 
   return (
     <>
-      {/* <section>
-        <TagsFilter tags={["봄", "여름", "가을", "겨울"]} selectedTags={selectedTags} onToggleTag={toggleTag} />
-      </section> */}
       <section>
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
 
         {isMasonry ? <ListLayout posts={posts} /> : <MasonryLayout posts={posts} />}
 
-        {hasNextPage && (
-          <button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className="mt-4 rounded-lg border border-gray-300 px-4 py-2"
-          >
-            {isFetchingNextPage ? "불러오는 중 로딩" : "더보기"}
-          </button>
-        )}
+        {hasNextPage && <div ref={observerRef}>{isFetchingNextPage ? "불러오는 중 로딩" : "더보기"}</div>}
       </section>
 
       <FloatingButton variant="primary" href="/write" />

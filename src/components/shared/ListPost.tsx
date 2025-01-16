@@ -1,5 +1,6 @@
+import sampleImage from "@/assets/images/image_sample.png";
 import type { PostType } from "@/lib/types/post";
-import { formatDate } from "@/lib/utils/common/formatDateTime";
+import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,26 +20,41 @@ const Listpost = ({ post }: Props) => {
       </figure>
 
       <div className="relative w-[calc(100%-12.75rem)]">
-        <div className="flex gap-2">
-          {post.tags.map((tag) => (
-            <Tags key={tag} variant="black" size="md" label={tag} />
-          ))}
+        <div className="flex justify-between">
+          <div className="flex items-center gap-4">
+            <figure className="relative h-10 w-10 overflow-hidden rounded-full border border-line-02">
+              <Image
+                src={post.users.profile_image || sampleImage}
+                alt={`${post.users.nickname || "익명"}의 프로필 이미지`}
+                fill
+                className="object-cover"
+              />
+            </figure>
+            <div>
+              <p className="text-title2 font-bold">{post.users.nickname || "익명"}</p>
+              <p className="text-text-04">{relativeTimeDay(post.created_at)}</p>
+            </div>
+          </div>
+          <span className="flex gap-1">조회수: {post.view}</span>
         </div>
+
         <p className="clear-both mt-2 line-clamp-2 overflow-hidden text-ellipsis break-words text-subtitle font-medium text-text-04">
           {post.content}
         </p>
-        <div className="absolute bottom-0 left-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03">
+
+        <div className="absolute bottom-0 right-0 flex gap-4 text-title2 font-medium leading-7 text-text-03">
           <LikeSection postId={post.id} styleType="list" />
           <span className="post-center pointer-events-none flex gap-1">
             <ChatCircleDots size={28} className="text-text-03" />
             <span className="text-text-04">{post.comments}</span>
           </span>
         </div>
-        <p className="absolute bottom-4 right-4 flex gap-1">
-          <span>조회수: {post.view}</span>
-          <span>·</span>
-          <span>{formatDate(post.created_at)}</span>
-        </p>
+
+        <div className="absolute bottom-0 left-0 flex gap-2">
+          {post.tags.map((tag) => (
+            <Tags key={tag} variant="grayLine" size="md" label={tag} />
+          ))}
+        </div>
       </div>
     </li>
   );

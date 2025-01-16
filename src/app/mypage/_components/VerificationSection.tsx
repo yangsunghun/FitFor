@@ -21,7 +21,7 @@ const VerificationSection = () => {
       const available = verifyUser({ postNum: userPostsStats.length, likes: allStats.likes, views: allStats.view });
       setApplicationAvailable(available && !userVerified);
     }
-  }, []);
+  }, [queryClient, userPostsStats, allStats, userVerified]);
 
   if (isError) return <p>유저의 인증 정보를 불러오지 못했습니다.</p>;
 

@@ -326,7 +326,7 @@ export type Database = {
           buy_link: string | null
           description: string | null
           id: string
-          image_url: string | null
+          image_url: string
           post_id: string
           title: string
         }
@@ -334,7 +334,7 @@ export type Database = {
           buy_link?: string | null
           description?: string | null
           id?: string
-          image_url?: string | null
+          image_url: string
           post_id: string
           title: string
         }
@@ -342,7 +342,7 @@ export type Database = {
           buy_link?: string | null
           description?: string | null
           id?: string
-          image_url?: string | null
+          image_url?: string
           post_id?: string
           title?: string
         }

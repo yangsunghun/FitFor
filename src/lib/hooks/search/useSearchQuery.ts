@@ -8,7 +8,9 @@ export const useSearchQuery = () => {
   const searchParams = useSearchParams();
   const queryFromUrl = searchParams.get("query") || "";
   const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
-  const tagsFromUrl = searchParams.get("category") ? JSON.parse(searchParams.get("category") || "[]") : [];
+  const tagsFromUrl = searchParams.get("category")
+    ? JSON.parse(decodeURIComponent(searchParams.get("category") || "[]"))
+    : [];
   const sortFromUrl = searchParams.get("sort") || "created_at";
 
   const [inputValue, setInputValue] = useState(queryFromUrl);
@@ -25,13 +27,18 @@ export const useSearchQuery = () => {
     if (sort !== sortFromUrl) setSort(sortFromUrl);
   }, [queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
 
+  // JSON을 URL-safe한 배열 표현으로 변환하는 헬퍼 함수
+  const encodeArrayForUrl = (array: string[]): string => {
+    return `%5B${array.map((item) => `"${item}"`).join(",")}%5D`;
+  };
+
   // 검색 실행
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputValue !== query || page !== 1 || tags.length > 0 || sort !== sortFromUrl) {
       router.push(
-        `/search?query=${encodeURIComponent(inputValue)}&page=1&category=${encodeURIComponent(
-          JSON.stringify(tags)
+        `/search?query=${encodeURIComponent(inputValue)}&page=1&category=${encodeArrayForUrl(
+          tags
         )}&sort=${encodeURIComponent(sort)}`
       );
     }
@@ -43,8 +50,8 @@ export const useSearchQuery = () => {
     if (JSON.stringify(updatedTags) !== JSON.stringify(tags)) {
       setTags(updatedTags);
       router.push(
-        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeURIComponent(
-          JSON.stringify(updatedTags)
+        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeArrayForUrl(
+          updatedTags
         )}&sort=${encodeURIComponent(sort)}`
       );
     }
@@ -55,8 +62,8 @@ export const useSearchQuery = () => {
     if (newSort !== sort) {
       setSort(newSort);
       router.push(
-        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeURIComponent(
-          JSON.stringify(tags)
+        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeArrayForUrl(
+          tags
         )}&sort=${encodeURIComponent(newSort)}`
       );
     }

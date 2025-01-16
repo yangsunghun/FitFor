@@ -1,7 +1,7 @@
+import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import type { PurchaseInsert } from "../page";
 
 const supabase = createClient();
 const genUniqueId = () => {
@@ -11,9 +11,9 @@ const genUniqueId = () => {
 type ProductModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onAddProduct: (product: PurchaseInsert) => void;
-  onEditProduct?: (product: PurchaseInsert) => void;
-  productToEdit?: PurchaseInsert | null; // null 허용
+  onAddProduct: (product: Database["public"]["Tables"]["purchase"]["Insert"]) => void;
+  onEditProduct?: (product: Database["public"]["Tables"]["purchase"]["Insert"]) => void;
+  productToEdit?: Database["public"]["Tables"]["purchase"]["Insert"] | null; // null 허용
   mode: "add" | "edit";
   purchasesLength: number; // 현재 상품 개수
 };
@@ -32,11 +32,12 @@ const PurchaseModal = ({
   const [formState, setFormState] = useState({
     title: "",
     description: "",
-    price: "" as number | "",
+    by_link: "",
     image_url: "",
+    post_id: "", // post_id 추가
   });
 
-  const { title, description, price, image_url } = formState;
+  const { title, description, by_link, image_url, post_id } = formState;
 
   useEffect(() => {
     if (productToEdit) {
@@ -44,16 +45,18 @@ const PurchaseModal = ({
       setFormState({
         title: productToEdit.title,
         description: productToEdit.description || "",
-        price: productToEdit.price || "",
+        by_link: productToEdit.by_link || "",
         image_url: productToEdit.image_url || "",
+        post_id: productToEdit.post_id || "",
       });
     } else {
       // 추가 모드에서 초기 상태로 리셋
       setFormState({
         title: "",
         description: "",
-        price: "",
+        by_link: "",
         image_url: "",
+        post_id: "", // 기본값으로 설정
       });
     }
   }, [productToEdit]);
@@ -125,8 +128,9 @@ const PurchaseModal = ({
     setFormState({
       title: "",
       description: "",
-      price: "",
+      by_link: "",
       image_url: "",
+      post_id: "",
     });
   };
 
@@ -137,14 +141,14 @@ const PurchaseModal = ({
       alert("상품은 최대 5개까지만 추가할 수 있습니다.");
       return;
     }
-  
+
     // 필수 입력 항목 확인
-    if (!title || !description || !price || !image_url) {
+    if (!title || !description || !by_link || !image_url ) {
       alert("모든 필드를 입력해주세요.");
       return;
     }
-  
-    const product = { title, description, price: Number(price), image_url };
+
+    const product = { title, description, by_link, image_url, post_id };
     if (mode === "add") {
       // 추가 모드
       onAddProduct({ ...product, id: genUniqueId() });
@@ -152,7 +156,7 @@ const PurchaseModal = ({
       // 수정 모드
       onEditProduct({ ...product, id: productToEdit?.id });
     }
-  
+
     resetForm(); // 입력 폼 초기화
     onClose(); // 모달 닫기
   };
@@ -221,15 +225,15 @@ const PurchaseModal = ({
           ></textarea>
         </div>
 
-        {/* 가격 */}
+        {/* 링크 */}
         <div className="mb-4">
-          <label className="block font-bold mb-2">가격</label>
+          <label className="block font-bold mb-2">상품 링크</label>
           <input
-            type="number"
-            name="price"
-            value={price}
+            type="url" // URL 입력 필드
+            name="by_link"
+            value={formState.by_link || ""} // 링크 상태를 사용
             onChange={handleInputChange}
-            placeholder="상품의 가격을 입력해주세요."
+            placeholder="상품 구매 링크를 입력해주세요."
             className="w-full p-2 border rounded-md"
           />
         </div>

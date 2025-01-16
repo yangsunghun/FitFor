@@ -43,7 +43,7 @@ const ContentsSection = ({ postId }: Props) => {
       {/* <p className="text-3xl mb-4 font-bold">{title}</p> */}
 
       <article className="flex items-start justify-between">
-        <ImageGallery images={allImages} />
+        <ImageGallery images={allImages} writerSpec={body_size} />
 
         <div className="w-[46%]">
           <div className="flex items-center justify-between">

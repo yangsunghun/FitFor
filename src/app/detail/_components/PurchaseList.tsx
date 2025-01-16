@@ -28,20 +28,18 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
       <p className="mb-4 text-title1 font-bold text-black">상품 정보</p>
       <ul className="grid grid-cols-4 gap-6">
         {purchases.map((purchase: Purchase) => (
-          <li key={purchase.id} className="rounded-[0.5rem] p-4 shadow-lg">
+          <li key={purchase.id}>
             {purchase.image_url && (
-              <div className="relative h-[11.25rem] w-full">
+              <figure className="thumbnail aspect-square w-full rounded-[0.5rem] border border-line-02">
                 <Image src={purchase.image_url} alt={purchase.title} fill={true} className="object-cover" />
-              </div>
+              </figure>
             )}
-            <div className="flex flex-col justify-between">
-              <div>
-                <p className="text-title2 font-bold">{purchase.title}</p>
-                <p className="text-title2 font-medium text-primary-default">{purchase.description}</p>
-              </div>
-              <div className="hidden">
-                <strong>가격:</strong> {purchase.price ? `${purchase.price.toLocaleString()} 원` : "가격 정보 없음"}
-              </div>
+            <div className="mt-4">
+              <p className="ellip1 text-title2 font-bold">{purchase.title}</p>
+              <p className="ellip1 text-title2 font-medium text-text-03">{purchase.description}</p>
+            </div>
+            <div className="hidden">
+              <strong>가격:</strong> {purchase.price ? `${purchase.price.toLocaleString()} 원` : "가격 정보 없음"}
             </div>
           </li>
         ))}

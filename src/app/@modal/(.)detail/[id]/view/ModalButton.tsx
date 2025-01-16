@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
 
 type ModalButtonProps = {
@@ -21,14 +22,12 @@ const ModalButton = ({ label, action, path }: ModalButtonProps) => {
     }
   };
 
-  const baseClasses = "px-4 py-2 rounded-lg text-sm font-medium transition-all";
-  const styles =
-    action === "navigate" ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-300 text-black hover:bg-gray-400";
+  const styles = action !== "close" ? "primary" : "secondary";
 
   return (
-    <button onClick={handleClick} className={`${baseClasses} ${styles}`}>
+    <Button onClick={handleClick} variant={`${styles}`} size="sm">
       {label}
-    </button>
+    </Button>
   );
 };
 

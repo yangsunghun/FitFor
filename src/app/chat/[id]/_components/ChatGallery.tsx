@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/utils/supabase/client";
+import Image from "next/image";
 
 const supabase = createClient();
 
@@ -54,16 +55,23 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {images.length > 0 ? (
-        images.map((url, index) => (
-          <img key={index} src={url} alt={`Chat image ${index + 1}`} className="h-auto w-full rounded-md shadow-md" />
-        ))
-      ) : (
-        <p className="text-gray-500">No images found.</p>
-      )}
+
+<div className="grid grid-cols-3 gap-6">
+  {images.map((url, index) => (
+    <div key={index} className="w-[316px] h-[316px]">
+      <Image
+        src={url}
+        alt={`Image ${index}`}
+        width={316}
+        height={316}
+        className="w-full h-full rounded-2xl object-cover"
+      />
     </div>
+  ))}
+</div>
+
   );
+
 };
 
 export default ChatGallery;

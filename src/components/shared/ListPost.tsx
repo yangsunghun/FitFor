@@ -14,7 +14,7 @@ const Listpost = ({ post }: Props) => {
   return (
     <li className="relative mb-6 flex gap-6 py-4">
       <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
-      <figure className="thumbnail h-[11.25rem] w-[11.25rem] rounded-[1rem] bg-gray-200">
+      <figure className="thumbnail h-[11.25rem] w-[11.25rem] rounded-2xl bg-gray-200">
         <Image src={post.images[0]} alt={post.content} fill={true} />
       </figure>
 

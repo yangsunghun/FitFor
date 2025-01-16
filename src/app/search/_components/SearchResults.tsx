@@ -20,14 +20,8 @@ const SearchResults = ({ Results, isPending, isError }: SearchResultsProps) => {
       {Results.items.map((post) => (
         <li key={post.id} className="relative">
           <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
-          <figure className="relative h-[250px] w-full overflow-hidden bg-gray-200">
-            <Image
-              src={post.images[0] || sampleImage}
-              alt={post.content}
-              width={300}
-              height={300}
-              className="object-cover"
-            />
+          <figure className="thumbnail aspect-square rou">
+            <Image src={post.images[0] || sampleImage} alt={post.content} fill={true} />
           </figure>
 
           <p className="text-lg font-bold">{post.content}</p>

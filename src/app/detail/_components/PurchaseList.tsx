@@ -32,7 +32,7 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
           <li key={purchase.id} className="relative">
             {purchase.buy_link && <Link href={purchase.buy_link} title={purchase.title}></Link>}
             {purchase.image_url && (
-              <figure className="thumbnail aspect-square w-full rounded-[0.5rem] border border-line-02">
+              <figure className="thumbnail aspect-square w-full rounded-lg border border-line-02">
                 <Image src={purchase.image_url} alt={purchase.title} fill={true} className="object-cover" />
               </figure>
             )}

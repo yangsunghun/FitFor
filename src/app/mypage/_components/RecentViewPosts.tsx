@@ -1,9 +1,8 @@
 "use client";
 
+import GridPost from "@/components/shared/GridPost";
 import { useRecentViewPosts } from "@/lib/hooks/mypage/useRecentViewPosts";
 import { useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect } from "react";
 
 const RecentViewPosts = () => {
@@ -29,18 +28,8 @@ const RecentViewPosts = () => {
       {isPending ? (
         <p>로딩 중 ...</p>
       ) : (
-        <ul className="mt-8 grid grid-cols-4 gap-5">
-          {recentPosts?.map((post) => (
-            <li key={post.id} className="relative">
-              <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
-              <figure className="relative h-[250px] w-full overflow-hidden bg-gray-200">
-                <Image src={post.images[0]} alt={post.content} width={300} height={300} className="object-cover" />
-              </figure>
-
-              <p className="text-lg font-bold">{post.content}</p>
-              <p className="text-sm text-gray-500">작성자: {post.users?.nickname || "익명"}</p>
-            </li>
-          ))}
+        <ul className="mt-8 grid grid-cols-4 gap-6">
+          {recentPosts?.map((post) => <GridPost key={post.id} post={post} />)}
         </ul>
       )}
     </>

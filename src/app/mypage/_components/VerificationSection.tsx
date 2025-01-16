@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/Button";
 import { useUserStats } from "@/lib/hooks/mypage/useUserStats";
+import { verifyUser } from "@/lib/utils/mypage/userVerification";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import CardsSkeleton from "./CardsSkeleton";
 import StatsCard from "./StatsCard";
 
 // 추후에 로직이 필요
@@ -14,10 +16,15 @@ type VerificationSectionProps = {
 const VerificationSection = ({ isVerified = false }: VerificationSectionProps) => {
   const { userPostsStats, allStats, isPending, isFetching, isError } = useUserStats();
   const queryClient = useQueryClient();
+  const [applicationAvailable, setApplicationAvailable] = useState(false);
 
   // 실시간 데이터 반영
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["postsStats"] });
+    if (userPostsStats && allStats) {
+      const available = verifyUser({ postNum: userPostsStats.length, likes: allStats.likes, views: allStats.view });
+      setApplicationAvailable(available);
+    }
   }, []);
 
   if (isError) return <p>유저의 인증 정보를 불러오지 못했습니다.</p>;
@@ -31,7 +38,7 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
       <div className="flex flex-col">
         <h3 className="mb-6 mt-10 text-subtitle">내 통계 리포트</h3>
         {isPending || isFetching ? (
-          <p>로딩 중...</p>
+          <CardsSkeleton />
         ) : (
           <div className="my-6 grid grid-cols-1 gap-6 md:grid-cols-3">
             <StatsCard title="작성한 게시물 수" value={userPostsStats!.length} />
@@ -43,9 +50,9 @@ const VerificationSection = ({ isVerified = false }: VerificationSectionProps) =
           {/* 비활성화 디자인 논의 */}
           <Button
             onClick={handleApplication}
-            variant="disabled"
-            className="flex flex-row h-[3.5rem] items-center justify-center gap-2 rounded-2xl px-6 py-4"
-            disabled={true}
+            variant={!applicationAvailable ? "disabled" : "primary"}
+            className="flex h-[3.5rem] flex-row items-center justify-center gap-2 rounded-2xl px-6 py-4"
+            disabled={!applicationAvailable}
           >
             <span className="text-subtitle">인증 유저 신청하기</span>
           </Button>

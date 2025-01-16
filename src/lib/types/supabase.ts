@@ -285,11 +285,10 @@ export type Database = {
           created_at: string
           id: string
           images: string[]
-          isSaved: boolean
+          is_saved: boolean
           likes: number
           tags: string[]
-          thumbnail: string
-          upload_place: string
+          upload_place: string | null
           user_id: string
           view: number
         }
@@ -300,11 +299,10 @@ export type Database = {
           created_at?: string
           id?: string
           images: string[]
-          isSaved?: boolean
+          is_saved?: boolean
           likes: number
           tags: string[]
-          thumbnail: string
-          upload_place: string
+          upload_place?: string | null
           user_id: string
           view: number
         }
@@ -315,11 +313,10 @@ export type Database = {
           created_at?: string
           id?: string
           images?: string[]
-          isSaved?: boolean
+          is_saved?: boolean
           likes?: number
           tags?: string[]
-          thumbnail?: string
-          upload_place?: string
+          upload_place?: string | null
           user_id?: string
           view?: number
         }

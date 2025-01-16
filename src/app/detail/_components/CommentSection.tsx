@@ -31,17 +31,18 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
 
   return (
     <>
-      <p className="mb-4 text-title1 font-bold">댓글 {comments.length}개</p>
+      <p className="mb-4 text-title1 font-bold">댓글 ({comments.length})</p>
       <div className="mb-4 flex items-center justify-between">
         <figure className="relative h-12 w-12 overflow-hidden rounded-full">
           <Image src={(user && user.profile_image) || sampleImage} alt={user ? user.nickname : "비회원"} fill={true} />
         </figure>
-        <div className="relative flex w-[calc(100%-4rem)] gap-4 rounded-[1rem] border border-line-02 px-4 py-2">
+        <div className="relative flex h-16 w-[calc(100%-4rem)] gap-4 overflow-hidden rounded-[1rem] border border-line-02">
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            className="scrollbar-hide w-full max-w-[calc(100%-5rem)] resize-none outline-none"
-            placeholder="댓글을 작성해주세요."
+            className="scrollbar-hide w-full max-w-[calc(100%-5rem)] resize-none px-4 py-4 text-title2 outline-none disabled:bg-bg-01"
+            placeholder={userId ? "댓글을 입력해주세요." : "로그인이 필요합니다"}
+            disabled={!userId}
           />
 
           <Button
@@ -51,8 +52,8 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
               }
               setComment("");
             }}
-            variant="primary"
-            className="whitespace-nowrap"
+            variant={comment.trim() ? "primary" : "disabled"}
+            className="absolute right-4 top-1/2 -translate-y-1/2 whitespace-nowrap"
             disabled={!comment.trim()}
           >
             입력
@@ -61,24 +62,24 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
       </div>
       <ul className="mt-10">
         {comments?.map((comment) => (
-          <li key={comment.id} className="mb-4 pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <figure className="relative h-12 w-12 overflow-hidden rounded-full">
-                  <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
-                </figure>
-                <p className="text-title1 font-bold">{comment.users.nickname}</p>
+          <li key={comment.id} className="mb-4 flex w-full items-start justify-between pb-4">
+            <figure className="relative h-12 w-12 overflow-hidden rounded-full">
+              <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
+            </figure>
+            <div className="w-[calc(100%-4.25rem)]">
+              <div className="flex justify-between">
+                <p className="text-title2 font-bold">{comment.users.nickname}</p>
+                <div className="flex gap-4">
+                  <p className="text-text-03">{relativeTimeDay(comment.created_at)}</p>
+                  {userId === comment.user_id && (
+                    <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
+                      삭제
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="items-items-center flex gap-4">
-                <p className="text-text-03">{relativeTimeDay(comment.created_at)}</p>
-                {userId === comment.user_id && (
-                  <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
-                    삭제
-                  </button>
-                )}
-              </div>
+              <p className="mt-2 text-title2 font-medium">{comment.content}</p>
             </div>
-            <p className="mt-2 text-title2 font-medium">{comment.content}</p>
           </li>
         ))}
       </ul>

@@ -28,10 +28,10 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
   }
 
   return {
-    title: `${post.title} - fit4`,
+    title: `${post.users.nickname}님의 룩북 - fit4`,
     description: `${post.content}`,
     openGraph: {
-      title: `${post.title} - fit4`,
+      title: `${post.users.nickname}님의 룩북 - fit4`,
       description: `${post.content}`,
       url: `https://localhost:3000/detail/${params.id}`
     }

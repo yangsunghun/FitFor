@@ -3,6 +3,7 @@
 import { usePurchases } from "@/lib/hooks/detail/usePurchases";
 import type { Purchase } from "@/lib/types/post";
 import Image from "next/image";
+import Link from "next/link";
 
 type PurchaseListProps = {
   postId: string;
@@ -29,6 +30,7 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
       <ul className="grid grid-cols-4 gap-6">
         {purchases.map((purchase: Purchase) => (
           <li key={purchase.id}>
+            {purchase.buy_link && <Link href={purchase.buy_link} title={purchase.title}></Link>}
             {purchase.image_url && (
               <figure className="thumbnail aspect-square w-full rounded-[0.5rem] border border-line-02">
                 <Image src={purchase.image_url} alt={purchase.title} fill={true} className="object-cover" />
@@ -37,9 +39,6 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
             <div className="mt-4">
               <p className="ellip1 text-title2 font-bold">{purchase.title}</p>
               <p className="ellip1 text-title2 font-medium text-text-03">{purchase.description}</p>
-            </div>
-            <div className="hidden">
-              <strong>가격:</strong> {purchase.price ? `${purchase.price.toLocaleString()} 원` : "가격 정보 없음"}
             </div>
           </li>
         ))}

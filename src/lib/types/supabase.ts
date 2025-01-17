@@ -158,7 +158,6 @@ export type Database = {
           isActive: boolean
           room_id: string
           room_tags: string[]
-          room_theme: string
           room_thumbnail_url: string | null
           room_title: string
           user_id: string
@@ -168,7 +167,6 @@ export type Database = {
           isActive?: boolean
           room_id?: string
           room_tags: string[]
-          room_theme: string
           room_thumbnail_url?: string | null
           room_title: string
           user_id: string
@@ -178,7 +176,6 @@ export type Database = {
           isActive?: boolean
           room_id?: string
           room_tags?: string[]
-          room_theme?: string
           room_thumbnail_url?: string | null
           room_title?: string
           user_id?: string
@@ -282,7 +279,6 @@ export type Database = {
           is_saved: boolean
           likes: number
           tags: string[]
-          theme: string
           upload_place: string | null
           user_id: string
           view: number
@@ -297,7 +293,6 @@ export type Database = {
           is_saved?: boolean
           likes: number
           tags: string[]
-          theme: string
           upload_place?: string | null
           user_id: string
           view: number
@@ -312,7 +307,6 @@ export type Database = {
           is_saved?: boolean
           likes?: number
           tags?: string[]
-          theme?: string
           upload_place?: string | null
           user_id?: string
           view?: number

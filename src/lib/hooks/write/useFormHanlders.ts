@@ -20,7 +20,6 @@ type FormState = {
   isModalOpen: boolean;
   isPurchaseModalOpen: boolean;
   productToEdit: Database["public"]["Tables"]["purchase"]["Insert"] | null;
-  selectedTheme: string | null;
 };
 
 export const useFormHandlers = () => {
@@ -35,7 +34,6 @@ export const useFormHandlers = () => {
     isModalOpen: false, // 주소 검색 모달 상태
     isPurchaseModalOpen: false, // 상품 추가 모달 상태
     productToEdit: null, // 수정할 상품 데이터
-    selectedTheme: null,
   });
 
   const router = useRouter(); // 페이지 이동 관리
@@ -113,7 +111,6 @@ export const useFormHandlers = () => {
         user_id: currentUser.id,
         body_size,
         images,
-        theme: "default",
         tags,
         comments: 0,
         likes: 0,

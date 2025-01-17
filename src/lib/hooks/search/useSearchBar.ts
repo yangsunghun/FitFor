@@ -75,6 +75,7 @@ export const useSearchBar = () => {
     handleSelectTag,
     handleSearchWithHistory,
     handleSelectHistory,
-    clearSearchHistory
+    clearSearchHistory,
+    setSearchHistory
   };
 };

@@ -23,7 +23,7 @@ const HeaderContent = () => {
             <Link href="/bookmarks">북마크</Link>
           </li>
           <li className="w-1/2 text-center">
-            <a href="">라이브</a>
+            <Link href="/chat">라이브</Link>
           </li>
         </ul>
       </nav>

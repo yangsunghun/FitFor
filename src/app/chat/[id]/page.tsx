@@ -1,22 +1,19 @@
 "use client";
 
 import { useAuthStore } from "@/lib/store/authStore";
-import { createClient } from "@/lib/utils/supabase/client";
 import React from "react";
 import Tabs from "./_components/ChatTabs";
 import ChatMessages from "./_components/ChatMessages";
 import ChatInput from "./_components/ChatInput";
 import ChatGallery from "./_components/ChatGallery";
 
-const supabase = createClient(); // Supabase 클라이언트 생성
-
 interface ChatRoomPageProps {
-  params: { id: string }; // App Router에서 제공하는 동적 경로 파라미터
+  params: { id: string };
 }
 
 const ChatRoomPage = ({ params }: ChatRoomPageProps) => {
-  const { id: roomId } = params; // URL에서 가져온 동적 채팅방 ID
-  const currentUser = useAuthStore((state) => state.user); // 현재 로그인된 사용자 정보
+  const { id: roomId } = params;
+  const currentUser = useAuthStore((state) => state.user);
 
   return (
     <div className="flex h-screen w-full flex-col items-center bg-white">

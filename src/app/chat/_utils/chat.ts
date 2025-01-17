@@ -164,7 +164,7 @@ export const exitChatRoom = async (userId: string, roomId: string) => {
 };
 
 // 채팅방 삭제하기 (방장만 가능)
-export const deleteChatRoom = async (userId: string, roomId: string) => {
+export const deleteChatRoom = async (userId: string | undefined, roomId: string) => {
   try {
     // Step 1: 방장이 맞는지 확인
     const { data: roomData, error: roomError } = await supabase

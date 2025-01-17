@@ -10,13 +10,13 @@ type Props = {
 const GridPost = ({ post }: Props) => {
   return (
     <li key={post.id} className="relative mb-4">
-      <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
+      <Link href={`/detail/${post.id}/view`} className="click-box z-10"></Link>
       <figure className="thumbnail aspect-square rounded-2xl">
         <Image src={post.images[0]} alt={post.content} fill={true} />
       </figure>
 
       <p className="ellip2 mt-4 text-title2 font-medium">{post.content}</p>
-      <div className="mt-3 flex gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         {post.tags.map((tag) => (
           <Tags key={tag} variant="grayLine" size="md" label={tag} />
         ))}

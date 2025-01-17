@@ -22,7 +22,7 @@ const SortPosts = ({ sort, handleSort }: Props) => {
         {sortOptions.find((option) => option.key === sort)?.label || "선택"}
         <CaretDown
           weight="fill"
-          className={clsx("transition-transform", {
+          className={clsx({
             "rotate-180": isOpen,
             "rotate-0": !isOpen
           })}
@@ -31,10 +31,10 @@ const SortPosts = ({ sort, handleSort }: Props) => {
 
       <div
         className={clsx(
-          "absolute right-0 top-full z-20 overflow-hidden rounded-lg bg-bg-01 shadow-md transition duration-300",
+          "absolute right-0 top-full z-20 overflow-hidden rounded-lg bg-bg-01 shadow-md transition duration-200",
           {
-            "scale-100 opacity-100": isOpen,
-            "scale-95 opacity-0": !isOpen
+            "opacity-100": isOpen,
+            "opacity-0": !isOpen
           }
         )}
         style={{

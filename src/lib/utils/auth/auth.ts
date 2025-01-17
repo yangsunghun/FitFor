@@ -119,7 +119,7 @@ export const fetchUser = async (): Promise<UserType | null> => {
       .from("users")
       .select("*")
       .eq("id", user!.id)
-      .maybeSingle();
+      .single();
 
     // 에러처리 필요
     if (userDetailsError || !userDetails) {

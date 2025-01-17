@@ -23,6 +23,15 @@ const SearchBar = () => {
     setShowDropdown(false);
   };
 
+  const handleInputBlur = (e: React.FocusEvent<HTMLFormElement>) => {
+    setTimeout(() => {
+      const relatedTarget = e.relatedTarget as HTMLElement;
+      if (!relatedTarget || !relatedTarget.closest(".dropdown")) {
+        setShowDropdown(false); // 드롭다운 외부 클릭 시 닫기
+      }
+    }, 200);
+  };
+
   // 검색 기록 삭제
   const handleDeleteHistoryItem = (index: number) => {
     const updatedHistory = searchHistory.filter((_, i) => i !== index);
@@ -35,6 +44,7 @@ const SearchBar = () => {
       <form
         onSubmit={handleSubmit}
         className="relative flex w-full flex-row items-center rounded-lg bg-bg-02 pl-6"
+        onBlur={handleInputBlur}
         onFocus={() => setShowDropdown(true)} // 클릭 시 드롭다운 열림
       >
         <button type="submit">
@@ -45,12 +55,6 @@ const SearchBar = () => {
           placeholder="어떤 룩을 찾으시나요?"
           value={inputValue}
           onChange={(e) => handleInputChange(e.target.value)}
-          onBlur={(e) => {
-            const relatedTarget = e.relatedTarget as HTMLElement;
-            if (!relatedTarget || !relatedTarget.closest(".dropdown")) {
-              setShowDropdown(false); // 드롭다운 외부 클릭 시 닫기
-            }
-          }}
           className="h-12 w-full bg-transparent px-2 text-title2 font-medium outline-none placeholder:text-text-03"
         />
         {showDropdown && (filteredTags.length > 0 || searchHistory.length > 0) && (

@@ -11,18 +11,18 @@ const Tabs = ({ labels, children }: TabProps) => {
   return (
     <div className="mx-auto w-[996px]">
       {/* Tab Navigation */}
-      <nav className="flex h-14 border-b border-[#e8e8e8] bg-white">
+      <nav className="flex h-14 border-b border-x-text-02 bg-white">
         {labels.map((label, index) => (
           <div
             key={index}
-            className={`flex flex-1 items-center justify-center ${
-              activeTab === index ? "border-b-2 border-[#1a1a1a]" : ""
+            className={`flex flex-1 items-center justify-center cursor-pointer ${
+              activeTab === index ? "border-b-2 border-text-04" : ""
             }`}
             onClick={() => setActiveTab(index)}
           >
             <div
-              className={`text-lg text-center font-medium leading-[27px] ${
-                activeTab === index ? "text-[#1a1a1a]" : "text-[#b8b8b8]"
+              className={`text-title2 text-center font-medium leading-[27px] ${
+                activeTab === index ? "text-text-04" : "text-text-02"
               }`}
             >
               {label}
@@ -31,7 +31,7 @@ const Tabs = ({ labels, children }: TabProps) => {
         ))}
       </nav>
       {/* Tab Content */}
-      <div className="py-4">{children[activeTab]}</div>
+      <div>{children[activeTab]}</div>
     </div>
   );
 };

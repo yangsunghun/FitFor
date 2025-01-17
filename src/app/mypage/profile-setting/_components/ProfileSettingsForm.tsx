@@ -12,7 +12,19 @@ import { useState, type ChangeEvent, type DragEvent } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
 
 const ProfileSettingsForm = () => {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
+  console.log({user});
+
+  // 1. user -> null
+  // 2. 화면 렌더링 -> user -> null -> 
+  // 3. useEffect는 화면 렌더링 이후에 실행됨 
+
+  // 방법
+  // 1. 렌더링 이후에 defaultValue를 수정할 수 있는 방법이 있는지 
+  // 2. useState를 더 만든다.  -> useEffect적용
+  // const [nickname, setNickname] = useState("");
+  // 3. ProfileSettingsForm의 부모 컴포넌트(서버컴포넌트)에서 user정보를 props로 내려준다.
+  // 4. enabled 비슷한 기능 있는지 찾아보기 
 
   // 회원정보
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -21,6 +33,7 @@ const ProfileSettingsForm = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm({
     defaultValues: {
@@ -31,6 +44,16 @@ const ProfileSettingsForm = () => {
     resolver: zodResolver(profileSettingSchema)
   });
 
+  // useEffect(() => {
+  //   if (user) {
+  //     reset({
+  //       nickname: user.nickname || "",
+  //     introduction: user.introduction || "",
+  //     gender: user.gender || "none"
+  //     })
+  //   }
+  // }, [user])
+
   // 제출 함수
   const onSubmit = async (value: FieldValues) => {
     if (!user) return;
@@ -40,6 +63,7 @@ const ProfileSettingsForm = () => {
     let profileImageUrl = user.profile_image;
 
     // 파일이 존재하는 경우에만 storage에 업로드
+    // 클라이언트로만 이미지 파일 업로드 가능
     if (imageFile) {
       const supabase = createClient();
       const fileName = `${user.id}_${Date.now()}`; // Unique file name
@@ -61,13 +85,20 @@ const ProfileSettingsForm = () => {
     }
 
     // 유저 프로필 수정 서버 액션으로 요청
-    const result = await updateUserProfile({
+    await updateUserProfile({
       userId: user.id,
       editForm: profileSettingSchema.parse(value),
       imageFileURL: profileImageUrl
     });
 
-    console.log("완료 후: ", result);
+    // zustand에 저장
+    user.profile_image = profileImageUrl;
+    user.gender = value.gender;
+    user.introduction = value.introduction;
+    user.nickname = value.nickname;
+
+    setUser(user);
+    setIsUploading(false);
   };
 
   // 이미지 업로드 (파일 선택)
@@ -179,8 +210,9 @@ const ProfileSettingsForm = () => {
       <button
         type="submit"
         className="mt-8 w-full max-w-md rounded-lg bg-black py-3 font-medium text-white transition hover:bg-gray-800"
+        disabled={isUploading}
       >
-        수정 완료
+        {isUploading ? "수정 중" : "수정 완료"}
       </button>
 
       <TextField version="desktop" variant="default" placeholder="테스트 중" />

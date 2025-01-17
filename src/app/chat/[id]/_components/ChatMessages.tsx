@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchMessages } from "@/lib/utils/chat/fetchMessages";
 import Image from "next/image";
+import sampleImage from "@/assets/images/image_sample.png";
 
 const supabase = createClient();
 
@@ -15,6 +16,12 @@ type ChatMessagesProps = {
 
 const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
   const queryClient = useQueryClient();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // 스크롤을 맨 아래로 이동시키는 함수
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  };
 
   // 메시지 쿼리
   const {
@@ -27,6 +34,13 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
     staleTime: 1000 * 60 // 1분간 캐시 유지
   });
 
+  // 메시지가 변경될 때마다 스크롤을 맨 아래로 이동
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messages]);
+
   // 실시간 구독
   useEffect(() => {
     const subscription = supabase
@@ -34,11 +48,8 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "chat_messages", filter: `room_id=eq.${roomId}` },
-        (payload) => {
-          // 새 메시지가 생기면 쿼리 무효화
-          queryClient.invalidateQueries({
-            queryKey: ["chatMessages", roomId]
-          });
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["chatMessages", roomId] });
         }
       )
       .subscribe();
@@ -52,52 +63,41 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
   if (isError) return <div>메시지를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <div className="mb-[20px] flex flex-col">
-      <div className="flex flex-col gap-[16px]">
+    <div className="scrollbar-hide mb-5 flex h-[800px] w-full flex-col overflow-y-scroll rounded-lg bg-white">
+      <div className="flex flex-col gap-6">
         {messages.map((message: any) => {
           const isSender = message.member_id === currentUserId;
 
           return (
             <div
               key={message.message_id}
-              className={`flex ${isSender ? "justify-end" : "justify-start"} items-start gap-[16px]`}
+              className={`flex ${isSender ? "justify-end" : "justify-start"} items-start gap-4`}
             >
               {/* 프로필 이미지 (수신자만 표시) */}
               {!isSender && (
-                <div className="flex h-[40px] w-[40px] items-center justify-center overflow-hidden rounded-full">
+                <figure className="relative h-10 w-10 items-center justify-center overflow-hidden rounded-full">
                   <Image
-                    className="rounded-full"
-                    src={message.chat_members?.users?.profile_image || "https://via.placeholder.com/40x40"}
-                    alt={message.chat_members?.users?.nickname || "Unknown"}
-                    width={40}
-                    height={40}
+                    className="object-cover"
+                    src={message.chat_members?.users?.profile_image || sampleImage}
+                    alt={`${message.chat_members?.users?.nickname || "익명"}의 프로필 이미지`}
+                    fill
                   />
-                </div>
+                </figure>
               )}
 
               {/* 메시지와 이미지 박스 */}
-              <div className={`flex flex-col ${isSender ? "items-end" : "items-start"} max-w-[60%] gap-[8px]`}>
+              <div className={`flex flex-col ${isSender ? "items-end" : "items-start"} max-w-[60%] gap-2`}>
                 {/* 닉네임 (수신자만 표시) */}
-                {!isSender && (
-                  <span className="text-[13px] font-medium leading-tight text-[#6e6e6e]">
-                    {message.chat_members?.users?.nickname}
-                  </span>
-                )}
+                <span className="text-caption font-medium leading-3 text-text-03">
+                  {message.chat_members?.users?.nickname}
+                </span>
 
                 {/* 메시지와 작성 시간 */}
-                <div className={`flex ${isSender ? "flex-row-reverse" : "flex-row"} items-end gap-[12px]`}>
+                <div className={`flex ${isSender ? "flex-row-reverse" : "flex-row"} items-end gap-3`}>
                   {/* 메시지 박스 */}
                   {message.content && (
-                    <div
-                      className={`break-words rounded-lg px-[16px] py-[12px] ${
-                        isSender ? "bg-green-100" : "bg-neutral-100"
-                      }`}
-                      style={{
-                        maxWidth: "800px", // 메시지 박스의 최대 너비 제한
-                        wordBreak: "break-word" // 긴 단어를 줄바꿈
-                      }}
-                    >
-                      <p className="m-0 text-[15px] font-medium leading-snug text-[#1a1a1a]">{message.content}</p>
+                    <div className="max-w-[800px] break-words break-all rounded-lg bg-bg-02 px-4 py-3">
+                      <p className="m-0 text-title2 font-medium leading-6 text-text-04">{message.content}</p>
                     </div>
                   )}
 
@@ -120,8 +120,8 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
 
                   {/* 작성 시간 */}
                   <span
-                    className={`text-[11px] font-medium leading-none text-[#6e6e6e] ${
-                      isSender ? "ml-[8px] self-end" : "mr-[8px] self-end"
+                    className={`text-small font-medium leading-none text-text-03 ${
+                      isSender ? "ml-3 self-end" : "mr-3 self-end"
                     }`}
                   >
                     {new Date(message.created_at).toLocaleTimeString("ko-KR", {
@@ -134,6 +134,8 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
             </div>
           );
         })}
+        {/* 스크롤 맨 아래로 이동하기 위한 참조 요소 */}
+        <div ref={messagesEndRef} />
       </div>
     </div>
   );

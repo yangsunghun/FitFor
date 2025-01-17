@@ -217,7 +217,7 @@ export const sendMessage = async ({
   if (file) {
     // 파일 용량 검증
     if (file.size > MAX_FILE_SIZE) {
-      throw new Error("파일 용량은 5mb를 초과할 수 없습니다..");
+      throw new Error("파일 용량은 5MB를 초과할 수 없습니다..");
     }
 
     // 파일 확장자 검증

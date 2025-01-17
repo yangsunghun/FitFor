@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { getAdminDetails } from "../../_utils/chat";
 import Image from "next/image";
 import { List } from "@phosphor-icons/react";
+import sampleImage from "@/assets/images/image_sample.png";
 
 const supabase = createClient();
 
@@ -63,35 +64,27 @@ const ChatHeader = ({ roomId }: ChatHeaderProps) => {
   if (!roomData) {
     return <div>Loading...</div>;
   }
-  
- return (
-   <header className="flex h-[96px] w-[1200px] items-center justify-between bg-white px-[102px]">
-     <div className="flex items-center gap-[12px]">
-       {/* 채팅방 썸네일 이미지 */}
-       {roomData.room_thumbnail_url && (
-         <div className="h-[40px] w-[40px] overflow-hidden rounded-full">
-           <Image
-             src={roomData.room_thumbnail_url}
-             alt="Profile"
-             width={40} // Next.js Image는 px 단위 사용
-             height={40}
-             className="h-[40px] w-[40px] rounded-full"
-           />
-         </div>
-       )}
-       {/* 채팅방 정보 */}
-       <div className="flex flex-col">
-         <div className="text-[18px] font-bold leading-[27px] text-black">{roomData.room_title}</div>
-         <div className="text-[13px] font-medium leading-tight text-black">
-           {roomData.participant_count}명이 채팅에 참여 중
-         </div>
-       </div>
-     </div>
-     {/* 채팅방 삭제 버튼 연결해야함 */}
-     <List className="h-[32px] w-[32px] text-gray-950"/>
-   </header>
- );
 
+  return (
+    <header className="flex h-[96px] w-[1200px] items-center justify-between bg-white px-[102px]">
+      <div className="flex items-center gap-3">
+        {/* 채팅방 썸네일 이미지 */}
+        <figure className="relative h-10 w-10 overflow-hidden rounded-full">
+          <Image src={roomData.room_thumbnail_url || sampleImage} alt="Thumbnail" className="object-cover" fill />
+        </figure>
+
+        {/* 채팅방 정보 */}
+        <div className="flex flex-col">
+          <div className="text-title2 font-bold leading-[27px] text-black">{roomData.room_title}</div>
+          <div className="text-caption font-medium leading-tight text-black">
+            {roomData.participant_count}명이 채팅에 참여 중
+          </div>
+        </div>
+      </div>
+      {/* 채팅방 삭제 버튼 연결해야함 */}
+      <List size={32} />
+    </header>
+  );
 };
 
 export default ChatHeader;

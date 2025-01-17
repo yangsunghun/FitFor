@@ -3,7 +3,7 @@
 import { useAuthStore } from "@/lib/store/authStore";
 import { createClient } from "@/lib/utils/supabase/client";
 import React from "react";
-import Tabs from "./_components/Tabs";
+import Tabs from "./_components/ChatTabs";
 import ChatMessages from "./_components/ChatMessages";
 import ChatInput from "./_components/ChatInput";
 import ChatGallery from "./_components/ChatGallery";
@@ -20,19 +20,17 @@ const ChatRoomPage = ({ params }: ChatRoomPageProps) => {
 
   return (
     <div className="flex h-screen w-full flex-col items-center bg-white">
-
       {/* Tabs */}
       <div className="w-full px-4">
         {currentUser ? (
           <Tabs labels={["채팅", "갤러리"]}>
             {/* 탭 1: 채팅 */}
-            <div>
+            <div className="py-20">
               <ChatMessages roomId={roomId} currentUserId={currentUser.id} />
               <ChatInput roomId={roomId} memberId={currentUser.id} />
             </div>
             {/* 탭 2: 갤러리 */}
-            <div>
-              <p className="mb-4 text-gray-600">채팅방에서 업로드한 이미지들을 표시합니다.</p>
+            <div className="py-6">
               <ChatGallery roomId={roomId} />
             </div>
           </Tabs>

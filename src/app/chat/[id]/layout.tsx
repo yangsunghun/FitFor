@@ -21,7 +21,7 @@ const ChatRoomLayout = ({ children, params }: ChatRoomLayoutProps) => {
       <ChatHeader roomId={roomId} />
 
       {/* 채팅방 콘텐츠 */}
-      <section className="mt-4 w-full max-w-[1200px]">{children}</section>
+      <section className="w-full max-w-[1200px]">{children}</section>
     </div>
   );
 };

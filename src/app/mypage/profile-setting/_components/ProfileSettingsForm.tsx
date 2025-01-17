@@ -1,5 +1,6 @@
 "use client";
 
+import { TextField } from "@/components/ui/TextField";
 import { useAuthStore } from "@/lib/store/authStore";
 import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { createClient } from "@/lib/utils/supabase/client";
@@ -7,19 +8,20 @@ import { profileSettingSchema } from "@/lib/validataions/profileSettingSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useEffect, useState, type ChangeEvent, type DragEvent } from "react";
+import { useState, type ChangeEvent, type DragEvent } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
 
 const ProfileSettingsForm = () => {
   const { user } = useAuthStore();
+
+  // 회원정보
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    reset
+    formState: { errors }
   } = useForm({
     defaultValues: {
       nickname: user?.nickname || "",
@@ -28,18 +30,6 @@ const ProfileSettingsForm = () => {
     },
     resolver: zodResolver(profileSettingSchema)
   });
-
-  // 초기 유저 데이터 불러오기
-  useEffect(() => {
-    if (user) {
-      setImagePreview(user.profile_image);
-      reset({
-        nickname: user.nickname || "",
-        introduction: user.introduction || "",
-        gender: user.gender || "none"
-      });
-    }
-  }, [user?.profile_image, user, reset]);
 
   // 제출 함수
   const onSubmit = async (value: FieldValues) => {
@@ -192,6 +182,8 @@ const ProfileSettingsForm = () => {
       >
         수정 완료
       </button>
+
+      <TextField version="desktop" variant="default" placeholder="테스트 중" />
     </form>
   );
 };

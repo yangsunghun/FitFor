@@ -7,12 +7,12 @@ const supabase = createClient();
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGES = 4; // 최대 업로드 가능한 이미지 개수
 
-type ImageUploadProps = {
+type ImageUploadSectionProps = {
   images: string[]; // 나머지 이미지 배열
   setImages: (images: string[]) => void; // 이미지 배열 업데이트 함수
 };
 
-function ImageUpload({ images, setImages }: ImageUploadProps) {
+function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
   const [imageHashes, setImageHashes] = useState<Set<string>>(new Set()); // 업로드된 이미지 해시 추적
 
   // 고유 파일 경로 생성
@@ -139,6 +139,7 @@ function ImageUpload({ images, setImages }: ImageUploadProps) {
   };
 
   return (
+    <div className="pt-10 space-y-6">
     <div className="space-y-6">
       {/* 제목 및 설명 */}
       <div className="space-y-2">
@@ -228,7 +229,8 @@ function ImageUpload({ images, setImages }: ImageUploadProps) {
           })}
       </div>
     </div>
+    </div>
   );
 }
 
-export default ImageUpload;
+export default ImageUploadSection;

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef, type InputHTMLAttributes } from "react";
 
 const textFieldVariants = cva(
-  "inline-block rounded-[8px] font-medium transition duration-300 outline-none focus:ring-2", // 공통 스타일
+  "inline-block rounded-[8px] font-medium transition duration-300 outline-none focus:ring-2 focus:ring-secondary-light", // 공통 스타일
   {
     variants: {
       variant: {
@@ -15,13 +15,13 @@ const textFieldVariants = cva(
           "bg-bg-02 text-success placeholder:text-success-light border focus:ring-status-success border-status-success"
       },
       version: {
-        sm: "text-caption h-11 p-2", // app
-        md: "text-subtitle h-14 p-4" // desktop
+        app: "text-caption h-11 p-2", // app
+        desktop: "text-subtitle h-14 p-4" // desktop
       }
     },
     defaultVariants: {
       variant: "default",
-      version: "sm"
+      version: "app"
     }
   }
 );
@@ -31,11 +31,18 @@ export type TextFieldProps = InputHTMLAttributes<HTMLInputElement> &
     type?: string;
   };
 
-const TextField = forwardRef<HTMLInputElement, TextFieldProps>(({ className, variant, version, type, ...props }, ref) => {
-  return (
-    <input type={type || "text"} ref={ref} className={cn(textFieldVariants({ variant, version }), className)} {...props} />
-  );
-});
+const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
+  ({ className, variant, version, type, ...props }, ref) => {
+    return (
+      <input
+        type={type || "text"}
+        ref={ref}
+        className={cn(textFieldVariants({ variant, version }), className)}
+        {...props}
+      />
+    );
+  }
+);
 
 TextField.displayName = "TextField";
 

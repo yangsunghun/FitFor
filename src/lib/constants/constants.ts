@@ -5,10 +5,10 @@ export const VERIFICATION_THRESHOLD = 500; // 인증 유저 조건
 // 태그 그룹 정의
 export const TAG_GROUPS = [
   { key: "gender", title: "성별", tags: ["남성", "여성", "성별무관"], max: 1 },
-  { key: "season", title: "계절 (최대 2개)", tags: ["봄", "여름", "가을", "겨울"], max: 2 },
+  { key: "season", title: "계절", tags: ["봄", "여름", "가을", "겨울"], max: 2 },
   {
     key: "style",
-    title: "스타일 태그 (최대 2개)",
+    title: "스타일",
     tags: [
       "캐주얼",
       "스트릿",
@@ -31,7 +31,7 @@ export const TAG_GROUPS = [
   },
   {
     key: "tpo",
-    title: "TPO (최대 2개)",
+    title: "TPO",
     tags: [
       "데일리",
       "데이트",

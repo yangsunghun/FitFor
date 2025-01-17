@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@/lib/hooks/auth/useUser";
 import { useAuthStore } from "@/lib/store/authStore";
 import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -12,7 +11,6 @@ import HeaderCategorys from "./HeaderCategorys";
 import SearchBar from "./SearchBar";
 
 const HeaderContent = () => {
-  useUser();
   const { user } = useAuthStore();
 
   const [isOpen, setIsOpen] = useState(false);

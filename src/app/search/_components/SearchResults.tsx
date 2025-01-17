@@ -16,7 +16,7 @@ const SearchResults = ({ Results, isPending, isError }: SearchResultsProps) => {
   return (
     <ul className="grid grid-cols-4 gap-6">
       {Results.items.map((post) => (
-        <GridPost post={post} />
+        <GridPost key={post.id} post={post} />
       ))}
     </ul>
   );

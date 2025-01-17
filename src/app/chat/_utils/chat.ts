@@ -164,7 +164,7 @@ export const exitChatRoom = async (userId: string, roomId: string) => {
 };
 
 // 채팅방 삭제하기 (방장만 가능)
-export const deleteChatRoom = async (userId: string, roomId: string) => {
+export const deleteChatRoom = async (userId: string | undefined, roomId: string) => {
   try {
     // Step 1: 방장이 맞는지 확인
     const { data: roomData, error: roomError } = await supabase
@@ -217,7 +217,7 @@ export const sendMessage = async ({
   if (file) {
     // 파일 용량 검증
     if (file.size > MAX_FILE_SIZE) {
-      throw new Error("파일 용량은 5mb를 초과할 수 없습니다..");
+      throw new Error("파일 용량은 5MB를 초과할 수 없습니다..");
     }
 
     // 파일 확장자 검증

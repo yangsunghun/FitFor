@@ -30,6 +30,7 @@ const HeaderContent = () => {
           <CaretDown size={20} />
         </Link>
       </nav>
+      
       {/* 검색창 */}
       <SearchBar />
 

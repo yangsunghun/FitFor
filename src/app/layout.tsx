@@ -27,13 +27,13 @@ export default function RootLayout({
   return (
     <html lang="ko" className="min-h-full">
       <AuthProvider>
-        <TQProviders>
-          <body className={`${pretendard.className} mx-auto w-[1200px] text-body text-text-04`}>
-            <Header />
-            <main className="pt-10">{children}</main>
-            {modal && <div>{modal}</div>}
-          </body>
-        </TQProviders>
+      <TQProviders>
+        <body className={`${pretendard.className} text-body text-text-04`}>
+          <Header />
+          <main className="mx-auto w-[1200px] pt-24">{children}</main>
+          {modal && <div>{modal}</div>}
+        </body>
+      </TQProviders>
       </AuthProvider>
     </html>
   );

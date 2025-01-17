@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@/lib/hooks/auth/useUser";
 import { useAuthStore } from "@/lib/store/authStore";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +7,6 @@ import { Button } from "../ui/Button";
 import SearchBar from "./SearchBar";
 
 const HeaderContent = () => {
-  useUser();
   const { user } = useAuthStore();
 
   return (

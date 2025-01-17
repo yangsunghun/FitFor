@@ -27,8 +27,6 @@ const ContentsSection = ({ postId }: Props) => {
 
   return (
     <>
-      {/* <p className="text-3xl mb-4 font-bold">{title}</p> */}
-
       <article className="flex justify-between">
         <ImageGallery images={images} writerSpec={body_size} />
 

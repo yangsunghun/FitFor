@@ -31,7 +31,7 @@ const SortPosts = ({ sort, handleSort }: Props) => {
 
       <div
         className={clsx(
-          "absolute right-0 top-full z-50 overflow-hidden rounded-lg bg-bg-01 shadow-md transition duration-300",
+          "absolute right-0 top-full z-20 overflow-hidden rounded-lg bg-bg-01 shadow-md transition duration-300",
           {
             "scale-100 opacity-100": isOpen,
             "scale-95 opacity-0": !isOpen

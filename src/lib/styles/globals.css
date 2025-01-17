@@ -36,6 +36,10 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  .searchbar-shadow {
+    @apply shadow-[0px_0px_1px_0px_rgba(0,0,0,0.08)] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.08)] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.12)];
+  }
 }
 
 .image-modal .swiper .swiper-pagination {
@@ -45,6 +49,7 @@
 .image-modal .swiper .swiper-pagination .swiper-pagination-bullet {
   @apply bg-bg-01 opacity-50;
 }
+
 .image-modal .swiper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
   @apply bg-primary-default opacity-100;
 }

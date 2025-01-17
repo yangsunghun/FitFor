@@ -2,7 +2,7 @@ import HeaderContent from "./HeaderContent";
 
 const Header = () => {
   return (
-    <header className="w-full border-b border-line-01 bg-white px-6 py-5">
+    <header className="fixed left-0 top-0 z-50 w-full bg-white px-6 py-3">
       <HeaderContent />
     </header>
   );

@@ -20,6 +20,7 @@ type FormState = {
   isModalOpen: boolean;
   isPurchaseModalOpen: boolean;
   productToEdit: Database["public"]["Tables"]["purchase"]["Insert"] | null;
+  selectedCategory: string | null;
 };
 
 export const useFormHandlers = () => {
@@ -34,6 +35,7 @@ export const useFormHandlers = () => {
     isModalOpen: false, // 주소 검색 모달 상태
     isPurchaseModalOpen: false, // 상품 추가 모달 상태
     productToEdit: null, // 수정할 상품 데이터
+    selectedCategory: null,
   });
 
   const router = useRouter(); // 페이지 이동 관리
@@ -156,6 +158,14 @@ export const useFormHandlers = () => {
       const selectedGroupTags = prevState.tags.filter((t) =>
         groupTags.includes(t)
       );
+  
+      // 전체 태그 수 제한 (최대 7개)
+      if (!selectedGroupTags.includes(tag) && prevState.tags.length >= 7) {
+        alert("최대 7개의 태그만 선택 가능합니다.");
+        return prevState;
+      }
+  
+      // 그룹별 태그 선택/해제
       if (selectedGroupTags.includes(tag)) {
         return {
           ...prevState,
@@ -164,7 +174,7 @@ export const useFormHandlers = () => {
       } else if (selectedGroupTags.length < max) {
         return { ...prevState, tags: [...prevState.tags, tag] };
       } else {
-        alert(`최대 ${max}개의 태그만 선택 가능합니다.`);
+        alert(`해당 주제는 최대 ${max}개의 태그만 선택 가능합니다.`);
         return prevState;
       }
     });

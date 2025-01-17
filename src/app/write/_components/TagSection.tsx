@@ -5,23 +5,16 @@ type TagSectionProps = {
   selectedCategory: string | null;
   onChangeCategory: (category: string) => void;
   toggleTagSelector: (tag: string, allTags: string[], max: number) => void;
-}
+};
 
-const TagSection = ({
-  tags,
-  selectedCategory,
-  onChangeCategory,
-  toggleTagSelector,
-}: TagSectionProps) => {
+const TagSection = ({ tags, selectedCategory, onChangeCategory, toggleTagSelector }: TagSectionProps) => {
   const selectedGroup = TAG_GROUPS.find((group) => group.key === selectedCategory);
 
   return (
     <div className="space-y-2 pt-10">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <span className="text-title2 font-bold text-text-04">
-            게시물 주제를 선택해주세요.
-          </span>
+          <span className="text-title2 font-bold text-text-04">게시물 주제를 선택해주세요.</span>
           <span className="text-title2 font-bold text-primary-default">*</span>
         </div>
         <span className="text-sm text-body text-text-04">{tags.length} / 7</span>
@@ -33,9 +26,7 @@ const TagSection = ({
           <button
             key={group.key}
             onClick={() => onChangeCategory(group.key)}
-            className={`px-4 py-2 rounded-lg ${
-              selectedCategory === group.key ? 'bg-gray-300' : 'bg-gray-100'
-            }`}
+            className={`rounded-lg px-4 py-2 ${selectedCategory === group.key ? "bg-gray-300" : "bg-gray-100"}`}
           >
             {group.title}
           </button>
@@ -45,17 +36,13 @@ const TagSection = ({
       {/* 선택된 카테고리의 태그 */}
       {selectedGroup && (
         <div className="space-y-2">
-          <p className="font-bold pt-10">태그</p>
+          <p className="pt-10 font-bold">태그</p>
           <div className="flex flex-wrap gap-2">
             {selectedGroup.tags.map((tag) => (
               <button
                 key={tag}
-                onClick={() =>
-                  toggleTagSelector(tag, selectedGroup.tags, selectedGroup.max)
-                }
-                className={`px-3 py-1 rounded-lg ${
-                  tags.includes(tag) ? 'bg-gray-300' : 'bg-gray-100'
-                }`}
+                onClick={() => toggleTagSelector(tag, selectedGroup.tags, selectedGroup.max)}
+                className={`rounded-lg px-3 py-1 ${tags.includes(tag) ? "bg-gray-300" : "bg-gray-100"}`}
               >
                 {tag}
               </button>

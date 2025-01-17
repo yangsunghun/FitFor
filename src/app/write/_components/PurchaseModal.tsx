@@ -34,7 +34,7 @@ const PurchaseModal = ({
     description: "",
     buy_link: "",
     image_url: "",
-    post_id: "", // post_id 추가
+    post_id: "" // post_id 추가
   });
 
   const { title, description, buy_link, image_url, post_id } = formState;
@@ -47,7 +47,7 @@ const PurchaseModal = ({
         description: productToEdit.description || "",
         buy_link: productToEdit.buy_link || "",
         image_url: productToEdit.image_url || "",
-        post_id: productToEdit.post_id || "",
+        post_id: productToEdit.post_id || ""
       });
     } else {
       // 추가 모드에서 초기 상태로 리셋
@@ -56,19 +56,17 @@ const PurchaseModal = ({
         description: "",
         buy_link: "",
         image_url: "",
-        post_id: "", // 기본값으로 설정
+        post_id: "" // 기본값으로 설정
       });
     }
   }, [productToEdit]);
 
   // 입력 필드 값 변경 처리
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
-      [name]: value, // 모든 입력 값을 문자열로 처리
+      [name]: value // 모든 입력 값을 문자열로 처리
     }));
   };
 
@@ -84,19 +82,15 @@ const PurchaseModal = ({
     const filePath = `purchase/${timestamp}.${extension}`;
 
     // Supabase 스토리지에 이미지 업로드
-    const { error } = await supabase.storage
-      .from("post-images")
-      .upload(filePath, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+    const { error } = await supabase.storage.from("post-images").upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: false
+    });
 
     if (error) throw new Error(`이미지 업로드 실패: ${error.message}`);
 
     // 업로드된 이미지의 공개 URL 반환
-    const { publicUrl } = supabase.storage
-      .from("post-images")
-      .getPublicUrl(filePath).data;
+    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
 
     if (!publicUrl) throw new Error("이미지 URL 생성 실패");
 
@@ -129,7 +123,7 @@ const PurchaseModal = ({
       description: "",
       buy_link: "",
       image_url: "",
-      post_id: "",
+      post_id: ""
     });
   };
 
@@ -170,19 +164,17 @@ const PurchaseModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">
-          {mode === "add" ? "상품 추가" : "상품 수정"}
-        </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+        <h2 className="text-xl mb-4 font-bold">{mode === "add" ? "상품 추가" : "상품 수정"}</h2>
 
         {/* 이미지 업로드 */}
         <div
-          className="w-32 h-32 border border-gray-300 rounded-lg overflow-hidden bg-gray-100 cursor-pointer"
+          className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border border-gray-300 bg-gray-100"
           onClick={handleImageUpload}
         >
           {image_url ? (
-            <div className="relative w-full h-full">
+            <div className="relative h-full w-full">
               <Image
                 src={image_url}
                 alt="Uploaded"
@@ -191,62 +183,59 @@ const PurchaseModal = ({
               />
             </div>
           ) : (
-            <span className="text-gray-400 flex items-center justify-center h-full">
-              + 추가
-            </span>
+            <span className="flex h-full items-center justify-center text-gray-400">+ 추가</span>
           )}
         </div>
 
-
         {/* 상품명 */}
         <div className="mb-4">
-          <label className="block font-bold mb-2">상품명</label>
+          <label className="mb-2 block font-bold">상품명</label>
           <input
             type="text"
             name="title"
             value={title}
             onChange={handleInputChange}
             placeholder="상품명을 입력해주세요."
-            className="w-full p-2 border rounded-md"
+            className="w-full rounded-md border p-2"
           />
         </div>
 
         {/* 설명 */}
         <div className="mb-4">
-          <label className="block font-bold mb-2">설명</label>
+          <label className="mb-2 block font-bold">설명</label>
           <textarea
             name="description"
             value={description}
             onChange={handleInputChange}
             placeholder="상품의 설명을 작성해주세요."
-            className="w-full p-2 border rounded-md resize-none"
+            className="w-full resize-none rounded-md border p-2"
             rows={2}
           ></textarea>
         </div>
 
         {/* 링크 */}
         <div className="mb-4">
-          <label className="block font-bold mb-2">상품 링크</label>
+          <label className="mb-2 block font-bold">상품 링크</label>
           <input
             type="url"
             name="buy_link"
             value={formState.buy_link || ""}
             onChange={handleInputChange}
             placeholder="상품 구매 링크를 입력해주세요."
-            className="w-full p-2 border rounded-md"
+            className="w-full rounded-md border p-2"
           />
         </div>
 
         {/* 버튼 */}
         <div className="flex justify-end gap-4">
           <button
-            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+            className="rounded-md bg-gray-300 px-4 py-2 hover:bg-gray-400"
             onClick={handleClose} // 폼 초기화 및 모달 닫기
           >
             취소
           </button>
           <button
-            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
+            className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800"
             onClick={handleSubmit} // 데이터 저장 및 모달 닫기
           >
             {mode === "add" ? "추가 완료" : "수정 완료"}

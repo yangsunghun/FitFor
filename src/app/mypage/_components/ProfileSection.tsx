@@ -18,14 +18,13 @@ const ProfileSection = () => {
 
   return (
     <div className="my-20 flex h-40 w-[40.5rem] flex-row items-center">
-      <div className="relative h-40 w-40">
+      <div className="over-flow-hidden relative h-40 w-40">
         {/* 프로필 이미지 */}
         <Image
           className="bg-transparant rounded-full object-cover"
           src={user.profile_image || "/images/default-user-profile"}
           alt={`${user.nickname} profile image`}
-          width={160}
-          height={160}
+          fill
           priority
         />
         {/* 인증 배지 */}

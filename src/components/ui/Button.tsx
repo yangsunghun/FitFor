@@ -1,4 +1,4 @@
- import { cn } from "@/lib/utils/common/className";
+import { cn } from "@/lib/utils/common/className";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
 import React from "react";

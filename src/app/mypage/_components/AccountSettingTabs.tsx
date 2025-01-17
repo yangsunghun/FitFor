@@ -1,4 +1,5 @@
 import { CaretRight } from "@phosphor-icons/react";
+import SignoutButton from "./SignoutButton";
 
 const menuItems = [
   {
@@ -32,6 +33,7 @@ const AccountSettingTabs = () => {
           <CaretRight size={24} />
         </button>
       ))}
+      <SignoutButton />
     </div>
   );
 };

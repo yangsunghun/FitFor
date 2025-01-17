@@ -1,4 +1,5 @@
 import Header from "@/components/layout/Header";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import TQProviders from "@/components/providers/TQProvider";
 import "@/lib/styles/globals.css";
 import type { Metadata } from "next";
@@ -25,6 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="min-h-full">
+      <AuthProvider>
       <TQProviders>
         <body className={`${pretendard.className} text-body text-text-04`}>
           <Header />
@@ -32,6 +34,7 @@ export default function RootLayout({
           {modal && <div>{modal}</div>}
         </body>
       </TQProviders>
+      </AuthProvider>
     </html>
   );
 }

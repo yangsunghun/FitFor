@@ -7,6 +7,7 @@ type AuthState = {
   user: UserType | null;
   isLoggedIn: boolean;
   setUser: (user: AuthState["user"]) => void;
+  removeUser: () => void;
 };
 
 export const useAuthStore = create(
@@ -14,7 +15,8 @@ export const useAuthStore = create(
     (set) => ({
       user: null,
       isLoggedIn: false,
-      setUser: (user) => set(() => ({ user, isLoggedIn: true }))
+      setUser: (user) => set({ user, isLoggedIn: true }),
+      removeUser: () => set({ user: null, isLoggedIn: false })
     }),
     { name: "auth-store" }
   )

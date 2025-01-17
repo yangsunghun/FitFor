@@ -1,4 +1,5 @@
 import Header from "@/components/layout/Header";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import TQProviders from "@/components/providers/TQProvider";
 import "@/lib/styles/globals.css";
 import type { Metadata } from "next";
@@ -25,13 +26,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="min-h-full">
-      <TQProviders>
-        <body className={`${pretendard.className} mx-auto w-[1200px] text-body text-text-04`}>
-          <Header />
-          <main className="pt-10">{children}</main>
-          {modal && <div>{modal}</div>}
-        </body>
-      </TQProviders>
+      <AuthProvider>
+        <TQProviders>
+          <body className={`${pretendard.className} mx-auto w-[1200px] text-body text-text-04`}>
+            <Header />
+            <main className="pt-10">{children}</main>
+            {modal && <div>{modal}</div>}
+          </body>
+        </TQProviders>
+      </AuthProvider>
     </html>
   );
 }

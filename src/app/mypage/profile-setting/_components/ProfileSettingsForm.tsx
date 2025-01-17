@@ -12,6 +12,9 @@ import { useForm, type FieldValues } from "react-hook-form";
 
 const ProfileSettingsForm = () => {
   const { user } = useAuthStore();
+
+  // 회원정보
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -38,6 +41,8 @@ const ProfileSettingsForm = () => {
         introduction: user.introduction || "",
         gender: user.gender || "none"
       });
+
+      console.log("user =>", user);
     }
   }, [user?.profile_image, user, reset]);
 

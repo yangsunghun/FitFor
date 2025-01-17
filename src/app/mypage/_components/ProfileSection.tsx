@@ -1,14 +1,16 @@
 "use client";
 
-import { useAuthStore } from "@/lib/store/authStore";
+import { Button } from "@/components/ui/Button";
+import { useUserProfile } from "@/lib/hooks/mypage/useUserProfile";
 import Image from "next/image";
 import Link from "next/link";
 import VerifiedBadge from "./VerifiedBadge";
 
 const ProfileSection = () => {
-  const user = useAuthStore((state) => state.user);
+  const { user, isPending, isError } = useUserProfile();
 
-  if (user === null) {
+  // 스켈레톤으로 대체 필요
+  if (isPending) {
     return (
       <div className="mt-5 text-center">
         <p className="text-gray-500">로딩 중...</p>
@@ -16,33 +18,38 @@ const ProfileSection = () => {
     );
   }
 
-  return (
-    <div className="my-20 flex h-40 w-[40.5rem] flex-row items-center">
-      <div className="relative h-40 w-40">
-        {/* 프로필 이미지 */}
-        <Image
-          className="bg-transparant rounded-full object-cover"
-          src={user.profile_image || "/images/default-user-profile"}
-          alt={`${user.nickname} profile image`}
-          width={160}
-          height={160}
-          priority
-        />
-        {/* 인증 배지 */}
-        <VerifiedBadge isVerified={user.is_verified} />
-      </div>
+  if (isError) {
+    <div className="mt-5 text-center">
+      <p className="text-gray-500">오류 발생</p>
+    </div>;
+  }
 
-      {/* 유저 정보 설명 */}
-      <div className="ml-[150px] flex h-full max-w-96 flex-col justify-between">
-        <p className="text-title1 font-bold">{user!.nickname}</p>
-        <p className="flex flex-col text-body">{user!.introduction || "아직 한 줄 소개가 없습니다."}</p>
-        <Link
-          href="/mypage/profile-setting"
-          className="max-w-[100px] rounded-2xl bg-black px-3 py-2 text-center text-body text-white"
-        >
-          프로필 편집
-        </Link>
-      </div>
+  console.log(user)
+
+  return (
+    <div className="mb-20 mt-10 flex h-40 w-[40.5rem] flex-row items-center">
+      {!isPending && (
+        <>
+          <div className="over-flow-hidden relative h-40 w-40">
+            <Image
+              className="bg-transparant rounded-full object-cover"
+              src={user!.profile_image || "/images/default-user-profile"}
+              alt={`${user!.nickname} profile image`}
+              fill
+              priority
+            />
+            <VerifiedBadge isVerified={user!.is_verified} />
+          </div>
+          <div className="relative ml-20 flex h-full w-full max-w-96 flex-col">
+            <p className="mb-2 text-title1 font-bold">{user!.nickname}</p>
+            <p className="flex flex-col text-body">{user!.introduction || "아직 한 줄 소개가 없습니다."}</p>
+
+            <Button asChild variant="secondary" size="sm" className="absolute bottom-0 left-0">
+              <Link href="/mypage/profile-setting">프로필 편집</Link>
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import kakaoLogo from "@/assets/images/kakao-logo.svg";
 import { Database } from "./supabase";
 import type { HTMLInputTypeAttribute } from "react";
 
-export type User = Database["public"]["Tables"]["users"]["Row"];
+export type UserType = Database["public"]["Tables"]["users"]["Row"];
 
 export type Provider = "google" | "kakao";
 

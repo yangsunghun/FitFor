@@ -1,7 +1,7 @@
 "use client";
 import { login } from "@/lib/utils/auth/auth";
-import { LOGIN_FIELDS } from "@/lib/validataions/authFields";
-import { loginSchema } from "@/lib/validataions/authSchema";
+import { LOGIN_FIELDS } from "@/lib/validations/authFields";
+import { loginSchema } from "@/lib/validations/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { FieldValues, useForm } from "react-hook-form";

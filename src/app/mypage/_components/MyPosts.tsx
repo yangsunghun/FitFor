@@ -21,7 +21,7 @@ const MyPosts = () => {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage]);
 
-  if (isPending) return <p>로딩 중...</p>;
+  if (isPending) return <p>Loading</p>;
   if (isError) return <p>내 게시물 불러오기 에러...</p>;
 
   return (

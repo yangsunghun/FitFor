@@ -1,30 +1,18 @@
 "use client";
 
-import { TextField } from "@/components/ui/TextField";
+import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/lib/store/authStore";
 import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { createClient } from "@/lib/utils/supabase/client";
-import { profileSettingSchema } from "@/lib/validataions/profileSettingSchema";
+import { profileSettingSchema } from "@/lib/validations/profileSettingSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "@phosphor-icons/react";
+import { Camera, Plus } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useState, type ChangeEvent, type DragEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type DragEvent } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
 
 const ProfileSettingsForm = () => {
   const { user, setUser } = useAuthStore();
-  console.log({user});
-
-  // 1. user -> null
-  // 2. 화면 렌더링 -> user -> null -> 
-  // 3. useEffect는 화면 렌더링 이후에 실행됨 
-
-  // 방법
-  // 1. 렌더링 이후에 defaultValue를 수정할 수 있는 방법이 있는지 
-  // 2. useState를 더 만든다.  -> useEffect적용
-  // const [nickname, setNickname] = useState("");
-  // 3. ProfileSettingsForm의 부모 컴포넌트(서버컴포넌트)에서 user정보를 props로 내려준다.
-  // 4. enabled 비슷한 기능 있는지 찾아보기 
 
   // 회원정보
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -44,15 +32,16 @@ const ProfileSettingsForm = () => {
     resolver: zodResolver(profileSettingSchema)
   });
 
-  // useEffect(() => {
-  //   if (user) {
-  //     reset({
-  //       nickname: user.nickname || "",
-  //     introduction: user.introduction || "",
-  //     gender: user.gender || "none"
-  //     })
-  //   }
-  // }, [user])
+  useEffect(() => {
+    if (user) {
+      reset({
+        nickname: user.nickname,
+        introduction: user.introduction,
+        gender: user.gender || "none"
+      });
+      setImagePreview(user.profile_image);
+    }
+  }, [user]);
 
   // 제출 함수
   const onSubmit = async (value: FieldValues) => {
@@ -80,7 +69,6 @@ const ProfileSettingsForm = () => {
 
       // 업로드 된 이미지의 URL 정보 받아오기
       const { data: publicUrlData } = supabase.storage.from("profile-images").getPublicUrl(`images/${fileName}`);
-
       profileImageUrl = publicUrlData?.publicUrl || null;
     }
 
@@ -125,10 +113,10 @@ const ProfileSettingsForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto flex w-2/4 flex-col items-center space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto mt-10 flex w-2/4 flex-col items-center space-y-6">
       {/* 프로필 이미지 업로드 부분*/}
       <div
-        className="group relative mb-8 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-gray-300"
+        className="relative mb-8 flex h-[12.5rem] w-[12.5rem] items-center justify-center rounded-full bg-gray-300"
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleImageDrop}
       >
@@ -139,17 +127,25 @@ const ProfileSettingsForm = () => {
           <Plus size={48} />
         )}
 
-        {/* 호버 마스크 */}
-        <div className="absolute inset-0 hidden items-center justify-center bg-black/50 group-hover:flex">
-          <Plus size={48} className="text-white" />
-        </div>
+        {/* 카메라 버튼 */}
+        <Button
+          variant="disabledLine"
+          size="sm"
+          asChild
+          className="absolute bottom-0 left-1/2 flex -translate-x-1/2 transform cursor-pointer items-center rounded-lg bg-white px-4 py-2 font-medium text-black"
+        >
+          <label htmlFor="fileInput">
+            <Camera className="text-body text-black" /> <span className="text-body">수정</span>
+          </label>
+        </Button>
 
         {/* 파일 선택 부분 */}
         <input
           type="file"
+          id="fileInput"
           accept="image/*"
           onChange={handleImageUpload}
-          className="absolute inset-0 z-10 cursor-pointer opacity-0"
+          className="absolute bottom-0 z-10 cursor-pointer opacity-0"
         />
       </div>
 
@@ -214,8 +210,6 @@ const ProfileSettingsForm = () => {
       >
         {isUploading ? "수정 중" : "수정 완료"}
       </button>
-
-      <TextField version="desktop" variant="default" placeholder="테스트 중" />
     </form>
   );
 };

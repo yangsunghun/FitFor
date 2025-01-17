@@ -21,7 +21,6 @@ export default function ChatRoomListPage() {
     const { data, error } = await supabase.from("chat_rooms").select(`
       room_id,
       room_title,
-      room_subtitle,
       room_thumbnail_url
     `);
 

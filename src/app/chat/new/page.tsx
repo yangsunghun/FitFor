@@ -1,3 +1,125 @@
+// 'use client'
+
+// import React, { useState } from "react";
+// import { useForm, Controller } from "react-hook-form";
+
+// const ChatRoomCreationForm = () => {
+//   const {
+//     register,
+//     handleSubmit,
+//     control,
+//     formState: { errors }
+//   } = useForm();
+//   const [thumbnail, setThumbnail] = useState(null);
+//   const topics = ["성별", "계절", "스타일", "TPO"];
+
+//   const onSubmit = (data) => {
+//     console.log("Form Data:", data);
+//   };
+
+//   const handleThumbnailChange = (e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       setThumbnail(URL.createObjectURL(file));
+//     }
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg rounded-lg border p-4 shadow-lg">
+//       {/* Live 이름 입력 */}
+//       <div className="mb-4">
+//         <label htmlFor="liveName" className="text-sm block font-medium text-gray-700">
+//           Live 이름 <span className="text-red-500">*</span>
+//         </label>
+//         <input
+//           type="text"
+//           id="liveName"
+//           placeholder="예시 - 소개팅 가야하는데 도와주세요"
+//           className={`mt-1 w-full rounded-md border p-2 focus:outline-none focus:ring-2 focus:ring-black ${
+//             errors.liveName ? "border-red-500" : ""
+//           }`}
+//           {...register("liveName", { required: "Live 이름을 입력해주세요." })}
+//         />
+//         {errors.liveName && <p className="text-sm mt-1 text-red-500">{errors.liveName.message}</p>}
+//       </div>
+
+//       {/* 주제 선택 */}
+//       <div className="mb-4">
+//         <label className="text-sm block font-medium text-gray-700">
+//           Live 주제를 선택해주세요. <span className="text-red-500">*</span>
+//         </label>
+//         <Controller
+//           name="topics"
+//           control={control}
+//           defaultValue={[]}
+//           rules={{
+//             validate: (value) => value.length > 0 || "최소 하나의 주제를 선택해주세요."
+//           }}
+//           render={({ field: { onChange, value } }) => (
+//             <div className="mt-2 flex flex-wrap gap-2">
+//               {topics.map((topic) => (
+//                 <button
+//                   type="button"
+//                   key={topic}
+//                   onClick={() => onChange(value.includes(topic) ? value.filter((t) => t !== topic) : [...value, topic])}
+//                   className={`rounded-full border px-4 py-2 ${
+//                     value.includes(topic) ? "bg-black text-white" : "bg-white text-black"
+//                   } hover:bg-black hover:text-white`}
+//                 >
+//                   {topic}
+//                 </button>
+//               ))}
+//             </div>
+//           )}
+//         />
+//         {errors.topics && <p className="text-sm mt-1 text-red-500">{errors.topics.message}</p>}
+//       </div>
+
+//       {/* 썸네일 업로드 */}
+//       <div className="mb-4">
+//         <label className="text-sm block font-medium text-gray-700">
+//           썸네일 이미지 <span className="text-red-500">*</span>
+//         </label>
+//         <div className="mt-2 flex items-center">
+//           <div className="flex h-32 w-48 items-center justify-center overflow-hidden rounded-md border bg-gray-100">
+//             {thumbnail ? (
+//               <img src={thumbnail} alt="썸네일" className="h-full w-full object-cover" />
+//             ) : (
+//               <span className="text-gray-400">이미지 미리보기</span>
+//             )}
+//           </div>
+//           <label htmlFor="thumbnailUpload" className="ml-4 cursor-pointer rounded-md bg-black px-4 py-2 text-white">
+//             이미지 업로드
+//           </label>
+//           <input
+//             type="file"
+//             id="thumbnailUpload"
+//             accept="image/*"
+//             className="hidden"
+//             {...register("thumbnail", {
+//               required: "썸네일 이미지를 업로드해주세요.",
+//               onChange: handleThumbnailChange
+//             })}
+//           />
+//         </div>
+//         {errors.thumbnail && <p className="text-sm mt-1 text-red-500">{errors.thumbnail.message}</p>}
+//         <p className="text-sm mt-1 text-gray-500">
+//           추천 사이즈 : 190x250
+//           <br />
+//           JPG, PNG. 최대 10MB
+//         </p>
+//       </div>
+
+//       {/* 제출 버튼 */}
+//       <button type="submit" className="w-full rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800">
+//         생성하기
+//       </button>
+//     </form>
+//   );
+// };
+
+// export default ChatRoomCreationForm;
+
 "use client";
 
 import React from "react";

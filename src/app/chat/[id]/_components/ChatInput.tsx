@@ -4,6 +4,8 @@ import { useState } from "react";
 import { sendMessage } from "../../_utils/chat";
 import { useMutation } from "@tanstack/react-query";
 import { Image } from "@phosphor-icons/react";
+import { useAuthStore } from "@/lib/store/authStore";
+import { Button } from "@/components/ui/Button";
 
 interface ChatInputProps {
   roomId: string;
@@ -13,6 +15,8 @@ interface ChatInputProps {
 const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
+
+  const currentUser = useAuthStore((state) => state.user);
 
   // useMutation 설정
   const mutation = useMutation({
@@ -55,7 +59,7 @@ const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="OOO(으)로 메시지 작성"
+          placeholder={`${currentUser?.nickname}(으)로 메시지 작성`}
         />
       </div>
 
@@ -69,16 +73,15 @@ const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
             className="hidden"
             onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
           />
-          <Image alt="사진 전송하기" width={28} height={28} className="text-gray-600"/>
+          <Image alt="사진 전송하기" size={28} className="text-gray-600" />
         </label>
 
         {/* 전송 버튼 */}
-        <button
+        <Button variant="disabled"
           onClick={handleSendMessage}
-          className="rounded-lg border border-neutral-100 bg-neutral-100 px-4 py-2 text-[15px] font-medium text-gray-300"
         >
           보내기
-        </button>
+        </Button>
       </div>
     </footer>
   );

@@ -4,17 +4,16 @@ import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/lib/store/authStore";
 import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { createClient } from "@/lib/utils/supabase/client";
-import { profileSettingSchema } from "@/lib/validations/profileSettingSchema";
+import { PROFILE_EDIT_FIELD, profileSettingSchema } from "@/lib/validations/profileSettingSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Camera, Plus } from "@phosphor-icons/react";
-import Image from "next/image";
-import { useEffect, useState, type ChangeEvent, type DragEvent } from "react";
+import { useEffect, useState } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
+import GenderSelection from "./GenderSelection";
+import ProfileEditTextField from "./ProfileEditTextField";
+import ProfileImageUploadSection from "./ProfileImageUploadSection";
 
 const ProfileSettingsForm = () => {
   const { user, setUser } = useAuthStore();
-
-  // 회원정보
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -24,14 +23,16 @@ const ProfileSettingsForm = () => {
     reset,
     formState: { errors }
   } = useForm({
+    mode: "onChange",
     defaultValues: {
       nickname: user?.nickname || "",
       introduction: user?.introduction || "",
-      gender: user?.gender || "none"
+      gender: user?.gender || ""
     },
     resolver: zodResolver(profileSettingSchema)
   });
 
+  // 유저 정보 반영
   useEffect(() => {
     if (user) {
       reset({
@@ -55,9 +56,9 @@ const ProfileSettingsForm = () => {
     // 클라이언트로만 이미지 파일 업로드 가능
     if (imageFile) {
       const supabase = createClient();
-      const fileName = `${user.id}_${Date.now()}`; // Unique file name
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("profile-images") // Your bucket name
+      const fileName = `${user.id}_${Date.now()}`;
+      const { error: uploadError } = await supabase.storage
+        .from("profile-images")
         .upload(`images/${fileName}`, imageFile, {
           cacheControl: "3600",
           upsert: true
@@ -73,143 +74,55 @@ const ProfileSettingsForm = () => {
     }
 
     // 유저 프로필 수정 서버 액션으로 요청
-    await updateUserProfile({
-      userId: user.id,
-      editForm: profileSettingSchema.parse(value),
-      imageFileURL: profileImageUrl
-    });
+    // 데이터에 변경이 있는 경우만
+    if (
+      value.nickname !== user.nickname ||
+      value.introduction !== user.introduction ||
+      value.gender !== user.gender ||
+      imageFile
+    ) {
+      await updateUserProfile({
+        userId: user.id,
+        editForm: profileSettingSchema.parse(value),
+        imageFileURL: profileImageUrl
+      });
 
-    // zustand에 저장
-    user.profile_image = profileImageUrl;
-    user.gender = value.gender;
-    user.introduction = value.introduction;
-    user.nickname = value.nickname;
+      // zustand에 저장
+      user.profile_image = profileImageUrl;
+      user.gender = value.gender;
+      user.introduction = value.introduction;
+      user.nickname = value.nickname;
 
-    setUser(user);
+      setUser(user);
+      alert("변경된 회원 정보가 저장되었습니다.");
+    }
+
     setIsUploading(false);
   };
 
-  // 이미지 업로드 (파일 선택)
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // 이미지 드롭 다운
-  const handleImageDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto mt-10 flex w-2/4 flex-col items-center space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto mt-10 flex w-2/4 flex-col items-center">
       {/* 프로필 이미지 업로드 부분*/}
-      <div
-        className="relative mb-8 flex h-[12.5rem] w-[12.5rem] items-center justify-center rounded-full bg-gray-300"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={handleImageDrop}
-      >
-        {/* 이미지 preview */}
-        {imagePreview ? (
-          <Image src={imagePreview} alt="Preview" fill className="h-full w-full rounded-full object-cover" />
-        ) : (
-          <Plus size={48} />
-        )}
+      <ProfileImageUploadSection
+        setImageFile={setImageFile}
+        setImagePreview={setImagePreview}
+        imagePreview={imagePreview}
+      />
 
-        {/* 카메라 버튼 */}
-        <Button
-          variant="disabledLine"
-          size="sm"
-          asChild
-          className="absolute bottom-0 left-1/2 flex -translate-x-1/2 transform cursor-pointer items-center rounded-lg bg-white px-4 py-2 font-medium text-black"
-        >
-          <label htmlFor="fileInput">
-            <Camera className="text-body text-black" /> <span className="text-body">수정</span>
-          </label>
-        </Button>
-
-        {/* 파일 선택 부분 */}
-        <input
-          type="file"
-          id="fileInput"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="absolute bottom-0 z-10 cursor-pointer opacity-0"
-        />
-      </div>
-
-      {/* 닉네임 */}
-      <div className="w-full max-w-md">
-        <label htmlFor="nickname" className="text-sm block font-medium text-gray-700">
-          닉네임
-        </label>
-        <input
-          id="nickname"
-          type="text"
-          placeholder="Placeholder"
-          {...register("nickname")}
-          className={`mt-1 w-full rounded-md border px-4 py-2 shadow-sm focus:border-black focus:ring-black ${
-            errors.nickname ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.nickname && <p className="text-sm mt-1 text-red-500">{errors.nickname.message}</p>}
-      </div>
-
-      {/* 한 줄 소개 */}
-      <div className="w-full max-w-md">
-        <label htmlFor="oneLineIntro" className="text-sm block font-medium text-gray-700">
-          한 줄 소개
-        </label>
-        <input
-          id="oneLineIntro"
-          type="text"
-          placeholder="Placeholder"
-          {...register("introduction")}
-          className={`mt-1 w-full rounded-md border px-4 py-2 shadow-sm focus:border-black focus:ring-black ${
-            errors.introduction ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.introduction && <p className="text-sm mt-1 text-red-500">{errors.introduction.message}</p>}
+      {/* 텍스트 입력 부분 */}
+      <div className="mt-[3.875rem] flex w-[30rem] flex-col gap-10">
+        {PROFILE_EDIT_FIELD.map((field) => (
+          <ProfileEditTextField key={field.id} {...field} register={register} error={errors[field.id]?.message} />
+        ))}
       </div>
 
       {/* 성별 선택 */}
-      <div className="w-full max-w-md">
-        <label className="text-sm mb-2 block font-medium text-gray-700">성별</label>
-        <div className="flex justify-between">
-          {["male", "female", "none"].map((gender) => (
-            <label key={gender} className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value={gender}
-                {...register("gender")}
-                className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black accent-white peer-checked:bg-black peer-checked:text-white"
-              />
-              <span>{gender === "male" ? "남성" : gender === "female" ? "여성" : "선택하지 않음"}</span>
-            </label>
-          ))}
-        </div>
-        {errors.gender && <p className="text-sm mt-1 text-red-500">{errors.gender.message}</p>}
-      </div>
+      <GenderSelection register={register} error={errors.gender?.message} />
 
       {/* 제출 */}
-      <button
-        type="submit"
-        className="mt-8 w-full max-w-md rounded-lg bg-black py-3 font-medium text-white transition hover:bg-gray-800"
-        disabled={isUploading}
-      >
-        {isUploading ? "수정 중" : "수정 완료"}
-      </button>
+      <Button variant="primary" size="lg" type="submit" disabled={isUploading} className={`mt-20 w-[30rem]`}>
+        {isUploading ? "저장 중..." : "저장하기"}
+      </Button>
     </form>
   );
 };

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { UploadSimple } from "@phosphor-icons/react";
 
-interface ProductSectionProps {
+type ProductSectionProps = {
   purchases: { image_url?: string; title?: string }[];
   onAdd: () => void;
   onEdit: (index: number) => void;

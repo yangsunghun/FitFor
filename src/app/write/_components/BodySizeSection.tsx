@@ -1,5 +1,5 @@
-interface BodySizeSectionProps {
-    bodySize: number[]; // `number[]`를 기대하도록 변경
+type BodySizeSectionProps = {
+    bodySize: number[];
     onChange: (index: number, value: string) => void;
   }
   

@@ -39,13 +39,10 @@ const WritePage = () => {
         onChange={(value) => handleChange('content', value)}
       />
 
-      {/* 이미지 업로드 섹션 */}
-
         <ImageUploadSection
           images={formState.images}
           setImages={(images) => handleChange('images', images)}
         />
-
 
       <LocationSection
         address={formState.address}

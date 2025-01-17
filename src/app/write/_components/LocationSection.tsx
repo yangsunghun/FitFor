@@ -1,7 +1,7 @@
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/Button';
 
-interface LocationSectionProps {
+type LocationSectionProps = {
   address: string;
   onOpenModal: () => void;
 }

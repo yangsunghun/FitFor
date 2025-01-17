@@ -1,4 +1,4 @@
-interface ContentSectionProps {
+type ContentSectionProps = {
     content: string;
     onChange: (value: string) => void;
   }

@@ -1,6 +1,6 @@
 import { TAG_GROUPS } from "@/lib/constants/constants";
 
-interface TagSectionProps {
+type TagSectionProps = {
   tags: string[];
   selectedCategory: string | null;
   onChangeCategory: (category: string) => void;

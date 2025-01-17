@@ -8,9 +8,7 @@ import LayoutToggle from "./LayoutToggle";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
 
-type ListLenderProps = {};
-
-const ListLender = ({}: ListLenderProps) => {
+const ListLender = () => {
   const { isMasonry, toggleLayout } = useLayoutStore();
 
   const { posts, fetchNextPage, hasNextPage, isPending, isFetchingNextPage, isError } = usePosts();

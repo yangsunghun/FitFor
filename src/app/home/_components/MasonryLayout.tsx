@@ -10,13 +10,11 @@ type MasonryLayoutProps = {
 
 const MasonryLayout = ({ posts }: MasonryLayoutProps) => {
   return (
-    <>
-      <Masonry columns={{ 1200: 4, 768: 3, 480: 2 }} gap={24} className="flex">
-        {posts.map((post) => (
-          <Cardpost key={post.id} post={post} isMasonry={true} />
-        ))}
-      </Masonry>
-    </>
+    <Masonry columns={{ 1200: 4, 768: 3, 480: 2 }} gap={24} className="flex">
+      {posts.map((post) => (
+        <Cardpost key={post.id} post={post} isMasonry={true} />
+      ))}
+    </Masonry>
   );
 };
 

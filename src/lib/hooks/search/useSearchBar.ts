@@ -1,5 +1,6 @@
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
+import { extractUnicode } from "@/lib/utils/common/extractUnicode";
 import { useEffect, useState } from "react";
 
 export const useSearchBar = () => {
@@ -19,13 +20,19 @@ export const useSearchBar = () => {
     }
   }, []);
 
-  // 입력값 변경 처리
+  // 입력값 변경 처리 연관검색 풍성해보이도록 초성 일치할 시 출력
   const handleInputChange = (value: string) => {
     setInputValue(value);
 
-    // 입력값을 기준으로 태그 필터링
     if (value.trim() !== "") {
-      const filtered = allTags.filter((tag) => tag.toLowerCase().includes(value.toLowerCase()));
+      const chosungInput = extractUnicode(value); // 입력값의 초성 추출
+      const filtered = allTags.filter((tag) => {
+        const tagChosung = extractUnicode(tag); // 태그의 초성 추출
+        return (
+          tag.toLowerCase().includes(value.toLowerCase()) || // 일반 검색
+          tagChosung.includes(chosungInput) // 초성 검색
+        );
+      });
       setFilteredTags(filtered);
     } else {
       setFilteredTags([]);

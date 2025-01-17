@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/lib/store/authStore";
 import Image from "next/image";
 import Link from "next/link";
+import ProfileSkeleton from "./ProfileSkeleton";
 import VerifiedBadge from "./VerifiedBadge";
 
 const ProfileSection = () => {
   const { user } = useAuthStore();
 
   // user null일때 skeleton 필요함
-  return (
+  return user ? (
     <div className="mb-20 mt-10 flex h-40 w-[40.5rem] flex-row items-center">
       <div className="over-flow-hidden relative h-40 w-40">
         <Image
@@ -31,6 +32,8 @@ const ProfileSection = () => {
         </Button>
       </div>
     </div>
+  ) : (
+    <ProfileSkeleton />
   );
 };
 

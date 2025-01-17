@@ -7,7 +7,6 @@ const PrivatePage = () => {
     <div className="h-screen mx-auto max-w-[62.25rem] justify-items-center">
       <ProfileSection />
       <MypageMenu />
-      <SignoutButton />
     </div>
   );
 };

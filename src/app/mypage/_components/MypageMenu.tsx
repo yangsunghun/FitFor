@@ -13,15 +13,15 @@ const MypageMenu = () => {
   // value={`tab-${activeTab}`} onValueChange={(value) => handleTabChange(value.replace('tab-', ''))}
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
+    <div className="container mx-auto max-w-7xl">
       {/* 탭 네비게이션 */}
-      <Tabs defaultValue="tab-0" className="w-full">
-        <TabsList className="h-auto w-full justify-start rounded-none border-t bg-transparent p-0">
+      <Tabs defaultValue="tab-0" className="w-full h-14">
+        <TabsList className="h-full w-full justify-start rounded-none border-t bg-transparent p-0">
           {menuTabs.map((tab, index) => (
             <TabsTrigger
               key={`tab-${index}`}
               value={`tab-${index}`}
-              className="w-1/4 rounded-none border-t-2 border-transparent px-6 py-2 text-title2 data-[state=active]:border-black data-[state=active]:shadow-none"
+              className="w-1/4 h-full rounded-none border-t-2 border-transparent px-2 py-2 text-title2 data-[state=active]:border-black data-[state=active]:shadow-none"
             >
               {tab}
             </TabsTrigger>

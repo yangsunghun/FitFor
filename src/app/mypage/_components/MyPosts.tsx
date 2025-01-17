@@ -34,7 +34,7 @@ const MyPosts = () => {
       )}
       {/* 작성한 게시물 무한 스크롤 */}
       {userPosts?.pages.map((page, i) => (
-        <div className="mt-8 grid grid-cols-4 gap-6" key={`${page}_${i}`}>
+        <div className="mt-10 grid grid-cols-4 gap-6" key={`${page}_${i}`}>
           {page.items.map((post) => (
             <Cardpost key={post.id} post={post} isMasonry={false} />
           ))}

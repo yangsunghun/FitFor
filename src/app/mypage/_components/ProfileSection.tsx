@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/lib/store/authStore";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,7 +18,7 @@ const ProfileSection = () => {
   }
 
   return (
-    <div className="my-20 flex h-40 w-[40.5rem] flex-row items-center">
+    <div className="mb-20 mt-10 flex h-40 w-[40.5rem] flex-row items-center">
       <div className="over-flow-hidden relative h-40 w-40">
         {/* 프로필 이미지 */}
         <Image
@@ -32,15 +33,13 @@ const ProfileSection = () => {
       </div>
 
       {/* 유저 정보 설명 */}
-      <div className="ml-[150px] flex h-full max-w-96 flex-col justify-between">
-        <p className="text-title1 font-bold">{user!.nickname}</p>
+      <div className="ml-20 flex flex-col h-full w-full max-w-96 relative">
+        <p className="text-title1 font-bold mb-2">{user!.nickname}</p>
         <p className="flex flex-col text-body">{user!.introduction || "아직 한 줄 소개가 없습니다."}</p>
-        <Link
-          href="/mypage/profile-setting"
-          className="max-w-[100px] rounded-2xl bg-black px-3 py-2 text-center text-body text-white"
-        >
-          프로필 편집
-        </Link>
+
+        <Button asChild variant="secondary" size="sm" className="absolute bottom-0 left-0">
+          <Link href="/mypage/profile-setting">프로필 편집</Link>
+        </Button>
       </div>
     </div>
   );

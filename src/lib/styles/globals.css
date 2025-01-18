@@ -46,12 +46,16 @@
   @apply bottom-20;
 }
 
-.image-modal .swiper .swiper-pagination .swiper-pagination-bullet {
+.swiper .swiper-pagination .swiper-pagination-bullet {
   @apply bg-bg-01 opacity-50;
 }
 
+.swiper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+  @apply opacity-100;
+}
+
 .image-modal .swiper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
-  @apply bg-primary-default opacity-100;
+  @apply bg-primary-default;
 }
 
 /* input type=search x button 제거 */

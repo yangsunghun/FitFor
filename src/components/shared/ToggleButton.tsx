@@ -15,7 +15,7 @@ const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, btnS
     <span>
       <button onClick={onClick} className={btnStyle}>
         {isActive ? activeIcon : inactiveIcon}
-        <span className="text-text-04">
+        <span>
           {typeof count === "number" && count}
           {text && "북마크"}
         </span>

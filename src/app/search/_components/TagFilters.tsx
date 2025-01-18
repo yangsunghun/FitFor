@@ -1,5 +1,4 @@
 "use client";
-
 import { Tags } from "@/components/ui/Tags";
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";

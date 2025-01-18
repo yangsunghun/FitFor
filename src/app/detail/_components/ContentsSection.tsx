@@ -51,8 +51,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             <p className="text-text-03">{relativeTimeDay(created_at)}</p>
           </div>
 
-          {/* 엄정은이 추가하라고 해서 추가한 줄바꿈.. 기능추가 ^-^)b */}
-          <p className="mt-6 h-[8.5rem] overflow-auto text-title2 font-medium whitespace-pre-wrap">{content}</p>
+          <p className="mt-6 h-[8.5rem] overflow-auto text-title2 font-medium">{content}</p>
 
           {tags.length > 0 && (
             <div className="mt-10 flex flex-wrap gap-2">

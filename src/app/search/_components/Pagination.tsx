@@ -16,7 +16,7 @@ const Pagination = ({ Results }: PaginationProps) => {
     const params = new URLSearchParams();
     params.set("query", query);
     params.set("page", String(newPage));
-    params.set("category", encodeTagsForUrl(tags)); // 추가 인코딩 제거
+    params.set("category", encodeTagsForUrl(tags));
     params.set("sort", sort);
 
     router.push(`/search?${params.toString()}`);

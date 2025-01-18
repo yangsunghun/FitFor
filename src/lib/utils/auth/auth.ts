@@ -68,11 +68,12 @@ export const insertUserToPublic = async ({
     // 로그인 했던 유저라면
     // 새로 추가 X
     if (existingUser) {
-      return null;
+      console.log("기존 유저 확인");
+      redirect("/home");
     }
 
     // 처음 로그인한 유저는 public.users에 추가
-    const { data, error: insertError } = await supabase.from("users").insert({
+    const { error: insertError } = await supabase.from("users").insert({
       email,
       id,
       nickname,
@@ -85,9 +86,10 @@ export const insertUserToPublic = async ({
       throw insertError;
     }
 
-    return data;
+    console.log("신규 유저 확인");
+    // redirect("/home/@modal/onboard");
   } catch (error) {
-    console.error("insertUserToPublic error:", error);
+    console.error("[insertUserToPublic error]", error);
     throw error;
   }
 };

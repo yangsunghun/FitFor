@@ -24,7 +24,7 @@ const useActiveTab = (defaultTab: string = "0") => {
     if (tab) {
       setActiveTab(tab);
     }
-  });
+  }, [searchParams]);
 
   return { activeTab, handleTabChange };
 };

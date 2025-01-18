@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
+import TagSection from "../../components/shared/TagSection";
 import AddressModal from "./_components/AddressModal";
 import BodySizeSection from "./_components/BodySizeSection";
 import ContentSection from "./_components/ContentSection";
@@ -8,7 +9,6 @@ import ImageUploadSection from "./_components/ImageUploadSection";
 import LocationSection from "./_components/LocationSection";
 import ProductSection from "./_components/ProductSection";
 import PurchaseModal from "./_components/PurchaseModal";
-import TagSection from "../../components/shared/TagSection";
 
 const WritePage = () => {
   const {
@@ -19,11 +19,14 @@ const WritePage = () => {
     handleDeletePurchase,
     handleBodySizeChange,
     handleSubmit,
-    toggleTagSelector
+    toggleTagSelector,
+    handleChangeCategory,
+    tags,
+    selectedCategory
   } = useFormHandlers();
 
   return (
-    <div className="mx-auto max-w-[700px] pt-10 pb-20">
+    <div className="mx-auto max-w-[700px] pb-20 pt-10">
       {/* 어쩔수 없이 pb로 설정.. */}
       <div className="space-y-2 pb-10">
         <h1 className="text-title1 font-bold leading-[150%] text-text-04">게시물 작성하기</h1>
@@ -65,9 +68,9 @@ const WritePage = () => {
 
         <TagSection
           title="게시물 주제를 선택해주세요."
-          tags={formState.tags}
-          selectedCategory={formState.selectedCategory}
-          onChangeCategory={(category) => handleChange("selectedCategory", category)}
+          tags={tags}
+          selectedCategory={selectedCategory}
+          onChangeCategory={handleChangeCategory}
           toggleTagSelector={toggleTagSelector}
         />
       </div>

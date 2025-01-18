@@ -20,7 +20,6 @@ type FormState = {
   isModalOpen: boolean;
   isPurchaseModalOpen: boolean;
   productToEdit: Database["public"]["Tables"]["purchase"]["Insert"] | null;
-  selectedCategory: string | null;
   thumbnail_blur_url: string | null;
 };
 
@@ -36,12 +35,43 @@ export const useFormHandlers = () => {
     isModalOpen: false, // 주소 검색 모달 상태
     isPurchaseModalOpen: false, // 상품 추가 모달 상태
     productToEdit: null, // 수정할 상품 데이터
-    selectedCategory: null,
     thumbnail_blur_url: null
   });
 
+  type PostWithPurchases = Database["public"]["Tables"]["posts"]["Row"] & {
+    purchases: Database["public"]["Tables"]["purchase"]["Row"][];
+  };
+  
+  const setInitialFormState = async (data: PostWithPurchases) => {
+    try {
+      setFormState({
+        address: data.upload_place || "",
+        content: data.content || "",
+        body_size: data.body_size || [],
+        images: data.images || [],
+        tags: data.tags || [],
+        purchases: data.purchases || [], // purchases 포함
+        isModalOpen: false,
+        isPurchaseModalOpen: false,
+        productToEdit: null,
+        thumbnail_blur_url: data.thumbnail_blur_url || null,
+      });
+    } catch (error) {
+      console.error("Error initializing form state:", error);
+    }
+  };
+
   const router = useRouter(); // 페이지 이동 관리
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
+    // 태그 섹션 관련 상태
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [tags, setTags] = useState<string[]>([]);
+  
+    // 카테고리 변경 핸들러
+    const handleChangeCategory = (category: string) => {
+      setSelectedCategory(category);
+      setTags([]); // 카테고리 변경 시 태그 초기화
+    };
 
   // 폼 상태 변경 핸들러
   const handleChange = <T extends keyof FormState>(key: T, value: FormState[T]) => {
@@ -180,6 +210,10 @@ export const useFormHandlers = () => {
     handleDeletePurchase,
     handleBodySizeChange,
     handleSubmit,
-    toggleTagSelector
+    toggleTagSelector,
+    handleChangeCategory,
+    tags,
+    selectedCategory,
+    setInitialFormState
   };
 };

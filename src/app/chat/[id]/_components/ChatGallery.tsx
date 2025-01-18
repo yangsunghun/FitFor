@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from "react";
+import ImageModal from "@/components/shared/ImageModal";
 import { createClient } from "@/lib/utils/supabase/client";
-import ChatImageModal from "./ChatImageModal"; // 모달 컴포넌트 가져오기
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const supabase = createClient();
 
@@ -15,7 +15,7 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
   const [images, setImages] = useState<string[]>([]); // 이미지 URL 목록
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // 클릭된 이미지 URL
+  const [selectedImage, setSelectedImage] = useState(images[0]); // 클릭된 이미지 URL
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
   };
 
   const closeModal = () => {
-    setSelectedImage(null);
+    setSelectedImage(images[0]);
     setIsModalOpen(false);
   };
 
@@ -91,7 +91,8 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
       </div>
 
       {/* ChatImageModal 컴포넌트 사용 */}
-      <ChatImageModal isOpen={isModalOpen} onClose={closeModal} imageSrc={selectedImage} />
+
+      <ImageModal isOpen={isModalOpen} images={images} selectedImage={selectedImage} onClose={closeModal} />
     </div>
   );
 };

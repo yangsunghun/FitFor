@@ -10,10 +10,16 @@ type PaginationProps = {
 
 const Pagination = ({ Results }: PaginationProps) => {
   const router = useRouter();
-  const { query, page } = useSearchQuery();
+  const { query, page, tags, sort, encodeTagsForUrl } = useSearchQuery();
 
   const handlePageChange = (newPage: number) => {
-    router.push(`?query=${encodeURIComponent(query)}&page=${newPage}`);
+    const params = new URLSearchParams();
+    params.set("query", query);
+    params.set("page", String(newPage));
+    params.set("category", encodeTagsForUrl(tags)); // 추가 인코딩 제거
+    params.set("sort", sort);
+
+    router.push(`/search?${params.toString()}`);
   };
 
   if (!Results || Results.total === 0) return null;

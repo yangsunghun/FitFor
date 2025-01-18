@@ -1,8 +1,6 @@
-// useEditPostQuery와 useUpdatePostMutation 훅 구현
-
-import { useQuery, useMutation, UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
-import { createClient } from "@/lib/utils/supabase/client";
 import type { Database } from "@/lib/types/supabase";
+import { createClient } from "@/lib/utils/supabase/client";
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 const supabase = createClient();
 
@@ -22,38 +20,34 @@ export const useEditPostQuery = (
   >({
     queryKey: ["post", id],
     queryFn: async () => {
-      const { data: postData, error: postError } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("id", id)
-        .single();
-    
+      const { data: postData, error: postError } = await supabase.from("posts").select("*").eq("id", id).single();
+
       console.log("Fetched postData:", postData); // 디버깅 로그 추가
-    
+
       if (postError) {
         console.error("Post fetch error:", postError);
         throw postError;
       }
-    
+
       const { data: purchaseData, error: purchaseError } = await supabase
         .from("purchase")
         .select("*")
         .eq("post_id", id);
-    
+
       console.log("Fetched purchaseData:", purchaseData); // 디버깅 로그 추가
-    
+
       if (purchaseError) {
         console.error("Purchase fetch error:", purchaseError);
         throw purchaseError;
       }
-    
+
       return {
         post: postData,
-        purchases: purchaseData || [],
+        purchases: purchaseData || []
       };
     },
     staleTime: 60000, // 1분 동안 캐싱
-    onSuccess, // 옵션 객체의 일부로 포함
+    onSuccess // 옵션 객체의 일부로 포함
   } as UseQueryOptions<
     {
       post: Database["public"]["Tables"]["posts"]["Row"];
@@ -84,22 +78,16 @@ export const useUpdatePostMutation = (
       upload_place: address,
       body_size,
       images,
-      tags,
+      tags
     };
 
     // 게시글 업데이트
-    const { error: postError } = await supabase
-      .from("posts")
-      .update(updatedPost)
-      .eq("id", id);
+    const { error: postError } = await supabase.from("posts").update(updatedPost).eq("id", id);
 
     if (postError) throw postError;
 
     // 기존 구매 데이터 삭제
-    const { error: deleteError } = await supabase
-      .from("purchase")
-      .delete()
-      .eq("post_id", id);
+    const { error: deleteError } = await supabase.from("purchase").delete().eq("post_id", id);
 
     if (deleteError) throw deleteError;
 
@@ -107,12 +95,10 @@ export const useUpdatePostMutation = (
     if (purchases.length > 0) {
       const purchaseData = purchases.map((purchase) => ({
         ...purchase,
-        post_id: id,
+        post_id: id
       }));
 
-      const { error: purchaseError } = await supabase
-        .from("purchase")
-        .insert(purchaseData);
+      const { error: purchaseError } = await supabase.from("purchase").insert(purchaseData);
 
       if (purchaseError) throw purchaseError;
     }
@@ -120,6 +106,6 @@ export const useUpdatePostMutation = (
 
   return useMutation<void, Error, void>({
     mutationFn, // 분리된 mutationFn 전달
-    ...options, // 추가 옵션 전달
+    ...options // 추가 옵션 전달
   });
 };

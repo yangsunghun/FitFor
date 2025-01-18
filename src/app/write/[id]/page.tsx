@@ -1,8 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import { useEditPostQuery, useUpdatePostMutation } from "@/lib/hooks/write/usePostQueries";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import TagSection from "../../../components/shared/TagSection";
 import AddressModal from "../_components/AddressModal";
 import BodySizeSection from "../_components/BodySizeSection";
 import ContentSection from "../_components/ContentSection";
@@ -10,9 +13,6 @@ import ImageUploadSection from "../_components/ImageUploadSection";
 import LocationSection from "../_components/LocationSection";
 import ProductSection from "../_components/ProductSection";
 import PurchaseModal from "../_components/PurchaseModal";
-import TagSection from "../../../components/shared/TagSection";
-import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import { useRef, useEffect } from "react";
 
 type EditPageProps = {
   params: {
@@ -34,7 +34,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
     toggleTagSelector,
     handleChangeCategory,
     selectedCategory,
-    setInitialFormState = () => {},
+    setInitialFormState = () => {}
   } = useFormHandlers();
 
   const { data: fetchedData, isPending, isError } = useEditPostQuery(id);
@@ -47,7 +47,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
       // 데이터가 있고, 아직 폼 초기화가 되지 않은 경우에만 실행
       setInitialFormState({
         ...fetchedData.post,
-        purchases: fetchedData.purchases,
+        purchases: fetchedData.purchases
       });
       isFormInitialized.current = true; // 초기화 플래그 설정
     }
@@ -62,7 +62,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
     onError: (error) => {
       console.error("게시물 수정 실패:", error);
       alert("수정 실패");
-    },
+    }
   });
   // 수정 완료 버튼 핸들러
   const handleUpdate = () => {
@@ -73,7 +73,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
   if (isError) return <p>게시물을 불러오는 데 문제가 발생했습니다.</p>;
 
   return (
-    <div className="mx-auto max-w-[700px] pt-10 pb-20">
+    <div className="mx-auto max-w-[700px] pb-20 pt-10">
       <div className="space-y-2 pb-10">
         <h1 className="text-title1 font-bold leading-[150%] text-text-04">게시물 수정하기</h1>
       </div>
@@ -88,15 +88,9 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
         />
 
-        <LocationSection
-          address={formState.address}
-          onOpenModal={() => handleChange("isModalOpen", true)}
-        />
+        <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />
 
-        <BodySizeSection
-          bodySize={formState.body_size}
-          onChange={handleBodySizeChange}
-        />
+        <BodySizeSection bodySize={formState.body_size} onChange={handleBodySizeChange} />
 
         <ProductSection
           purchases={formState.purchases}

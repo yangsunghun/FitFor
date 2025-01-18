@@ -41,7 +41,7 @@ export const useFormHandlers = () => {
   type PostWithPurchases = Database["public"]["Tables"]["posts"]["Row"] & {
     purchases: Database["public"]["Tables"]["purchase"]["Row"][];
   };
-  
+
   const setInitialFormState = async (data: PostWithPurchases) => {
     try {
       setFormState({
@@ -54,7 +54,7 @@ export const useFormHandlers = () => {
         isModalOpen: false,
         isPurchaseModalOpen: false,
         productToEdit: null,
-        thumbnail_blur_url: data.thumbnail_blur_url || null,
+        thumbnail_blur_url: data.thumbnail_blur_url || null
       });
     } catch (error) {
       console.error("Error initializing form state:", error);
@@ -63,15 +63,15 @@ export const useFormHandlers = () => {
 
   const router = useRouter(); // 페이지 이동 관리
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
-    // 태그 섹션 관련 상태
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [tags, setTags] = useState<string[]>([]);
-  
-    // 카테고리 변경 핸들러
-    const handleChangeCategory = (category: string) => {
-      setSelectedCategory(category);
-      setTags([]); // 카테고리 변경 시 태그 초기화
-    };
+  // 태그 섹션 관련 상태
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
+
+  // 카테고리 변경 핸들러
+  const handleChangeCategory = (category: string) => {
+    setSelectedCategory(category);
+    setTags([]); // 카테고리 변경 시 태그 초기화
+  };
 
   // 폼 상태 변경 핸들러
   const handleChange = <T extends keyof FormState>(key: T, value: FormState[T]) => {

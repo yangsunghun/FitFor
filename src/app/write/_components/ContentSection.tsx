@@ -17,7 +17,7 @@ const ContentSection = ({ content, onChange }: ContentSectionProps) => (
         e.target.style.height = `${e.target.scrollHeight}px`;
       }}
       rows={6}
-      className="h-38 w-full resize-none rounded-lg bg-bg-02 p-4 text-body font-medium placeholder-text-02"
+      className="h-38 w-full resize-none rounded-lg bg-bg-02 p-4 text-body font-medium placeholder-text-02 focus:outline-none"
       placeholder="예시 - 소개팅 가야하는데 도와주세요"
     />
   </div>

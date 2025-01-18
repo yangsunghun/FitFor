@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/utils/supabase/client";
-import { Image as ImageIcon } from "@phosphor-icons/react";
+import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -180,7 +180,9 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
               return (
                 <div
                   key={index}
-                  className="relative flex h-36 w-36 items-center justify-center overflow-hidden rounded-lg border border-line-02"
+                  className={`relative flex h-36 w-36 items-center justify-center overflow-hidden rounded-lg ${
+                    index === 0 ? "border-2 border-primary-default" : "border border-line-02"
+                  }`}
                 >
                   {/* 업로드된 이미지 */}
                   {url && (
@@ -192,11 +194,11 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
                       {/* 삭제 버튼 */}
                       <button
                         onClick={() => handleDelete(index)}
-                        className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white"
+                        className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
                       >
-                        X
+                      <Trash size={16} />
                       </button>
-                      {/* 대표로 설정 버튼 */}
+                      {/* 썸네일로 설정 버튼 */}
                       {index !== 0 && (
                         <button
                           className="rounded-lg bg-gray-200 px-2 py-1 text-black"
@@ -208,6 +210,13 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
                           썸네일로 등록
                         </button>
                       )}
+                    </div>
+                  )}
+                  {/* 첫 번째 이미지에 썸네일 표시 */}
+                  {index === 0 && (
+                    <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded bg-primary-default px-2 py-1 text-white">
+                      <Check size={8} weight="bold" />
+                      <span className="text-caption font-medium">썸네일</span>
                     </div>
                   )}
                 </div>

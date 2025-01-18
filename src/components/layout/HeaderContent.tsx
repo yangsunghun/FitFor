@@ -15,6 +15,7 @@ const HeaderContent = () => {
   const pathname = usePathname();
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
@@ -26,6 +27,7 @@ const HeaderContent = () => {
 
   useEffect(() => {
     setIsOpen(false);
+    setIsLoading(false);
   }, [pathname]);
 
   return (
@@ -58,8 +60,16 @@ const HeaderContent = () => {
           <SearchBar />
 
           <div className="absolute right-0">
-            {user ? (
-              <Button asChild variant="disabledLine" className="text-body font-medium flex flex-row infline-flex gap-2 py-3 leading-[1.5rem]">
+            {isLoading ? (
+              <Button variant="whiteLine" size="md" className="py-3 text-body font-medium">
+                <div className="h-full w-[96px] animate-pulse rounded bg-gray-200"></div>
+              </Button>
+            ) : user ? (
+              <Button
+                asChild
+                variant="whiteLine"
+                className="infline-flex flex flex-row gap-2 py-3 text-body font-medium leading-[1.5rem]"
+              >
                 <Link href="/mypage">
                   <Image
                     src={user.profile_image as string}
@@ -69,11 +79,11 @@ const HeaderContent = () => {
                     priority
                     className="rounded-full"
                   />
-                  <span className="text-text-04">{user.nickname}</span>
+                  <span>{user.nickname}</span>
                 </Link>
               </Button>
             ) : (
-              <Button asChild variant="whiteLine" size="md">
+              <Button asChild variant="whiteLine" size="md" className="text-body font-medium">
                 <Link href="/login">로그인/회원가입</Link>
               </Button>
             )}

@@ -7,13 +7,15 @@ import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { Export } from "@phosphor-icons/react";
 import Image from "next/image";
+import ImageCarousel from "./ImageCarousel";
 import ImageGallery from "./ImageGallery";
 
 type Props = {
   postId: string;
+  mode?: "page" | "modal";
 };
 
-const ContentsSection = ({ postId }: Props) => {
+const ContentsSection = ({ postId, mode }: Props) => {
   const { post, isPending, isError } = usePostDetail(postId);
 
   if (isPending) return <div>스켈레톤 ui 추가해야겠지?</div>;
@@ -28,8 +30,8 @@ const ContentsSection = ({ postId }: Props) => {
   return (
     <>
       <article className="flex justify-between">
-        <ImageGallery images={images} writerSpec={body_size} />
-
+        {mode === "page" ? <ImageGallery images={images} writerSpec={body_size} /> : <ImageCarousel images={images} />}
+        {/*  */}
         <div className="relative w-[46%]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -69,6 +71,7 @@ const ContentsSection = ({ postId }: Props) => {
             </button>
           </div>
         </div>
+        {/*  */}
       </article>
     </>
   );

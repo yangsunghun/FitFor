@@ -279,6 +279,7 @@ export type Database = {
           is_saved: boolean
           likes: number
           tags: string[]
+          thumbnail_blur_url: string | null
           upload_place: string | null
           user_id: string
           view: number
@@ -293,6 +294,7 @@ export type Database = {
           is_saved?: boolean
           likes: number
           tags: string[]
+          thumbnail_blur_url?: string | null
           upload_place?: string | null
           user_id: string
           view: number
@@ -307,6 +309,7 @@ export type Database = {
           is_saved?: boolean
           likes?: number
           tags?: string[]
+          thumbnail_blur_url?: string | null
           upload_place?: string | null
           user_id?: string
           view?: number

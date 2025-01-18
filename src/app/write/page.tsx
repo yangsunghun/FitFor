@@ -33,7 +33,14 @@ const WritePage = () => {
       <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
         <ContentSection content={formState.content} onChange={(value) => handleChange("content", value)} />
 
-        <ImageUploadSection images={formState.images} setImages={(images) => handleChange("images", images)} />
+        {/* 이미지 업로드 섹션 */}
+
+        <ImageUploadSection
+          images={formState.images}
+          blur={formState.thumbnail_blur_url}
+          setImages={(images) => handleChange("images", images)}
+          setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
+        />
 
         <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />
 

@@ -33,7 +33,6 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
     handleBodySizeChange,
     toggleTagSelector,
     handleChangeCategory,
-    tags,
     selectedCategory,
     setInitialFormState = () => {},
   } = useFormHandlers();
@@ -118,7 +117,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
 
         <TagSection
           title="게시물 주제를 선택해주세요."
-          tags={tags}
+          tags={formState.tags}
           selectedCategory={selectedCategory}
           onChangeCategory={handleChangeCategory}
           toggleTagSelector={toggleTagSelector}

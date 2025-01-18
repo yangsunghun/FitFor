@@ -212,7 +212,6 @@ export const useFormHandlers = () => {
     handleSubmit,
     toggleTagSelector,
     handleChangeCategory,
-    tags,
     selectedCategory,
     setInitialFormState
   };

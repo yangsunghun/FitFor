@@ -21,7 +21,6 @@ const WritePage = () => {
     handleSubmit,
     toggleTagSelector,
     handleChangeCategory,
-    tags,
     selectedCategory
   } = useFormHandlers();
 
@@ -68,7 +67,7 @@ const WritePage = () => {
 
         <TagSection
           title="게시물 주제를 선택해주세요."
-          tags={tags}
+          tags={formState.tags}
           selectedCategory={selectedCategory}
           onChangeCategory={handleChangeCategory}
           toggleTagSelector={toggleTagSelector}

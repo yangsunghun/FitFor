@@ -29,8 +29,8 @@ export const useSearchQuery = () => {
 
   // JSON을 URL-safe한 배열 표현으로 변환하는 헬퍼 함수
   const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => {
-    const flatTags = Object.values(tags).flat();
-    return `%5B${flatTags.map((tag) => `"${tag}"`).join(",")}%5D`;
+    // JSON.stringify로 직렬화된 값을 반환 (추가 인코딩 제거)
+    return JSON.stringify(tags);
   };
 
   // 검색 실행
@@ -70,8 +70,8 @@ export const useSearchQuery = () => {
 
     // URL 동기화
     router.push(
-      `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeURIComponent(
-        JSON.stringify(updatedTags)
+      `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
+        updatedTags
       )}&sort=${encodeURIComponent(sort)}`
     );
   };
@@ -97,6 +97,7 @@ export const useSearchQuery = () => {
     sort,
     handleSearch,
     handleToggleTag,
-    handleSort
+    handleSort,
+    encodeTagsForUrl
   };
 };

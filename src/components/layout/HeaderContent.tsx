@@ -5,18 +5,28 @@ import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
 import HeaderCategorys from "./HeaderCategorys";
 import SearchBar from "./SearchBar";
 
 const HeaderContent = () => {
+  const pathname = usePathname();
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <>
@@ -80,11 +90,17 @@ const HeaderContent = () => {
           }
         )}
       >
-        <HeaderCategorys />
+        <HeaderCategorys handleClose={handleClose} />
       </div>
       {isOpen && (
         <div
-          className="z-1 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+          className={clsx(
+            "z-1 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 backdrop-blur-sm transition duration-300",
+            {
+              "opacity-100": isOpen,
+              "opacity-0": !isOpen
+            }
+          )}
           onClick={() => {
             setIsOpen(false);
           }}

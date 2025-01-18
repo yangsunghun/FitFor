@@ -5,7 +5,7 @@ interface TabProps {
   children: React.ReactNode[];
 }
 
-const Tabs = ({ labels, children }: TabProps) => {
+const ChatTabs = ({ labels, children }: TabProps) => {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
@@ -36,4 +36,4 @@ const Tabs = ({ labels, children }: TabProps) => {
   );
 };
 
-export default Tabs;
+export default ChatTabs;

@@ -7,11 +7,8 @@ export const createChatRoom = async (
   userId: string,
   roomDetails: {
     title: string;
-    subtitle: string;
-    description: string;
-    category: string;
-    hashtags: string[];
     thumbnailUrl: string;
+    tags: string[];
   }
 ) => {
   try {
@@ -21,11 +18,8 @@ export const createChatRoom = async (
       .insert({
         user_id: userId,
         room_title: roomDetails.title,
-        room_subtitle: roomDetails.subtitle,
-        room_description: roomDetails.description,
-        room_category: roomDetails.category,
-        room_hashtags: roomDetails.hashtags,
         room_thumbnail_url: roomDetails.thumbnailUrl,
+        room_tags: roomDetails.tags,
         isActive: true
       })
       .select()
@@ -182,10 +176,7 @@ export const deleteChatRoom = async (userId: string | undefined, roomId: string)
     }
 
     // Step 2: 채팅방 삭제
-    const { error: deleteError } = await supabase
-      .from("chat_rooms")
-      .delete()
-      .eq("room_id", roomId);
+    const { error: deleteError } = await supabase.from("chat_rooms").delete().eq("room_id", roomId);
 
     if (deleteError) {
       throw deleteError;
@@ -253,7 +244,6 @@ export const sendMessage = async ({
     throw new Error(error.message);
   }
 };
-
 
 // 채팅방 일반 멤버로 등록하기(기존)
 // export const enterAsMember = async (userId: string, roomId: string) => {

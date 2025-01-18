@@ -60,16 +60,17 @@ const HeaderContent = () => {
           <SearchBar />
 
           <div className="absolute right-0">
-            {isLoading ? (
-              <Button variant="whiteLine" size="md" className="py-3 text-body font-medium">
-                <div className="h-full w-[96px] animate-pulse rounded bg-gray-200"></div>
-              </Button>
-            ) : user ? (
-              <Button
-                asChild
-                variant="whiteLine"
-                className="infline-flex flex flex-row gap-2 py-3 text-body font-medium leading-[1.5rem]"
-              >
+            <Button
+              asChild
+              variant="whiteLine"
+              size="md"
+              className="infline-flex flex flex-row gap-2 py-3 text-body font-medium leading-[1.5rem]"
+            >
+              {isLoading ? (
+                <div>
+                  <div className="h-full w-[96px] animate-pulse rounded bg-gray-200" />
+                </div>
+              ) : user ? (
                 <Link href="/mypage">
                   <Image
                     src={user.profile_image as string}
@@ -81,12 +82,10 @@ const HeaderContent = () => {
                   />
                   <span>{user.nickname}</span>
                 </Link>
-              </Button>
-            ) : (
-              <Button asChild variant="whiteLine" size="md" className="text-body font-medium">
+              ) : (
                 <Link href="/login">로그인/회원가입</Link>
-              </Button>
-            )}
+              )}
+            </Button>
           </div>
         </div>
       </div>

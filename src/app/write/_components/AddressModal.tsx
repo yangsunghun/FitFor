@@ -1,4 +1,4 @@
-import ModalItem from "@/components/ui/Modal";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { getAddressFromCoordinates, getCurrentPosition } from "../_utils/location";
 
@@ -96,88 +96,79 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
   if (!isOpen) return null;
 
   return (
-    <ModalItem isOpen={isOpen} onClose={onClose} mode="default">
-      <h2 className="text-xl mb-4 font-bold">주소 검색</h2>
+    <div className="z-100 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+        <h2 className="text-xl mb-4 font-bold">주소 검색</h2>
 
-      {/* 검색 입력 필드 */}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-3 flex items-center">
-          {/* 돋보기 아이콘 */}
-          <svg
-            className="h-5 w-5 text-gray-400"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-        </div>
-        <input
-          type="text"
-          name="searchTerm" // 상태와 연결된 name 속성
-          value={state.searchTerm}
-          onChange={handleInputChange}
-          placeholder="주소 입력 (예: 서초동)"
-          className="w-full rounded-md border p-3 pl-10 focus:ring-2 focus:ring-black"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault(); // 기본 Enter 동작 방지
-              handleSearch(); // 검색 함수 실행
-            }
-          }}
-        />
-      </div>
-
-      {/* 검색 버튼 */}
-      <button
-        onClick={handleSearch}
-        className="mt-2 w-full rounded-md bg-black p-3 text-white"
-        disabled={state.loading}
-      >
-        {state.loading ? "검색 중..." : "검색"}
-      </button>
-
-      {/* 검색 결과 목록 */}
-      <ul className="mt-4 max-h-60 overflow-y-auto rounded-md border">
-        {state.searchResults.map((result, index) => (
-          <li
-            key={index}
-            className="cursor-pointer border-b p-3 text-gray-700 hover:bg-gray-100"
-            onClick={() => {
-              if (result !== "검색 결과가 없습니다." && result !== "검색 중 오류가 발생했습니다.") {
-                onSelectAddress(result); // 선택된 주소 전달
-                onClose(); // 모달 닫기
+        {/* 검색 입력 필드 */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-3 flex items-center">
+            <MagnifyingGlass size={24} className="text-text-02" />
+          </div>
+          <input
+            type="text"
+            name="searchTerm" // 상태와 연결된 name 속성
+            value={state.searchTerm}
+            onChange={handleInputChange}
+            placeholder="주소 입력 (예: 서초동)"
+            className="w-full rounded-md border p-3 pl-10 focus:ring-2 focus:ring-black"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // 기본 Enter 동작 방지
+                handleSearch(); // 검색 함수 실행
               }
             }}
-          >
-            {result}
-          </li>
-        ))}
-      </ul>
+          />
+        </div>
 
-      {/* 현재 위치 가져오기 버튼 */}
-      <button
-        onClick={handleGetCurrentLocation}
-        className="mt-4 w-full rounded-md bg-black p-3 text-white"
-        disabled={state.geoLoading}
-      >
-        {state.geoLoading ? "현재 위치 가져오는 중..." : "현재 위치 가져오기"}
-      </button>
+        {/* 검색 버튼 */}
+        <button
+          onClick={handleSearch}
+          className="mt-2 w-full rounded-md bg-black p-3 text-white"
+          disabled={state.loading}
+        >
+          {state.loading ? "검색 중..." : "검색"}
+        </button>
 
-      {/* 에러 메시지 */}
-      {state.errorMessage && <p className="text-sm text-red-500">{state.errorMessage}</p>}
+        {/* 검색 결과 목록 */}
+        <ul className="mt-4 max-h-60 overflow-y-auto rounded-md border">
+          {state.searchResults.map((result, index) => (
+            <li
+              key={index}
+              className="cursor-pointer border-b p-3 text-gray-700 hover:bg-gray-100"
+              onClick={() => {
+                if (result !== "검색 결과가 없습니다." && result !== "검색 중 오류가 발생했습니다.") {
+                  onSelectAddress(result); // 선택된 주소 전달
+                  onClose(); // 모달 닫기
+                }
+              }}
+            >
+              {result}
+            </li>
+          ))}
+        </ul>
 
-      {/* 닫기 버튼 */}
-      <button
-        onClick={onClose} // 상태 초기화 및 모달 닫기
-        className="mt-4 w-full rounded-md bg-gray-500 p-3 text-white"
-      >
-        닫기
-      </button>
-    </ModalItem>
+        {/* 현재 위치 가져오기 버튼 */}
+        <button
+          onClick={handleGetCurrentLocation}
+          className="mt-4 w-full rounded-md bg-black p-3 text-white"
+          disabled={state.geoLoading}
+        >
+          {state.geoLoading ? "현재 위치 가져오는 중..." : "현재 위치 가져오기"}
+        </button>
+
+        {/* 에러 메시지 */}
+        {state.errorMessage && <p className="text-sm text-red-500">{state.errorMessage}</p>}
+
+        {/* 닫기 버튼 */}
+        <button
+          onClick={onClose} // 상태 초기화 및 모달 닫기
+          className="mt-4 w-full rounded-md bg-gray-500 p-3 text-white"
+        >
+          닫기
+        </button>
+      </div>
+    </div>
   );
 };
 

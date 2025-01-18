@@ -32,10 +32,9 @@ const Listpost = ({ post }: Props) => {
             </figure>
             <div>
               <p className="text-title2 font-bold">{post.users.nickname || "익명"}</p>
-              <p className="text-text-04">{relativeTimeDay(post.created_at)}</p>
+              <p className="text-text-03">{relativeTimeDay(post.created_at)}</p>
             </div>
           </div>
-          <span className="flex gap-1">조회수: {post.view}</span>
         </div>
 
         <p className="clear-both mt-2 line-clamp-2 overflow-hidden text-ellipsis break-words text-subtitle font-medium text-text-04">
@@ -46,13 +45,13 @@ const Listpost = ({ post }: Props) => {
           <LikeSection postId={post.id} styleType="list" />
           <span className="post-center pointer-events-none flex gap-1">
             <ChatCircleDots size={28} className="text-text-03" />
-            <span className="text-text-04">{post.comments}</span>
+            <span>{post.comments}</span>
           </span>
         </div>
 
         <div className="absolute bottom-0 left-0 flex gap-2">
           {post.tags.map((tag) => (
-            <Tags key={tag} variant="grayLine" size="md" label={tag} />
+            <Tags key={tag} variant="gray" size="md" label={tag} />
           ))}
         </div>
       </div>

@@ -82,7 +82,13 @@ const HeaderContent = () => {
       </div>
       {isOpen && (
         <div
-          className="z-1 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+          className={clsx(
+            "z-1 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 backdrop-blur-sm transition duration-300",
+            {
+              "opacity-100": isOpen,
+              "opacity-0": !isOpen
+            }
+          )}
           onClick={() => {
             setIsOpen(false);
           }}

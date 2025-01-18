@@ -57,7 +57,7 @@ export const TAG_GROUPS = [
   }
 ];
 
-export const regions = [
+export const REGIONS = [
   "서울특별시",
   "부산광역시",
   "대구광역시",

@@ -15,7 +15,7 @@ type Props = {
   mode?: "page" | "modal";
 };
 
-const ContentsSection = ({ postId, mode }: Props) => {
+const ContentsSection = ({ postId, mode = "page" }: Props) => {
   const { post, isPending, isError } = usePostDetail(postId);
 
   if (isPending) return <div>스켈레톤 ui 추가해야겠지?</div>;
@@ -31,7 +31,6 @@ const ContentsSection = ({ postId, mode }: Props) => {
     <>
       <article className="flex justify-between">
         {mode === "page" ? <ImageGallery images={images} writerSpec={body_size} /> : <ImageCarousel images={images} />}
-        {/*  */}
         <div className="relative w-[46%]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -57,13 +56,13 @@ const ContentsSection = ({ postId, mode }: Props) => {
           {tags.length > 0 && (
             <div className="mt-10 flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <Tags key={tag} variant="black" size="md" label={tag} />
+                <Tags key={tag} variant="gray" size="md" label={tag} />
               ))}
             </div>
           )}
           <p className="mt-4 font-medium text-text-03">조회수 {view}</p>
 
-          <div className="absolute bottom-[6.75rem] left-0 mt-[6.35rem] flex gap-10 font-medium">
+          <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
             <LikeSection postId={postId} styleType="detail" />
             <button className="flex flex-col gap-2">
               <Export size={28} />
@@ -71,7 +70,6 @@ const ContentsSection = ({ postId, mode }: Props) => {
             </button>
           </div>
         </div>
-        {/*  */}
       </article>
     </>
   );

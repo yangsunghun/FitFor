@@ -1,4 +1,4 @@
-import { regions, TAG_GROUPS } from "@/lib/constants/constants";
+import { REGIONS, TAG_GROUPS } from "@/lib/constants/constants";
 
 const HeaderCategorys = () => {
   return (
@@ -23,9 +23,8 @@ const HeaderCategorys = () => {
       <div className="text-title2">
         <p className="mb-8 font-bold">지역</p>
 
-        {/* 태그 리스트 */}
         <ul className="flex h-[32rem] flex-col flex-wrap">
-          {regions.map((region, index) => (
+          {REGIONS.map((region, index) => (
             <li
               key={index}
               className="mb-6 w-[6.875rem] font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"

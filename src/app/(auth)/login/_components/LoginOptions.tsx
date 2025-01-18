@@ -13,11 +13,11 @@ const LoginOptions = () => {
   };
 
   return (
-    <div className="flex w-full flex-col items-center gap-2 pt-8">
+    <div className="flex w-full flex-col items-center gap-4 mt-6">
       {!isEmailLogin ? (
         <>
-          <SocialLoginButton provider="google" />
           <SocialLoginButton provider="kakao" />
+          <SocialLoginButton provider="google" />
           {/* 1차 피드백 이후의 도전 기능 */}
           <button
             className="flex hidden w-full flex-row justify-center gap-4 rounded-2xl bg-white p-4 text-black shadow-md"

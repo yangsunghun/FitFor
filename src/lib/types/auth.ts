@@ -10,6 +10,8 @@ export type Provider = "google" | "kakao";
 export type ProviderConfig = {
   label: string;
   bgColor: string;
+  border: boolean;
+  borderColor?: string;
   textColor: string;
   logo: string;
   queryParams?: Record<string, string>;
@@ -17,9 +19,11 @@ export type ProviderConfig = {
 
 export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
   google: {
-    label: "Google 계정으로 시작",
+    label: "구글로 계속하기",
     bgColor: "bg-white",
-    textColor: "text-[#666666]",
+    border: true,
+    borderColor: "border-[#d6d6d6]",
+    textColor: "text-[#6e6e6e]",
     logo: googleLogo,
     queryParams: {
       access_type: "offline",
@@ -27,11 +31,13 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
     }
   },
   kakao: {
-    label: "Kakao 계정으로 시작",
+    label: "카카오로 계속하기",
+    border: false,
     bgColor: "bg-[#ffeb00]",
-    textColor: "text-[#333333]",
+    textColor: "text-[#1a1a1a]",
     logo: kakaoLogo
   }
+  // apple: {}
 };
 
 export type FormField<T> = {

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
@@ -13,7 +14,7 @@ type ImageUploadSectionProps = {
 };
 
 function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
-  const [imageHashes, setImageHashes] = useState<Set<string>>(new Set()); // 업로드된 이미지 해시 추적
+  const [imageHashes, setImageHashes] = useState<string[]>([]); // 업로드된 이미지 해시를 배열로 관리
 
   // 고유 파일 경로 생성
   const genFilePath = (file: File): string => {
@@ -73,9 +74,9 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
       const hash = await genFileHash(file);
 
       // 기존 해시 확인
-      if (imageHashes.has(hash)) {
+      if (imageHashes.includes(hash)) {
         alert("이미 업로드된 이미지입니다.");
-        return;
+        continue;
       }
 
       // 새 이미지를 업로드
@@ -93,7 +94,7 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
     // 상태 업데이트
     if (newImages.length > 0) {
       setImages([...images, ...newImages]);
-      setImageHashes((prev) => new Set([...Array.from(prev), ...newHashes]));
+      setImageHashes([...imageHashes, ...newHashes]);
     }
   };
 
@@ -102,11 +103,7 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
     setImages(updatedImages);
 
     // 해시도 제거
-    setImageHashes((prev) => {
-      const updatedHashes = Array.from(prev);
-      updatedHashes.splice(index, 1);
-      return new Set(updatedHashes);
-    });
+    setImageHashes((prev) => prev.filter((_, i) => i !== index));
   };
 
   // 버튼 클릭 시
@@ -198,17 +195,19 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
                       >
                       <Trash size={16} />
                       </button>
-                      {/* 썸네일로 설정 버튼 */}
+                      {/* 썸네일로 설정 버튼 - 임의로 만들어서 체킹받고 또 수정예정..*/}
                       {index !== 0 && (
-                        <button
-                          className="rounded-lg bg-gray-200 px-2 py-1 text-black"
+                        <Button
+                          variant="whiteLine"
+                          size="sm"
+                          className="h-6 w-24 bg-transparent text-caption leading-none !text-text-01"
                           onClick={() => {
                             const updatedImages = [url, ...images.filter((img, i) => i !== index)];
                             setImages(updatedImages);
                           }}
                         >
-                          썸네일로 등록
-                        </button>
+                          썸네일 등록
+                        </Button>
                       )}
                     </div>
                   )}

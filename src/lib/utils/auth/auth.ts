@@ -1,6 +1,6 @@
 "use server";
 
-import { LoginForm, Provider, PROVIDER_CONFIG, SignupForm, type UserType } from "@/lib/types/auth";
+import { LoginForm, Provider, PROVIDER_CONFIG, SignupForm, UserType } from "@/lib/types/auth";
 import { createClient } from "@/lib/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";

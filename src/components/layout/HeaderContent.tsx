@@ -14,8 +14,8 @@ import SearchBar from "./SearchBar";
 const HeaderContent = () => {
   const pathname = usePathname();
   const { user } = useAuthStore();
-
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
@@ -27,6 +27,7 @@ const HeaderContent = () => {
 
   useEffect(() => {
     setIsOpen(false);
+    setIsLoading(false);
   }, [pathname]);
 
   return (
@@ -59,18 +60,27 @@ const HeaderContent = () => {
           <SearchBar />
 
           <div className="absolute right-0">
-            <Button asChild variant="whiteLine" size="md">
-              {user ? (
-                <Link href="/mypage" className="flex items-center gap-2">
+            <Button
+              asChild
+              variant="whiteLine"
+              size="md"
+              className="infline-flex flex flex-row gap-2 py-3 text-body font-medium leading-[1.5rem]"
+            >
+              {isLoading ? (
+                <div>
+                  <div className="h-full w-[96px] animate-pulse rounded bg-gray-200" />
+                </div>
+              ) : user ? (
+                <Link href="/mypage">
                   <Image
-                    src={user!.profile_image as string}
+                    src={user.profile_image as string}
                     alt={`${user.nickname}'s profile`}
                     width={24}
                     height={24}
                     priority
                     className="rounded-full"
                   />
-                  <span className="text-body font-medium">{user.nickname}</span>
+                  <span>{user.nickname}</span>
                 </Link>
               ) : (
                 <Link href="/login">로그인/회원가입</Link>

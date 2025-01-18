@@ -1,11 +1,11 @@
 "use client";
+import AuthInput from "@/app/(auth)/_components/AuthInput";
 import { login } from "@/lib/utils/auth/auth";
 import { LOGIN_FIELDS } from "@/lib/validations/authFields";
 import { loginSchema } from "@/lib/validations/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { FieldValues, useForm } from "react-hook-form";
-import AuthInput from "../../_components/AuthInput";
 
 // 일반 로그인 폼
 const LoginForm = () => {

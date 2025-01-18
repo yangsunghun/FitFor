@@ -1,5 +1,6 @@
+import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/utils/supabase/client";
-import { Image as ImageIcon } from "@phosphor-icons/react";
+import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -13,7 +14,7 @@ type ImageUploadSectionProps = {
 };
 
 function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
-  const [imageHashes, setImageHashes] = useState<Set<string>>(new Set()); // 업로드된 이미지 해시 추적
+  const [imageHashes, setImageHashes] = useState<string[]>([]); // 업로드된 이미지 해시를 배열로 관리
 
   // 고유 파일 경로 생성
   const genFilePath = (file: File): string => {
@@ -46,9 +47,7 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
       throw new Error(`이미지 업로드 실패: ${error.message}`);
     }
 
-    const { publicUrl } = supabase.storage
-      .from("post-images")
-      .getPublicUrl(filePath).data;
+    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
 
     if (!publicUrl) {
       throw new Error("이미지 URL 생성 실패");
@@ -75,9 +74,9 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
       const hash = await genFileHash(file);
 
       // 기존 해시 확인
-      if (imageHashes.has(hash)) {
+      if (imageHashes.includes(hash)) {
         alert("이미 업로드된 이미지입니다.");
-        return;
+        continue;
       }
 
       // 새 이미지를 업로드
@@ -95,7 +94,7 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
     // 상태 업데이트
     if (newImages.length > 0) {
       setImages([...images, ...newImages]);
-      setImageHashes((prev) => new Set([...Array.from(prev), ...newHashes]));
+      setImageHashes([...imageHashes, ...newHashes]);
     }
   };
 
@@ -104,11 +103,7 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
     setImages(updatedImages);
 
     // 해시도 제거
-    setImageHashes((prev) => {
-      const updatedHashes = Array.from(prev);
-      updatedHashes.splice(index, 1);
-      return new Set(updatedHashes);
-    });
+    setImageHashes((prev) => prev.filter((_, i) => i !== index));
   };
 
   // 버튼 클릭 시
@@ -139,96 +134,95 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
   };
 
   return (
-    <div className="pt-10 space-y-6">
-    <div className="space-y-6">
-      {/* 제목 및 설명 */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-1">
-          <span className="text-title2 font-bold text-text-04">
-            게시물 이미지
-          </span>
-          <span className="text-title2 font-bold text-primary-default">*</span>
+    <div className="space-y-6 pt-10">
+      <div className="space-y-6">
+        {/* 제목 및 설명 */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-1">
+            <span className="text-title2 font-bold text-text-04">게시물 이미지</span>
+            <span className="text-title2 font-bold text-primary-default">*</span>
+          </div>
+          <p className="text-caption font-medium text-text-03">
+            다양한 각도에서 찍은 이미지가 있다면 추가해주세요. (최대 5개)
+            <br />
+            추천 사이즈 : OOO x OOO / OOO x OOO
+          </p>
         </div>
-        <p className="text-caption text-text-03 font-medium">
-          다양한 각도에서 찍은 이미지가 있다면 추가해주세요. (최대 5개)
-          <br />
-          추천 사이즈 : OOO x OOO / OOO x OOO
-        </p>
-      </div>
-  
-      {/* 상단 업로드 섹션 */}
-      <div
-        className="w-full h-48 bg-bg-02 rounded-lg flex justify-center items-center overflow-hidden"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={handleDrop}
-      >
+
+        {/* 상단 업로드 섹션 */}
         <div
-          className="w-36 h-36 bg-bg-01 rounded-2xl flex flex-col justify-center items-center cursor-pointer"
-          onClick={handleFileInput}
+          className="flex h-48 w-full items-center justify-center overflow-hidden rounded-lg bg-bg-02"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
         >
-          {/* 아이콘 */}
-          <div className="w-6 h-6 text-text-03">
-            <ImageIcon size={24} />
-          </div>
-          {/* 텍스트 */}
-          <div className="text-text-03 text-caption font-medium leading-[1.5] mt-1">
-            이미지 업로드하기
+          <div
+            className="flex h-36 w-36 cursor-pointer flex-col items-center justify-center rounded-2xl bg-bg-01"
+            onClick={handleFileInput}
+          >
+            {/* 아이콘 */}
+            <div className="h-6 w-6 text-text-03">
+              <ImageIcon size={24} />
+            </div>
+            {/* 텍스트 */}
+            <div className="mt-1 text-caption font-medium leading-[1.5] text-text-03">이미지 업로드하기</div>
           </div>
         </div>
-      </div>
-  
-      {/* 하단 이미지 섹션 */}
-      <div className="grid grid-cols-4 w-full gap-6">
-        {Array(4)
-          .fill(null)
-          .map((_, index) => {
-            const url = images[index]; // 현재 인덱스에 해당하는 이미지 URL
-            return (
-              <div
-                key={index}
-                className="relative w-36 h-36 border border-line-02 rounded-lg overflow-hidden flex items-center justify-center"
-              >
-                {/* 업로드된 이미지 */}
-                {url && (
-                  <Image
-                    src={url}
-                    alt={`Uploaded Image ${index + 1}`}
-                    layout="fill"
-                    className="object-cover"
-                  />
-                )}
-                {/* 삭제 버튼 및 대표 설정 버튼 */}
-                {url && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center opacity-0 hover:opacity-100 transition-opacity space-y-2">
-                    {/* 삭제 버튼 */}
-                    <button
-                      onClick={() => handleDelete(index)}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                    >
-                      X
-                    </button>
-                    {/* 대표로 설정 버튼 */}
-                    {index !== 0 && (
+
+        {/* 하단 이미지 섹션 */}
+        <div className="grid w-full grid-cols-4 gap-6">
+          {Array(4)
+            .fill(null)
+            .map((_, index) => {
+              const url = images[index]; // 현재 인덱스에 해당하는 이미지 URL
+              return (
+                <div
+                  key={index}
+                  className={`relative flex h-36 w-36 items-center justify-center overflow-hidden rounded-lg ${
+                    index === 0 ? "border-2 border-primary-default" : "border border-line-02"
+                  }`}
+                >
+                  {/* 업로드된 이미지 */}
+                  {url && (
+                    <Image src={url} alt={`Uploaded Image ${index + 1}`} layout="fill" className="object-cover" />
+                  )}
+                  {/* 삭제 버튼 및 대표 설정 버튼 */}
+                  {url && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center space-y-2 bg-black bg-opacity-50 opacity-0 transition-opacity hover:opacity-100">
+                      {/* 삭제 버튼 */}
                       <button
-                        className="px-2 py-1 bg-gray-200 text-black rounded-lg"
-                        onClick={() => {
-                          const updatedImages = [
-                            url,
-                            ...images.filter((img, i) => i !== index),
-                          ];
-                          setImages(updatedImages);
-                        }}
+                        onClick={() => handleDelete(index)}
+                        className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
                       >
-                        썸네일로 등록
+                      <Trash size={16} />
                       </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                      {/* 썸네일로 설정 버튼 - 임의로 만들어서 체킹받고 또 수정예정..*/}
+                      {index !== 0 && (
+                        <Button
+                          variant="whiteLine"
+                          size="sm"
+                          className="h-6 w-24 bg-transparent text-caption leading-none !text-text-01"
+                          onClick={() => {
+                            const updatedImages = [url, ...images.filter((img, i) => i !== index)];
+                            setImages(updatedImages);
+                          }}
+                        >
+                          썸네일 등록
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                  {/* 첫 번째 이미지에 썸네일 표시 */}
+                  {index === 0 && (
+                    <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded bg-primary-default px-2 py-1 text-white">
+                      <Check size={8} weight="bold" />
+                      <span className="text-caption font-medium">썸네일</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+        </div>
       </div>
-    </div>
     </div>
   );
 }

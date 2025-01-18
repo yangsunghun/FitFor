@@ -8,7 +8,7 @@ import ImageUploadSection from "./_components/ImageUploadSection";
 import LocationSection from "./_components/LocationSection";
 import ProductSection from "./_components/ProductSection";
 import PurchaseModal from "./_components/PurchaseModal";
-import TagSection from "./_components/TagSection";
+import TagSection from "../../components/shared/TagSection";
 
 const WritePage = () => {
   const {
@@ -23,16 +23,15 @@ const WritePage = () => {
   } = useFormHandlers();
 
   return (
-    <div className="mx-auto max-w-[700px] pt-10">
-      <div className="space-y-2">
+    <div className="mx-auto max-w-[700px] pt-10 pb-20">
+      {/* 어쩔수 없이 pb로 설정.. */}
+      <div className="space-y-2 pb-10">
         <h1 className="text-title1 font-bold leading-[150%] text-text-04">게시물 작성하기</h1>
         <p className="text-title2 font-medium text-text-03">나만의 룩이나 소개하고 싶은 옷을 공유해보세요!</p>
       </div>
 
       <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
         <ContentSection content={formState.content} onChange={(value) => handleChange("content", value)} />
-
-        {/* 이미지 업로드 섹션 */}
 
         <ImageUploadSection images={formState.images} setImages={(images) => handleChange("images", images)} />
 
@@ -58,6 +57,7 @@ const WritePage = () => {
         />
 
         <TagSection
+          title="게시물 주제를 선택해주세요."
           tags={formState.tags}
           selectedCategory={formState.selectedCategory}
           onChangeCategory={(category) => handleChange("selectedCategory", category)}
@@ -65,7 +65,7 @@ const WritePage = () => {
         />
       </div>
 
-      <div className="flex justify-center gap-6">
+      <div className="flex justify-center gap-6 pt-20">
         <button className="rounded-lg border border-primary-default bg-bg-01 px-8 py-4 text-body font-medium text-primary-default">
           임시 저장
         </button>

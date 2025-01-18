@@ -22,7 +22,7 @@ const Cardpost = ({ post, isMasonry }: Props) => {
         <div className="absolute right-4 top-4 z-20">
           <LikeSection postId={post.id} styleType="masonry" />
         </div>
-        <div className="posts-center absolute bottom-4 left-4 flex gap-2">
+        <div className="absolute bottom-4 left-4 flex items-center gap-2">
           <div className="posts-center relative h-7 w-7 overflow-hidden rounded-full bg-gray-300">
             <Image
               src={post.users.profile_image || sampleImage}

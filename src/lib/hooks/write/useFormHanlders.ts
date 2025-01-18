@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
-import { createClient } from "@/lib/utils/supabase/client";
 import type { Database } from "@/lib/types/supabase";
+import { createClient } from "@/lib/utils/supabase/client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const supabase = createClient();
 const genUniqueId = () => crypto.randomUUID(); // 고유 ID 생성
@@ -35,17 +35,14 @@ export const useFormHandlers = () => {
     isModalOpen: false, // 주소 검색 모달 상태
     isPurchaseModalOpen: false, // 상품 추가 모달 상태
     productToEdit: null, // 수정할 상품 데이터
-    selectedCategory: null,
+    selectedCategory: null
   });
 
   const router = useRouter(); // 페이지 이동 관리
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
 
   // 폼 상태 변경 핸들러
-  const handleChange = <T extends keyof FormState>(
-    key: T,
-    value: FormState[T]
-  ) => {
+  const handleChange = <T extends keyof FormState>(key: T, value: FormState[T]) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -82,15 +79,14 @@ export const useFormHandlers = () => {
 
       return {
         ...prevState,
-        body_size: updatedBodySize,
+        body_size: updatedBodySize
       };
     });
   };
 
   // 폼 제출 핸들러
   const handleSubmit = async () => {
-    const { content, address, body_size, images, tags, purchases } =
-      formState;
+    const { content, address, body_size, images, tags, purchases } = formState;
 
     // 필수 입력 값 확인
     if (!content) {
@@ -116,14 +112,11 @@ export const useFormHandlers = () => {
         tags,
         comments: 0,
         likes: 0,
-        view: 0,
+        view: 0
       };
 
       // 게시글 저장
-      const { data: postData, error: postError } = await supabase
-        .from("posts")
-        .insert([post])
-        .select();
+      const { data: postData, error: postError } = await supabase.from("posts").insert([post]).select();
 
       if (postError) throw postError;
 
@@ -133,12 +126,10 @@ export const useFormHandlers = () => {
       if (purchases.length > 0) {
         const purchaseData = purchases.map((purchase) => ({
           ...purchase,
-          post_id: postId,
+          post_id: postId
         }));
 
-        const { error: purchaseError } = await supabase
-          .from("purchase")
-          .insert(purchaseData);
+        const { error: purchaseError } = await supabase.from("purchase").insert(purchaseData);
 
         if (purchaseError) throw purchaseError;
       }
@@ -155,21 +146,19 @@ export const useFormHandlers = () => {
 
   const toggleTagSelector = (tag: string, groupTags: string[], max: number) => {
     setFormState((prevState) => {
-      const selectedGroupTags = prevState.tags.filter((t) =>
-        groupTags.includes(t)
-      );
-  
+      const selectedGroupTags = prevState.tags.filter((t) => groupTags.includes(t));
+
       // 전체 태그 수 제한 (최대 7개)
       if (!selectedGroupTags.includes(tag) && prevState.tags.length >= 7) {
         alert("최대 7개의 태그만 선택 가능합니다.");
         return prevState;
       }
-  
+
       // 그룹별 태그 선택/해제
       if (selectedGroupTags.includes(tag)) {
         return {
           ...prevState,
-          tags: prevState.tags.filter((t) => t !== tag),
+          tags: prevState.tags.filter((t) => t !== tag)
         };
       } else if (selectedGroupTags.length < max) {
         return { ...prevState, tags: [...prevState.tags, tag] };

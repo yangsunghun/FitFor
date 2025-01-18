@@ -25,7 +25,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
     "flex gap-10": styleType === "detail"
   });
 
-  const buttonClass = cn("flex justify-center items-center ", {
+  const buttonClass = cn("flex justify-center items-center", {
     "w-7 h-7 rounded-lg bg-bg-01": styleType === "masonry",
     "gap-1": styleType === "list",
     "flex-col gap-2": styleType === "detail"
@@ -77,12 +77,14 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
         count={styleType !== "masonry" ? likeCount : null}
         onClick={toggleLike}
         activeIcon={
-          <span className="text-primary-default">
+          <span className="text-primary-default transition duration-300">
             {styleType === "masonry" ? <Heart weight="fill" size={20} /> : <Heart weight="fill" size={28} />}
           </span>
         }
         inactiveIcon={
-          <span className="text-text-03">{styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}</span>
+          <span className="text-text-03 transition duration-300">
+            {styleType === "masonry" ? <Heart size={20} /> : <Heart size={28} />}
+          </span>
         }
         text={false}
       />
@@ -92,7 +94,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
           isActive={isBookmarked}
           onClick={toggleBookmark}
           activeIcon={
-            <span className="text-status-info">
+            <span className="text-status-info transition duration-300">
               {styleType === "masonry" ? (
                 <BookmarkSimple weight="fill" size={20} />
               ) : (
@@ -101,7 +103,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
             </span>
           }
           inactiveIcon={
-            <span className="text-text-03">
+            <span className="text-text-03 transition duration-300">
               {styleType === "masonry" ? <BookmarkSimple size={20} /> : <BookmarkSimple size={28} />}
             </span>
           }

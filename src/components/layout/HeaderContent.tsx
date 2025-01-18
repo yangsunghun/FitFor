@@ -5,12 +5,14 @@ import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
 import HeaderCategorys from "./HeaderCategorys";
 import SearchBar from "./SearchBar";
 
 const HeaderContent = () => {
+  const pathname = usePathname();
   const { user } = useAuthStore();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +20,14 @@ const HeaderContent = () => {
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <>
@@ -49,22 +59,23 @@ const HeaderContent = () => {
           <SearchBar />
 
           <div className="absolute right-0">
-            {user ? (
-              <Link href="/mypage">
-                <Image
-                  src={user!.profile_image as string}
-                  alt={`${user.nickname}'s profile`}
-                  width={48}
-                  height={48}
-                  priority
-                  className="rounded-full"
-                />
-              </Link>
-            ) : (
-              <Button asChild variant="whiteLine" size="md">
+            <Button asChild variant="whiteLine" size="md">
+              {user ? (
+                <Link href="/mypage" className="flex items-center gap-2">
+                  <Image
+                    src={user!.profile_image as string}
+                    alt={`${user.nickname}'s profile`}
+                    width={24}
+                    height={24}
+                    priority
+                    className="rounded-full"
+                  />
+                  <span className="text-body font-medium">{user.nickname}</span>
+                </Link>
+              ) : (
                 <Link href="/login">로그인/회원가입</Link>
-              </Button>
-            )}
+              )}
+            </Button>
           </div>
         </div>
       </div>
@@ -78,11 +89,17 @@ const HeaderContent = () => {
           }
         )}
       >
-        <HeaderCategorys />
+        <HeaderCategorys handleClose={handleClose} />
       </div>
       {isOpen && (
         <div
-          className="z-1 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+          className={clsx(
+            "z-1 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 backdrop-blur-sm transition duration-300",
+            {
+              "opacity-100": isOpen,
+              "opacity-0": !isOpen
+            }
+          )}
           onClick={() => {
             setIsOpen(false);
           }}

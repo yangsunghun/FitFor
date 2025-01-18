@@ -1,6 +1,32 @@
-import { regions, TAG_GROUPS } from "@/lib/constants/constants";
+"use client";
+import { REGIONS, TAG_GROUPS } from "@/lib/constants/constants";
+import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-const HeaderCategorys = () => {
+type Tags = { [key: string]: string[] };
+type Props = {
+  handleClose: () => void;
+};
+
+const HeaderCategorys = ({ handleClose }: Props) => {
+  const [tags, setTags] = useState<Tags>({});
+  const router = useRouter();
+  const { handleToggleTag, encodeTagsForUrl } = useSearchQuery();
+
+  const handleCategoryClick = (key: string, tag: string) => {
+    handleToggleTag(key, tag);
+
+    const updatedTags = { ...tags, [key]: [...(tags[key] || []), tag] };
+
+    const params = new URLSearchParams();
+    params.set("query", "");
+    params.set("page", "1");
+    params.set("category", encodeTagsForUrl(updatedTags));
+
+    router.push(`/search?${params.toString()}`);
+  };
+
   return (
     <div className="mx-auto flex max-w-[1200px] pb-8 pt-4">
       {TAG_GROUPS.map((group) => (
@@ -8,12 +34,13 @@ const HeaderCategorys = () => {
           <p className="mb-8 font-bold">{group.title}</p>
 
           <ul className="mr-6 flex h-[32rem] flex-col flex-wrap border-r border-line-02">
-            {group.tags.map((tag, index) => (
+            {group.tags.map((tag) => (
               <li
-                key={index}
+                key={tag}
+                onClick={handleClose}
                 className="mb-6 w-[8.75rem] font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
               >
-                <button className="">{tag}</button>
+                <button onClick={() => handleCategoryClick(group.key, tag)}>{tag}</button>
               </li>
             ))}
           </ul>
@@ -23,9 +50,8 @@ const HeaderCategorys = () => {
       <div className="text-title2">
         <p className="mb-8 font-bold">지역</p>
 
-        {/* 태그 리스트 */}
         <ul className="flex h-[32rem] flex-col flex-wrap">
-          {regions.map((region, index) => (
+          {REGIONS.map((region, index) => (
             <li
               key={index}
               className="mb-6 w-[6.875rem] font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"

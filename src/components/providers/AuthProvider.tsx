@@ -16,9 +16,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const fetchSignedUser = async () => {
       try {
-        // TODO: 변수에 담자
         const user = await fetchUser();
-        // console.log({user})
         if (user) {
           setUser(user);
           setIsAuthenticated(true);

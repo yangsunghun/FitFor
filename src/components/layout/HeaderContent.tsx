@@ -12,7 +12,6 @@ import SearchBar from "./SearchBar";
 
 const HeaderContent = () => {
   const { user } = useAuthStore();
-
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -50,16 +49,19 @@ const HeaderContent = () => {
 
           <div className="absolute right-0">
             {user ? (
-              <Link href="/mypage">
-                <Image
-                  src={user!.profile_image as string}
-                  alt={`${user.nickname}'s profile`}
-                  width={48}
-                  height={48}
-                  priority
-                  className="rounded-full"
-                />
-              </Link>
+              <Button asChild variant="disabledLine" className="text-body font-medium flex flex-row infline-flex gap-2 py-3 leading-[1.5rem]">
+                <Link href="/mypage">
+                  <Image
+                    src={user.profile_image as string}
+                    alt={`${user.nickname}'s profile`}
+                    width={24}
+                    height={24}
+                    priority
+                    className="rounded-full"
+                  />
+                  <span className="text-text-04">{user.nickname}</span>
+                </Link>
+              </Button>
             ) : (
               <Button asChild variant="whiteLine" size="md">
                 <Link href="/login">로그인/회원가입</Link>

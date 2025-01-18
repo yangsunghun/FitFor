@@ -32,17 +32,17 @@ const VerificationSection = () => {
   return (
     <>
       <div className="flex flex-col">
-        <h3 className="mb-6 mt-10 text-subtitle">내 통계 리포트</h3>
+        <h3 className="mt-10 text-subtitle font-medium">내 통계 리포트</h3>
         {isPending ? (
           <CardsSkeleton />
         ) : (
-          <div className="my-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
             <StatsCard title="작성한 게시물 수" value={userPostsStats!.length} />
             <StatsCard title="받은 좋아요 수" value={allStats.likes} />
             <StatsCard title="총 조회수" value={allStats.view} />
           </div>
         )}
-        <div className="flex flex-col gap-3 rounded-2xl text-center">
+        <div className="mt-6 flex flex-col gap-3 rounded-2xl text-center">
           <Button
             onClick={handleApplication}
             variant={!applicationAvailable ? "disabled" : "primary"}
@@ -56,7 +56,7 @@ const VerificationSection = () => {
       </div>
       <div className="mt-20">
         <h3 className="mb-6 text-subtitle font-medium text-text-04">인증 유저 요건</h3>
-        <ul className="list-disc space-y-3 pl-5 text-title2 text-text-03">
+        <ul className="list-disc pl-5 text-title2 text-text-03 space-y-3 ">
           <li>위 기준을 충족해야만 인증 유저로 활동할 수 있어요.</li>
           <li>인증 유저가 되면 Live 채팅방에 입장할 수 있어요.</li>
           <li>신청 후 24시간 뒤, 관리자 확인 후 인증 유저로 활동 가능해요.</li>

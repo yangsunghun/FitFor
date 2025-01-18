@@ -1,6 +1,7 @@
 "use client";
 
 import GridPost from "@/components/shared/GridPost";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { useRecentViewPosts } from "@/lib/hooks/mypage/useRecentViewPosts";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -26,9 +27,9 @@ const RecentViewPosts = () => {
       )}
       {/* 나중에 검색 포스트 컴포넌트 나오면 수정 예정... */}
       {isPending ? (
-        <p>로딩 중 ...</p>
+        <LoadingSpinner />
       ) : (
-        <ul className="mt-8 grid grid-cols-4 gap-6">
+        <ul className="mt-10 grid grid-cols-4 gap-6">
           {recentPosts?.map((post) => <GridPost key={post.id} post={post} />)}
         </ul>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import Cardpost from "@/components/shared/CardPost";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { useUserPosts } from "@/lib/hooks/mypage/useUserPosts";
 import { useEffect, useRef } from "react";
 
@@ -21,7 +22,7 @@ const MyPosts = () => {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage]);
 
-  if (isPending) return <p>Loading</p>;
+  if (isPending) return <LoadingSpinner />;
   if (isError) return <p>내 게시물 불러오기 에러...</p>;
 
   return (

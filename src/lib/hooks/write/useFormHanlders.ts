@@ -21,6 +21,7 @@ type FormState = {
   isPurchaseModalOpen: boolean;
   productToEdit: Database["public"]["Tables"]["purchase"]["Insert"] | null;
   selectedCategory: string | null;
+  thumbnail_blur_url: string | null;
 };
 
 export const useFormHandlers = () => {
@@ -35,7 +36,8 @@ export const useFormHandlers = () => {
     isModalOpen: false, // 주소 검색 모달 상태
     isPurchaseModalOpen: false, // 상품 추가 모달 상태
     productToEdit: null, // 수정할 상품 데이터
-    selectedCategory: null
+    selectedCategory: null,
+    thumbnail_blur_url: null
   });
 
   const router = useRouter(); // 페이지 이동 관리
@@ -86,7 +88,7 @@ export const useFormHandlers = () => {
 
   // 폼 제출 핸들러
   const handleSubmit = async () => {
-    const { content, address, body_size, images, tags, purchases } = formState;
+    const { content, address, body_size, images, tags, purchases, thumbnail_blur_url } = formState;
 
     // 필수 입력 값 확인
     if (!content) {
@@ -110,6 +112,7 @@ export const useFormHandlers = () => {
         body_size,
         images,
         tags,
+        thumbnail_blur_url,
         comments: 0,
         likes: 0,
         view: 0

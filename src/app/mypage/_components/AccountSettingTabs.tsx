@@ -22,7 +22,7 @@ const AccountSettingTabs = () => {
   }
 
   return (
-    <div className="mt-10 flex w-full flex-col">
+    <div className="mt-10 flex w-full flex-col space-y-6">
       {menuItems.map((item) => (
         <button
           onClick={handleClick}

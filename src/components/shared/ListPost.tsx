@@ -14,7 +14,7 @@ type Props = {
 const Listpost = ({ post }: Props) => {
   return (
     <li className="relative mb-6 flex gap-6 py-4">
-      <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
+      <Link href={`/detail/${post.id}/view`} className="click-box z-10"></Link>
       <figure className="thumbnail h-[11.25rem] w-[11.25rem] rounded-2xl bg-gray-200">
         <Image src={post.images[0]} alt={post.content} fill={true} />
       </figure>
@@ -32,27 +32,26 @@ const Listpost = ({ post }: Props) => {
             </figure>
             <div>
               <p className="text-title2 font-bold">{post.users.nickname || "익명"}</p>
-              <p className="text-text-04">{relativeTimeDay(post.created_at)}</p>
+              <p className="text-text-03">{relativeTimeDay(post.created_at)}</p>
             </div>
           </div>
-          <span className="flex gap-1">조회수: {post.view}</span>
         </div>
 
         <p className="clear-both mt-2 line-clamp-2 overflow-hidden text-ellipsis break-words text-subtitle font-medium text-text-04">
           {post.content}
         </p>
 
-        <div className="absolute bottom-0 right-0 flex gap-4 text-title2 font-medium leading-7 text-text-03">
+        <div className="absolute bottom-0 right-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03">
           <LikeSection postId={post.id} styleType="list" />
           <span className="post-center pointer-events-none flex gap-1">
             <ChatCircleDots size={28} className="text-text-03" />
-            <span className="text-text-04">{post.comments}</span>
+            <span>{post.comments}</span>
           </span>
         </div>
 
         <div className="absolute bottom-0 left-0 flex gap-2">
           {post.tags.map((tag) => (
-            <Tags key={tag} variant="grayLine" size="md" label={tag} />
+            <Tags key={tag} variant="gray" size="md" label={tag} />
           ))}
         </div>
       </div>

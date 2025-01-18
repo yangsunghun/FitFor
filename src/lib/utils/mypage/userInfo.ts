@@ -2,7 +2,7 @@
 
 import type { FetchPostsResponse } from "@/lib/types/post";
 import type { ProfileEditForm } from "@/lib/types/profile";
-import { createClient } from "../supabase/server";
+import { createClient } from "@/lib/utils/supabase/server";
 
 // 유저 정보 업데이트 하는 로직
 export const updateUserProfile = async ({

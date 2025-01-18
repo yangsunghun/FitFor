@@ -68,8 +68,7 @@ export const insertUserToPublic = async ({
     // 로그인 했던 유저라면
     // 새로 추가 X
     if (existingUser) {
-      console.log("기존 유저 확인");
-      redirect("/home");
+      return;
     }
 
     // 처음 로그인한 유저는 public.users에 추가
@@ -85,9 +84,6 @@ export const insertUserToPublic = async ({
       console.error("[유저 정보 데이터베이스 저장 오류]", insertError.message);
       throw insertError;
     }
-
-    console.log("신규 유저 확인");
-    // redirect("/home/@modal/onboard");
   } catch (error) {
     console.error("[insertUserToPublic error]", error);
     throw error;

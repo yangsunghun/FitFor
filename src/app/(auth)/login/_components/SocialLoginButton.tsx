@@ -10,6 +10,8 @@ type SocialLoginButtonProps = {
 const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
   const handleSocialLogin = async () => {
     await socialLogin(provider);
+
+    window.location.href = "/";
   };
 
   return (

@@ -51,7 +51,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
       }
 
       // Canvas 크기 설정 (아주 작은 크기로 축소)
-      const width = 10; // 축소된 너비
+      const width = 3; // 축소된 너비
       const height = (imageBitmap.height / imageBitmap.width) * width; // 비율 유지
 
       canvas.width = width;

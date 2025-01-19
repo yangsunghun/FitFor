@@ -279,7 +279,7 @@ export type Database = {
           is_saved: boolean
           likes: number
           tags: string[]
-          thumbnail_blur_url: string | null
+          thumbnail_blur_url: string
           upload_place: string | null
           user_id: string
           view: number
@@ -294,7 +294,7 @@ export type Database = {
           is_saved?: boolean
           likes: number
           tags: string[]
-          thumbnail_blur_url?: string | null
+          thumbnail_blur_url: string
           upload_place?: string | null
           user_id: string
           view: number
@@ -309,7 +309,7 @@ export type Database = {
           is_saved?: boolean
           likes?: number
           tags?: string[]
-          thumbnail_blur_url?: string | null
+          thumbnail_blur_url?: string
           upload_place?: string | null
           user_id?: string
           view?: number
@@ -368,6 +368,7 @@ export type Database = {
           introduction: string
           is_verified: boolean
           nickname: string
+          onboard: boolean
           profile_image: string | null
         }
         Insert: {
@@ -378,6 +379,7 @@ export type Database = {
           introduction?: string
           is_verified?: boolean
           nickname: string
+          onboard?: boolean
           profile_image?: string | null
         }
         Update: {
@@ -388,6 +390,7 @@ export type Database = {
           introduction?: string
           is_verified?: boolean
           nickname?: string
+          onboard?: boolean
           profile_image?: string | null
         }
         Relationships: []

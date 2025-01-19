@@ -29,9 +29,9 @@ const SortPosts = ({ sort, handleSort }: Props) => {
         />
       </button>
 
-      <div
+      <ul
         className={clsx(
-          "absolute right-0 top-full z-20 overflow-hidden rounded-lg bg-bg-01 shadow-md transition duration-200",
+          "absolute right-0 top-full z-20 min-w-[8rem] overflow-hidden rounded-2xl bg-bg-01 px-6 py-4 shadow-md transition duration-200",
           {
             "opacity-100": isOpen,
             "opacity-0": !isOpen
@@ -41,29 +41,22 @@ const SortPosts = ({ sort, handleSort }: Props) => {
           transformOrigin: "top right"
         }}
       >
-        <ul>
-          {sortOptions.map((option) => (
-            <li
-              key={option.key}
-              className={clsx(
-                "w-full px-4 py-2 text-left transition duration-300 hover:bg-primary-default hover:text-white",
-                {
-                  "bg-primary-default text-white": sort === option.key
-                }
-              )}
+        {sortOptions.map((option) => (
+          <li
+            key={option.key}
+            className="w-full whitespace-nowrap py-2 text-left font-medium transition duration-300 hover:text-primary-default"
+          >
+            <button
+              onClick={() => {
+                handleSort(option.key);
+                setIsOpen(false);
+              }}
             >
-              <button
-                onClick={() => {
-                  handleSort(option.key);
-                  setIsOpen(false);
-                }}
-              >
-                {option.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+              {option.label}
+            </button>
+          </li>
+        ))}
+      </ul>
 
       {isOpen && <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)}></div>}
     </div>

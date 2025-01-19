@@ -4,10 +4,12 @@ import sampleImage from "@/assets/images/image_sample.png";
 import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
+import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { Export } from "@phosphor-icons/react";
 import Image from "next/image";
 import ContentsSkeleton from "./ContentsSkeleton";
+import EditDelete from "./EditDelete";
 import ImageCarousel from "./ImageCarousel";
 import ImageGallery from "./ImageGallery";
 
@@ -17,6 +19,8 @@ type Props = {
 };
 
 const ContentsSection = ({ postId, mode = "page" }: Props) => {
+  const { user } = useAuthStore();
+  const userId = user?.id;
   const { post, isPending, isError } = usePostDetail(postId);
 
   if (isPending) return <ContentsSkeleton />;
@@ -27,6 +31,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   }
 
   const {
+    user_id,
     users,
     created_at,
     content,
@@ -61,6 +66,8 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
               <p className="text-text-03">{upload_place}</p>
             </div>
           </div>
+
+          {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
 
           <p className="mt-6 h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium">{content}</p>
 

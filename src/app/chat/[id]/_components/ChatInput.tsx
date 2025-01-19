@@ -85,7 +85,7 @@ const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
             type="file"
             id="file-input"
             className="hidden"
-            onChange={handleFileUpload} // 파일 선택 시 즉시 전송
+            onChange={handleFileUpload}
           />
           <Image alt="사진 전송하기" size={28} className="text-gray-600" />
         </label>

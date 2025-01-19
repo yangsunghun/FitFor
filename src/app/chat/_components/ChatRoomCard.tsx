@@ -2,16 +2,44 @@ import { Tags } from "@/components/ui/Tags";
 import { ChatRoomType } from "@/lib/types/chat";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { enterAsMember } from "../_utils/chat";
+import { useAuthStore } from "@/lib/store/authStore";
 
 type Props = {
   chatRoom: ChatRoomType;
 };
 
 const ChatRoomCard = ({ chatRoom }: Props) => {
-  const router = useRouter();
+  const currentUser = useAuthStore((state) => state.user);
 
-  const handleCardClick = () => {
-    router.push(`/chat/${chatRoom.room_id}`);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleCardClick = async () => {
+    if (!currentUser || !currentUser.id) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    if (loading) return; // 로딩 중이면 중복 실행 방지
+    setLoading(true);
+
+    try {
+      const result = await enterAsMember(currentUser.id, chatRoom.room_id);
+
+      if (result.success) {
+        router.push(`/chat/${chatRoom.room_id}`); // 채팅방 페이지로 라우팅
+      } else {
+        console.error(result.error || "채팅방 입장 중 문제가 발생했습니다.");
+        alert("채팅방 입장 중 문제가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      alert("채팅방 입장 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

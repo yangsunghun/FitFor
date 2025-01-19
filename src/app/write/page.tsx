@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
-import TagSection from "../../components/shared/TagSection";
+import TagSection from "@/components/shared/TagSection";
 import AddressModal from "./_components/AddressModal";
 import BodySizeSection from "./_components/BodySizeSection";
 import ContentSection from "./_components/ContentSection";

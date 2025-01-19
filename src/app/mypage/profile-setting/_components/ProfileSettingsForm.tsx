@@ -42,7 +42,7 @@ const ProfileSettingsForm = () => {
       });
       setImagePreview(user.profile_image);
     }
-  }, [user]);
+  }, [user, reset, setImagePreview]);
 
   // 제출 함수
   const onSubmit = async (value: FieldValues) => {

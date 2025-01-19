@@ -34,15 +34,13 @@ const ListLender = () => {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage, user]);
 
-  if (isPending) return <p>로딩...</p>;
   if (isError) return <p>오류 발생</p>;
 
   return (
     <>
       <section>
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
-
-        {isMasonry ? <ListLayout posts={posts} /> : <MasonryLayout posts={posts} />}
+        {isMasonry ? <ListLayout posts={posts} /> : <MasonryLayout isPending={isPending} posts={posts} />}
 
         {hasNextPage && <div ref={observerRef}>{isFetchingNextPage ? "불러오는 중 로딩" : "더보기"}</div>}
 

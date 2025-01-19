@@ -20,7 +20,7 @@ type FormState = {
   isModalOpen: boolean;
   isPurchaseModalOpen: boolean;
   productToEdit: Database["public"]["Tables"]["purchase"]["Insert"] | null;
-  thumbnail_blur_url: string | null;
+  thumbnail_blur_url: string;
 };
 
 export const useFormHandlers = () => {
@@ -35,7 +35,7 @@ export const useFormHandlers = () => {
     isModalOpen: false, // 주소 검색 모달 상태
     isPurchaseModalOpen: false, // 상품 추가 모달 상태
     productToEdit: null, // 수정할 상품 데이터
-    thumbnail_blur_url: null
+    thumbnail_blur_url: ""
   });
 
   type PostWithPurchases = Database["public"]["Tables"]["posts"]["Row"] & {
@@ -54,7 +54,7 @@ export const useFormHandlers = () => {
         isModalOpen: false,
         isPurchaseModalOpen: false,
         productToEdit: null,
-        thumbnail_blur_url: data.thumbnail_blur_url || null
+        thumbnail_blur_url: data.thumbnail_blur_url || ""
       });
     } catch (error) {
       console.error("Error initializing form state:", error);

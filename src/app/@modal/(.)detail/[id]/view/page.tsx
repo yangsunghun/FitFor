@@ -30,10 +30,9 @@ const DetailModal = async ({ params }: Props) => {
       <div className="inner relative max-w-[1080px] rounded-2xl bg-bg-01 p-10 shadow-lg">
         <ViewCounter postId={postId} />
         <ContentsSection postId={postId} mode="modal" />
-        {/* <div className="mt-4 flex justify-end gap-2">
+        <div className="absolute bottom-10 right-10">
           <ModalButton label="전체 보기" action="refresh" />
-          <ModalButton label="닫기" action="close" />
-        </div> */}
+        </div>
       </div>
     </ModalBg>
   );

@@ -70,7 +70,7 @@ const HeaderContent = () => {
                 <div>
                   <div className="h-full w-[96px] animate-pulse rounded bg-gray-200" />
                 </div>
-              ) : user ? (
+              ) : user?.onboard ? (
                 <Link href="/mypage">
                   <Image
                     src={user.profile_image as string}

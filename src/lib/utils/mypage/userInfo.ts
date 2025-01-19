@@ -5,27 +5,42 @@ import type { ProfileEditForm } from "@/lib/types/profile";
 import { createClient } from "@/lib/utils/supabase/server";
 
 // 유저 정보 업데이트 하는 로직
+// 온보딩 (닉네임 변경) & 회원정보 수정에 사용됨
 export const updateUserProfile = async ({
   userId,
   imageFileURL,
-  editForm
+  editForm,
+  onboard
 }: {
   userId: string;
   imageFileURL: string | null;
-  editForm: ProfileEditForm;
+  editForm: Partial<ProfileEditForm>;
+  onboard?: boolean;
 }) => {
   const supabase = await createClient();
 
+  // 닉네임만 필드에 있는 경우 (온보딩)
+  // 닉네임, 한줄소개, 성별이 필드에 있는 경우 (회원정보 수정)
+  // 두 필드에 대한 값 정리
+  const updatePayload: Partial<ProfileEditForm> & { profile_image: string | null; onboard?: boolean } = {
+    nickname: editForm.nickname,
+    profile_image: imageFileURL,
+    onboard
+  };
+
+  // 한 줄 소개 (회원 정보 수정)
+  if (editForm.introduction) {
+    updatePayload.introduction = editForm.introduction;
+  }
+
+  // 성별 (회원 정보 수정)
+  if (editForm.gender) {
+    updatePayload.gender = editForm.gender;
+  }
+
   // db의 유저 데이터 업데이트
-  const { error: updateError } = await supabase
-    .from("users")
-    .update({
-      nickname: editForm.nickname,
-      introduction: editForm.introduction,
-      gender: editForm.gender,
-      profile_image: imageFileURL // 새로운 파일 있다면 업로드
-    })
-    .eq("id", userId);
+  // supabase 업데이트 - 업데이트 하려는 값이 undefined인 경우 해당 column을 업데이트 하지 않음
+  const { error: updateError } = await supabase.from("users").update(updatePayload).eq("id", userId);
 
   if (updateError) {
     throw new Error(`프로필 업데이트 실패: ${updateError.message}`);

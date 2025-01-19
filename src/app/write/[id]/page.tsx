@@ -5,7 +5,7 @@ import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import { useEditPostQuery, useUpdatePostMutation } from "@/lib/hooks/write/usePostQueries";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import TagSection from "../../../components/shared/TagSection";
+import TagSection from "@/components/shared/TagSection";
 import AddressModal from "../_components/AddressModal";
 import BodySizeSection from "../_components/BodySizeSection";
 import ContentSection from "../_components/ContentSection";

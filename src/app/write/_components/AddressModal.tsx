@@ -1,6 +1,6 @@
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import { getAddressFromCoordinates, getCurrentPosition } from "../_utils/location";
+import { getAddressFromCoordinates, getCurrentPosition } from "@/lib/utils/write/location";
 
 type AddressModalProps = {
   isOpen: boolean;

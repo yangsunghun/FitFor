@@ -37,7 +37,6 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
     textColor: "text-[#1a1a1a]",
     logo: kakaoLogo
   }
-  // apple: {}
 };
 
 export type FormField<T> = {

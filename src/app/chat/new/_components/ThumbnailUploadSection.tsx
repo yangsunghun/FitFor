@@ -42,7 +42,7 @@ const ThumbnailUploadSection = ({ thumbnail, onChange, error }: ThumbnailUploadS
           {/* 추천 사이즈 및 포맷 */}
           <div className="space-y-1">
             <p className="text-body font-medium text-text-03">추천 사이즈: 190x250</p>
-            <p className="text-body font-medium text-text-03">JPG, PNG, 최대 10MB</p>
+            <p className="text-body font-medium text-text-03">JPG, PNG, 최대 5MB</p>
           </div>
 
           {/* 업로드 버튼 - 수정 필요 */}

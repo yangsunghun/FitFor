@@ -68,11 +68,11 @@ export const insertUserToPublic = async ({
     // 로그인 했던 유저라면
     // 새로 추가 X
     if (existingUser) {
-      return null;
+      return;
     }
 
     // 처음 로그인한 유저는 public.users에 추가
-    const { data, error: insertError } = await supabase.from("users").insert({
+    const { error: insertError } = await supabase.from("users").insert({
       email,
       id,
       nickname,
@@ -84,10 +84,8 @@ export const insertUserToPublic = async ({
       console.error("[유저 정보 데이터베이스 저장 오류]", insertError.message);
       throw insertError;
     }
-
-    return data;
   } catch (error) {
-    console.error("insertUserToPublic error:", error);
+    console.error("[insertUserToPublic error]", error);
     throw error;
   }
 };

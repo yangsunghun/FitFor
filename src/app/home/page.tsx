@@ -1,9 +1,9 @@
-import ListLender from "./_components/ListLender";
+import MainContent from "./_components/MainContent";
 
 const MainPage = () => {
   return (
     <div className="inner">
-      <ListLender />
+      <MainContent />
     </div>
   );
 };

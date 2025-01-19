@@ -8,15 +8,15 @@ import { useEffect, useState } from "react";
 const supabase = createClient();
 
 interface ChatGalleryProps {
-  roomId: string; // 채팅방 ID
+  roomId: string;
 }
 
 const ChatGallery = ({ roomId }: ChatGalleryProps) => {
-  const [images, setImages] = useState<string[]>([]); // 이미지 URL 목록
+  const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState(images[0]); // 클릭된 이미지 URL
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태
+  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -34,7 +34,6 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
           throw new Error("No files found in the specified folder.");
         }
 
-        // 각 파일에 대해 Public URL 비동기 생성
         const urls = await Promise.all(
           fileList.map(async (file) => {
             const { data: publicUrlData } = supabase.storage
@@ -77,20 +76,18 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
           <div
             key={index}
             className="w-full cursor-pointer overflow-hidden rounded-2xl"
-            onClick={() => openModal(url)} // 이미지 클릭 시 모달 열기
+            onClick={() => openModal(url)}
           >
             <Image
               src={url}
               alt={`Image ${index}`}
-              width={400} // 임의의 넓이를 설정, 자동 반응형
-              height={400} // 상응하는 높이 설정
+              width={400}
+              height={400}
               className="aspect-square w-full object-cover"
             />
           </div>
         ))}
       </div>
-
-      {/* ChatImageModal 컴포넌트 사용 */}
 
       <ImageModal isOpen={isModalOpen} images={images} selectedImage={selectedImage} onClose={closeModal} />
     </div>

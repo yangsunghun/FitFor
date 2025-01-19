@@ -7,15 +7,16 @@ import { useEffect, useRef } from "react";
 import LayoutToggle from "./LayoutToggle";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
+import OnboardingModal from "./OnboardingModal";
 
-const ListLender = () => {
+const MainContent = () => {
   const { isMasonry, toggleLayout } = useLayoutStore();
-
   const { posts, fetchNextPage, hasNextPage, isPending, isFetchingNextPage, isError } = usePosts();
 
   const observerRef = useRef(null);
 
   useEffect(() => {
+    // 무한 스크롤 observer
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && hasNextPage) {
@@ -41,6 +42,8 @@ const ListLender = () => {
         )}
 
         {hasNextPage && <div ref={observerRef}>{isFetchingNextPage ? "불러오는 중 로딩" : "더보기"}</div>}
+
+        <OnboardingModal />
       </section>
 
       <FloatingButton variant="primary" href="/write" />
@@ -48,4 +51,4 @@ const ListLender = () => {
   );
 };
 
-export default ListLender;
+export default MainContent;

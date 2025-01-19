@@ -25,35 +25,24 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
-
   const {
     data: { user }
   } = await supabase.auth.getUser();
 
-  if (!user && !request.nextUrl.pathname.startsWith("/login") && !request.nextUrl.pathname.startsWith("/auth")) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+  // 일반 회원가입 기능은 1차에서 잠시 사용 X
+  if (request.nextUrl.pathname.startsWith("/signup")) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
+  // 현재 로그인 상태이면서 경로가 /login 인 경우 마이페이지 리다이렉트.
+  if (user && request.nextUrl.pathname.startsWith("/login")) {
+    return NextResponse.redirect(new URL("/mypage", request.url));
+  }
+
+  // 로그인을 하지 않았는데 마이페이지에 접근하면 로그인 페이지로 리다이렉트
+  if (!user && request.nextUrl.pathname.startsWith("/mypage")) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
   return supabaseResponse;
 }

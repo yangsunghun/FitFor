@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .inner {
+    @apply mx-auto w-[83%];
+  }
+
+  .click-box {
+    @apply absolute left-0 top-0 block h-full w-full;
+  }
+
+  .ellip1 {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+
+  .ellip2 {
+    @apply clear-both line-clamp-2 overflow-hidden text-ellipsis break-words;
+  }
+}
+
+@layer components {
+  .skeleton-effect {
+    @apply animate-pulse rounded bg-gray-200;
+  }
+
+  .skeleton-effect2 {
+    @apply animate-gradient rounded bg-gradient-to-r from-bg-02 via-gray-200 to-bg-02 bg-[length:500%_auto];
+  }
+
+  .thumbnail {
+    @apply relative overflow-hidden;
+  }
+
+  .thumbnail > img {
+    @apply object-cover object-center;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .searchbar-shadow {
+    @apply shadow-[0px_0px_1px_0px_rgba(0,0,0,0.08)] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.08)] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.12)];
+  }
+}
+
+.image-modal .swiper .swiper-pagination {
+  @apply bottom-20;
+}
+
+.swiper .swiper-pagination .swiper-pagination-bullet {
+  @apply bg-bg-01 opacity-50;
+}
+
+.swiper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+  @apply opacity-100;
+}
+
+.image-modal .swiper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+  @apply bg-primary-default;
+}
+
+/* input type=search x button 제거 */
+/* WebKit browsers */
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* Firefox */
+input[type="search"]::-moz-search-cancel-button {
+  display: none;
+}
+
+/* Edge */
+input[type="search"]::-ms-clear {
+  display: none;
+}
+
+/* shadcn용 radius 변경시 수정 */
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}

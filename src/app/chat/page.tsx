@@ -6,10 +6,11 @@ import React, { useState, useEffect } from "react";
 import { enterAsMember } from "./_utils/chat";
 import { useAuthStore } from "@/lib/store/authStore";
 import Image from "next/image";
+import { FloatingButton } from "@/components/ui/FloatingButton";
 
 const supabase = createClient();
 
-export default function ChatRoomListPage() {
+const ChatRoomListPage = () => {
   const router = useRouter();
   const currentUser = useAuthStore((state) => state.user);
 
@@ -105,8 +106,12 @@ export default function ChatRoomListPage() {
           </li>
         ))}
       </ul>
+
+      <FloatingButton variant="primary" href="/chat/new" />
     </div>
   );
-}
+};
+
+export default ChatRoomListPage;
 
 // 채팅방 생성 페이지로 이동하는 플로팅 버튼입니다.

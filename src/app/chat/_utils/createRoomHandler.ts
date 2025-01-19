@@ -5,11 +5,8 @@ export const createRoomHandler = async (
   userId: string,
   roomDetails: {
     title: string;
-    subtitle: string;
-    description: string;
-    category: string; // 카테고리 추가함!!
-    hashtags: string[];
     thumbnail: File; // 추가: 썸네일 파일
+    tags: string[];
   }
 ) => {
   try {
@@ -19,10 +16,7 @@ export const createRoomHandler = async (
     // Step 2: 기존 createChatRoom 호출
     const response = await createChatRoom(userId, {
       title: roomDetails.title,
-      subtitle: roomDetails.subtitle,
-      description: roomDetails.description,
-      category: roomDetails.category,
-      hashtags: roomDetails.hashtags,
+      tags: roomDetails.tags,
       thumbnailUrl // 업로드된 썸네일 URL 전달
     });
 

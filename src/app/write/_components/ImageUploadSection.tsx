@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
@@ -9,11 +11,13 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGES = 4; // 최대 업로드 가능한 이미지 개수
 
 type ImageUploadSectionProps = {
-  images: string[]; // 나머지 이미지 배열
+  images: string[]; // 이미지 배열
   setImages: (images: string[]) => void; // 이미지 배열 업데이트 함수
+  blur: string | null;
+  setBlur: (blurUrl: string) => void; // Base64 블러 데이터 업데이트 함수
 };
 
-function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
+function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSectionProps) {
   const [imageHashes, setImageHashes] = useState<string[]>([]); // 업로드된 이미지 해시를 배열로 관리
 
   // 고유 파일 경로 생성
@@ -30,6 +34,38 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
     const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  };
+
+  // Base64 Blur 데이터 생성
+  const generateBlurData = async (file: File): Promise<string | null> => {
+    try {
+      const imageBitmap = await createImageBitmap(file);
+
+      // Canvas 설정
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) {
+        console.error("Canvas context 생성 실패");
+        return null;
+      }
+
+      // Canvas 크기 설정 (아주 작은 크기로 축소)
+      const width = 3; // 축소된 너비
+      const height = (imageBitmap.height / imageBitmap.width) * width; // 비율 유지
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // 이미지를 Canvas에 그리기
+      ctx.drawImage(imageBitmap, 0, 0, width, height);
+
+      // Canvas 데이터를 Base64로 변환
+      return canvas.toDataURL("image/jpeg", 0.5); // 품질 50%
+    } catch (e) {
+      console.error("Blur 처리 실패:", e);
+      return null;
+    }
   };
 
   // Supabase에 파일 업로드
@@ -83,6 +119,14 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
       const url = await uploadImage(file);
       newImages.push(url);
       newHashes.push(hash);
+
+      if (!blur) {
+        const blurData = await generateBlurData(file);
+
+        if (blurData) {
+          setBlur(blurData); // Base64 데이터를 부모 상태로 전달
+        }
+      }
 
       // 최대 업로드 제한에 도달하면 작업 중단
       if (existingCount + newImages.length > MAX_IMAGES) {
@@ -193,7 +237,7 @@ function ImageUploadSection({ images, setImages }: ImageUploadSectionProps) {
                         onClick={() => handleDelete(index)}
                         className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
                       >
-                      <Trash size={16} />
+                        <Trash size={16} />
                       </button>
                       {/* 썸네일로 설정 버튼 - 임의로 만들어서 체킹받고 또 수정예정..*/}
                       {index !== 0 && (

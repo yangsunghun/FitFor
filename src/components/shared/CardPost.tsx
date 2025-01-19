@@ -16,7 +16,14 @@ const Cardpost = ({ post, isMasonry }: Props) => {
     <div className={clsx("masonry-post group relative overflow-hidden rounded-2xl", isMasonry || "aspect-square")}>
       <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
       <figure className="relative h-full w-full">
-        <Image src={post.images[0]} alt={post.content} {...imageProps} className="object-cover object-center" />
+        <Image
+          src={post.images[0]}
+          alt={post.content}
+          {...imageProps}
+          className="object-cover object-center"
+          placeholder="blur"
+          blurDataURL={post.thumbnail_blur_url}
+        />
       </figure>
       <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100">
         <div className="absolute right-4 top-4 z-20">

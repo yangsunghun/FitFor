@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
+import TagSection from "../../components/shared/TagSection";
 import AddressModal from "./_components/AddressModal";
 import BodySizeSection from "./_components/BodySizeSection";
 import ContentSection from "./_components/ContentSection";
@@ -8,7 +9,6 @@ import ImageUploadSection from "./_components/ImageUploadSection";
 import LocationSection from "./_components/LocationSection";
 import ProductSection from "./_components/ProductSection";
 import PurchaseModal from "./_components/PurchaseModal";
-import TagSection from "../../components/shared/TagSection";
 
 const WritePage = () => {
   const {
@@ -19,11 +19,13 @@ const WritePage = () => {
     handleDeletePurchase,
     handleBodySizeChange,
     handleSubmit,
-    toggleTagSelector
+    toggleTagSelector,
+    handleChangeCategory,
+    selectedCategory
   } = useFormHandlers();
 
   return (
-    <div className="mx-auto max-w-[700px] pt-10 pb-20">
+    <div className="mx-auto max-w-[700px] pb-20 pt-10">
       {/* 어쩔수 없이 pb로 설정.. */}
       <div className="space-y-2 pb-10">
         <h1 className="text-title1 font-bold leading-[150%] text-text-04">게시물 작성하기</h1>
@@ -33,7 +35,14 @@ const WritePage = () => {
       <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
         <ContentSection content={formState.content} onChange={(value) => handleChange("content", value)} />
 
-        <ImageUploadSection images={formState.images} setImages={(images) => handleChange("images", images)} />
+        {/* 이미지 업로드 섹션 */}
+
+        <ImageUploadSection
+          images={formState.images}
+          blur={formState.thumbnail_blur_url}
+          setImages={(images) => handleChange("images", images)}
+          setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
+        />
 
         <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />
 
@@ -59,8 +68,8 @@ const WritePage = () => {
         <TagSection
           title="게시물 주제를 선택해주세요."
           tags={formState.tags}
-          selectedCategory={formState.selectedCategory}
-          onChangeCategory={(category) => handleChange("selectedCategory", category)}
+          selectedCategory={selectedCategory}
+          onChangeCategory={handleChangeCategory}
           toggleTagSelector={toggleTagSelector}
         />
       </div>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/lib/store/authStore";
 import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { createClient } from "@/lib/utils/supabase/client";
-import { PROFILE_EDIT_FIELD, profileSettingSchema } from "@/lib/validations/profileSettingSchema";
+import { PROFILE_EDIT_FIELD, profileSettingSchema } from "@/lib/validations/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
@@ -14,9 +14,9 @@ import ProfileImageUploadSection from "./ProfileImageUploadSection";
 
 const ProfileSettingsForm = () => {
   const { user, setUser } = useAuthStore();
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null); // 이미지 storage 저장용
+  const [imagePreview, setImagePreview] = useState<string | null>(null); // 이미지 미리보기
+  const [isUploading, setIsUploading] = useState(false); // 저장 중 버튼 클릭 방지
   const {
     register,
     handleSubmit,

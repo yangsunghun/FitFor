@@ -1,6 +1,6 @@
+import type { FormField } from "@/lib/types/auth";
+import type { ProfileEditForm } from "@/lib/types/profile";
 import { z } from "zod";
-import type { FormField } from "../types/auth";
-import type { ProfileEditForm } from "../types/profile";
 
 export const profileSettingSchema = z.object({
   nickname: z.string().min(2, "닉네임은 최소 2글자 이상이어야 합니다.").max(5, "닉네임은 최대 5글자까지 가능합니다."),

@@ -1,6 +1,6 @@
+import { UserType } from "@/lib/types/auth";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { UserType } from "../types/auth";
 
 // 유저 로그인 여부 및 정보 스토어
 type AuthState = {

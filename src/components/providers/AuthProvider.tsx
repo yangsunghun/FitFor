@@ -5,7 +5,7 @@ import type { UserType } from "@/lib/types/auth";
 import { fetchUser } from "@/lib/utils/auth/auth";
 import { createContext, useEffect, useState, type PropsWithChildren } from "react";
 
-const AuthContext = createContext<{user: UserType | null}>({user: null});
+const AuthContext = createContext<{ user: UserType | null }>({ user: null });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { user, setUser } = useAuthStore();
@@ -16,9 +16,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const fetchSignedUser = async () => {
       try {
-        // TODO: 변수에 담자
-        const user = await fetchUser()
-        // console.log({user})
+        const user = await fetchUser();
         if (user) {
           setUser(user);
           setIsAuthenticated(true);
@@ -30,7 +28,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     };
 
     fetchSignedUser();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, setUser]);
 
   return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
 };

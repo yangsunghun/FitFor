@@ -1,4 +1,4 @@
-import HeaderContent from "./HeaderContent";
+import HeaderContent from "@/components/layout/HeaderContent";
 
 const Header = () => {
   return (

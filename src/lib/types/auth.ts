@@ -1,6 +1,6 @@
 import googleLogo from "@/assets/images/google-logo.svg";
 import kakaoLogo from "@/assets/images/kakao-logo.svg";
-import { Database } from "./supabase";
+import { Database } from "@/lib/types/supabase";
 import type { HTMLInputTypeAttribute } from "react";
 
 export type UserType = Database["public"]["Tables"]["users"]["Row"];

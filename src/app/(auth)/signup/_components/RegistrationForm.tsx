@@ -5,7 +5,7 @@ import { signupSchema } from "@/lib/validations/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm, type FieldValues } from "react-hook-form";
-import AuthInput from "../../_components/AuthInput";
+import AuthInput from "@/app/(auth)/_components/AuthInput";
 
 const RegistrationForm = () => {
   const { register, handleSubmit, formState } = useForm({

@@ -21,6 +21,14 @@
 }
 
 @layer components {
+  .skeleton-effect {
+    @apply animate-pulse rounded bg-gray-200;
+  }
+
+  .skeleton-effect2 {
+    @apply animate-gradient rounded bg-gradient-to-r from-bg-02 via-gray-200 to-bg-02 bg-[length:500%_auto];
+  }
+
   .thumbnail {
     @apply relative overflow-hidden;
   }

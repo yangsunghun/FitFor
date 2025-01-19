@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchMessages } from "@/lib/utils/chat/fetchMessages";
 import Image from "next/image";
 import sampleImage from "@/assets/images/image_sample.png";
+import { ChatMessage } from "@/lib/types/chat";
 
 const supabase = createClient();
 
@@ -28,10 +29,10 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
     data: messages = [],
     isLoading,
     isError
-  } = useQuery({
+  } = useQuery<ChatMessage[]>({
     queryKey: ["chatMessages", roomId],
     queryFn: () => fetchMessages(roomId),
-    staleTime: 1000 * 60 // 1분간 캐시 유지
+    staleTime: 1000 * 60
   });
 
   // 메시지가 변경될 때마다 스크롤을 맨 아래로 이동
@@ -65,7 +66,7 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
   return (
     <div className="scrollbar-hide mb-5 flex h-[800px] w-full flex-col overflow-y-scroll rounded-lg bg-white">
       <div className="flex flex-col gap-6">
-        {messages.map((message: any) => {
+        {messages.map((message: ChatMessage) => {
           const isSender = message.member_id === currentUserId;
 
           return (

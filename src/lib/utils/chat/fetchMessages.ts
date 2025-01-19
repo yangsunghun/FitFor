@@ -1,8 +1,9 @@
+import type { ChatMessage } from "@/lib/types/chat";
 import { createClient } from "@/lib/utils/supabase/client";
 
 const supabase = createClient();
 
-export const fetchMessages = async (roomId: string) => {
+export const fetchMessages = async (roomId: string): Promise<ChatMessage[]> => {
   const { data, error } = await supabase
     .from("chat_messages")
     .select(

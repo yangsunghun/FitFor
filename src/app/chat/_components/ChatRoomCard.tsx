@@ -1,88 +1,59 @@
+import { Tags } from "@/components/ui/Tags";
+import { ChatRoomType } from "@/lib/types/chat";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-interface ChatRoom {
-  room_id: string;
-  room_title: string;
-  room_thumbnail_url: string;
-  created_at: string;
-  room_hash_tags: string[];
-}
+type Props = {
+  chatRoom: ChatRoomType;
+};
 
-interface ChatRoomCardProps {
-  chatrooms: ChatRoom[];
-}
+const ChatRoomCard = ({ chatRoom }: Props) => {
+  const router = useRouter();
 
-const ChatRoomCard = ({ chatrooms }: ChatRoomCardProps) => {
+  const handleCardClick = () => {
+    router.push(`/chat/${chatRoom.room_id}`);
+  };
+
   return (
-    <div className="mx-auto max-w-[1200px] bg-white py-10 text-black">
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-        {chatrooms.map((room) => (
-          <a
-            key={room.room_id}
-            href={`/chat/${room.room_id}`}
-            className="overflow-hidden rounded-lg border bg-white shadow-md transition hover:shadow-lg"
-          >
-            {room.room_thumbnail_url && (
-              <Image
-                src={room.room_thumbnail_url}
-                alt={room.room_title}
-                width={400}
-                height={250}
-                className="h-48 w-full object-cover"
-              />
-            )}
-            <div className="p-4">
-              <h2 className="text-xl font-semibold">{room.room_title}</h2>
-            </div>
-          </a>
-        ))}
+    <div className="flex w-[190px] cursor-pointer flex-col gap-3" onClick={handleCardClick}>
+      {/* 썸네일 */}
+      <figure className="relative h-[252px] w-full overflow-hidden rounded-2xl shadow-md">
+        <Image
+          src={chatRoom.room_thumbnail_url || "https://via.placeholder.com/190x252"}
+          alt={`${chatRoom.room_title}'s thumbnail`}
+          fill
+          className="object-cover transition duration-300 hover:brightness-75"
+        />
+        {/* 채팅방 참여자 수 */}
+        <figcaption className="absolute left-2 top-2 flex items-center gap-1 rounded bg-black/70 px-2 py-1">
+          <span className="text-xs rounded-full">🔴</span>
+          <span className="text-caption font-medium text-text-01">{chatRoom.participantCount}명</span>
+        </figcaption>
+      </figure>
+
+      {/* 채팅방 정보 */}
+      <div className="flex flex-col items-start gap-2">
+        <div className="flex items-center gap-2">
+          <Image
+            src={chatRoom.user.profile_image || "/default-profile.png"}
+            alt={`${chatRoom.user.nickname}'s profile`}
+            width={30}
+            height={30}
+            className="rounded-full border border-gray-300 bg-white"
+          />
+          <span className="text-sm font-medium text-gray-800">{chatRoom.user.nickname}</span>
+        </div>
+        <h3 className="text-sm line-clamp-2 font-semibold text-black">
+          {chatRoom.room_title || "채팅방 제목이 없습니다."}
+        </h3>
+      </div>
+
+      {/* 태그 */}
+      <div className="flex flex-wrap gap-1">
+        {chatRoom.room_tags?.map((tag, index) => <Tags key={index} label={tag} variant="grayLine" size="sm" />)}
       </div>
     </div>
   );
 };
 
 export default ChatRoomCard;
-
-// import Image from "next/image";
-
-// interface ChatRoom {
-//   id: string;
-//   title: string;
-//   image_url: string | null;
-//   created_at: string;
-//   room_leader: string;
-// }
-
-// interface ChatListProps {
-//   chatrooms: ChatRoom[];
-// }
-
-// export default function ChatList({ chatrooms }: ChatListProps) {
-//   return (
-//     <div className="mx-auto max-w-[1200px] bg-white py-10 text-black">
-//       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-//         {chatrooms.map((room) => (
-//           <a
-//             key={room.id}
-//             href={`/chat/${room.id}`}
-//             className="overflow-hidden rounded-lg border bg-white shadow-md transition hover:shadow-lg"
-//           >
-//             {room.image_url && (
-//               <Image
-//                 src={room.image_url}
-//                 alt={room.title}
-//                 width={400}
-//                 height={250}
-//                 className="h-48 w-full object-cover"
-//               />
-//             )}
-//             <div className="p-4">
-//               <h2 className="text-xl font-semibold">{room.title}</h2>
-//               <p className="text-sm text-gray-500">생성일: {new Date(room.created_at).toLocaleDateString()}</p>
-//             </div>
-//           </a>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }

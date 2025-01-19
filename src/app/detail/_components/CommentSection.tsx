@@ -19,7 +19,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
   const { comments, isPending, addComment, deleteComment } = useComment(postId);
 
   if (isPending) {
-    return <p>스켈레톤 ui 추가해야겠지?</p>;
+    return;
   }
 
   const handleDeleteComment = (id: string) => {

@@ -66,7 +66,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
   }
 
   if (likePending || bookmarkPending) {
-    return <p>스켈레톤 ui 추가해야겠지?</p>;
+    return;
   }
 
   return (

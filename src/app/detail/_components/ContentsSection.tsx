@@ -26,12 +26,26 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
     return <div>게시물을 찾을 수 없습니다.</div>;
   }
 
-  const { users, created_at, content, tags = [], body_size = [], view, images = [], upload_place } = post!;
+  const {
+    users,
+    created_at,
+    content,
+    tags = [],
+    body_size = [],
+    view,
+    images = [],
+    upload_place,
+    thumbnail_blur_url
+  } = post!;
 
   return (
     <>
       <article className="flex justify-between">
-        {mode === "page" ? <ImageGallery images={images} writerSpec={body_size} /> : <ImageCarousel images={images} />}
+        {mode === "page" ? (
+          <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
+        ) : (
+          <ImageCarousel images={images} blur={thumbnail_blur_url} />
+        )}
         <div className="relative w-[46%]">
           <div className="flex items-center gap-4">
             <figure className="relative h-12 w-12 overflow-hidden rounded-full border bg-gray-100">

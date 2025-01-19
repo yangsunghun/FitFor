@@ -89,7 +89,6 @@ const ListLender = () => {
         {/* 온보딩 폼이 작성 완료 되었을때만 모달이 자동으로 닫힘 */}
         <ModalItem isOpen={onboardModal} onClose={() => {}}>
           <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-            {/* TODO: 온보딩 로직 추가 */}
             <div className="flex flex-col gap-2">
               <h3 className="text-title1 font-bold text-text-04">프로필을 만들어주세요!</h3>
               <p className="text-subtitle font-medium">다른 사람들과 소통할 나만의 프로필이에요.</p>

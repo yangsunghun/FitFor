@@ -1,3 +1,6 @@
+"use client";
+
+import ModalItem from "@/components/ui/Modal";
 import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import Image from "next/image";
@@ -17,6 +20,7 @@ type ProductModalProps = {
   mode: "add" | "edit";
   purchasesLength: number; // 현재 상품 개수
 };
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 최대 업로드 파일 크기 5MB
 
 const PurchaseModal = ({
@@ -164,85 +168,83 @@ const PurchaseModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-        <h2 className="text-xl mb-4 font-bold">{mode === "add" ? "상품 추가" : "상품 수정"}</h2>
+    <ModalItem isOpen={isOpen} onClose={handleClose}>
+      <h2 className="text-xl mb-4 font-bold">{mode === "add" ? "상품 추가" : "상품 수정"}</h2>
 
-        {/* 이미지 업로드 */}
-        <div
-          className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border border-gray-300 bg-gray-100"
-          onClick={handleImageUpload}
-        >
-          {image_url ? (
-            <div className="relative h-full w-full">
-              <Image
-                src={image_url}
-                alt="Uploaded"
-                layout="fill" // 부모 요소를 기준으로 채움
-                objectFit="cover" // 이미지 비율 유지하며 영역을 꽉 채움
-              />
-            </div>
-          ) : (
-            <span className="flex h-full items-center justify-center text-gray-400">+ 추가</span>
-          )}
-        </div>
-
-        {/* 상품명 */}
-        <div className="mb-4">
-          <label className="mb-2 block font-bold">상품명</label>
-          <input
-            type="text"
-            name="title"
-            value={title}
-            onChange={handleInputChange}
-            placeholder="상품명을 입력해주세요."
-            className="w-full rounded-md border p-2"
-          />
-        </div>
-
-        {/* 설명 */}
-        <div className="mb-4">
-          <label className="mb-2 block font-bold">설명</label>
-          <textarea
-            name="description"
-            value={description}
-            onChange={handleInputChange}
-            placeholder="상품의 설명을 작성해주세요."
-            className="w-full resize-none rounded-md border p-2"
-            rows={2}
-          ></textarea>
-        </div>
-
-        {/* 링크 */}
-        <div className="mb-4">
-          <label className="mb-2 block font-bold">상품 링크</label>
-          <input
-            type="url"
-            name="buy_link"
-            value={formState.buy_link || ""}
-            onChange={handleInputChange}
-            placeholder="상품 구매 링크를 입력해주세요."
-            className="w-full rounded-md border p-2"
-          />
-        </div>
-
-        {/* 버튼 */}
-        <div className="flex justify-end gap-4">
-          <button
-            className="rounded-md bg-gray-300 px-4 py-2 hover:bg-gray-400"
-            onClick={handleClose} // 폼 초기화 및 모달 닫기
-          >
-            취소
-          </button>
-          <button
-            className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800"
-            onClick={handleSubmit} // 데이터 저장 및 모달 닫기
-          >
-            {mode === "add" ? "추가 완료" : "수정 완료"}
-          </button>
-        </div>
+      {/* 이미지 업로드 */}
+      <div
+        className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border border-gray-300 bg-gray-100"
+        onClick={handleImageUpload}
+      >
+        {image_url ? (
+          <div className="relative h-full w-full">
+            <Image
+              src={image_url}
+              alt="Uploaded"
+              layout="fill" // 부모 요소를 기준으로 채움
+              objectFit="cover" // 이미지 비율 유지하며 영역을 꽉 채움
+            />
+          </div>
+        ) : (
+          <span className="flex h-full items-center justify-center text-gray-400">+ 추가</span>
+        )}
       </div>
-    </div>
+
+      {/* 상품명 */}
+      <div className="mb-4">
+        <label className="mb-2 block font-bold">상품명</label>
+        <input
+          type="text"
+          name="title"
+          value={title}
+          onChange={handleInputChange}
+          placeholder="상품명을 입력해주세요."
+          className="w-full rounded-md border p-2"
+        />
+      </div>
+
+      {/* 설명 */}
+      <div className="mb-4">
+        <label className="mb-2 block font-bold">설명</label>
+        <textarea
+          name="description"
+          value={description}
+          onChange={handleInputChange}
+          placeholder="상품의 설명을 작성해주세요."
+          className="w-full resize-none rounded-md border p-2"
+          rows={2}
+        ></textarea>
+      </div>
+
+      {/* 링크 */}
+      <div className="mb-4">
+        <label className="mb-2 block font-bold">상품 링크</label>
+        <input
+          type="url"
+          name="buy_link"
+          value={formState.buy_link || ""}
+          onChange={handleInputChange}
+          placeholder="상품 구매 링크를 입력해주세요."
+          className="w-full rounded-md border p-2"
+        />
+      </div>
+
+      {/* 버튼 */}
+      <div className="flex justify-end gap-4">
+        <button
+          className="rounded-md bg-gray-300 px-4 py-2 hover:bg-gray-400"
+          onClick={handleClose} // 폼 초기화 및 모달 닫기
+        >
+          취소
+        </button>
+        <button
+          className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800"
+          onClick={handleSubmit} // 데이터 저장 및 모달 닫기
+        >
+          {mode === "add" ? "추가 완료" : "수정 완료"}
+        </button>
+      </div>
+    </ModalItem>
   );
 };
 

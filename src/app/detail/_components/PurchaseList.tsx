@@ -30,7 +30,9 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
       <ul className="grid grid-cols-4 gap-6">
         {purchases.map((purchase: Purchase) => (
           <li key={purchase.id} className="relative">
-            {purchase.buy_link && <Link href={purchase.buy_link} title={purchase.title}></Link>}
+            {purchase.buy_link && (
+              <Link href={purchase.buy_link} title={purchase.title} target="_blank" className="click-box z-10"></Link>
+            )}
             {purchase.image_url && (
               <figure className="thumbnail aspect-square w-full rounded-lg border border-line-02">
                 <Image src={purchase.image_url} alt={purchase.title} fill={true} className="object-cover" />

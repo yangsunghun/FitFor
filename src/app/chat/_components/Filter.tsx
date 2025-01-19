@@ -5,8 +5,8 @@ import { TAG_GROUPS } from "@/lib/constants/constants";
 import { Tags } from "@/components/ui/Tags";
 
 const Filter = ({ onFilterChange }: { onFilterChange: (tags: { [key: string]: string[] }) => void }) => {
-  const [activeTab, setActiveTab] = useState(TAG_GROUPS[0].key); // 첫 번째 탭 활성화
-  const [selectedTags, setSelectedTags] = useState<{ [key: string]: string[] }>({}); // 선택된 태그 상태
+  const [activeTab, setActiveTab] = useState(TAG_GROUPS[0].key);
+  const [selectedTags, setSelectedTags] = useState<{ [key: string]: string[] }>({});
 
   // 탭 전환
   const handleTabChange = (key: string) => {

@@ -10,9 +10,10 @@ import { SwiperSlide } from "swiper/react";
 type Props = {
   images: string[];
   writerSpec: number[];
+  blur: string;
 };
 
-const ImageGallery = ({ images, writerSpec }: Props) => {
+const ImageGallery = ({ images, writerSpec, blur }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(images[0]);
 
@@ -24,7 +25,7 @@ const ImageGallery = ({ images, writerSpec }: Props) => {
       <ImageModal isOpen={isOpen} images={images} selectedImage={selectedImage} onClose={closeModal} />
       <div className="w-[48%]">
         <figure className="thumbnail mb-4 aspect-square w-full rounded-2xl">
-          <Image src={selectedImage} alt="Selected" fill={true} />
+          <Image src={selectedImage} alt="Selected" fill={true} placeholder="blur" blurDataURL={blur} />
           {writerSpec.length === 2 && (
             <p className="absolute bottom-4 left-4 rounded-lg bg-bg-01 bg-opacity-80 px-2 py-1 text-caption font-medium text-text-03">
               {writerSpec[0]}cm · {writerSpec[1]}kg

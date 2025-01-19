@@ -4,10 +4,12 @@ import sampleImage from "@/assets/images/image_sample.png";
 import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
+import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { Export } from "@phosphor-icons/react";
 import Image from "next/image";
 import ContentsSkeleton from "./ContentsSkeleton";
+import EditDelete from "./EditDelete";
 import ImageCarousel from "./ImageCarousel";
 import ImageGallery from "./ImageGallery";
 
@@ -17,6 +19,8 @@ type Props = {
 };
 
 const ContentsSection = ({ postId, mode = "page" }: Props) => {
+  const { user } = useAuthStore();
+  const userId = user?.id;
   const { post, isPending, isError } = usePostDetail(postId);
 
   if (isPending) return <ContentsSkeleton />;
@@ -26,12 +30,27 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
     return <div>게시물을 찾을 수 없습니다.</div>;
   }
 
-  const { users, created_at, content, tags = [], body_size = [], view, images = [], upload_place } = post!;
+  const {
+    user_id,
+    users,
+    created_at,
+    content,
+    tags = [],
+    body_size = [],
+    view,
+    images = [],
+    upload_place,
+    thumbnail_blur_url
+  } = post!;
 
   return (
     <>
       <article className="flex justify-between">
-        {mode === "page" ? <ImageGallery images={images} writerSpec={body_size} /> : <ImageCarousel images={images} />}
+        {mode === "page" ? (
+          <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
+        ) : (
+          <ImageCarousel images={images} blur={thumbnail_blur_url} />
+        )}
         <div className="relative w-[46%]">
           <div className="flex items-center gap-4">
             <figure className="relative h-12 w-12 overflow-hidden rounded-full border bg-gray-100">
@@ -47,6 +66,8 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
               <p className="text-text-03">{upload_place}</p>
             </div>
           </div>
+
+          {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
 
           <p className="mt-6 h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium">{content}</p>
 

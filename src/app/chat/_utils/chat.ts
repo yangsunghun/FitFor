@@ -12,7 +12,7 @@ export const createChatRoom = async (
   }
 ) => {
   try {
-    // Step 1: 채팅방 생성
+    // 채팅방 생성
     const { data: chatRoom, error: roomError } = await supabase
       .from("chat_rooms")
       .insert({
@@ -27,7 +27,7 @@ export const createChatRoom = async (
 
     if (roomError) throw roomError;
 
-    // Step 2: 생성자를 관리자로 등록
+    // 생성자를 관리자로 등록
     const { error: adminError } = await enterAsAdmin(userId, chatRoom.room_id);
 
     if (adminError) throw adminError;
@@ -59,7 +59,7 @@ export const enterAsAdmin = async (userId: string, roomId: string) => {
 // 채팅방 일반 멤버로 등록하기(기존 멤버의 isActive 상태를 활용해서 입장 가능 여부 판단)
 export const enterAsMember = async (userId: string, roomId: string) => {
   try {
-    // Step 1: 기존 멤버 상태 확인
+    // 기존 멤버 상태 확인
     const { data: existingMember, error: checkError } = await supabase
       .from("chat_members")
       .select("member_id, room_id, isActive")
@@ -68,7 +68,6 @@ export const enterAsMember = async (userId: string, roomId: string) => {
       .single();
 
     if (checkError && checkError.code !== "PGRST116") {
-      // PGRST116: 데이터가 없음을 나타냄
       throw checkError;
     }
 
@@ -108,7 +107,7 @@ export const enterAsMember = async (userId: string, roomId: string) => {
 // 방장 정보 가져오기
 export const getAdminDetails = async (roomId: string) => {
   try {
-    // Step 1: 방장의 member_id 가져오기
+    // 방장의 member_id 가져오기
     const { data: adminMember, error: adminError } = await supabase
       .from("chat_members")
       .select("member_id")
@@ -118,10 +117,10 @@ export const getAdminDetails = async (roomId: string) => {
 
     if (adminError || !adminMember) throw adminError || new Error("방장을 찾을 수 없습니다.");
 
-    // Step 2: 방장의 프로필 정보 가져오기 (users 테이블에서 조회)
+    // 방장의 프로필 정보 가져오기
     const { data: adminProfile, error: profileError } = await supabase
-      .from("users") // Supabase Auth에서 사용하는 users 테이블
-      .select("id, nickname, profile_image") // 필요한 필드 선택
+      .from("users")
+      .select("id, nickname, profile_image")
       .eq("id", adminMember.member_id)
       .single();
 
@@ -160,7 +159,7 @@ export const exitChatRoom = async (userId: string, roomId: string) => {
 // 채팅방 삭제하기 (방장만 가능)
 export const deleteChatRoom = async (userId: string | undefined, roomId: string) => {
   try {
-    // Step 1: 방장이 맞는지 확인
+    // 방장 확인
     const { data: roomData, error: roomError } = await supabase
       .from("chat_rooms")
       .select("user_id")
@@ -202,8 +201,8 @@ export const sendMessage = async ({
   let fileUrl = null;
 
   // 파일 용량 제한 (예: 5MB)
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-  const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "gif"]; // 허용된 확장자
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "gif"];
 
   if (file) {
     // 파일 용량 검증

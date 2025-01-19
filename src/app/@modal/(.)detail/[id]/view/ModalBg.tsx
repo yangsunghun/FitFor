@@ -9,9 +9,11 @@ type ModalBgProps = {
 
 const ModalBg = ({ children }: ModalBgProps) => {
   const router = useRouter();
-  const bodyRef = useRef(document.body);
+  const bodyRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
+    bodyRef.current = document.body;
+
     if (bodyRef.current) {
       bodyRef.current.style.overflow = "hidden";
     }

@@ -25,7 +25,7 @@ export const useSearchQuery = () => {
     if (page !== pageFromUrl) setPage(pageFromUrl);
     if (JSON.stringify(tags) !== JSON.stringify(tagsFromUrl)) setTags(tagsFromUrl);
     if (sort !== sortFromUrl) setSort(sortFromUrl);
-  }, [queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
+  }, [query, page, tags, sort, queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
 
   // JSON을 URL-safe한 배열 표현으로 변환하는 헬퍼 함수
   const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => {

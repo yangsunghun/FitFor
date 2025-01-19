@@ -51,7 +51,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             <p className="text-text-03">{relativeTimeDay(created_at)}</p>
           </div>
 
-          <p className="mt-6 h-[8.5rem] overflow-auto text-title2 font-medium">{content}</p>
+          <p className="mt-6 h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium">{content}</p>
 
           {tags.length > 0 && (
             <div className="mt-10 flex flex-wrap gap-2">

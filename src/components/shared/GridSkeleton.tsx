@@ -3,7 +3,7 @@ import { Tags } from "../ui/Tags";
 const GridSkeleton = () => {
   return (
     <li className="relative mb-4">
-      <figure className="skeleton-effect aspect-square rounded-2xl"></figure>
+      <div className="skeleton-effect aspect-square rounded-2xl"></div>
 
       <p className="skeleton-effect2 mt-4 h-6"></p>
       <div className="mt-3 flex flex-wrap gap-2">

@@ -34,7 +34,11 @@ const ListLender = () => {
     <>
       <section>
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
-        {isMasonry ? <ListLayout posts={posts} /> : <MasonryLayout isPending={isPending} posts={posts} />}
+        {isMasonry ? (
+          <ListLayout isPending={isPending} posts={posts} />
+        ) : (
+          <MasonryLayout isPending={isPending} posts={posts} />
+        )}
 
         {hasNextPage && <div ref={observerRef}>{isFetchingNextPage ? "불러오는 중 로딩" : "더보기"}</div>}
       </section>

@@ -97,7 +97,7 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
                   {/* 메시지 박스 */}
                   {message.content && (
                     <div className="max-w-[800px] break-words break-all rounded-lg bg-bg-02 px-4 py-3">
-                      <p className="m-0 text-title2 font-medium leading-6 text-text-04">{message.content}</p>
+                      <p className="m-0 text-title2 font-medium leading-6 whitespace-pre-wrap text-text-04">{message.content}</p>
                     </div>
                   )}
 

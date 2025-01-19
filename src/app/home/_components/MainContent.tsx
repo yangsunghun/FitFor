@@ -16,7 +16,7 @@ import LayoutToggle from "./LayoutToggle";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
 
-const ListLender = () => {
+const MainContent = () => {
   const { user, setUser } = useAuthStore();
   const [onboardModal, setOnboardModal] = useState(false);
   const {
@@ -119,4 +119,4 @@ const ListLender = () => {
   );
 };
 
-export default ListLender;
+export default MainContent;

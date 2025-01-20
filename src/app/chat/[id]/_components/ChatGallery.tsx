@@ -69,15 +69,11 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="scrollbar-hide mb-5 flex h-[800px] w-full flex-col overflow-y-scroll rounded-lg bg-white">
+    <div className="scrollbar-hide mb-5 flex w-full flex-col overflow-y-scroll rounded-lg bg-white pt-28">
       {/* 이미지 갤러리 */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
         {images.map((url, index) => (
-          <div
-            key={index}
-            className="w-full cursor-pointer overflow-hidden rounded-2xl"
-            onClick={() => openModal(url)}
-          >
+          <div key={index} className="w-full cursor-pointer overflow-hidden rounded-2xl" onClick={() => openModal(url)}>
             <Image
               src={url}
               alt={`Image ${index}`}

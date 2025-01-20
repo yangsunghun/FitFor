@@ -41,7 +41,7 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
   facebook: {
     label: "페이스북으로 계속하기",
     border: false,
-    bgColor: "bg-[#1977f2]",
+    bgColor: "bg-[#0c6efd]",
     textColor: "text-white",
     logo: facebookLogo
   }

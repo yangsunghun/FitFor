@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type MouseEvent } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -32,7 +32,7 @@ const ModalItem = ({ isOpen, onClose, children, mode = "default" }: Props) => {
   }, [isOpen]);
   if (!isOpen) return null;
 
-  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleOverlayClick = (event: MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       onClose();
     }

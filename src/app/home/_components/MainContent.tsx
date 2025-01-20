@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorScreen from "@/components/common/ErrorScreen";
 import { FloatingButton } from "@/components/ui/FloatingButton";
 import { usePosts } from "@/lib/hooks/home/usePosts";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
@@ -29,7 +30,7 @@ const MainContent = () => {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage]);
 
-  if (isError) return <p>오류 발생</p>;
+  if (isError) return <ErrorScreen error={new Error("데이터를 불러오는 중 에러가 발생했습니다.")} />;
 
   return (
     <>

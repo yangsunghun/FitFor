@@ -2,6 +2,7 @@
 
 import { useSearchBar } from "@/lib/hooks/search/useSearchBar";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
+import type { FocusEvent, FormEvent } from "react";
 
 const SearchBar = () => {
   const {
@@ -18,12 +19,12 @@ const SearchBar = () => {
     setSearchHistory
   } = useSearchBar();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     handleSearchWithHistory(e);
     setShowDropdown(false);
   };
 
-  const handleInputBlur = (e: React.FocusEvent<HTMLFormElement>) => {
+  const handleInputBlur = (e: FocusEvent<HTMLFormElement>) => {
     setTimeout(() => {
       const relatedTarget = e.relatedTarget as HTMLElement;
       if (!relatedTarget || !relatedTarget.closest(".dropdown")) {

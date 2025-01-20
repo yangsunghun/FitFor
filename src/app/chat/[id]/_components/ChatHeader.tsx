@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/utils/supabase/client";
-import React from "react";
-import { deleteChatRoom } from "../../_utils/chat";
-import Image from "next/image";
-import { List } from "@phosphor-icons/react";
 import sampleImage from "@/assets/images/image_sample.png";
+import { createClient } from "@/lib/utils/supabase/client";
+import { List } from "@phosphor-icons/react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { deleteChatRoom } from "../../_utils/chat";
 
 const supabase = createClient();
 
@@ -78,7 +77,7 @@ const ChatHeader = ({ roomId, currentUserId }: ChatHeaderProps) => {
   }
 
   return (
-    <header className="relative flex h-[96px] w-[1200px] items-center justify-between bg-white px-[102px]">
+    <section className="absolute top-0 z-20 flex w-full items-center justify-between bg-white pb-4">
       <div className="flex items-center gap-3">
         {/* 채팅방 썸네일 이미지 */}
         <figure className="relative h-10 w-10 overflow-hidden rounded-full">
@@ -113,7 +112,7 @@ const ChatHeader = ({ roomId, currentUserId }: ChatHeaderProps) => {
           </div>
         )}
       </div>
-    </header>
+    </section>
   );
 };
 

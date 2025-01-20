@@ -1,11 +1,12 @@
 import googleLogo from "@/assets/images/google-logo.svg";
 import kakaoLogo from "@/assets/images/kakao-logo.svg";
+import facebookLogo from "@/assets/images/facebook-logo.svg"
 import { Database } from "@/lib/types/supabase";
 import type { HTMLInputTypeAttribute } from "react";
 
 export type UserType = Database["public"]["Tables"]["users"]["Row"];
 
-export type Provider = "google" | "kakao";
+export type Provider = "google" | "kakao" | "facebook";
 
 export type ProviderConfig = {
   label: string;
@@ -36,6 +37,13 @@ export const PROVIDER_CONFIG: Record<Provider, ProviderConfig> = {
     bgColor: "bg-[#ffeb00]",
     textColor: "text-[#1a1a1a]",
     logo: kakaoLogo
+  },
+  facebook: {
+    label: "페이스북으로 계속하기",
+    border: false,
+    bgColor: "bg-[#1977f2]",
+    textColor: "text-white",
+    logo: facebookLogo
   }
 };
 

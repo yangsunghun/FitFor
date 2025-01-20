@@ -4,7 +4,7 @@ const config: Config = {
   // darkMode: ["class"],
   content: ["./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   // dynamic으로 사용시 필요 리스트
-  safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#1a1a1a]", "text-[#6e6e6e]", "border-[#d6d6d6]"],
+  safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#1a1a1a]", "text-[#6e6e6e]", "border-[#d6d6d6]", "bg-[#1977f2]"],
   theme: {
     fontSize: {
       heading: ["36px", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Heading 36px
@@ -137,6 +137,22 @@ const config: Config = {
         }
       },
       keyframes: {
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" }
+        },
+        fadeOut: {
+          from: { opacity: "1" },
+          to: { opacity: "0" }
+        },
+        scaleUp: {
+          from: { transform: "scale(0.95)" },
+          to: { transform: "scale(1)" }
+        },
+        scaleDown: {
+          from: { transform: "scale(1)" },
+          to: { transform: "scale(0.95)" }
+        },
         gradient: {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
@@ -144,7 +160,11 @@ const config: Config = {
         }
       },
       animation: {
-        gradient: "gradient 4s linear infinite"
+        gradient: "gradient 4s linear infinite",
+        fadeIn: "fadeIn 0.3s ease-out",
+        fadeOut: "fadeOut 0.3s ease-out",
+        scaleUp: "scaleUp 0.3s ease-out",
+        scaleDown: "scaleDown 0.3s ease-out"
       }
     }
   },

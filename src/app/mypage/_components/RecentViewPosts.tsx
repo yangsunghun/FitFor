@@ -25,7 +25,6 @@ const RecentViewPosts = () => {
           <p className="text-title2 font-medium text-text-03">최근 조회한 게시물이 없습니다.</p>
         </div>
       )}
-      {/* 나중에 검색 포스트 컴포넌트 나오면 수정 예정... */}
       {isPending ? (
         <LoadingSpinner />
       ) : (

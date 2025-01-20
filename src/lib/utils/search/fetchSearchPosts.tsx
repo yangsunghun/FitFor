@@ -37,7 +37,7 @@ export const fetchSearchPosts = async ({
 
   // 태그 포함시 결과로 출력
   if (tags.length > 0) {
-    baseQuery = baseQuery.overlaps("tags", tags);
+    baseQuery = baseQuery.contains("tags", tags);
   }
 
   const { data: posts, error, count } = await baseQuery;

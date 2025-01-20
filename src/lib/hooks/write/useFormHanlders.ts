@@ -183,46 +183,85 @@ export const useFormHandlers = () => {
     }
   };
 
-// 이미지 업로드 핸들러
-const uploadToSupabase = async (files: File[], handleChange: (urls: string[]) => void) => {
-  const uploadedImageUrls: string[] = [];
+  const handleUpdate = async (id: string) => {
+    const { content, address, body_size, images, tags, purchases } = formState;
 
-  for (const file of files) {
-    // 파일 이름 생성
-    const timestamp = Date.now();
-    const extension = file.name.split(".").pop() || "unknown";
-    const fileName = `images/${timestamp}_${file.name}`;
+    try {
+      const updatedPost = {
+        content,
+        upload_place: address,
+        body_size,
+        images,
+        tags
+      };
 
-    // Supabase에 파일 업로드
-    const { error } = await supabase.storage
-      .from("post-images")
-      .upload(fileName, file, { cacheControl: "3600", upsert: false });
+      // 게시물 업데이트
+      const { error: postError } = await supabase.from("posts").update(updatedPost).eq("id", id);
+      if (postError) throw postError;
 
-    if (error) {
-      throw new Error(`이미지 업로드 실패: ${error.message}`);
+      // 기존 구매 데이터 삭제
+      const { error: deleteError } = await supabase.from("purchase").delete().eq("post_id", id);
+      if (deleteError) throw deleteError;
+
+      // 새 구매 데이터 삽입
+      if (purchases.length > 0) {
+        const purchaseData = purchases.map((purchase) => ({
+          ...purchase,
+          post_id: id
+        }));
+
+        const { error: purchaseError } = await supabase.from("purchase").insert(purchaseData);
+        if (purchaseError) throw purchaseError;
+      }
+
+      alert("수정 성공!");
+      router.push(`/detail/${id}`);
+    } catch (error) {
+      console.error("게시물 수정 실패:", error);
+      alert("수정 실패");
+    }
+  };
+
+  // 이미지 업로드 핸들러
+  const uploadToSupabase = async (files: File[], handleChange: (urls: string[]) => void) => {
+    const uploadedImageUrls: string[] = [];
+
+    for (const file of files) {
+      // 파일 이름 생성
+      const timestamp = Date.now();
+      const extension = file.name.split(".").pop() || "unknown";
+      const fileName = `images/${timestamp}_${file.name}`;
+
+      // Supabase에 파일 업로드
+      const { error } = await supabase.storage
+        .from("post-images")
+        .upload(fileName, file, { cacheControl: "3600", upsert: false });
+
+      if (error) {
+        throw new Error(`이미지 업로드 실패: ${error.message}`);
+      }
+
+      const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(fileName).data;
+
+      if (!publicUrl) {
+        throw new Error("이미지 URL 생성 실패");
+      }
+
+      uploadedImageUrls.push(publicUrl);
     }
 
-    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(fileName).data;
+    handleChange(uploadedImageUrls); // 업로드된 URL 반환
+  };
 
-    if (!publicUrl) {
-      throw new Error("이미지 URL 생성 실패");
+  const handleFinalSubmit = async (files: File[], setImages: (urls: string[]) => void) => {
+    try {
+      await uploadToSupabase(files, setImages); // File 배열을 업로드 핸들러로 전달
+      handleSubmit(); // 폼 제출 호출
+    } catch (error) {
+      console.error("게시글 작성 실패:", error);
+      alert("작성 실패");
     }
-
-    uploadedImageUrls.push(publicUrl);
-  }
-
-  handleChange(uploadedImageUrls); // 업로드된 URL 반환
-};
-
-const handleFinalSubmit = async (files: File[], setImages: (urls: string[]) => void) => {
-  try {
-    await uploadToSupabase(files, setImages); // File 배열을 업로드 핸들러로 전달
-    handleSubmit(); // 폼 제출 호출
-  } catch (error) {
-    console.error("게시글 작성 실패:", error);
-    alert("작성 실패");
-  }
-};
+  };
 
   const toggleTagSelector = (tag: string, groupTags: string[], max: number) => {
     setFormState((prevState) => {
@@ -263,6 +302,7 @@ const handleFinalSubmit = async (files: File[], setImages: (urls: string[]) => v
     selectedCategory,
     setInitialFormState,
     imageFiles,
-    handleSetImageFiles
+    handleSetImageFiles,
+    handleUpdate
   };
 };

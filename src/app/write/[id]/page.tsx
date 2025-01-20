@@ -1,12 +1,13 @@
 "use client";
 
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import TagSection from "@/components/shared/TagSection";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import { useEditPostQuery } from "@/lib/hooks/write/usePostQueries";
 import { useAuthStore } from "@/lib/store/authStore";
+import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import TagSection from "@/components/shared/TagSection";
 import AddressModal from "../_components/AddressModal";
 import BodySizeSection from "../_components/BodySizeSection";
 import ContentSection from "../_components/ContentSection";
@@ -14,7 +15,6 @@ import ImageUploadSection from "../_components/ImageUploadSection";
 import LocationSection from "../_components/LocationSection";
 import ProductSection from "../_components/ProductSection";
 import PurchaseModal from "../_components/PurchaseModal";
-import { createClient } from "@/lib/utils/supabase/client";
 
 type EditPageProps = {
   params: {
@@ -39,7 +39,8 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
     handleChangeCategory,
     selectedCategory,
     handleSetImageFiles,
-    setInitialFormState
+    setInitialFormState,
+    handleUpdate
   } = useFormHandlers();
 
   const { data: fetchedData, isPending, isError } = useEditPostQuery(id);
@@ -59,51 +60,11 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
       // 기존 데이터를 폼 상태에 반영
       setInitialFormState({
         ...fetchedData.post,
-        purchases: fetchedData.purchases,
+        purchases: fetchedData.purchases
       });
       isFormInitialized.current = true; // 초기화 플래그 설정
     }
   }, [fetchedData, setInitialFormState, currentUser, router]);
-
-  const handleUpdate = async () => {
-    try {
-      // 업데이트 실행
-      const { content, address, body_size, images, tags, purchases } = formState;
-
-      const updatedPost = {
-        content,
-        upload_place: address,
-        body_size,
-        images,
-        tags,
-      };
-
-      // 게시물 업데이트
-      const { error: postError } = await supabase.from("posts").update(updatedPost).eq("id", id);
-      if (postError) throw postError;
-
-      // 기존 구매 데이터 삭제
-      const { error: deleteError } = await supabase.from("purchase").delete().eq("post_id", id);
-      if (deleteError) throw deleteError;
-
-      // 새 구매 데이터 삽입
-      if (purchases.length > 0) {
-        const purchaseData = purchases.map((purchase) => ({
-          ...purchase,
-          post_id: id,
-        }));
-
-        const { error: purchaseError } = await supabase.from("purchase").insert(purchaseData);
-        if (purchaseError) throw purchaseError;
-      }
-
-      alert("수정 성공!");
-      router.push(`/detail/${id}`);
-    } catch (error) {
-      console.error("게시물 수정 실패:", error);
-      alert("수정 실패");
-    }
-  };
 
   // 로딩 상태 처리
   if (isPending) return <LoadingSpinner />;
@@ -164,7 +125,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
           뒤로 가기
         </button>
         <button
-          onClick={handleUpdate}
+          onClick={() => handleUpdate(id)}
           className="rounded-lg bg-primary-default px-8 py-4 text-body font-medium text-bg-01"
         >
           수정 완료

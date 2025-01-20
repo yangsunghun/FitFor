@@ -102,15 +102,15 @@ const SearchBar = () => {
                 </li>
                 <li className="my-2 h-[1px] w-full bg-line-02"></li>
                 {filteredTags.map((tag) => (
-                  <li
-                    key={tag}
-                    onClick={() => {
-                      handleSelectTag(tag);
-                      setShowDropdown(false); // 자동완성 클릭 시 닫기
-                    }}
-                    className="cursor-pointer py-2 text-title2 text-text-03"
-                  >
-                    {tag}
+                  <li key={tag} className="cursor-pointer py-2 text-title2 text-text-03">
+                    <button
+                      onClick={() => {
+                        handleSelectTag(tag);
+                        setShowDropdown(false);
+                      }}
+                    >
+                      {tag}
+                    </button>
                   </li>
                 ))}
               </>

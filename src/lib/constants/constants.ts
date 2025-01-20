@@ -1,4 +1,4 @@
-export const POSTS_PER_PAGE = 12; // 페이지 당 게시물 개수
+export const POSTS_PER_PAGE = 8; // 페이지 당 게시물 개수
 
 export const VERIFICATION_THRESHOLD = 500; // 인증 유저 조건
 

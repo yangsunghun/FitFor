@@ -25,6 +25,8 @@ const VerificationSection = () => {
 
   if (isError) return <p>유저의 인증 정보를 불러오지 못했습니다.</p>;
 
+  // 24시간뒤 자동 인증 되는 로직
+  // is_verified는 요청으로 true 보내기
   const handleApplication = () => {
     alert("서비스 준비 중입니다");
   };

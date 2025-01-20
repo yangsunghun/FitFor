@@ -1,7 +1,7 @@
 "use client";
 
 import { useBookmarks } from "@/lib/hooks/detail/useBookmark";
-import { useLike } from "@/lib/hooks/detail/useLike";
+import { useLike, useLikeCount } from "@/lib/hooks/detail/useLike";
 import { useAuthStore } from "@/lib/store/authStore";
 import { cn } from "@/lib/utils/common/className";
 import { BookmarkSimple, Heart } from "@phosphor-icons/react";
@@ -16,7 +16,8 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
   const { user } = useAuthStore();
   const userId = user?.id;
 
-  const { isLiked, likeCount, isPending: likePending, toggleLike } = useLike(postId, userId ?? "");
+  const { likeCount } = useLikeCount(postId);
+  const { isLiked, isPending: likePending, toggleLike } = useLike(postId, userId ?? "");
   const { isBookmarked, isPending: bookmarkPending, toggleBookmark } = useBookmarks(postId, userId ?? "");
 
   const containerClass = cn({
@@ -37,7 +38,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
         <ToggleButton
           btnStyle={buttonClass}
           isActive={false}
-          count={styleType !== "masonry" ? 0 : null}
+          count={styleType !== "masonry" ? likeCount : null}
           onClick={() => {
             alert("로그인이 필요합니다");
           }}

@@ -37,7 +37,7 @@ export const useSearchQuery = () => {
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputValue !== query || page !== 1 || Object.values(tags).flat().length > 0 || sort !== sortFromUrl) {
-      router.push(
+      router.replace(
         `/search?query=${encodeURIComponent(inputValue)}&page=1&category=${encodeTagsForUrl(
           tags
         )}&sort=${encodeURIComponent(sort)}`
@@ -69,7 +69,7 @@ export const useSearchQuery = () => {
     setTags(updatedTags);
 
     // URL 동기화
-    router.push(
+    router.replace(
       `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
         updatedTags
       )}&sort=${encodeURIComponent(sort)}`
@@ -80,7 +80,7 @@ export const useSearchQuery = () => {
   const handleSort = (newSort: string) => {
     if (newSort !== sort) {
       setSort(newSort);
-      router.push(
+      router.replace(
         `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
           tags
         )}&sort=${encodeURIComponent(newSort)}`

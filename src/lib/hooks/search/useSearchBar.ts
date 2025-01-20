@@ -1,7 +1,7 @@
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import { extractUnicode } from "@/lib/utils/common/extractUnicode";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
 export const useSearchBar = () => {
   const { inputValue, setInputValue, handleSearch } = useSearchQuery();
@@ -48,7 +48,7 @@ export const useSearchBar = () => {
   };
 
   // 검색 실행
-  const handleSearchWithHistory = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchWithHistory = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // 검색 기록 저장

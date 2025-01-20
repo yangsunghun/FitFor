@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type MouseEvent } from "react";
 
 type ModalBgProps = {
   children: React.ReactNode;
@@ -25,7 +25,7 @@ const ModalBg = ({ children }: ModalBgProps) => {
     };
   }, []);
 
-  const handleClose = (e: React.MouseEvent) => {
+  const handleClose = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
       router.back();
     }

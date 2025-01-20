@@ -80,7 +80,6 @@ const ChatRoomListPage = () => {
 
   return (
     <div className="inner pb-40">
-      {/* 상단 헤더 */}
       <div className="flex items-center justify-between py-10">
         <h2 className="text-title1 font-bold text-text-04">Live</h2>
       </div>

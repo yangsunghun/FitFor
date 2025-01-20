@@ -40,17 +40,25 @@ const ModalItem = ({ isOpen, onClose, children, mode = "default" }: Props) => {
 
   return (
     <div
-      className={clsx("fixed inset-0 z-50 flex items-center justify-center bg-black", {
-        "bg-opacity-50": mode === "default",
-        "image-modal": mode === "imageView"
-      })}
+      className={clsx(
+        "fixed inset-0 z-50 flex items-center justify-center bg-black",
+        {
+          "bg-opacity-50": mode === "default",
+          "image-modal": mode === "imageView"
+        },
+        isOpen ? "animate-fadeIn" : "animate-fadeOut"
+      )}
       onClick={handleOverlayClick}
     >
       <div
-        className={clsx("relative rounded-lg shadow-lg", {
-          "h-fit w-[90%] max-w-lg bg-bg-01 p-6": mode === "default",
-          "h-full w-full max-w-none bg-transparent": mode === "imageView"
-        })}
+        className={clsx(
+          "relative rounded-lg shadow-lg",
+          {
+            "inline-block h-fit w-auto max-w-lg bg-bg-01 p-6": mode === "default",
+            "h-full w-full max-w-none bg-transparent": mode === "imageView"
+          },
+          isOpen ? "animate-fadeIn animate-scaleUp" : "animate-fadeOut animate-scaleDown"
+        )}
       >
         {children}
       </div>

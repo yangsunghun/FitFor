@@ -7,7 +7,7 @@ type AuthState = {
   user: UserType | null;
   isLoggedIn: boolean;
   setUser: (user: AuthState["user"]) => void;
-  removeUser: () => void;
+  deleteUser: () => void;
 };
 
 export const useAuthStore = create(
@@ -16,7 +16,22 @@ export const useAuthStore = create(
       user: null,
       isLoggedIn: false,
       setUser: (user) => set({ user, isLoggedIn: true }),
-      removeUser: () => set({ user: null, isLoggedIn: false })
+      deleteUser: async () => {
+        try {
+          const response = await fetch("/api/auth/delete", {
+            method: "DELETE"
+          });
+
+          if (!response.ok) {
+            throw new Error("회원 탈퇴 실패");
+          }
+          window.location.href = "/home"; // 탈퇴 후 홈으로
+          set({ user: null, isLoggedIn: false });
+          document.cookie = "supabase.auth.token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;"; // 쿠키 삭제
+        } catch (error: any) {
+          console.error("회원 탈퇴 오류", error.message);
+        }
+      }
     }),
     { name: "auth-store" }
   )

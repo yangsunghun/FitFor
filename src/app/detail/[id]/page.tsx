@@ -17,23 +17,26 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
 
   if (!post) {
     return {
-      title: "게시글을 찾을 수 없습니다.",
-      description: "존재하지 않는 게시글입니다.",
+      title: "fit4",
+      description: "삭제된 게시글",
       openGraph: {
-        title: "게시글을 찾을 수 없습니다.",
-        description: "존재하지 않는 게시글입니다.",
-        url: `https://localhost:3000/detail/${params.id}`
+        title: "fit4",
+        description: "삭제된 게시글",
+        url: `https://fit4.vercel.app/detail/${params.id}`
       }
     };
   }
+  const maxDescriptionLength = 160;
 
   return {
     title: `${post.users.nickname}님의 룩북 - fit4`,
-    description: `${post.content}`,
+    description:
+      post.content.length > maxDescriptionLength ? `${post.content.slice(0, maxDescriptionLength)}...` : post.content,
     openGraph: {
       title: `${post.users.nickname}님의 룩북 - fit4`,
-      description: `${post.content}`,
-      url: `https://localhost:3000/detail/${params.id}`
+      description:
+        post.content.length > maxDescriptionLength ? `${post.content.slice(0, maxDescriptionLength)}...` : post.content,
+      url: `https://fit4.vercel.app/detail/${params.id}`
     }
   };
 };

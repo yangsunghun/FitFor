@@ -1,9 +1,11 @@
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import { extractUnicode } from "@/lib/utils/common/extractUnicode";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, type FormEvent } from "react";
 
 export const useSearchBar = () => {
+  const router = useRouter();
   const { inputValue, setInputValue, handleSearch } = useSearchQuery();
   const [showDropdown, setShowDropdown] = useState(false);
   const [filteredTags, setFilteredTags] = useState<string[]>([]);
@@ -45,10 +47,12 @@ export const useSearchBar = () => {
   const handleSelectTag = (tag: string) => {
     setInputValue(tag);
     setShowDropdown(false);
+    const updatedUrl = `/search?query=${encodeURIComponent(tag)}&page=1`;
+    router.replace(updatedUrl);
   };
 
   // 검색 실행
-  const handleSearchWithHistory = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchWithHistory = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // 검색 기록 저장
@@ -65,6 +69,8 @@ export const useSearchBar = () => {
   const handleSelectHistory = (query: string) => {
     setInputValue(query);
     setShowDropdown(false);
+    const updatedUrl = `/search?query=${encodeURIComponent(query)}&page=1`;
+    router.replace(updatedUrl);
   };
 
   const clearSearchHistory = () => {

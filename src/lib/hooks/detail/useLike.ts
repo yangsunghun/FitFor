@@ -10,8 +10,7 @@ export const useLike = (postId: string, userId: string) => {
     queryKey,
     queryFn: async () => {
       const isLiked = await isPostLiked(postId, userId);
-      const likeCount = await getLikeCount(postId);
-      return { isLiked, likeCount };
+      return { isLiked };
     },
     enabled: Boolean(postId && userId),
     staleTime: 300000
@@ -45,8 +44,20 @@ export const useLike = (postId: string, userId: string) => {
 
   return {
     isLiked: likeData?.isLiked || false,
-    likeCount: likeData?.likeCount || 0,
     isPending,
     toggleLike: () => mutation.mutate(likeData?.isLiked || false)
   };
 };
+
+export function useLikeCount(postId: string | null) {
+  const { data: likeCount = 0, isPending: likeCountPending } = useQuery({
+    queryKey: ["likeCount", postId],
+    queryFn: async () => {
+      return await getLikeCount(postId!);
+    },
+    enabled: Boolean(postId),
+    staleTime: 300000
+  });
+
+  return { likeCount, likeCountPending };
+}

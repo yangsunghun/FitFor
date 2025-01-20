@@ -1,17 +1,19 @@
 "use client";
 
+import logoImage from "@/assets/images/logo.svg";
 import { useAuthStore } from "@/lib/store/authStore";
 import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
 import HeaderCategorys from "./HeaderCategorys";
 import SearchBar from "./SearchBar";
 
 const HeaderContent = () => {
+  const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -34,14 +36,25 @@ const HeaderContent = () => {
     <>
       <div className="relative z-10 w-full bg-white px-6 py-3">
         <div className="relative mx-auto flex max-w-[1200px] items-center gap-[4vw]">
-          <Link href="/" className="flex h-12 w-[8.75rem] items-center justify-center rounded-[.5rem] bg-bg-02">
-            FITFOR
+          <Link href="/">
+            <Image src={logoImage} alt="fitfor" />
           </Link>
 
-          <nav className="flex w-[22%] max-w-[16.5rem] justify-between text-title2 font-bold">
-            <Link href="/bookmarks" className="text-center">
-              북마크
-            </Link>
+          <nav className="flex w-[22%] max-w-[16.5rem] justify-between text-title2 font-medium text-text-03">
+            {!user ? (
+              <button
+                onClick={() => {
+                  alert("로그인이 필요합니다");
+                  router.push("login");
+                }}
+              >
+                북마크
+              </button>
+            ) : (
+              <Link href="/bookmarks" className="text-center">
+                북마크
+              </Link>
+            )}
             <Link href="/chat" className="text-center">
               라이브
             </Link>

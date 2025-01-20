@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils/common/className";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
-import React from "react";
+import { forwardRef, type ButtonHTMLAttributes, type MouseEvent } from "react";
 
 const buttonVariants = cva(
   "inline-block rounded-[8px] font-medium transition duration-300", // 공통 스타일
@@ -29,13 +29,13 @@ const buttonVariants = cva(
   }
 );
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
-    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   };
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ asChild, className, variant, size, onClick, ...props }, ref) => {
     const Container = asChild ? Slot : "button";
     return (

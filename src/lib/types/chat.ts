@@ -6,6 +6,7 @@ export type ChatRoomType = Database["public"]["Tables"]["chat_rooms"]["Row"] & {
     profile_image?: string | null;
   };
   participantCount: number;
+  isFevertime: boolean;
 };
 
 export type ChatMember = {

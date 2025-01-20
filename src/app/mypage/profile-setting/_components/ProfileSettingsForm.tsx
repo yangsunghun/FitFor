@@ -6,6 +6,7 @@ import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { createClient } from "@/lib/utils/supabase/client";
 import { PROFILE_EDIT_FIELD, profileSettingSchema } from "@/lib/validations/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm, type FieldValues } from "react-hook-form";
 import GenderSelection from "./GenderSelection";
@@ -14,6 +15,7 @@ import ProfileImageUploadSection from "./ProfileImageUploadSection";
 
 const ProfileSettingsForm = () => {
   const { user, setUser } = useAuthStore();
+  const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null); // 이미지 storage 저장용
   const [imagePreview, setImagePreview] = useState<string | null>(null); // 이미지 미리보기
   const [isUploading, setIsUploading] = useState(false); // 저장 중 버튼 클릭 방지
@@ -98,6 +100,7 @@ const ProfileSettingsForm = () => {
     }
 
     setIsUploading(false);
+    router.push("/mypage");
   };
 
   return (

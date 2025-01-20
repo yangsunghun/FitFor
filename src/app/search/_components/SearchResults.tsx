@@ -5,13 +5,11 @@ import type { PostType } from "@/lib/types/post";
 type SearchResultsProps = {
   Results: { items: PostType[]; total: number } | undefined;
   isPending: boolean;
-  isError: any;
 };
 
-const SearchResults = ({ Results, isPending, isError }: SearchResultsProps) => {
-  if (isError) return <p>검색에 문제가 있습니다</p>;
-
-  if (!Results || Results.items.length === 0) return <p>검색 결과가 없습니다.</p>;
+const SearchResults = ({ Results, isPending }: SearchResultsProps) => {
+  if (!Results || Results.items.length === 0)
+    return <p className="mt-32 text-center text-subtitle font-medium text-text-03">검색 결과가 없습니다.</p>;
 
   return (
     <ul className="grid grid-cols-4 gap-6">

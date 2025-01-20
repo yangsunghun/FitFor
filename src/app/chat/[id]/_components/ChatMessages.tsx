@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { createClient } from "@/lib/utils/supabase/client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchMessages } from "@/lib/utils/chat/fetchMessages";
-import Image from "next/image";
 import sampleImage from "@/assets/images/image_sample.png";
 import { ChatMessage } from "@/lib/types/chat";
+import { fetchMessages } from "@/lib/utils/chat/fetchMessages";
+import { createClient } from "@/lib/utils/supabase/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 const supabase = createClient();
 
@@ -64,7 +64,7 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
   if (isError) return <div>메시지를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <div className="scrollbar-hide mb-5 flex h-[800px] w-full flex-col overflow-y-scroll rounded-lg bg-white">
+    <div className="scrollbar-hide absolute bottom-0 h-full w-full flex-col overflow-y-scroll bg-white pb-[9.375rem] pt-[15rem]">
       <div className="flex flex-col gap-6">
         {messages.map((message: ChatMessage) => {
           const isSender = message.member_id === currentUserId;
@@ -98,7 +98,9 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
                   {/* 메시지 박스 */}
                   {message.content && (
                     <div className="max-w-[800px] break-words break-all rounded-lg bg-bg-02 px-4 py-3">
-                      <p className="m-0 text-title2 font-medium leading-6 whitespace-pre-wrap text-text-04">{message.content}</p>
+                      <p className="m-0 whitespace-pre-wrap text-title2 font-medium leading-6 text-text-04">
+                        {message.content}
+                      </p>
                     </div>
                   )}
 

@@ -69,7 +69,7 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="scrollbar-hide mb-5 flex w-full flex-col overflow-y-scroll rounded-lg bg-white pt-28">
+    <div className="scrollbar-hide absolute bottom-0 h-full w-full flex-col overflow-y-scroll bg-white pt-32">
       {/* 이미지 갤러리 */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
         {images.map((url, index) => (

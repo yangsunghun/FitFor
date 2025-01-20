@@ -1,11 +1,11 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
+import { useAuthStore } from "@/lib/store/authStore";
+import { Image } from "@phosphor-icons/react";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { sendMessage } from "../../_utils/chat";
-import { useMutation } from "@tanstack/react-query";
-import { Image } from "@phosphor-icons/react";
-import { useAuthStore } from "@/lib/store/authStore";
-import { Button } from "@/components/ui/Button";
 
 interface ChatInputProps {
   roomId: string;
@@ -61,7 +61,7 @@ const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
   const maxLength = 100;
 
   return (
-    <footer className="flex h-[150px] w-[996px] flex-col justify-between border-t border-[#e8e8e8] p-4">
+    <div className="absolute bottom-0 z-10 flex h-fit w-full flex-col justify-between border-t border-[#e8e8e8] bg-bg-01 p-4">
       {/* 메시지 입력 필드 */}
       <div className="flex items-center">
         <textarea
@@ -80,13 +80,8 @@ const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
       {/* 파일 업로드와 전송 버튼 */}
       <div className="mt-2 flex items-center justify-between">
         {/* 파일 업로드 버튼 */}
-        <label htmlFor="file-input" className="flex h-[28px] w-[28px] cursor-pointer items-center justify-center">
-          <input
-            type="file"
-            id="file-input"
-            className="hidden"
-            onChange={handleFileUpload}
-          />
+        <label htmlFor="file-input" className="flex h-7 w-7 cursor-pointer items-center justify-center">
+          <input type="file" id="file-input" className="hidden" onChange={handleFileUpload} />
           <Image alt="사진 전송하기" size={28} className="text-gray-600" />
         </label>
 
@@ -95,7 +90,7 @@ const ChatInput = ({ roomId, memberId }: ChatInputProps) => {
           보내기
         </Button>
       </div>
-    </footer>
+    </div>
   );
 };
 

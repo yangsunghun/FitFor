@@ -5,13 +5,14 @@ import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
 import HeaderCategorys from "./HeaderCategorys";
 import SearchBar from "./SearchBar";
 
 const HeaderContent = () => {
+  const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -39,9 +40,20 @@ const HeaderContent = () => {
           </Link>
 
           <nav className="flex w-[22%] max-w-[16.5rem] justify-between text-title2 font-bold">
-            <Link href="/bookmarks" className="text-center">
-              북마크
-            </Link>
+            {!user ? (
+              <button
+                onClick={() => {
+                  alert("로그인이 필요합니다");
+                  router.push("login");
+                }}
+              >
+                북마크
+              </button>
+            ) : (
+              <Link href="/bookmarks" className="text-center">
+                북마크
+              </Link>
+            )}
             <Link href="/chat" className="text-center">
               라이브
             </Link>

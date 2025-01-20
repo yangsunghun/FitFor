@@ -1,8 +1,8 @@
 "use client";
 
+import { useAuthStore } from "@/lib/store/authStore";
 import React from "react";
 import ChatHeader from "./_components/ChatHeader";
-import { useAuthStore } from "@/lib/store/authStore";
 
 interface ChatRoomLayoutProps {
   children: React.ReactNode;
@@ -22,12 +22,14 @@ const ChatRoomLayout = ({ children, params }: ChatRoomLayoutProps) => {
   }
 
   return (
-    <div className="flex flex-col items-center">
-      {/* 헤더 컴포넌트 */}
-      <ChatHeader currentUserId={currentUser.id} roomId={roomId} />
+    <div className="h-fit max-w-[1200px]">
+      <div className="inner relative h-[calc(100vh-6rem)]">
+        {/* 헤더 컴포넌트 */}
+        <ChatHeader currentUserId={currentUser.id} roomId={roomId} />
 
-      {/* 채팅방 콘텐츠 */}
-      <section className="w-full max-w-[1200px]">{children}</section>
+        {/* 채팅방 콘텐츠 */}
+        <section className="absolute bottom-0 h-full w-full">{children}</section>
+      </div>
     </div>
   );
 };

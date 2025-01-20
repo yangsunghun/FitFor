@@ -1,12 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { createClient } from "@/lib/utils/supabase/client";
 import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
 import React, { useState } from "react";
 
-const supabase = createClient();
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGES = 4; // 최대 업로드 가능한 이미지 개수
 
@@ -15,18 +13,11 @@ type ImageUploadSectionProps = {
   setImages: (images: string[]) => void; // 이미지 배열 업데이트 함수
   blur: string | null;
   setBlur: (blurUrl: string) => void; // Base64 블러 데이터 업데이트 함수
+    setImageFiles: (files: File[]) => void; // 파일 설정 핸들러 추가
 };
 
 function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSectionProps) {
   const [imageHashes, setImageHashes] = useState<string[]>([]); // 업로드된 이미지 해시를 배열로 관리
-
-  // 고유 파일 경로 생성
-  const genFilePath = (file: File): string => {
-    const timestamp = Date.now(); // 고유 타임스탬프 추가
-    const extension = file.name.split(".").pop() || "unknown";
-    const folder = "images";
-    return `${folder}/${timestamp}.${extension}`;
-  };
 
   // 파일 해시 생성 (SHA-256)
   const genFileHash = async (file: File): Promise<string> => {
@@ -68,30 +59,6 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
     }
   };
 
-  // Supabase에 파일 업로드
-  const uploadImage = async (file: File): Promise<string> => {
-    validateFile(file);
-
-    // 고유 파일 경로 생성
-    const filePath = genFilePath(file);
-
-    const { error } = await supabase.storage
-      .from("post-images")
-      .upload(filePath, file, { cacheControl: "3600", upsert: false });
-
-    if (error) {
-      throw new Error(`이미지 업로드 실패: ${error.message}`);
-    }
-
-    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
-
-    if (!publicUrl) {
-      throw new Error("이미지 URL 생성 실패");
-    }
-
-    return publicUrl;
-  };
-
   // 파일 업로드와 중복 제거 로직
   const handleFiles = async (files: File[]) => {
     const existingCount = images.length;
@@ -102,21 +69,27 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
       return;
     }
 
-    // 새로 추가된 이미지 관련 변수
     const newImages: string[] = [];
     const newHashes: string[] = [];
-
+    
     for (const file of files) {
+      // 파일 크기 검증
+      if (file.size > MAX_FILE_SIZE) {
+        alert(`최대 5MB를 초과하는 파일은 업로드할 수 없습니다. : ${file.name}`);
+        return;
+      }
+  
       const hash = await genFileHash(file);
-
+  
       // 기존 해시 확인
       if (imageHashes.includes(hash)) {
         alert("이미 업로드된 이미지입니다.");
-        continue;
+        return;
       }
+  
 
       // 새 이미지를 업로드
-      const url = await uploadImage(file);
+      const url = URL.createObjectURL(file);
       newImages.push(url);
       newHashes.push(hash);
 
@@ -168,13 +141,6 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
     handleFiles(files);
-  };
-
-  // 파일 크기 확인
-  const validateFile = (file: File) => {
-    if (file.size > MAX_FILE_SIZE) {
-      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다.");
-    }
   };
 
   return (
@@ -239,12 +205,12 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
                       >
                         <Trash size={16} />
                       </button>
-                      {/* 썸네일로 설정 버튼 - 임의로 만들어서 체킹받고 또 수정예정..*/}
+                      {/* 썸네일 등록 버튼 */}
                       {index !== 0 && (
                         <Button
                           variant="whiteLine"
                           size="sm"
-                          className="h-6 w-24 bg-transparent text-caption leading-none !text-text-01"
+                          className="h-6 w-24 bg-transparent border-none text-caption leading-none !text-text-01"
                           onClick={() => {
                             const updatedImages = [url, ...images.filter((img, i) => i !== index)];
                             setImages(updatedImages);

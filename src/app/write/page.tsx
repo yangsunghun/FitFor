@@ -1,7 +1,7 @@
 "use client";
 
-import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import TagSection from "@/components/shared/TagSection";
+import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import AddressModal from "./_components/AddressModal";
 import BodySizeSection from "./_components/BodySizeSection";
 import ContentSection from "./_components/ContentSection";
@@ -18,10 +18,12 @@ const WritePage = () => {
     handleEditPurchase,
     handleDeletePurchase,
     handleBodySizeChange,
-    handleSubmit,
+    handleFinalSubmit,
     toggleTagSelector,
     handleChangeCategory,
-    selectedCategory
+    selectedCategory,
+    imageFiles, // 상태 반환
+    handleSetImageFiles // 핸들러 반환
   } = useFormHandlers();
 
   return (
@@ -42,6 +44,7 @@ const WritePage = () => {
           blur={formState.thumbnail_blur_url}
           setImages={(images) => handleChange("images", images)}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
+          setImageFiles={handleSetImageFiles} // 파일 설정 핸들러 전달
         />
 
         <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />
@@ -79,7 +82,9 @@ const WritePage = () => {
           임시 저장
         </button>
         <button
-          onClick={handleSubmit}
+          onClick={() =>
+            handleFinalSubmit(imageFiles, (uploadedUrls) => handleChange("images", uploadedUrls))
+          }
           className="rounded-lg bg-primary-default px-8 py-4 text-body font-medium text-bg-01"
         >
           게시물 만들기

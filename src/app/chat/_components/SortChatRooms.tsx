@@ -2,7 +2,10 @@ import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState } from "react";
 
-const sortOptions = [{ key: "created_at", label: "최신순" }];
+const sortOptions = [
+  { key: "created_at", label: "최신순" },
+  { key: "fevertime", label: "인기순" }
+];
 
 type Props = {
   currentSort: string;

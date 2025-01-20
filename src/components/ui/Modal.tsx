@@ -40,10 +40,10 @@ const ModalItem = ({ isOpen, onClose, children, mode = "default" }: Props) => {
 
   return (
     <div
-    className={clsx("fixed inset-0 z-50 flex items-center justify-center bg-black", {
-      "bg-opacity-50": mode === "default",
-      "image-modal": mode === "imageView"
-    })}
+      className={clsx("fixed inset-0 z-50 flex items-center justify-center bg-black", {
+        "bg-opacity-50": mode === "default",
+        "image-modal": mode === "imageView"
+      })}
       onClick={handleOverlayClick}
     >
       <div

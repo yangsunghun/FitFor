@@ -16,15 +16,11 @@ const ContentSection = ({ content, onChange }: ContentSectionProps) => (
     {/* textarea 영역 */}
     <textarea
       value={content}
-      onChange={(e) => {
-        onChange(e.target.value); // 줄바꿈 포함된 텍스트 전달
-        e.target.style.height = "auto"; // 높이 초기화
-        e.target.style.height = `${e.target.scrollHeight}px`; // 동적 높이 계산
-      }}
+      onChange={(e) => onChange(e.target.value)} // 줄바꿈 포함된 텍스트 전달
       rows={5}
       className={cn(
         textFieldVariants({ variant: "default", version: "desktop" }), // TextField 스타일 적용
-        "focus-visible:box-shadow-none h-auto w-full resize-none overflow-hidden p-4 text-body font-medium placeholder-text-02 focus:outline-none focus-visible:border-transparent focus-visible:ring-0"
+        "focus-visible:box-shadow-none h-auto w-full resize-none p-4 text-body font-medium placeholder-text-02 focus:outline-none focus-visible:border-transparent focus-visible:ring-0"
       )}
       placeholder="예시 - 소개팅 가야하는데 도와주세요"
     />

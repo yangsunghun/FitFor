@@ -1,5 +1,6 @@
 "use client";
 
+import logoImage from "@/assets/images/logo.svg";
 import { useAuthStore } from "@/lib/store/authStore";
 import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -35,11 +36,11 @@ const HeaderContent = () => {
     <>
       <div className="relative z-10 w-full bg-white px-6 py-3">
         <div className="relative mx-auto flex max-w-[1200px] items-center gap-[4vw]">
-          <Link href="/" className="flex h-12 w-[8.75rem] items-center justify-center rounded-[.5rem] bg-bg-02">
-            FITFOR
+          <Link href="/">
+            <Image src={logoImage} alt="fitfor" />
           </Link>
 
-          <nav className="flex w-[22%] max-w-[16.5rem] justify-between text-title2 font-bold">
+          <nav className="flex w-[22%] max-w-[16.5rem] justify-between text-title2 font-medium text-text-03">
             {!user ? (
               <button
                 onClick={() => {

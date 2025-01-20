@@ -8,7 +8,8 @@ type SearchResultsProps = {
 };
 
 const SearchResults = ({ Results, isPending }: SearchResultsProps) => {
-  if (!Results || Results.items.length === 0) return <p>검색 결과가 없습니다.</p>;
+  if (!Results || Results.items.length === 0)
+    return <p className="mt-32 text-center text-subtitle font-medium text-text-03">검색 결과가 없습니다.</p>;
 
   return (
     <ul className="grid grid-cols-4 gap-6">

@@ -2,6 +2,8 @@
 
 import { POSTS_PER_PAGE } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
+import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight } from "@phosphor-icons/react";
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 
 type PaginationProps = {
@@ -31,47 +33,38 @@ const Pagination = ({ Results }: PaginationProps) => {
   const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
   return (
-    <div className="mt-6 flex justify-center gap-2">
-      <button
-        disabled={page === 1}
-        onClick={() => handlePageChange(1)}
-        className="rounded bg-gray-300 px-4 py-2 disabled:opacity-50"
-      >
-        처음
+    <div className="mt-16 flex justify-center gap-2">
+      <button disabled={page === 1} onClick={() => handlePageChange(1)} className="disabled:opacity-50">
+        <CaretDoubleLeft size={16} weight="bold" />
       </button>
 
-      <button
-        disabled={page === 1}
-        onClick={() => handlePageChange(page - 1)}
-        className="rounded bg-gray-300 px-4 py-2 disabled:opacity-50"
-      >
-        이전
+      <button disabled={page === 1} onClick={() => handlePageChange(page - 1)} className="disabled:opacity-50">
+        <CaretLeft size={16} weight="bold" />
       </button>
 
       {Array.from({ length: endPage - startPage + 1 }, (_, idx) => startPage + idx).map((pageNumber) => (
         <button
           key={pageNumber}
           onClick={() => handlePageChange(pageNumber)}
-          className={`rounded px-4 py-2 ${page === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+          className={clsx("text-title2", {
+            "font-bold": page === pageNumber,
+            "text-text-03": page !== pageNumber
+          })}
         >
           {pageNumber}
         </button>
       ))}
 
-      <button
-        disabled={page === totalPages}
-        onClick={() => handlePageChange(page + 1)}
-        className="rounded bg-gray-300 px-4 py-2 disabled:opacity-50"
-      >
-        다음
+      <button disabled={page === totalPages} onClick={() => handlePageChange(page + 1)} className="disabled:opacity-50">
+        <CaretRight size={16} weight="bold" />
       </button>
 
       <button
         disabled={page === totalPages}
         onClick={() => handlePageChange(totalPages)}
-        className="rounded bg-gray-300 px-4 py-2 disabled:opacity-50"
+        className="disabled:opacity-50"
       >
-        끝
+        <CaretDoubleRight size={16} weight="bold" />
       </button>
     </div>
   );

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils/common/className";
 import { Plus } from "@phosphor-icons/react";
 import { cva, VariantProps } from "class-variance-authority";
 import Link from "next/link";
-import React from "react";
+import React, { forwardRef, type AnchorHTMLAttributes } from "react";
 
 const buttonVariants = cva(
   "inline-block w-[4.5rem] h-[4.5rem] rounded-full transition duration-300 fixed bottom-12 right-[6.875rem] flex justify-center items-center", // 공통 스타일
@@ -23,9 +23,9 @@ const buttonVariants = cva(
   }
 );
 
-export type ButtonProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & VariantProps<typeof buttonVariants>;
+export type ButtonProps = AnchorHTMLAttributes<HTMLAnchorElement> & VariantProps<typeof buttonVariants>;
 
-const FloatingButton = React.forwardRef<HTMLAnchorElement, ButtonProps>(
+const FloatingButton = forwardRef<HTMLAnchorElement, ButtonProps>(
   ({ className, variant, href, ...props }, ref) => {
     return (
       <Link ref={ref} href={href || "#"} className={cn(buttonVariants({ variant }), className)} {...props}>

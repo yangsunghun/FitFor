@@ -137,6 +137,22 @@ const config: Config = {
         }
       },
       keyframes: {
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" }
+        },
+        fadeOut: {
+          from: { opacity: "1", transform: "scale(1)" },
+          to: { opacity: "0", transform: "scale(0.95)" }
+        },
+        scaleUp: {
+          from: { transform: "scale(0.95)" },
+          to: { transform: "scale(1)" }
+        },
+        scaleDown: {
+          from: { transform: "scale(1)" },
+          to: { transform: "scale(0.95)" }
+        },
         gradient: {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
@@ -144,7 +160,11 @@ const config: Config = {
         }
       },
       animation: {
-        gradient: "gradient 4s linear infinite"
+        gradient: "gradient 4s linear infinite",
+        fadeIn: "fadeIn 0.3s ease-out",
+        fadeOut: "fadeOut 0.3s ease-out",
+        scaleUp: "scaleUp 0.3s ease-out",
+        scaleDown: "scaleDown 0.3s ease-out"
       }
     }
   },

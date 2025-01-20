@@ -43,7 +43,7 @@ const MyPosts = () => {
       ))}
       {hasNextPage && (
         <div ref={observerRef} className="h-5">
-          {isFetchingNextPage ? <p>로딩 중...</p> : <p>더 보기</p>}
+          {isFetchingNextPage ? <LoadingSpinner /> : <p>더 보기</p>}
         </div>
       )}
     </>

@@ -4,7 +4,7 @@ const config: Config = {
   // darkMode: ["class"],
   content: ["./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
   // dynamic으로 사용시 필요 리스트
-  safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#1a1a1a]", "text-[#6e6e6e]", "border-[#d6d6d6]"],
+  safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#1a1a1a]", "text-[#6e6e6e]", "border-[#d6d6d6]", "bg-[#1977f2]"],
   theme: {
     fontSize: {
       heading: ["36px", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Heading 36px

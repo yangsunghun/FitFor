@@ -1,6 +1,7 @@
 "use client";
 
 import sampleImage from "@/assets/images/image_sample.png";
+import ErrorScreen from "@/components/common/ErrorScreen";
 import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
@@ -24,7 +25,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   const { post, isPending, isError } = usePostDetail(postId);
 
   if (isPending) return <ContentsSkeleton />;
-  if (isError) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  if (isError) return <ErrorScreen error={new Error("데이터를 불러오는 중 에러가 발생했습니다.")} />;
 
   if (!post) {
     return <div>게시물을 찾을 수 없습니다.</div>;

@@ -12,6 +12,7 @@ type Props = {
 
 const EditDelete = ({ postId }: Props) => {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const handleDeletePost = async (postId: string) => {
     const userConfirmed = window.confirm("정말 이 게시물을 삭제하시겠습니까?");
 
@@ -28,7 +29,7 @@ const EditDelete = ({ postId }: Props) => {
       alert("삭제 중 오류가 발생했습니다.");
     }
   };
-  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="absolute right-0 top-3">
       <button onClick={() => setIsOpen(!isOpen)}>

@@ -5,7 +5,6 @@ import TagSection from "@/components/shared/TagSection";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import { useEditPostQuery } from "@/lib/hooks/write/usePostQueries";
 import { useAuthStore } from "@/lib/store/authStore";
-import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import AddressModal from "../_components/AddressModal";
@@ -22,7 +21,6 @@ type EditPageProps = {
   };
 };
 
-const supabase = createClient();
 const EditPage = ({ params: { id } }: EditPageProps) => {
   const router = useRouter();
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기

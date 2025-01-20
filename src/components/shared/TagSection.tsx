@@ -26,6 +26,7 @@ const TagSection = ({ title, tags, selectedCategory, onChangeCategory, toggleTag
       <div className="flex flex-wrap gap-2">
         {TAG_GROUPS.map((group) => (
           <button
+            type="button"
             key={group.key}
             onClick={() => onChangeCategory(group.key)}
             className="focus:outline-none"
@@ -47,6 +48,7 @@ const TagSection = ({ title, tags, selectedCategory, onChangeCategory, toggleTag
           <div className="flex flex-wrap gap-2">
             {selectedGroup.tags.map((tag) => (
               <button
+                type="button"
                 key={tag}
                 onClick={() => toggleTagSelector(tag, selectedGroup.tags, selectedGroup.max)}
                 className="focus:outline-none"

@@ -14,7 +14,12 @@ const pretendard = localFont({
 
 export const metadata: Metadata = {
   title: "Fit4",
-  description: "3조 최종프로젝트 개발중"
+  description: "3조 최종프로젝트 개발중",
+  openGraph: {
+    title: `Fit4`,
+    description: `3조 최종프로젝트 개발중`,
+    url: `https://fit4.vercel.app`
+  }
 };
 
 export default function RootLayout({
@@ -27,13 +32,13 @@ export default function RootLayout({
   return (
     <html lang="ko" className="min-h-full">
       <AuthProvider>
-      <TQProviders>
-        <body className={`${pretendard.className} text-body text-text-04`}>
-          <Header />
-          <main className="mx-auto w-[1200px] pt-24">{children}</main>
-          {modal && <div>{modal}</div>}
-        </body>
-      </TQProviders>
+        <TQProviders>
+          <body className={`${pretendard.className} text-body text-text-04`}>
+            <Header />
+            <main className="mx-auto w-[1200px] pt-24">{children}</main>
+            {modal && <div>{modal}</div>}
+          </body>
+        </TQProviders>
       </AuthProvider>
     </html>
   );

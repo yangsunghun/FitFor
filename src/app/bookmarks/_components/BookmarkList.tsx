@@ -1,5 +1,6 @@
 "use client";
 
+import ErrorScreen from "@/components/common/ErrorScreen";
 import Cardpost from "@/components/shared/CardPost";
 import CardSkeleton from "@/components/shared/CardSkeleton";
 import { useBookmarks } from "@/lib/hooks/bookmarks/useBookmark";
@@ -19,7 +20,7 @@ const BookmarkList = () => {
   }
 
   if (isError) {
-    return <p>오류가 발생했습니다</p>;
+    return <ErrorScreen error={new Error("데이터를 불러오는 중 에러가 발생했습니다.")} />;
   }
 
   if (!ownBookmarks || ownBookmarks.length === 0) {

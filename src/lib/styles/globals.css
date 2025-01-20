@@ -62,9 +62,9 @@
   @apply opacity-100;
 }
 
-.image-modal .swiper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+/* .image-modal .swiper .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
   @apply bg-primary-default;
-}
+} */
 
 /* input type=search x button 제거 */
 /* WebKit browsers */

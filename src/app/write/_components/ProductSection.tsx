@@ -15,46 +15,61 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete }: ProductSectionPr
         <span className="text-title2 font-bold text-text-04">상품정보 입력</span>
         <span className="text-title2 font-bold text-primary-default">*</span>
       </div>
-      <p className="text-caption font-medium text-text-03">
+      <p className="text-caption text-text-03">
         다양한 각도에서 찍은 이미지가 있다면 추가해주세요. (최대 5개)
       </p>
     </div>
-    <div className="flex flex-wrap gap-4">
-      <button
-        onClick={onAdd}
-        className="flex h-32 w-32 flex-col items-center justify-center rounded-lg border border-line-02 text-text-03"
-      >
-        <UploadSimple size={24} />
-      </button>
+    <div className="flex gap-6">
+      {/* 추가 버튼은 업로드된 이미지가 5개 미만일 때만 표시 */}
+      {purchases.length < 5 && (
+        <button
+          onClick={onAdd}
+          className="flex h-[6.75rem] w-[6.75rem] flex-col items-center justify-center rounded-lg border border-line-02 text-text-03"
+        >
+          <UploadSimple size={24} />
+        </button>
+      )}
 
+      {/* 업로드된 이미지 리스트 */}
       {purchases.map((purchase, index) => (
-        <div key={index} className="group relative h-32 w-32 cursor-pointer" onClick={() => onEdit(index)}>
-          <div className="absolute inset-0 overflow-hidden rounded-lg border border-black">
-            {purchase.image_url ? (
-              <Image
-                src={purchase.image_url}
-                alt={purchase.title || "상품 이미지"}
-                layout="fill"
-                className="object-cover"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gray-200">
-                <p className="text-sm text-gray-400">이미지 없음</p>
-              </div>
-            )}
+        <div key={index} className="flex flex-col items-center">
+          {/* 이미지 영역 */}
+          <div
+            className="group relative h-[6.75rem] w-[6.75rem] cursor-pointer"
+            onClick={() => onEdit(index)}
+          >
+            <div className="absolute inset-0 overflow-hidden rounded-lg border border-line-02">
+              {purchase.image_url ? (
+                <Image
+                  src={purchase.image_url}
+                  alt={purchase.title || "상품 이미지"}
+                  layout="fill"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-gray-200">
+                  <p className="text-caption text-text-03">이미지 없음</p>
+                </div>
+              )}
+            </div>
+
+            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(index);
+                }}
+                className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
+              >
+                <Trash size={16} />
+              </button>
+            </div>
           </div>
 
-          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(index);
-              }}
-              className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
-            >
-              <Trash size={16} />
-            </button>
-          </div>
+          {/* 상품 정보 영역 */}
+          <p className="text-text-04 text-caption text-center mt-2 truncate w-[6.75rem]">
+            {purchase.title || "상품 상세 정보"}
+          </p>
         </div>
       ))}
     </div>

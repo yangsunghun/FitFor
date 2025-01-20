@@ -9,6 +9,7 @@ import FilterTabs from "./_components/RoomFilters";
 import { FloatingButton } from "@/components/ui/FloatingButton";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import SortChatRooms from "./_components/SortChatRooms";
+import { useAuthStore } from "@/lib/store/authStore";
 
 const supabase = createClient();
 
@@ -44,6 +45,8 @@ const fetchChatRooms = async (): Promise<ChatRoomType[]> => {
 const ChatRoomListPage = () => {
   const [sortKey, setSortKey] = useState("created_at");
   const [selectedTags, setSelectedTags] = useState<{ [key: string]: string[] }>({});
+
+   const { user } = useAuthStore((state) => state);
 
   const { data: chatRooms = [], isLoading } = useQuery<ChatRoomType[]>({
     queryKey: ["chatRooms"],
@@ -108,7 +111,7 @@ const ChatRoomListPage = () => {
       </section>
 
       {/* 플로팅 버튼 */}
-      <FloatingButton variant="primary" href="/chat/new" />
+      {user && <FloatingButton variant="primary" href="/chat/new" />}
     </div>
   );
 };

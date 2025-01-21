@@ -82,7 +82,7 @@ input[type="search"]::-ms-clear {
   display: none;
 }
 
-/* 인풋 파일 커서 포인터 안 먹는 이슈 해결 */
+/* 파일 인풋 커서 포인터 안 먹는 이슈 해결 */
 input[type=file], /* FF, IE7+, chrome */
 input[type=file]::-webkit-file-upload-button {
   cursor: pointer;

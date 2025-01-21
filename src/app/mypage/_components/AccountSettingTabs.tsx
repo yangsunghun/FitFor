@@ -64,13 +64,6 @@ const AccountSettingTabs = () => {
             <CaretRight size={24} />
           </button>
         ))}
-        {/* <button
-          onClick={() => openModal("deleteAccount")}
-          className="flex items-center justify-between px-6 py-4 text-title2 font-medium text-text-04 hover:bg-gray-50"
-        >
-          <span>탈퇴하기</span>
-          <CaretRight size={24} />
-        </button> */}
         <SignoutButton />
       </div>
 

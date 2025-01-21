@@ -72,3 +72,5 @@ export const REGIONS = [
   "제주특별자치도",
   "강원도"
 ];
+
+export const MYPAGE_MENU = ["내 게시물", "히스토리", "인증", "계정 관리"]

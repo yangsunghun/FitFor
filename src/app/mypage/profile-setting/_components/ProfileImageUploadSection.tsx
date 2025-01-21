@@ -40,7 +40,7 @@ const ProfileImageUploadSection = ({ setImageFile, setImagePreview, imagePreview
     >
       {/* 이미지 preview */}
       {imagePreview && (
-        <Image src={imagePreview} alt="Preview" fill className="h-full w-full rounded-full object-cover" />
+        <Image src={imagePreview} alt="Preview" fill className="h-full w-full rounded-full object-cover border border-gray-100" />
       )}
 
       {/* 카메라 버튼 */}
@@ -52,7 +52,7 @@ const ProfileImageUploadSection = ({ setImageFile, setImagePreview, imagePreview
         id="fileInput"
         accept="image/*"
         onChange={handleImageUpload}
-        className="max-w-25 absolute -bottom-[14px] z-10 cursor-pointer opacity-0 overflow-hidden"
+        className="max-w-20 absolute -bottom-[14px] z-10 cursor-pointer opacity-0 overflow-hidden"
       />
     </div>
   );

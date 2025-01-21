@@ -14,7 +14,7 @@ const ProfileSection = () => {
     <div className="mb-20 mt-10 flex h-40 w-[40.5rem] flex-row items-center">
       <div className="over-flow-hidden relative h-40 w-40">
         <Image
-          className="bg-transparant rounded-full object-cover"
+          className="bg-transparant rounded-full object-cover border border-gray-100"
           src={user?.profile_image || "/images/default-user-profile"}
           alt={`${user?.nickname} profile image`}
           fill

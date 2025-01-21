@@ -1,32 +1,38 @@
-"use client";
-
-import { useRouter, useSearchParams } from "next/navigation";
+import { MYPAGE_MENU } from "@/lib/constants/constants";
 import { useEffect, useState } from "react";
 
-const useActiveTab = (defaultTab: string = "0") => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState(defaultTab);
+export const useActiveTabs = () => {
+  // 빈 탭으로 초기화
+  const [activeTab, setActiveTab] = useState("");
 
-  // 활성화된 탭 url에 추가
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
+  // URL값과 활성화 된 탭 싱크 맞추기
+  useEffect(() => {
+    // useSearchParams 대신에 사용할 수 있는 방법
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get("tab");
 
-    const currentParams = new URLSearchParams(searchParams?.toString());
-    currentParams.set("tab", tab);
+    // 해당 tab query가 있는 경우에만 활성화 탭 세팅
+    if (tabParam && MYPAGE_MENU.some((_, index) => `tab-${index}` === tabParam)) {
+      setActiveTab(tabParam);
+    } else {
+      // tab이 없는 경우 첫번째 탭 활성화
+      setActiveTab("tab-0");
+    }
+  });
+
+  // 활성화 된 탭을 변경할때마다 URL 변경하는 함수
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
 
     // 새로고침 없이 URL만 변경
-    router.push(`/mypage?${currentParams.toString()}`);
+    const params = new URLSearchParams(window.location.search);
+    params.set("tab", value);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, "", newUrl);
   };
 
-  useEffect(() => {
-    const tab = searchParams?.get("tab");
-    if (tab) {
-      setActiveTab(tab);
-    }
-  }, [searchParams]);
-
-  return { activeTab, handleTabChange };
+  return {
+    activeTab,
+    handleTabChange
+  };
 };
-
-export default useActiveTab;

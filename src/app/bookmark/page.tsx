@@ -1,9 +1,9 @@
-import BookmarkList from "../_components/BookmarkList";
+import TabContents from "./_components/TabContents";
 
 const BookmarksPage = () => {
   return (
     <div className="inner">
-      <BookmarkList />
+      <TabContents />
     </div>
   );
 };

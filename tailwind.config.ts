@@ -165,9 +165,34 @@ const config: Config = {
         fadeOut: "fadeOut 0.3s ease-out",
         scaleUp: "scaleUp 0.3s ease-out",
         scaleDown: "scaleDown 0.3s ease-out"
+      },
+      screens: {
+        mn: { max: "375px" }, // 우리 모바일 디자인 시안 크기
+        mb: { max: "480px" }, // 가장 큰 폰 크기
+        tb: { max: "768px" }, // 일반 타블렛 크기
+        lt: { max: "1200px" } // 일반 노트북 크기
       }
     }
   },
-  plugins: [require("tailwindcss-animate")]
+  plugins: [
+    require("tailwindcss-animate")
+    // function ({ addBase }: PluginAPI) { 나중에 rem 크기를 한번에 바꿀 때 사용 , 사용안할 수도 있음.
+    //   addBase({
+    //     html: {
+    //       fontSize: "16px" // 기본 크기
+    //     },
+    //     "@screen tb": {
+    //       html: {
+    //         fontSize: "14px" // 중간 값
+    //       }
+    //     },
+    //     "@screen mb": {
+    //       html: {
+    //         fontSize: "12px" // 모바일 시안을 보면 폰트가 딱 3/4 크기로 줄어들어서 12로 함.
+    //       }
+    //     }
+    //   });
+    // }
+  ]
 };
 export default config;

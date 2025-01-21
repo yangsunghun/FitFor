@@ -4,6 +4,7 @@ import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { Tags } from "../ui/Tags";
 import LikeSection from "./LikeSection";
 
@@ -12,16 +13,18 @@ type Props = {
 };
 
 const Listpost = ({ post }: Props) => {
+  const [isImgError, setIsImgError] = useState<boolean>(false);
   return (
     <li className="relative mb-6 flex gap-6 py-4">
       <Link href={`/detail/${post.id}/view`} className="click-box z-10"></Link>
       <figure className="thumbnail h-[11.25rem] w-[11.25rem] rounded-2xl bg-gray-200">
         <Image
-          src={post.images[0]}
+          src={isImgError ? sampleImage : post.images[0]}
           alt={post.content}
           fill={true}
           placeholder="blur"
           blurDataURL={post.thumbnail_blur_url}
+          onError={() => setIsImgError(true)}
         />
       </figure>
 

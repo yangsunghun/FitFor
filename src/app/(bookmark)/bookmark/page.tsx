@@ -1,4 +1,4 @@
-import BookmarkList from "./_components/BookmarkList";
+import BookmarkList from "../_components/BookmarkList";
 
 const BookmarksPage = () => {
   return (

@@ -16,7 +16,7 @@ const BookmarkList = () => {
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
 
   if (!userId) {
-    return <p>로그인이 필요합니다.</p>;
+    return <p className="mt-32 text-center text-subtitle font-medium text-text-02">로그인이 필요합니다.</p>;
   }
 
   if (isError) {

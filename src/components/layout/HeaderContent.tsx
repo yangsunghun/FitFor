@@ -53,7 +53,7 @@ const HeaderContent = () => {
                 북마크
               </button>
             ) : (
-              <Link href="/bookmarks" className="text-center">
+              <Link href="/bookmark" className="text-center">
                 북마크
               </Link>
             )}

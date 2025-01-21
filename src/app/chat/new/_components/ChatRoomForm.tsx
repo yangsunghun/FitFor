@@ -1,18 +1,17 @@
 "use client";
 
-import React from "react";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { ChatRoomFormInputs } from "../page";
-import { chatRoomSchema } from "@/lib/validations/chatRoomSchema";
 import TagSection from "@/components/shared/TagSection";
-import TitleSection from "./TitleSection";
-import ThumbnailUploadSection from "./ThumbnailUploadSection";
-import { useAuthStore } from "@/lib/store/authStore";
-import { uploadThumbnail } from "../../_utils/uploadThumbnail";
-import { createChatRoom } from "../../_utils/chat";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { useAuthStore } from "@/lib/store/authStore";
+import { chatRoomSchema } from "@/lib/validations/chatRoomSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import ThumbnailUploadSection from "./ThumbnailUploadSection";
+import TitleSection from "./TitleSection";
+import type { ChatRoomFormInputs } from "../page";
+import { uploadThumbnail } from "@/lib/utils/chat/uploadThumbnail";
+import { createChatRoom } from "@/lib/utils/chat/chat";
 
 const ChatRoomForm = () => {
   const router = useRouter();

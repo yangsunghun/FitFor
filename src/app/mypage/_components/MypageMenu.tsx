@@ -10,8 +10,8 @@ import VerificationSection from "./VerificationSection";
 const menuTabs = ["내 게시물", "히스토리", "인증", "계정 관리"];
 
 const MypageMenu = () => {
-  // 항상 첫번째로 초기화
-  const [activeTab, setActiveTab] = useState("tab-0");
+  // 빈탭으로 초기화
+  const [activeTab, setActiveTab] = useState("");
 
   // URL값과 활성화 된 탭 싱크 맞추기
   useEffect(() => {
@@ -22,6 +22,9 @@ const MypageMenu = () => {
     // 해당 tab query가 있는 경우에만 활성화 탭 세팅
     if (tabParam && menuTabs.some((_, index) => `tab-${index}` === tabParam)) {
       setActiveTab(tabParam);
+    } else {
+      // tab이 없는 경우 첫번째 탭 활성화
+      setActiveTab("tab-0");
     }
   }, []);
 

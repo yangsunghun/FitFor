@@ -1,12 +1,12 @@
 "use client";
 
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import TagSection from "@/components/shared/TagSection";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import { useEditPostQuery } from "@/lib/hooks/write/usePostQueries";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import TagSection from "@/components/shared/TagSection";
 import AddressModal from "../_components/AddressModal";
 import BodySizeSection from "../_components/BodySizeSection";
 import ContentSection from "../_components/ContentSection";
@@ -34,11 +34,10 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
     handleDeletePurchase,
     handleBodySizeChange,
     toggleTagSelector,
+    handleUpdate,
     handleChangeCategory,
     selectedCategory,
-    handleSetImageFiles,
-    setInitialFormState,
-    handleUpdate
+    setInitialFormState = () => {}
   } = useFormHandlers();
 
   const { data: fetchedData, isPending, isError } = useEditPostQuery(id);
@@ -82,7 +81,6 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
           blur={formState.thumbnail_blur_url}
           setImages={(images) => handleChange("images", images)}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
-          setImageFiles={handleSetImageFiles}
         />
 
         <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />

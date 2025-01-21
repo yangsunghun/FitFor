@@ -42,7 +42,7 @@ const BookmarkList = () => {
         </button>
       </div>
       {!ownBookmarks || ownBookmarks.length === 0 ? (
-        <p className="mt-32 text-center text-subtitle font-medium text-text-03">아직 북마크한 게시물이 없습니다.</p>
+        <p className="mt-32 text-center text-subtitle font-medium text-text-02">아직 북마크한 게시물이 없습니다.</p>
       ) : (
         <ul className="square-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {isPending

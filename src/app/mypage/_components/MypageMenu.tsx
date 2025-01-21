@@ -33,7 +33,7 @@ const MypageMenu = () => {
     const params = new URLSearchParams(window.location.search);
     params.set("tab", value);
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState({}, "", newUrl); // Updates the URL
+    window.history.replaceState({}, "", newUrl);
   };
 
   return (

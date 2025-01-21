@@ -1,13 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "plus.unsplash.com",
-      "images.unsplash.com",
-      "czcbonajmenirmxdslhj.supabase.co",
-      "k.kakaocdn.net",
-      "via.placeholder.com"
-    ], // 테스트 데이터 외부 이미지 도메인
+    domains: ["czcbonajmenirmxdslhj.supabase.co", "k.kakaocdn.net", "via.placeholder.com"],
     remotePatterns: [
       {
         protocol: "https",
@@ -22,10 +16,10 @@ const nextConfig = {
         hostname: "k.kakaocdn.net"
       },
       {
-        protocol: 'https',
-        hostname: 'czcbonajmenirmxdslhj.supabase.co',
-        pathname: '/**',
-      },
+        protocol: "https",
+        hostname: "czcbonajmenirmxdslhj.supabase.co",
+        pathname: "/**"
+      }
     ]
   }
 };

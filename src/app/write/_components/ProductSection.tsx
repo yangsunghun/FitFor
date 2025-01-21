@@ -25,7 +25,6 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete }: ProductSectionPr
       const imageUrl = purchase.image_url;
 
       if (!imageUrl) {
-        console.warn("삭제할 이미지 URL이 없습니다.");
         onDelete(index); // Supabase 없이 로컬 상태만 업데이트
         return;
       }
@@ -35,15 +34,12 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete }: ProductSectionPr
       // Supabase에서 파일 삭제
       const { error } = await supabase.storage.from("post-images").remove([filePath]);
       if (error) {
-        console.error("Supabase에서 이미지 삭제 실패:", error);
         alert("이미지 삭제에 실패했습니다.");
         return;
       }
 
-      console.log(`이미지 삭제 성공: ${filePath}`);
       onDelete(index); // 상태 업데이트 (부모 컴포넌트에서 처리)
     } catch (error) {
-      console.error("이미지 삭제 중 오류 발생:", error);
       alert("이미지 삭제 중 문제가 발생했습니다.");
     }
   };

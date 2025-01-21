@@ -152,12 +152,9 @@ const handleDelete = async (index: number) => {
     // Supabase에서 파일 삭제
     const { error } = await supabase.storage.from("post-images").remove([filePath]);
     if (error) {
-      console.error("Supabase에서 이미지 삭제 실패:", error);
       alert("이미지 삭제에 실패했습니다. 다시 시도해주세요.");
       return;
     }
-
-    console.log(`Supabase에서 이미지 삭제 성공: ${filePath}`);
 
     // 상태 업데이트
     const updatedImages = images.filter((_, i) => i !== index);
@@ -166,7 +163,6 @@ const handleDelete = async (index: number) => {
     // 해시도 제거
     setImageHashes((prev) => prev.filter((_, i) => i !== index));
   } catch (error) {
-    console.error("이미지 삭제 중 오류 발생:", error);
     alert("이미지 삭제 중 문제가 발생했습니다.");
   }
 };

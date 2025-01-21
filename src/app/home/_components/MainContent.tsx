@@ -38,10 +38,9 @@ const MainContent = () => {
       <section>
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
 
-        {!posts || (
+        {!posts || posts.length === 0 ? (
           <p className="mt-32 text-center text-subtitle font-medium text-text-02">아직 등록한 게시물이 없습니다.</p>
-        )}
-        {isMasonry ? (
+        ) : isMasonry ? (
           <ListLayout isPending={isPending} posts={posts} />
         ) : (
           <MasonryLayout isPending={isPending} posts={posts} />

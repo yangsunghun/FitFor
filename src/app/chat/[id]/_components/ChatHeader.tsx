@@ -1,11 +1,11 @@
 "use client";
 
 import sampleImage from "@/assets/images/image_sample.png";
+import { deleteChatRoom } from "@/lib/utils/chat/chat";
 import { createClient } from "@/lib/utils/supabase/client";
 import { List } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { deleteChatRoom } from "../../_utils/chat";
 
 const supabase = createClient();
 

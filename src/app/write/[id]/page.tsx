@@ -2,8 +2,7 @@
 
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
-import { useEditPostQuery } from "@/lib/hooks/write/usePostQueries";
-import { useAuthStore } from "@/lib/store/authStore";
+import { useEditPostQuery, useUpdatePostMutation } from "@/lib/hooks/write/usePostQueries";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import TagSection from "@/components/shared/TagSection";
@@ -14,7 +13,6 @@ import ImageUploadSection from "../_components/ImageUploadSection";
 import LocationSection from "../_components/LocationSection";
 import ProductSection from "../_components/ProductSection";
 import PurchaseModal from "../_components/PurchaseModal";
-import { createClient } from "@/lib/utils/supabase/client";
 
 type EditPageProps = {
   params: {
@@ -22,10 +20,8 @@ type EditPageProps = {
   };
 };
 
-const supabase = createClient();
 const EditPage = ({ params: { id } }: EditPageProps) => {
   const router = useRouter();
-  const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
 
   // 폼 상태 및 핸들러 초기화
   const {
@@ -38,74 +34,41 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
     toggleTagSelector,
     handleChangeCategory,
     selectedCategory,
-    handleSetImageFiles,
-    setInitialFormState
+    setInitialFormState = () => {}
   } = useFormHandlers();
 
   const { data: fetchedData, isPending, isError } = useEditPostQuery(id);
 
-  // 폼 초기화 플래그 관리
+  // 한 번만 실행되도록 플래그 관리
   const isFormInitialized = useRef(false);
 
-  // 데이터 변경 시 폼 초기화 및 접근 권한 확인
   useEffect(() => {
     if (fetchedData && !isFormInitialized.current) {
-      // 게시물 작성자와 현재 사용자가 다르면 접근 차단
-      if (!currentUser || fetchedData.post.user_id !== currentUser.id) {
-        alert("접근 권한이 없습니다.");
-        router.push("/");
-        return;
-      }
-      // 기존 데이터를 폼 상태에 반영
+      // 데이터가 있고, 아직 폼 초기화가 되지 않은 경우에만 실행
       setInitialFormState({
         ...fetchedData.post,
-        purchases: fetchedData.purchases,
+        purchases: fetchedData.purchases
       });
       isFormInitialized.current = true; // 초기화 플래그 설정
     }
-  }, [fetchedData, setInitialFormState, currentUser, router]);
+  }, [fetchedData, setInitialFormState]);
 
-  const handleUpdate = async () => {
-    try {
-      // 업데이트 실행
-      const { content, address, body_size, images, tags, purchases } = formState;
-
-      const updatedPost = {
-        content,
-        upload_place: address,
-        body_size,
-        images,
-        tags,
-      };
-
-      // 게시물 업데이트
-      const { error: postError } = await supabase.from("posts").update(updatedPost).eq("id", id);
-      if (postError) throw postError;
-
-      // 기존 구매 데이터 삭제
-      const { error: deleteError } = await supabase.from("purchase").delete().eq("post_id", id);
-      if (deleteError) throw deleteError;
-
-      // 새 구매 데이터 삽입
-      if (purchases.length > 0) {
-        const purchaseData = purchases.map((purchase) => ({
-          ...purchase,
-          post_id: id,
-        }));
-
-        const { error: purchaseError } = await supabase.from("purchase").insert(purchaseData);
-        if (purchaseError) throw purchaseError;
-      }
-
+  // 게시물 수정 뮤테이션
+  const mutation = useUpdatePostMutation(id, formState, {
+    onSuccess: () => {
       alert("수정 성공!");
       router.push(`/detail/${id}`);
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("게시물 수정 실패:", error);
       alert("수정 실패");
     }
+  });
+  // 수정 완료 버튼 핸들러
+  const handleUpdate = () => {
+    mutation.mutate();
   };
 
-  // 로딩 상태 처리
   if (isPending) return <LoadingSpinner />;
   if (isError) return <p>게시물을 불러오는 데 문제가 발생했습니다.</p>;
 
@@ -120,10 +83,9 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
 
         <ImageUploadSection
           images={formState.images}
-          blur={formState.thumbnail_blur_url}
           setImages={(images) => handleChange("images", images)}
+          blur={formState.thumbnail_blur_url}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
-          setImageFiles={handleSetImageFiles}
         />
 
         <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />

@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
 import type { Database } from "@/lib/types/supabase";
+import { createClient } from "@/lib/utils/supabase/client";
 import { Image as ImageIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
+const supabase = createClient();
 const genUniqueId = () => {
   return crypto.randomUUID(); // 고유 ID 생성
 };
@@ -20,7 +22,6 @@ type PurchaseModalProps = {
   mode: "add" | "edit";
   purchasesLength: number; // 현재 상품 개수
 };
-
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 최대 업로드 파일 크기 5MB
 
 const PurchaseModal = ({
@@ -41,8 +42,6 @@ const PurchaseModal = ({
     post_id: "" // post_id 추가
   });
 
-  const [imageFiles, setImageFiles] = useState<File[]>([]); // File 객체 관리
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]); // 미리보기 URL 관리
   const { title, description, buy_link, image_url, post_id } = formState;
 
   useEffect(() => {
@@ -55,10 +54,15 @@ const PurchaseModal = ({
         image_url: productToEdit.image_url || "",
         post_id: productToEdit.post_id || ""
       });
-      setPreviewUrls(productToEdit.image_url ? [productToEdit.image_url] : []);
     } else {
       // 추가 모드에서 초기 상태로 리셋
-      resetForm();
+      setFormState({
+        title: "",
+        description: "",
+        buy_link: "",
+        image_url: "",
+        post_id: "" // 기본값으로 설정
+      });
     }
   }, [productToEdit]);
 
@@ -70,26 +74,50 @@ const PurchaseModal = ({
       [name]: value // 모든 입력 값을 문자열로 처리
     }));
   };
+
+  // 이미지 업로드 함수
+  const uploadImage = async (file: File): Promise<string> => {
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다."); // 파일 크기 확인
+    }
+
+    // 고유 파일 이름 생성
+    const timestamp = Date.now();
+    const extension = file.name.split(".").pop() || "unknown";
+    const filePath = `purchase/${timestamp}.${extension}`;
+
+    // Supabase 스토리지에 이미지 업로드
+    const { error } = await supabase.storage.from("post-images").upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: false
+    });
+
+    if (error) throw new Error(`이미지 업로드 실패: ${error.message}`);
+
+    // 업로드된 이미지의 공개 URL 반환
+    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
+
+    if (!publicUrl) throw new Error("이미지 URL 생성 실패");
+
+    return publicUrl;
+  };
+
+  // 이미지 업로드 핸들러
   const handleImageUpload = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "image/*";
-    fileInput.onchange = (e: Event) => {
-      const file = (e.target as HTMLInputElement).files?.[0]; // 첫 번째 파일만 처리
-
-      if (!file) return; // 파일이 없으면 종료
-
-      if (file.size > MAX_FILE_SIZE) {
-        alert(`최대 5MB를 초과하는 파일은 업로드할 수 없습니다. : ${file.name}`);
-        return;
+    fileInput.onchange = async (e: Event) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        try {
+          const url = await uploadImage(file); // 이미지 업로드
+          setFormState((prevState) => ({ ...prevState, image_url: url }));
+        } catch (error: any) {
+          alert(error.message); // 에러 알림
+        }
       }
-
-      const preview = URL.createObjectURL(file); // 미리보기 URL 생성
-      setImageFiles([file]); // 단일 파일 배열로 상태 설정
-      setPreviewUrls([preview]); // 단일 미리보기 URL 설정
-      setFormState((prev) => ({ ...prev, image_url: preview })); // 폼 상태 업데이트
     };
-
     fileInput.click(); // 파일 선택 창 열기
   };
 
@@ -102,18 +130,18 @@ const PurchaseModal = ({
       image_url: "",
       post_id: ""
     });
-    setImageFiles([]);
-    setPreviewUrls([]);
   };
 
-  // 로컬 저장 및 상위로 데이터 전달
-  const handleLocalSubmit = () => {
+  // 폼 제출 핸들러
+  const handleSubmit = () => {
     // 5개 제한 확인
     if (mode === "add" && purchasesLength >= 5) {
       alert("상품은 최대 5개까지만 추가할 수 있습니다.");
       return;
     }
-    if (!formState.title || !formState.image_url) {
+
+    // 필수 입력 항목 확인
+    if (!title || !image_url) {
       alert("모든 필드를 입력해주세요.");
       return;
     }
@@ -228,7 +256,7 @@ const PurchaseModal = ({
           variant={title && image_url ? "secondary" : "disabled"} // 입력값에 따라 variant 변경
           size="lg"
           className="w-full"
-          onClick={handleLocalSubmit}
+          onClick={handleSubmit}
           disabled={!title || !image_url} // 비활성화 조건 추가
         >
           {mode === "add" ? "완료" : "수정하기"}

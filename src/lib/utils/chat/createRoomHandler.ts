@@ -1,4 +1,4 @@
-import { createChatRoom } from "./chat";
+import { createChatRoom } from "../../../lib/utils/chat/chat";
 import { uploadThumbnail } from "./uploadThumbnail";
 
 export const createRoomHandler = async (

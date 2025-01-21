@@ -29,7 +29,7 @@ const LikedPostList = () => {
 
   return (
     <>
-      <div className="mb-12 flex items-center justify-between">
+      <div className="mb-12 mt-8 flex items-center justify-between">
         <h2 className="text-title1 font-bold text-text-04">
           좋아요한 게시물
           <span className="text-title2 font-medium">
@@ -46,7 +46,7 @@ const LikedPostList = () => {
       {!ownlikedPosts || ownlikedPosts.length === 0 ? (
         <p className="mt-32 text-center text-subtitle font-medium text-text-02">아직 북마크한 게시물이 없습니다.</p>
       ) : (
-        <ul className="square-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className="square-grid grid grid-cols-1 gap-6 pb-24 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {isPending
             ? [...Array(8)].map((_, index) => <CardSkeleton key={index} />)
             : ownlikedPosts.map((post) =>

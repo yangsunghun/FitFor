@@ -87,7 +87,12 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
           <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
             <LikeSection postId={postId} styleType="detail" />
             <KakaoScript />
-            <SocialShare postUrl={`https://fit4.vercel.app/detail/${postId}`} postTitle={content} thumbnail={images[0]} />
+            <SocialShare
+              postUrl={`https://fit4.vercel.app/detail/${postId}`}
+              postTitle={content}
+              writer={users?.nickname}
+              thumbnail={images[0]}
+            />
           </div>
         </div>
       </article>

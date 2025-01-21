@@ -9,9 +9,10 @@ type SocialShareProps = {
   postUrl: string;
   postTitle: string;
   thumbnail: string;
+  writer: string;
 };
 
-const SocialShare = ({ postUrl, postTitle, thumbnail }: SocialShareProps) => {
+const SocialShare = ({ postUrl, postTitle, thumbnail, writer }: SocialShareProps) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopyUrl = () => {
@@ -45,7 +46,7 @@ const SocialShare = ({ postUrl, postTitle, thumbnail }: SocialShareProps) => {
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: postTitle,
+        title: `${writer} 님의 룩북입니다. - Fit4`,
         description: postTitle,
         imageUrl: thumbnail, // 게시물 썸네일 이미지 URL
         link: {

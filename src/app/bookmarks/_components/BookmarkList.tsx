@@ -49,7 +49,7 @@ const BookmarkList = () => {
             ? [...Array(8)].map((_, index) => <CardSkeleton key={index} />)
             : ownBookmarks.map((post) =>
                 post ? (
-                  <li key={post.id} className="searchbar-shadow relative rounded-2xl p-1">
+                  <li key={post.id} className="shadow-emphasize relative rounded-2xl p-1">
                     {isEditing && (
                       <button
                         onClick={() => handleRemoveBookmark(post.id)}

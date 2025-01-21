@@ -59,7 +59,7 @@ const SearchBar = () => {
           className="h-12 w-full bg-transparent px-2 text-title2 font-medium outline-none placeholder:text-text-03"
         />
         {showDropdown && (filteredTags.length > 0 || searchHistory.length > 0) && (
-          <ul className="dropdown searchbar-shadow absolute left-0 top-[calc(100%+0.75rem)] z-50 w-full rounded-2xl bg-white p-6">
+          <ul className="dropdown shadow-emphasize absolute left-0 top-[calc(100%+0.75rem)] z-50 w-full rounded-2xl bg-white p-6">
             {/* 검색 기록 */}
             {searchHistory.length > 0 && inputValue.length === 0 && (
               <>

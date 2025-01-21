@@ -4,7 +4,7 @@
 
 @layer utilities {
   .inner {
-    @apply lt:w-[91.45%] mx-auto w-[83%];
+    @apply mx-auto w-[83%] lt:w-[91.45%];
   }
 
   .click-box {
@@ -45,8 +45,20 @@
     display: none;
   }
 
-  .searchbar-shadow {
+  .shadow-nomal {
+    @apply shadow-[0px_0px_1px_0px_rgba(0,0,0,0.08)] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.12)];
+  }
+
+  .shadow-emphasize {
     @apply shadow-[0px_0px_1px_0px_rgba(0,0,0,0.08)] shadow-[0px_1px_4px_0px_rgba(0,0,0,0.08)] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.12)];
+  }
+
+  .shadow-strong {
+    @apply shadow-[0px_0px_4px_0px_rgba(0,0,0,0.08)] shadow-[0px_4px_8px_0px_rgba(0,0,0,0.08)] shadow-[0px_6px_12px_0px_rgba(0,0,0,0.12)];
+  }
+
+  .shadow-heavy {
+    @apply shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)] shadow-[0px_16px_20px_0px_rgba(0,0,0,0.12)] shadow-[0px_8px_16px_0px_rgba(0,0,0,0.08)];
   }
 }
 

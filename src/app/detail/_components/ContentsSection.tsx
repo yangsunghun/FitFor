@@ -2,17 +2,18 @@
 
 import sampleImage from "@/assets/images/image_sample.png";
 import ErrorScreen from "@/components/common/ErrorScreen";
+import KakaoScript from "@/components/common/KakaoScript";
 import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
-import { Export } from "@phosphor-icons/react";
 import Image from "next/image";
 import ContentsSkeleton from "./ContentsSkeleton";
 import EditDelete from "./EditDelete";
 import ImageCarousel from "./ImageCarousel";
 import ImageGallery from "./ImageGallery";
+import SocialShare from "./SocialShare";
 
 type Props = {
   postId: string;
@@ -85,10 +86,13 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
 
           <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
             <LikeSection postId={postId} styleType="detail" />
-            <button className="flex flex-col gap-2">
-              <Export size={28} />
-              <span>공유</span>
-            </button>
+            <KakaoScript />
+            <SocialShare
+              postUrl={`https://fit4.vercel.app/detail/${postId}`}
+              postTitle={content}
+              writer={users?.nickname}
+              thumbnail={images[0]}
+            />
           </div>
         </div>
       </article>

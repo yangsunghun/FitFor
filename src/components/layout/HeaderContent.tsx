@@ -34,13 +34,15 @@ const HeaderContent = () => {
 
   return (
     <>
-      <div className="relative z-10 w-full bg-white px-6 py-3">
+      <div className="relative z-10 w-full bg-white px-6 py-4">
         <div className="relative mx-auto flex max-w-[1200px] items-center gap-[4vw]">
           <Link href="/">
-            <Image src={logoImage} alt="fitfor" />
+            <h1>
+              <Image src={logoImage} alt="fitfor" />
+            </h1>
           </Link>
 
-          <nav className="flex w-[22%] max-w-[16.5rem] justify-between text-title2 font-medium text-text-03">
+          <nav className="flex w-[22%] min-w-[190px] max-w-[16.5rem] justify-between text-title2 font-medium text-text-03">
             {!user ? (
               <button
                 onClick={() => {

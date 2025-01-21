@@ -41,7 +41,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="w-[40%] max-w-[30rem]">
+    <div className="w-[calc(100%-30rem)] max-w-[30rem]">
       <form
         onSubmit={handleSubmit}
         className="relative flex w-full flex-row items-center rounded-lg bg-bg-02 pl-6"

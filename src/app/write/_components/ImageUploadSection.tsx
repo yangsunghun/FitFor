@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, DragEvent } from "react";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_IMAGES = 4; // 최대 업로드 가능한 이미지 개수
@@ -137,7 +137,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
   };
 
   // 드래그 앤 드롭 시
-  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
     handleFiles(files);

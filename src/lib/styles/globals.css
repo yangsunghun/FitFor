@@ -94,6 +94,12 @@ input[type="search"]::-ms-clear {
   display: none;
 }
 
+/* 파일 인풋 커서 포인터 안 먹는 이슈 해결 */
+input[type=file], /* FF, IE7+, chrome */
+input[type=file]::-webkit-file-upload-button {
+  cursor: pointer;
+}
+
 /* shadcn용 radius 변경시 수정 */
 @layer base {
   :root {

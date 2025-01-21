@@ -53,6 +53,7 @@ const ProfileSettingsForm = () => {
     setIsUploading(true);
 
     let profileImageUrl = user.profile_image;
+    const prevImageId = user.profile_image?.split("/").pop();
 
     // 파일이 존재하는 경우에만 storage에 업로드
     // 클라이언트로만 이미지 파일 업로드 가능
@@ -73,6 +74,11 @@ const ProfileSettingsForm = () => {
       // 업로드 된 이미지의 URL 정보 받아오기
       const { data: publicUrlData } = supabase.storage.from("profile-images").getPublicUrl(`images/${fileName}`);
       profileImageUrl = publicUrlData?.publicUrl || null;
+
+      // 기존의 이미지 제거 (존재한다면)
+      if (prevImageId) {
+        supabase.storage.from("profile-images").remove([`images/${prevImageId}`]);
+      }
     }
 
     // 유저 프로필 수정 서버 액션으로 요청
@@ -96,9 +102,8 @@ const ProfileSettingsForm = () => {
       user.nickname = value.nickname;
 
       setUser(user);
-      alert("변경된 회원 정보가 저장되었습니다.");
     }
-
+    alert("변경된 회원 정보가 저장되었습니다.");
     setIsUploading(false);
     router.push("/mypage");
   };

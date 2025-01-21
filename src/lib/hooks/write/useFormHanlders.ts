@@ -63,20 +63,14 @@ export const useFormHandlers = () => {
 
   const router = useRouter(); // 페이지 이동 관리
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
-  const [tags, setTags] = useState<string[]>([]);
   // 태그 섹션 관련 상태
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
 
   // 카테고리 변경 핸들러
   const handleChangeCategory = (category: string) => {
     setSelectedCategory(category);
     setTags([]); // 카테고리 변경 시 태그 초기화
-  };
-
-  // 이미지 파일 상태를 업데이트하는 핸들러
-  const handleSetImageFiles = (files: File[]) => {
-    setImageFiles(files);
   };
 
   // 폼 상태 변경 핸들러
@@ -183,47 +177,6 @@ export const useFormHandlers = () => {
     }
   };
 
-// 이미지 업로드 핸들러
-const uploadToSupabase = async (files: File[], handleChange: (urls: string[]) => void) => {
-  const uploadedImageUrls: string[] = [];
-
-  for (const file of files) {
-    // 파일 이름 생성
-    const timestamp = Date.now();
-    const extension = file.name.split(".").pop() || "unknown";
-    const fileName = `images/${timestamp}_${file.name}`;
-
-    // Supabase에 파일 업로드
-    const { error } = await supabase.storage
-      .from("post-images")
-      .upload(fileName, file, { cacheControl: "3600", upsert: false });
-
-    if (error) {
-      throw new Error(`이미지 업로드 실패: ${error.message}`);
-    }
-
-    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(fileName).data;
-
-    if (!publicUrl) {
-      throw new Error("이미지 URL 생성 실패");
-    }
-
-    uploadedImageUrls.push(publicUrl);
-  }
-
-  handleChange(uploadedImageUrls); // 업로드된 URL 반환
-};
-
-const handleFinalSubmit = async (files: File[], setImages: (urls: string[]) => void) => {
-  try {
-    await uploadToSupabase(files, setImages); // File 배열을 업로드 핸들러로 전달
-    handleSubmit(); // 폼 제출 호출
-  } catch (error) {
-    console.error("게시글 작성 실패:", error);
-    alert("작성 실패");
-  }
-};
-
   const toggleTagSelector = (tag: string, groupTags: string[], max: number) => {
     setFormState((prevState) => {
       const selectedGroupTags = prevState.tags.filter((t) => groupTags.includes(t));
@@ -257,12 +210,9 @@ const handleFinalSubmit = async (files: File[], setImages: (urls: string[]) => v
     handleDeletePurchase,
     handleBodySizeChange,
     handleSubmit,
-    handleFinalSubmit,
     toggleTagSelector,
     handleChangeCategory,
     selectedCategory,
-    setInitialFormState,
-    imageFiles,
-    handleSetImageFiles
+    setInitialFormState
   };
 };

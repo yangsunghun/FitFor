@@ -7,13 +7,13 @@ const config: Config = {
   safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#1a1a1a]", "text-[#6e6e6e]", "border-[#d6d6d6]", "bg-[#0c6efd]"],
   theme: {
     fontSize: {
-      heading: ["36px", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Heading 36px
-      title1: ["24px", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Title1 24px
-      subtitle: ["20px", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Subtitle 20px
-      title2: ["18px", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Title2 18px
-      body: ["15px", { lineHeight: "150%", letterSpacing: "0" }], // Body2 15px
-      caption: ["13px", { lineHeight: "150%", letterSpacing: "0" }], // Caption 13px
-      small: ["11px", { lineHeight: "150%", letterSpacing: "0" }] // Small1 11px
+      heading: ["2.25rem", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Heading 36px
+      title1: ["1.5rem", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Title1 24px
+      subtitle: ["1.25rem", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Subtitle 20px
+      title2: ["1.125rem", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Title2 18px
+      body: ["0.9375rem", { lineHeight: "150%", letterSpacing: "0" }], // Body2 15px
+      caption: ["0.8125rem", { lineHeight: "150%", letterSpacing: "0" }], // Caption 13px
+      small: ["0.6875rem", { lineHeight: "150%", letterSpacing: "0" }] // Small1 11px
     },
     extend: {
       colors: {
@@ -165,9 +165,34 @@ const config: Config = {
         fadeOut: "fadeOut 0.3s ease-out",
         scaleUp: "scaleUp 0.3s ease-out",
         scaleDown: "scaleDown 0.3s ease-out"
+      },
+      screens: {
+        mn: { max: "375px" }, // 우리 모바일 디자인 시안 크기
+        mb: { max: "480px" }, // 가장 큰 폰 크기
+        tb: { max: "768px" }, // 일반 타블렛 크기
+        lt: { max: "1200px" } // 일반 노트북 크기
       }
     }
   },
-  plugins: [require("tailwindcss-animate")]
+  plugins: [
+    require("tailwindcss-animate")
+    // function ({ addBase }: PluginAPI) { 나중에 rem 크기를 한번에 바꿀 때 사용
+    //   addBase({
+    //     html: {
+    //       fontSize: "16px" // 기본 크기
+    //     },
+    //     "@screen tb": {
+    //       html: {
+    //         fontSize: "14px" // 중간 값
+    //       }
+    //     },
+    //     "@screen mb": {
+    //       html: {
+    //         fontSize: "12px" // 모바일 시안을 보면 폰트가 딱 3/4 크기로 줄어들어서 12로 함.
+    //       }
+    //     }
+    //   });
+    // }
+  ]
 };
 export default config;

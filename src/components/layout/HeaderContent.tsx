@@ -34,7 +34,7 @@ const HeaderContent = () => {
 
   return (
     <>
-      <div className="relative z-10 w-full bg-white px-6 py-3">
+      <div className="relative z-10 w-full bg-white px-6 py-4">
         <div className="relative mx-auto flex max-w-[1200px] items-center gap-[4vw]">
           <Link href="/">
             <Image src={logoImage} alt="fitfor" />

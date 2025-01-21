@@ -176,7 +176,7 @@ const config: Config = {
   },
   plugins: [
     require("tailwindcss-animate")
-    // function ({ addBase }: PluginAPI) { 나중에 rem 크기를 한번에 바꿀 때 사용
+    // function ({ addBase }: PluginAPI) { 나중에 rem 크기를 한번에 바꿀 때 사용 , 사용안할 수도 있음.
     //   addBase({
     //     html: {
     //       fontSize: "16px" // 기본 크기

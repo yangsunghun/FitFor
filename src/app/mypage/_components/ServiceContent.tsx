@@ -12,8 +12,8 @@ const ServiceContent = ({ closeModal }: ServiceContentProps) => {
         <li>
           <strong className="text-black">목적</strong>
           <p>
-            본 약관은 서비스 이용자가 제공되는 모든 서비스(이하 "서비스")를 이용함에 있어 필요한 권리, 의무 및
-            책임사항을 규정합니다.
+            본 약관은 서비스 이용자가 제공되는 모든 서비스(이하 서비스)를 이용함에 있어 필요한 권리, 의무 및 책임사항을
+            규정합니다.
           </p>
         </li>
         <li>

@@ -244,7 +244,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
                         <Button
                           variant="whiteLine"
                           size="sm"
-                          className="h-6 w-24 bg-transparent text-caption leading-none !text-text-01"
+                          className="h-6 w-24 bg-transparent border-none text-caption leading-none !text-text-01"
                           onClick={() => {
                             const updatedImages = [url, ...images.filter((img, i) => i !== index)];
                             setImages(updatedImages);

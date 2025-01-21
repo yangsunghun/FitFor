@@ -1,11 +1,11 @@
+import sampleImage from "@/assets/images/image_sample.png";
 import { Tags } from "@/components/ui/Tags";
+import { useAuthStore } from "@/lib/store/authStore";
 import { ChatRoomType } from "@/lib/types/chat";
+import { enterAsMember } from "@/lib/utils/chat/chat";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { enterAsMember } from "../_utils/chat";
-import { useAuthStore } from "@/lib/store/authStore";
-import sampleImage from "@/assets/images/image_sample.png";
 
 type Props = {
   chatRoom: ChatRoomType;
@@ -44,9 +44,9 @@ const ChatRoomCard = ({ chatRoom }: Props) => {
   };
 
   return (
-    <div className="flex flex-col cursor-pointer" onClick={handleCardClick}>
+    <div className="flex cursor-pointer flex-col" onClick={handleCardClick}>
       {/* 채팅방 썸네일 */}
-      <figure className="relative h-[15.75rem] w-full overflow-hidden rounded-2xl bg-gray-300 mb-4">
+      <figure className="relative mb-4 h-[15.75rem] w-full overflow-hidden rounded-2xl bg-gray-300">
         <Image
           src={chatRoom.room_thumbnail_url || sampleImage}
           alt={chatRoom.room_title}
@@ -67,11 +67,11 @@ const ChatRoomCard = ({ chatRoom }: Props) => {
             fill
           />
         </figure>
-        <h3 className="ml-2 leading-5 text-body font-medium">{chatRoom.room_title}</h3>
+        <h3 className="ml-2 text-body font-medium leading-5">{chatRoom.room_title}</h3>
       </div>
-      <div className="flex flex-col mt-1 ml-10">
+      <div className="ml-10 mt-1 flex flex-col">
         <h4 className="text-caption font-medium text-text-03">{chatRoom.user.nickname}</h4>
-        <div className="flex flex-wrap mt-1 gap-1">
+        <div className="mt-1 flex flex-wrap gap-1">
           {chatRoom.room_tags?.map((tag, index) => <Tags key={index} label={tag} variant="grayLine" size="sm" />)}
         </div>
       </div>

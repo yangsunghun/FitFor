@@ -1,5 +1,10 @@
+"use client";
+
+import { Button } from "@/components/ui/Button";
+import ModalItem from "@/components/ui/Modal";
 import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
+import { Image as ImageIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -8,7 +13,7 @@ const genUniqueId = () => {
   return crypto.randomUUID(); // 고유 ID 생성
 };
 
-type ProductModalProps = {
+type PurchaseModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onAddProduct: (product: Database["public"]["Tables"]["purchase"]["Insert"]) => void;
@@ -27,7 +32,7 @@ const PurchaseModal = ({
   productToEdit,
   mode,
   purchasesLength
-}: ProductModalProps) => {
+}: PurchaseModalProps) => {
   // 입력 폼 상태 관리
   const [formState, setFormState] = useState({
     title: "",
@@ -164,85 +169,100 @@ const PurchaseModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-        <h2 className="text-xl mb-4 font-bold">{mode === "add" ? "상품 추가" : "상품 수정"}</h2>
+    <ModalItem isOpen={isOpen} onClose={handleClose}>
+      <div className="space-y-2">
+        <div className="flex items-center gap-1">
+          <span className="text-title2 font-bold text-text-04">게시물 이미지</span>
+          <span className="text-title2 font-bold text-primary-default">*</span>
+        </div>
 
         {/* 이미지 업로드 */}
-        <div
-          className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border border-gray-300 bg-gray-100"
-          onClick={handleImageUpload}
-        >
-          {image_url ? (
-            <div className="relative h-full w-full">
+        <div className="flex items-start gap-6">
+          {/* 이미지 영역 */}
+          <div className="relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-lg border border-bg-02 bg-bg-02">
+            {image_url ? (
               <Image
                 src={image_url}
                 alt="Uploaded"
                 layout="fill" // 부모 요소를 기준으로 채움
                 objectFit="cover" // 이미지 비율 유지하며 영역을 꽉 채움
+                className="rounded-lg"
               />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <ImageIcon size={24} className="text-text-02" />
+              </div>
+            )}
+          </div>
+
+          {/* 이미지 업로드 버튼과 설명 */}
+          <div className="lex mt-[3px] flex-col items-start justify-start gap-4">
+            <div className="flex flex-col gap-1">
+              <p className="text-body text-text-03">추천 사이즈 : OOO x OOO</p>
+              <p className="text-body text-text-03">JPG, PNG. 최대 5MB</p>
             </div>
-          ) : (
-            <span className="flex h-full items-center justify-center text-gray-400">+ 추가</span>
-          )}
-        </div>
-
-        {/* 상품명 */}
-        <div className="mb-4">
-          <label className="mb-2 block font-bold">상품명</label>
-          <input
-            type="text"
-            name="title"
-            value={title}
-            onChange={handleInputChange}
-            placeholder="상품명을 입력해주세요."
-            className="w-full rounded-md border p-2"
-          />
-        </div>
-
-        {/* 설명 */}
-        <div className="mb-4">
-          <label className="mb-2 block font-bold">설명</label>
-          <textarea
-            name="description"
-            value={description}
-            onChange={handleInputChange}
-            placeholder="상품의 설명을 작성해주세요."
-            className="w-full resize-none rounded-md border p-2"
-            rows={2}
-          ></textarea>
-        </div>
-
-        {/* 링크 */}
-        <div className="mb-4">
-          <label className="mb-2 block font-bold">상품 링크</label>
-          <input
-            type="url"
-            name="buy_link"
-            value={formState.buy_link || ""}
-            onChange={handleInputChange}
-            placeholder="상품 구매 링크를 입력해주세요."
-            className="w-full rounded-md border p-2"
-          />
-        </div>
-
-        {/* 버튼 */}
-        <div className="flex justify-end gap-4">
-          <button
-            className="rounded-md bg-gray-300 px-4 py-2 hover:bg-gray-400"
-            onClick={handleClose} // 폼 초기화 및 모달 닫기
-          >
-            취소
-          </button>
-          <button
-            className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800"
-            onClick={handleSubmit} // 데이터 저장 및 모달 닫기
-          >
-            {mode === "add" ? "추가 완료" : "수정 완료"}
-          </button>
+            <button
+              className="mt-4 h-9 rounded-lg bg-bg-03 px-3 py-1 text-text-01 hover:bg-gray-800"
+              onClick={handleImageUpload}
+            >
+              이미지 업로드
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* 상품명 */}
+      <div className="space-y-2 pt-6">
+        <label className="block text-title2 font-bold">상품명</label>
+        <input
+          type="text"
+          name="title"
+          value={title}
+          onChange={handleInputChange}
+          placeholder="상품명을 입력해주세요."
+          className="w-full rounded-md bg-bg-02 p-4 focus:outline-none"
+        />
+      </div>
+
+      {/* 브랜드명 */}
+      <div className="space-y-2 pt-6">
+        <label className="block text-title2 font-bold text-text-04">브랜드명</label>
+        <input
+          name="description"
+          value={description}
+          onChange={handleInputChange}
+          placeholder="브랜드명을 작성해주세요."
+          className="w-full rounded-md bg-bg-02 p-4"
+        />
+      </div>
+
+      {/* 링크 */}
+      <div className="space-y-2 pt-6">
+        <label className="block text-title2 font-bold focus:outline-none">상품 링크</label>
+        <input
+          type="url"
+          name="buy_link"
+          value={formState.buy_link || ""}
+          onChange={handleInputChange}
+          placeholder="예시 - http://naver.com"
+          className="text-title-02 w-full rounded-md bg-bg-02 p-4 focus:outline-none"
+        />
+      </div>
+
+      {/* 버튼 */}
+      <div className="pt-10">
+        {/* 완료 버튼 */}
+        <Button
+          variant={title && image_url ? "secondary" : "disabled"} // 입력값에 따라 variant 변경
+          size="lg"
+          className="w-full"
+          onClick={handleSubmit}
+          disabled={!title || !image_url} // 비활성화 조건 추가
+        >
+          {mode === "add" ? "완료" : "수정하기"}
+        </Button>
+      </div>
+    </ModalItem>
   );
 };
 

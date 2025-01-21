@@ -60,7 +60,7 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
     };
   }, [roomId, queryClient]);
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) return <div></div>;
   if (isError) return <div>메시지를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (

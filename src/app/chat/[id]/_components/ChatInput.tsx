@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/lib/store/authStore";
+import { sendMessage } from "@/lib/utils/chat/chat";
 import { Image } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { sendMessage } from "../../_utils/chat";
 
 interface ChatInputProps {
   roomId: string;

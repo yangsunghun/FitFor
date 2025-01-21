@@ -7,13 +7,13 @@ const config: Config = {
   safelist: ["bg-[#ffeb00]", "bg-[#181717]", "text-[#1a1a1a]", "text-[#6e6e6e]", "border-[#d6d6d6]", "bg-[#0c6efd]"],
   theme: {
     fontSize: {
-      heading: ["2.25rem", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Heading 36px
-      title1: ["1.5rem", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Title1 24px
-      subtitle: ["1.25rem", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Subtitle 20px
-      title2: ["1.125rem", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Title2 18px
-      body: ["0.9375rem", { lineHeight: "150%", letterSpacing: "0" }], // Body2 15px
-      caption: ["0.8125rem", { lineHeight: "150%", letterSpacing: "0" }], // Caption 13px
-      small: ["0.6875rem", { lineHeight: "150%", letterSpacing: "0" }] // Small1 11px
+      heading: ["36px", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Heading 36px
+      title1: ["24px", { lineHeight: "150%", letterSpacing: "-0.025em" }], // Title1 24px
+      subtitle: ["20px", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Subtitle 20px
+      title2: ["18px", { lineHeight: "150%", letterSpacing: "-0.015em" }], // Title2 18px
+      body: ["15px", { lineHeight: "150%", letterSpacing: "0" }], // Body2 15px
+      caption: ["13px", { lineHeight: "150%", letterSpacing: "0" }], // Caption 13px
+      small: ["11px", { lineHeight: "150%", letterSpacing: "0" }] // Small1 11px
     },
     extend: {
       colors: {

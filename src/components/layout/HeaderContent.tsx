@@ -91,7 +91,7 @@ const HeaderContent = () => {
                     width={24}
                     height={24}
                     priority
-                    className="rounded-full"
+                    className="rounded-full object-cover"
                   />
                   <span>{user.nickname}</span>
                 </Link>

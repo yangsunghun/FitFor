@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/Button";
 import { useUserStats } from "@/lib/hooks/mypage/useUserStats";
+import { useAuthStore } from "@/lib/store/authStore";
+import { updateUserVerification } from "@/lib/utils/mypage/userInfo";
 import { verifyUser } from "@/lib/utils/mypage/userVerification";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -10,6 +12,7 @@ import StatsCard from "./StatsCard";
 
 // 유저 인증 섹션
 const VerificationSection = () => {
+  const { user, setUser } = useAuthStore();
   const { userPostsStats, allStats, isPending, isError, userVerified } = useUserStats();
   const queryClient = useQueryClient();
   const [applicationAvailable, setApplicationAvailable] = useState(false);
@@ -25,10 +28,14 @@ const VerificationSection = () => {
 
   if (isError) return <p>유저의 인증 정보를 불러오지 못했습니다.</p>;
 
-  // 24시간뒤 자동 인증 되는 로직
+  // 24시간뒤 자동 인증 되는 로직?
   // is_verified는 요청으로 true 보내기
-  const handleApplication = () => {
-    alert("서비스 준비 중입니다");
+  const handleApplication = async () => {
+    if (user) {
+      await updateUserVerification(user.id);
+      user.is_verified = true;
+      setUser(user);
+    }
   };
 
   return (
@@ -58,7 +65,7 @@ const VerificationSection = () => {
       </div>
       <div className="mt-20">
         <h3 className="mb-6 text-subtitle font-medium text-text-04">인증 유저 요건</h3>
-        <ul className="list-disc pl-5 text-title2 text-text-03 space-y-3 ">
+        <ul className="list-disc space-y-3 pl-5 text-title2 text-text-03">
           <li>위 기준을 충족해야만 인증 유저로 활동할 수 있어요.</li>
           <li>인증 유저가 되면 Live 채팅방에 입장할 수 있어요.</li>
           <li>신청 후 24시간 뒤, 관리자 확인 후 인증 유저로 활동 가능해요.</li>

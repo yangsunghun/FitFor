@@ -107,10 +107,11 @@ const HeaderContent = () => {
       </div>
 
       <div
-        className="absolute left-0 top-full z-10 w-full overflow-hidden bg-bg-01 shadow-sm transition-all duration-300 ease-in-out"
-        style={{
-          height: isOpen ? `${contentRef.current?.scrollHeight}px` : "0px"
-        }}
+        className={clsx(
+          "absolute left-0 top-full z-10 w-full overflow-hidden bg-bg-01 shadow-sm transition-all duration-300 ease-in-out",
+          { "pointer-events-auto visible": isOpen, "pointer-events-none invisible": !isOpen }
+        )}
+        style={{ maxHeight: isOpen ? `${contentRef.current?.scrollHeight}px` : 0 }}
       >
         <div ref={contentRef} className="mx-auto flex max-w-[1200px] pb-8 pt-4">
           <HeaderCategorys handleClose={handleClose} />

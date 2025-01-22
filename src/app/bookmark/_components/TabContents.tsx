@@ -1,6 +1,6 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { useActiveTabs } from "@/lib/hooks/mypage/useActiveTabs";
+import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
 import BookmarkList from "../_components/BookmarkList";
 import LikedPostList from "../_components/LikedPostList";
 

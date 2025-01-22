@@ -106,7 +106,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
       <h2 className="mb-6 items-center text-subtitle">위치 찾기</h2>
 
       {/* 검색 입력 필드 */}
-      <div className="relative">
+      <div className="relative w-[30vw] max-w-full">
         <div className="absolute inset-y-0 left-3 flex items-center">
           <MagnifyingGlass size={24} className="text-text-03" />
         </div>

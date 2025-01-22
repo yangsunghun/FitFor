@@ -153,6 +153,14 @@ const config: Config = {
           from: { transform: "scale(1)" },
           to: { transform: "scale(0.95)" }
         },
+        slideIn: {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" }
+        },
+        slideOut: {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(100%)" }
+        },
         gradient: {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
@@ -164,7 +172,9 @@ const config: Config = {
         fadeIn: "fadeIn 0.3s ease-out",
         fadeOut: "fadeOut 0.3s ease-out",
         scaleUp: "scaleUp 0.3s ease-out",
-        scaleDown: "scaleDown 0.3s ease-out"
+        scaleDown: "scaleDown 0.3s ease-out",
+        slideIn: "slideIn 0.3s ease-in-out",
+        slideOut: "slideOut 0.3s ease-in-out"
       },
       screens: {
         lt: { max: "1200px" }, // 일반 노트북 크기
@@ -172,6 +182,13 @@ const config: Config = {
         mb: { max: "480px" }, // 가장 큰 폰 크기
         mn: { max: "375px" } // 우리 모바일 디자인 시안 크기
       }
+    }
+  },
+  variants: {
+    extend: {
+      backgroundColor: ["checked"], // checked 상태에서 배경색 활성화
+      borderColor: ["checked"], // checked 상태에서 테두리색 활성화
+      textColor: ["checked"] // checked 상태에서 텍스트 색상 활성화
     }
   },
   plugins: [

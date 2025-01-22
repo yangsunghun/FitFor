@@ -14,7 +14,7 @@ const GridPost = ({ post }: Props) => {
   return (
     <li key={post.id} className="relative mb-4">
       <Link href={`/detail/${post.id}/view`} className="click-box z-10"></Link>
-      <figure className="thumbnail aspect-square rounded-2xl">
+      <figure className="thumbnail aspect-square rounded-2xl mb:rounded-lg">
         <Image
           src={isImgError ? sampleImage : post.images[0]}
           alt={post.content}

@@ -16,10 +16,10 @@ type Props = {
 
 const SortPosts = ({ sort, handleSort }: Props) => {
   return (
-    <div className="relative flex justify-end">
+    <>
       <Dropdown
         trigger={
-          <div className="flex h-8 items-center gap-3 font-medium leading-8">
+          <div className="flex h-8 items-center gap-3 font-medium leading-8 mb:gap-2 mb:text-caption mb:text-text-03">
             {sortOptions.find((option) => option.key === sort)?.label || "선택"}
             <CaretDown weight="fill" />
           </div>
@@ -30,7 +30,7 @@ const SortPosts = ({ sort, handleSort }: Props) => {
           {sortOptions.map((option) => (
             <li
               key={option.key}
-              className="w-full whitespace-nowrap py-2 text-left font-medium transition duration-300 hover:text-primary-default"
+              className="w-full whitespace-nowrap py-2 text-left font-medium transition duration-300 hover:text-primary-default mb:text-caption"
             >
               <button
                 onClick={() => {
@@ -43,7 +43,7 @@ const SortPosts = ({ sort, handleSort }: Props) => {
           ))}
         </ul>
       </Dropdown>
-    </div>
+    </>
   );
 };
 

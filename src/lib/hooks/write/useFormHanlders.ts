@@ -177,6 +177,45 @@ export const useFormHandlers = () => {
     }
   };
 
+  const handleUpdate = async (id: string) => {
+    const { content, address, body_size, images, tags, purchases } = formState;
+
+    try {
+      const updatedPost = {
+        content,
+        upload_place: address,
+        body_size,
+        images,
+        tags
+      };
+
+      // 게시물 업데이트
+      const { error: postError } = await supabase.from("posts").update(updatedPost).eq("id", id);
+      if (postError) throw postError;
+
+      // 기존 구매 데이터 삭제
+      const { error: deleteError } = await supabase.from("purchase").delete().eq("post_id", id);
+      if (deleteError) throw deleteError;
+
+      // 새 구매 데이터 삽입
+      if (purchases.length > 0) {
+        const purchaseData = purchases.map((purchase) => ({
+          ...purchase,
+          post_id: id
+        }));
+
+        const { error: purchaseError } = await supabase.from("purchase").insert(purchaseData);
+        if (purchaseError) throw purchaseError;
+      }
+
+      alert("수정 성공!");
+      router.push(`/detail/${id}`);
+    } catch (error) {
+      console.error("게시물 수정 실패:", error);
+      alert("수정 실패");
+    }
+  };
+
   const toggleTagSelector = (tag: string, groupTags: string[], max: number) => {
     setFormState((prevState) => {
       const selectedGroupTags = prevState.tags.filter((t) => groupTags.includes(t));
@@ -210,6 +249,7 @@ export const useFormHandlers = () => {
     handleDeletePurchase,
     handleBodySizeChange,
     handleSubmit,
+    handleUpdate,
     toggleTagSelector,
     handleChangeCategory,
     selectedCategory,

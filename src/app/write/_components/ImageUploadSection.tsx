@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
-import React, { useState } from "react";
+import { DragEvent, useState } from "react";
 
 const supabase = createClient();
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -96,23 +96,23 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
   const handleFiles = async (files: File[]) => {
     const existingCount = images.length;
 
-    // 최대 업로드 제한 확인
-    if (existingCount >= MAX_IMAGES) {
-      alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
-      return;
-    }
-
     // 새로 추가된 이미지 관련 변수
     const newImages: string[] = [];
     const newHashes: string[] = [];
 
     for (const file of files) {
+      // 파일 크기 검증
+      if (file.size > MAX_FILE_SIZE) {
+        alert(`최대 5MB를 초과하는 파일은 업로드할 수 없습니다. : ${file.name}`);
+        return;
+      }
+
       const hash = await genFileHash(file);
 
       // 기존 해시 확인
       if (imageHashes.includes(hash)) {
         alert("이미 업로드된 이미지입니다.");
-        continue;
+        return;
       }
 
       // 새 이미지를 업로드
@@ -142,15 +142,38 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
     }
   };
 
-  const handleDelete = (index: number) => {
+// 삭제 핸들러
+const handleDelete = async (index: number) => {
+  try {
+    // 삭제할 이미지 URL 가져오기
+    const imageToDelete = images[index];
+    const filePath = extractFilePath(imageToDelete); // Supabase 경로 추출
+
+    // Supabase에서 파일 삭제
+    const { error } = await supabase.storage.from("post-images").remove([filePath]);
+    if (error) {
+      alert("이미지 삭제에 실패했습니다. 다시 시도해주세요.");
+      return;
+    }
+
+    // 상태 업데이트
     const updatedImages = images.filter((_, i) => i !== index);
     setImages(updatedImages);
 
     // 해시도 제거
     setImageHashes((prev) => prev.filter((_, i) => i !== index));
-  };
+  } catch (error) {
+    alert("이미지 삭제 중 문제가 발생했습니다.");
+  }
+};
 
-  // 버튼 클릭 시
+// Supabase에서 이미지 파일 경로를 추출하는 유틸리티 함수
+const extractFilePath = (imageUrl: string): string => {
+  const bucketUrl = supabase.storage.from("post-images").getPublicUrl("").data.publicUrl;
+  return imageUrl.replace(bucketUrl, ""); // Bucket URL을 제거해 파일 경로만 반환
+};
+
+  // 업로드 버튼 클릭 시 이미지 업로드
   const handleFileInput = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -163,8 +186,8 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
     fileInput.click();
   };
 
-  // 드래그 앤 드롭 시
-  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+  // 드래그 앤 드롭 시 이미지 업로드
+  const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
     handleFiles(files);
@@ -239,12 +262,12 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
                       >
                         <Trash size={16} />
                       </button>
-                      {/* 썸네일로 설정 버튼 - 임의로 만들어서 체킹받고 또 수정예정..*/}
+                      {/* 썸네일 등록 버튼 */}
                       {index !== 0 && (
                         <Button
                           variant="whiteLine"
                           size="sm"
-                          className="h-6 w-24 bg-transparent border-none text-caption leading-none !text-text-01"
+                          className="h-6 w-24 border-none bg-transparent text-caption leading-none !text-text-01"
                           onClick={() => {
                             const updatedImages = [url, ...images.filter((img, i) => i !== index)];
                             setImages(updatedImages);

@@ -5,7 +5,7 @@ import BookmarkList from "../_components/BookmarkList";
 import LikedPostList from "../_components/LikedPostList";
 
 const TabContents = () => {
-  const { activeTab, handleTabChange } = useActiveTabs(2);
+  const { activeTab, handleTabChange } = useActiveTabs();
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="h-14 w-full">
       <TabsList className="h-full w-full justify-start rounded-none border-t bg-transparent p-0">

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
  * handleTabChange [(value: string) => void]: 활성화 탭의 URL을 업데이트 하는 함수
  */
 
-export const useActiveTabs = (numberOfTabs: number) => {
+export const useActiveTabs = (numberOfTabs: number = 5) => {
   // 빈 탭으로 초기화
   const [activeTab, setActiveTab] = useState("");
 

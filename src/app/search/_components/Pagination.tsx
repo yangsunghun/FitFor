@@ -33,20 +33,20 @@ const Pagination = ({ Results }: PaginationProps) => {
   const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
   return (
-    <div className="mt-16 flex justify-center gap-2">
+    <div className="mt-16 flex justify-center gap-2 tb:mt-6">
       <button disabled={page === 1} onClick={() => handlePageChange(1)} className="disabled:opacity-50">
-        <CaretDoubleLeft size={16} weight="bold" />
+        <CaretDoubleLeft size={16} weight="bold" className="tb:w-[13px]" />
       </button>
 
       <button disabled={page === 1} onClick={() => handlePageChange(page - 1)} className="disabled:opacity-50">
-        <CaretLeft size={16} weight="bold" />
+        <CaretLeft size={16} weight="bold" className="tb:w-[13px]" />
       </button>
 
       {Array.from({ length: endPage - startPage + 1 }, (_, idx) => startPage + idx).map((pageNumber) => (
         <button
           key={pageNumber}
           onClick={() => handlePageChange(pageNumber)}
-          className={clsx("text-title2", {
+          className={clsx("text-title2 tb:text-body", {
             "font-bold": page === pageNumber,
             "text-text-03": page !== pageNumber
           })}
@@ -56,7 +56,7 @@ const Pagination = ({ Results }: PaginationProps) => {
       ))}
 
       <button disabled={page === totalPages} onClick={() => handlePageChange(page + 1)} className="disabled:opacity-50">
-        <CaretRight size={16} weight="bold" />
+        <CaretRight size={16} weight="bold" className="tb:w-[13px]" />
       </button>
 
       <button
@@ -64,7 +64,7 @@ const Pagination = ({ Results }: PaginationProps) => {
         onClick={() => handlePageChange(totalPages)}
         className="disabled:opacity-50"
       >
-        <CaretDoubleRight size={16} weight="bold" />
+        <CaretDoubleRight size={16} weight="bold" className="tb:w-[13px]" />
       </button>
     </div>
   );

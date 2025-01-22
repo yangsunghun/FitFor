@@ -167,10 +167,10 @@ const config: Config = {
         scaleDown: "scaleDown 0.3s ease-out"
       },
       screens: {
-        mn: { max: "375px" }, // 우리 모바일 디자인 시안 크기
-        mb: { max: "480px" }, // 가장 큰 폰 크기
+        lt: { max: "1200px" }, // 일반 노트북 크기
         tb: { max: "768px" }, // 일반 타블렛 크기
-        lt: { max: "1200px" } // 일반 노트북 크기
+        mb: { max: "480px" }, // 가장 큰 폰 크기
+        mn: { max: "375px" } // 우리 모바일 디자인 시안 크기
       }
     }
   },

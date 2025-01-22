@@ -29,14 +29,16 @@ const BookmarkList = () => {
 
   return (
     <>
-      <div className="mb-12 mt-8 flex items-center justify-between">
-        <h2 className="text-title1 font-bold text-text-04">
+      <div className="mb-12 mt-8 flex items-center justify-between mb:mb-[24px]">
+        <h2 className="text-title1 font-bold text-text-04 mb:text-title2">
           북마크
-          <span className="text-title2 font-medium">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{ownBookmarks?.length}개</span>
+          <span className="text-title2 font-medium mb:hidden">
+            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{ownBookmarks?.length}개
+          </span>
         </h2>
         <button
           onClick={() => setIsEditing(!isEditing)}
-          className="text-title2 font-medium underline underline-offset-4"
+          className="text-title2 font-medium underline underline-offset-4 mb:text-caption"
         >
           {isEditing ? "완료" : "편집"}
         </button>
@@ -44,7 +46,7 @@ const BookmarkList = () => {
       {!ownBookmarks || ownBookmarks.length === 0 ? (
         <p className="mt-32 text-center text-subtitle font-medium text-text-02">아직 북마크한 게시물이 없습니다.</p>
       ) : (
-        <ul className="square-grid grid grid-cols-1 gap-6 pb-24 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className="grid grid-cols-4 gap-6 pb-24 mb:grid-cols-2 mb:gap-[11px] tb:grid-cols-3 tb:gap-4">
           {isPending
             ? [...Array(8)].map((_, index) => <CardSkeleton key={index} />)
             : ownBookmarks.map((post) =>

@@ -1,11 +1,11 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { useActiveTabs } from "@/lib/hooks/mypage/useActiveTabs";
+import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
 import BookmarkList from "../_components/BookmarkList";
 import LikedPostList from "../_components/LikedPostList";
 
 const TabContents = () => {
-  const { activeTab, handleTabChange } = useActiveTabs();
+  const { activeTab, handleTabChange } = useActiveTabs(2);
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="h-14 w-full">
       <TabsList className="h-full w-full justify-start rounded-none border-t bg-transparent p-0">

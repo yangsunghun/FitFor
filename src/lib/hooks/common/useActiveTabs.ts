@@ -1,7 +1,15 @@
-import { MYPAGE_MENU } from "@/lib/constants/constants";
 import { useEffect, useState } from "react";
 
-export const useActiveTabs = () => {
+/**
+ * 활성화된 탭으로 새로고침 후에도 보여주는 hook
+ * 매개변수로 사용할 총 탭의 숫자를 넘겨주면 됩니다.
+ *
+ * 반환값(return)
+ * activeTab [string]: 현재 활성화 된 탭
+ * handleTabChange [(value: string) => void]: 활성화 탭의 URL을 업데이트 하는 함수
+ */
+
+export const useActiveTabs = (numberOfTabs: number) => {
   // 빈 탭으로 초기화
   const [activeTab, setActiveTab] = useState("");
 
@@ -12,7 +20,7 @@ export const useActiveTabs = () => {
     const tabParam = params.get("tab");
 
     // 해당 tab query가 있는 경우에만 활성화 탭 세팅
-    if (tabParam && MYPAGE_MENU.some((_, index) => `tab-${index}` === tabParam)) {
+    if (tabParam && isValidTab(tabParam, numberOfTabs)) {
       setActiveTab(tabParam);
     } else {
       // tab이 없는 경우 첫번째 탭 활성화
@@ -29,6 +37,17 @@ export const useActiveTabs = () => {
     params.set("tab", value);
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, "", newUrl);
+  };
+
+  // 탭 범위 체크
+  const isValidTab = (tabParam: string, numberOfTabs: number) => {
+    // "tab-{index}"와 범위에 맞는지 확인
+    const regex = /^tab-(\d+)$/;
+    const match = tabParam.match(regex);
+    if (!match) return false;
+
+    const index = parseInt(match[1], 10);
+    return index >= 0 && index < numberOfTabs;
   };
 
   return {

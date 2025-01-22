@@ -1,15 +1,15 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { useActiveTabs } from "@/lib/hooks/mypage/useActiveTabs";
+import { MYPAGE_MENU } from "@/lib/constants/constants";
+import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
 import AccountSettingTabs from "./AccountSettingTabs";
 import MyPosts from "./MyPosts";
 import RecentViewPosts from "./RecentViewPosts";
 import VerificationSection from "./VerificationSection";
-import { MYPAGE_MENU } from "@/lib/constants/constants";
 
 const MypageMenu = () => {
-  const { activeTab, handleTabChange } = useActiveTabs();
+  const { activeTab, handleTabChange } = useActiveTabs(4);
 
   return (
     <div className="container mx-auto max-w-7xl">

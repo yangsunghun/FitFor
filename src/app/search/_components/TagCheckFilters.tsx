@@ -35,7 +35,7 @@ const TagCheckFilters = ({ selectedGroup }: TagCheckFiltersProps) => {
 
       {/* 태그 필터 UI */}
       {TAG_GROUPS.filter((group) => !selectedGroup || group.key === selectedGroup).map((group) => (
-        <div key={group.key} className="inner flex max-h-[50vh] flex-col flex-wrap gap-4 py-4 text-caption">
+        <div key={group.key} className="inner flex max-h-[380px] flex-col flex-wrap gap-4 py-4 text-caption">
           {group.tags.map((tag) => (
             <label key={tag} className="flex items-center gap-2">
               <input

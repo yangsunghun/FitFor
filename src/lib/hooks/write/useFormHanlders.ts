@@ -2,9 +2,10 @@
 
 import { useAuthStore } from "@/lib/store/authStore";
 import type { Database } from "@/lib/types/supabase";
+import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState,MutableRefObject } from "react";
 
 const supabase = createClient();
 const genUniqueId = () => crypto.randomUUID(); // 고유 ID 생성
@@ -19,8 +20,14 @@ type FormState = {
   purchases: Database["public"]["Tables"]["purchase"]["Insert"][];
   isModalOpen: boolean;
   isPurchaseModalOpen: boolean;
+  isSaveModalOpen: boolean;
+  isContinued: boolean;
   productToEdit: Database["public"]["Tables"]["purchase"]["Insert"] | null;
   thumbnail_blur_url: string;
+};
+
+export type PostWithPurchases = Database["public"]["Tables"]["posts"]["Row"] & {
+  purchases: Database["public"]["Tables"]["purchase"]["Row"][];
 };
 
 export const useFormHandlers = () => {
@@ -34,13 +41,11 @@ export const useFormHandlers = () => {
     purchases: [],
     isModalOpen: false, // 주소 검색 모달 상태
     isPurchaseModalOpen: false, // 상품 추가 모달 상태
+    isSaveModalOpen: false,
+    isContinued: false,
     productToEdit: null, // 수정할 상품 데이터
     thumbnail_blur_url: ""
   });
-
-  type PostWithPurchases = Database["public"]["Tables"]["posts"]["Row"] & {
-    purchases: Database["public"]["Tables"]["purchase"]["Row"][];
-  };
 
   const setInitialFormState = async (data: PostWithPurchases) => {
     try {
@@ -53,6 +58,8 @@ export const useFormHandlers = () => {
         purchases: data.purchases || [], // purchases 포함
         isModalOpen: false,
         isPurchaseModalOpen: false,
+        isSaveModalOpen: false,
+        isContinued: false,
         productToEdit: null,
         thumbnail_blur_url: data.thumbnail_blur_url || ""
       });
@@ -66,6 +73,7 @@ export const useFormHandlers = () => {
   // 태그 섹션 관련 상태
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
+  const [unsavedPosts, setUnsavedPosts] = useState<PostWithPurchases[]>([]);
 
   // 카테고리 변경 핸들러
   const handleChangeCategory = (category: string) => {
@@ -143,6 +151,7 @@ export const useFormHandlers = () => {
         images,
         tags,
         thumbnail_blur_url,
+        is_saved: false, // 최종 저장이
         comments: 0,
         likes: 0,
         view: 0
@@ -177,6 +186,7 @@ export const useFormHandlers = () => {
     }
   };
 
+  //업데이트 핸들러
   const handleUpdate = async (id: string) => {
     const { content, address, body_size, images, tags, purchases } = formState;
 
@@ -216,6 +226,147 @@ export const useFormHandlers = () => {
     }
   };
 
+  // 임시 저장 게시글 가져오기 함수 (공용)
+  const fetchUnsavedPosts = async (
+    userId: string
+  ): Promise<PostWithPurchases[]> => {
+    try {
+      const { data: postsData, error: postsError } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("is_saved", true);
+  
+      if (postsError || !postsData) {
+        console.error("임시 저장된 게시물 가져오기 실패:", postsError);
+        return [];
+      }
+  
+      const postIds = postsData.map((post) => post.id);
+      const { data: purchasesData, error: purchasesError } = await supabase
+        .from("purchase")
+        .select("*")
+        .in("post_id", postIds);
+  
+      if (purchasesError) {
+        console.error("구매 데이터 가져오기 실패:", purchasesError);
+      }
+  
+      return postsData.map((post) => ({
+        ...post,
+        purchases: purchasesData?.filter((purchase) => purchase.post_id === post.id) || [],
+      }));
+    } catch (error) {
+      console.error("임시 저장된 게시물 가져오기 중 오류:", error);
+      return [];
+    }
+  };
+
+// 이어서 작성 핸들러
+const handleContinuePost = async (post: PostWithPurchases) => {
+  try {
+    // 폼 상태에 데이터 설정
+    setInitialFormState(post);
+    alert("이어 작성할 게시물이 불러와졌습니다.");
+  } catch (error) {
+    console.error("게시물 불러오기 실패:", error);
+    alert("게시물 불러오기 중 오류가 발생했습니다.");
+  }
+};
+
+  // 임시저장 삭제 핸들러
+  const handleDiscardPost = async (postId: string) => {
+    try {
+      const { error } = await supabase
+        .from("posts")
+        .delete()
+        .eq("id", postId);
+
+      if (error) throw error;
+
+      alert("임시 저장된 게시물이 삭제되었습니다.");
+    } catch (error) {
+      console.error("게시물 삭제 실패:", error);
+      alert("게시물 삭제 중 오류가 발생했습니다.");
+    }
+  };
+  
+
+// 임시 저장 핸들러 (기존 게시물 업데이트 및 새로운 게시물 생성)
+const handleTemporarySave = async () => {
+  const { content, address, body_size, images, tags, purchases, thumbnail_blur_url } = formState;
+
+  if (!content) {
+    alert("내용을 입력해주세요.");
+    return;
+  }
+
+  if (!currentUser?.id) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
+
+  try {
+    let postId: string;
+    if (formState.isContinued && formState.productToEdit?.id) {
+      postId = formState.productToEdit.id;
+
+      const updatedPost = {
+        content,
+        upload_place: address,
+        body_size,
+        images,
+        tags,
+        thumbnail_blur_url,
+        is_saved: true,
+      };
+
+      const { error: updateError } = await supabase.from("posts").update(updatedPost).eq("id", postId);
+      if (updateError) {
+        throw updateError;
+      }
+    } else {
+      const newPost = {
+        content,
+        upload_place: address,
+        created_at: new Date().toISOString(),
+        user_id: currentUser.id,
+        body_size,
+        images,
+        tags,
+        thumbnail_blur_url,
+        is_saved: true,
+        comments: 0,
+        likes: 0,
+        view: 0,
+      };
+
+      const { data: postData, error: insertError } = await supabase.from("posts").insert([newPost]).select();
+      if (insertError) {
+        throw insertError;
+      }
+
+      postId = postData[0].id;
+    }
+
+    const purchaseData = purchases.map((purchase) => ({
+      ...purchase,
+      post_id: postId,
+    }));
+
+    const { error: purchaseError } = await supabase.from("purchase").upsert(purchaseData);
+    if (purchaseError) {
+      throw purchaseError;
+    }
+
+    alert("임시 저장 완료!");
+  } catch (error) {
+    console.error("임시 저장 실패:", error);
+    alert("임시 저장 실패");
+  }
+};
+
+  // 토글선택 핸들러
   const toggleTagSelector = (tag: string, groupTags: string[], max: number) => {
     setFormState((prevState) => {
       const selectedGroupTags = prevState.tags.filter((t) => groupTags.includes(t));
@@ -250,6 +401,10 @@ export const useFormHandlers = () => {
     handleBodySizeChange,
     handleSubmit,
     handleUpdate,
+    handleContinuePost,
+    handleDiscardPost,
+    fetchUnsavedPosts,
+    handleTemporarySave,
     toggleTagSelector,
     handleChangeCategory,
     selectedCategory,

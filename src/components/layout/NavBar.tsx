@@ -6,7 +6,7 @@ import NavItem from "./NavItem";
 
 const NavBar = () => {
   return (
-    <nav className="fixed bottom-0 z-50 hidden w-full bg-bg-01 pb-7 text-small text-text-02 tb:block">
+    <nav className="fixed bottom-0 z-40 hidden w-full bg-bg-01 pb-7 text-small text-text-02 tb:block">
       <ul className="flex justify-between">
         <NavItem href="/home" icon={<House weight="fill" size={24} />} label="홈" />
         <NavItem href="/search" icon={<MagnifyingGlass size={24} />} label="검색" />

@@ -13,10 +13,10 @@ const TagFilters = ({ selectedGroup }: TagFiltersProps) => {
   return (
     <>
       {TAG_GROUPS.filter((group) => !selectedGroup || group.key === selectedGroup).map((group) => (
-        <div key={group.key} className="mb-6">
-          <h2 className="mb-6 text-title1 font-bold">{group.title}</h2>
+        <div key={group.key}>
+          <h2 className="mb-6 text-title1 font-bold mb:mb-0 mb:text-title2">{group.title}</h2>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="mb-6 flex flex-wrap gap-2 mb:hidden">
             {group.tags.map((tag) => (
               <button key={tag} onClick={() => handleToggleTag(group.key, tag)}>
                 <Tags label={tag} variant={`${tags[group.key]?.includes(tag) ? "black" : "gray"}`} />

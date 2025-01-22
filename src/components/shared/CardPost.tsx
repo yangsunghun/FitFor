@@ -15,7 +15,12 @@ const Cardpost = ({ post, isMasonry }: Props) => {
   const [isImgError, setIsImgError] = useState<boolean>(false);
   const imageProps = isMasonry ? { width: 500, height: 700 } : { fill: true };
   return (
-    <div className={clsx("masonry-post group relative overflow-hidden rounded-2xl", isMasonry || "aspect-square")}>
+    <div
+      className={clsx(
+        "masonry-post group relative overflow-hidden rounded-2xl mb:rounded-lg",
+        isMasonry || "aspect-square"
+      )}
+    >
       <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
       <figure className="relative h-full w-full">
         <Image

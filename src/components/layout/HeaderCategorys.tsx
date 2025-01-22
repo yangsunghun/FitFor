@@ -1,6 +1,7 @@
 "use client";
 import { REGIONS, TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
+import useCategoryStore from "@/lib/store/useCategoryStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -12,6 +13,7 @@ type Props = {
 const HeaderCategorys = ({ handleClose }: Props) => {
   const [tags, setTags] = useState<Tags>({});
   const router = useRouter();
+  const setSelectedCategory = useCategoryStore((state) => state.setSelectedCategory);
   const { handleToggleTag, encodeTagsForUrl } = useSearchQuery();
 
   const handleCategoryClick = (key: string, tag: string) => {
@@ -24,11 +26,13 @@ const HeaderCategorys = ({ handleClose }: Props) => {
     params.set("page", "1");
     params.set("category", encodeTagsForUrl(updatedTags));
 
+    setSelectedCategory(key);
+
     router.push(`/search?${params.toString()}`);
   };
 
   return (
-    <div className="mx-auto flex max-w-[1200px] pb-8 pt-4">
+    <>
       {TAG_GROUPS.map((group) => (
         <div key={group.key} className="text-title2">
           <p className="mb-8 font-bold">{group.title}</p>
@@ -61,7 +65,7 @@ const HeaderCategorys = ({ handleClose }: Props) => {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 };
 

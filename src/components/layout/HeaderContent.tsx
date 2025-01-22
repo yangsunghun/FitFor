@@ -7,7 +7,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/Button";
 import HeaderCategorys from "./HeaderCategorys";
 import SearchBar from "./SearchBar";
@@ -18,6 +18,7 @@ const HeaderContent = () => {
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
@@ -106,15 +107,14 @@ const HeaderContent = () => {
       </div>
 
       <div
-        className={clsx(
-          "absolute left-0 top-full z-10 w-full overflow-hidden bg-bg-01 shadow-sm transition-all duration-300 ease-in-out",
-          {
-            "max-h-[600px]": isOpen,
-            "max-h-0": !isOpen
-          }
-        )}
+        className="absolute left-0 top-full z-10 w-full overflow-hidden bg-bg-01 shadow-sm transition-all duration-300 ease-in-out"
+        style={{
+          height: isOpen ? `${contentRef.current?.scrollHeight}px` : "0px"
+        }}
       >
-        <HeaderCategorys handleClose={handleClose} />
+        <div ref={contentRef} className="mx-auto flex max-w-[1200px] pb-8 pt-4">
+          <HeaderCategorys handleClose={handleClose} />
+        </div>
       </div>
       {isOpen && (
         <div

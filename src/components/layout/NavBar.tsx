@@ -11,7 +11,7 @@ const NavBar = () => {
         <NavItem href="/home" icon={<House weight="fill" size={24} />} label="홈" />
         <NavItem href="/search" icon={<MagnifyingGlass size={24} />} label="검색" />
         <NavItem href="/chat" icon={<VideoCamera weight="fill" size={24} />} label="Live" />
-        <NavItem href="/bookmarks" icon={<BookmarkSimple weight="fill" size={24} />} label="북마크" />
+        <NavItem href="/bookmark" icon={<BookmarkSimple weight="fill" size={24} />} label="북마크" />
         <NavItem href="/mypage" icon={<Image src={profileIcon} alt="" width={24} />} label="My" />
       </ul>
     </nav>

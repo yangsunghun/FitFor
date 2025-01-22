@@ -3,6 +3,7 @@ import type { PostType } from "@/lib/types/post";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import LikeSection from "./LikeSection";
 
 type Props = {
@@ -11,18 +12,20 @@ type Props = {
 };
 
 const Cardpost = ({ post, isMasonry }: Props) => {
+  const [isImgError, setIsImgError] = useState<boolean>(false);
   const imageProps = isMasonry ? { width: 500, height: 700 } : { fill: true };
   return (
     <div className={clsx("masonry-post group relative overflow-hidden rounded-2xl", isMasonry || "aspect-square")}>
       <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
       <figure className="relative h-full w-full">
         <Image
-          src={post.images[0]}
+          src={isImgError ? sampleImage : post.images[0]}
           alt={post.content}
           {...imageProps}
           className="object-cover object-center"
           placeholder="blur"
           blurDataURL={post.thumbnail_blur_url}
+          onError={() => setIsImgError(true)}
         />
       </figure>
       <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100">

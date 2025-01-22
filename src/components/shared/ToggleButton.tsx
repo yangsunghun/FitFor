@@ -15,7 +15,7 @@ const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, btnS
     <span>
       <button onClick={onClick} className={btnStyle}>
         {isActive ? activeIcon : inactiveIcon}
-        <span>
+        <span className="tb:text-text-03">
           {typeof count === "number" && count}
           {text && "북마크"}
         </span>

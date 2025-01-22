@@ -3,14 +3,19 @@ import { Tags } from "@/components/ui/Tags";
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 
-const TagFilters = () => {
+type TagFiltersProps = {
+  selectedGroup: string | null;
+};
+
+const TagFilters = ({ selectedGroup }: TagFiltersProps) => {
   const { tags, handleToggleTag } = useSearchQuery();
 
   return (
-    <div className="mb-4">
-      {TAG_GROUPS.map((group) => (
+    <>
+      {TAG_GROUPS.filter((group) => !selectedGroup || group.key === selectedGroup).map((group) => (
         <div key={group.key} className="mb-6">
-          <p className="mb-2 text-[18px] font-bold">{group.title}</p>
+          <h2 className="mb-6 text-title1 font-bold">{group.title}</h2>
+
           <div className="flex flex-wrap gap-2">
             {group.tags.map((tag) => (
               <button key={tag} onClick={() => handleToggleTag(group.key, tag)}>
@@ -20,7 +25,7 @@ const TagFilters = () => {
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 };
 

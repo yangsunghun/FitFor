@@ -18,6 +18,7 @@ const WritePage = () => {
   const currentUser = useAuthStore((state) => state.user);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [unsavedPosts, setUnsavedPosts] = useState<PostWithPurchases[]>([]);
+  const [activePostId, setActivePostId] = useState<string | null>(null); // 현재 작성 중인 Post ID
 
   const {
     formState,
@@ -44,21 +45,27 @@ const WritePage = () => {
   useEffect(() => {
     if (currentUser?.id) {
       (async () => {
-        const posts = await fetchUnsavedPostsRef.current(currentUser.id);
-        setUnsavedPosts(posts);
+        try {
+          const posts = await fetchUnsavedPosts(currentUser.id); // 임시 저장 게시물 가져오기
+          setUnsavedPosts(posts);
   
-        if (posts.length > 0 && !hasAlertShown.current) {
-          const latestPost = posts[0]; // 가장 최근의 임시 저장 게시물
-          if (confirm(`${relativeTimeDay(latestPost.created_at)}에 작성한 글이 있습니다. 이어서 작성하시겠습니까?`)) {
-            handleContinuePostRef.current(latestPost);
-            handleChangeRef.current("isContinued", true); // 이어 작성 설정
-          } else {
-            handleChangeRef.current("isContinued", false); // 새 게시글로 작성
+          if (posts.length > 0 && !hasAlertShown.current) {
+            const latestPost = posts[0]; // 가장 최근의 임시 저장 게시물
+            const continueWriting = confirm(
+              `${relativeTimeDay(latestPost.created_at)}에 작성한 글이 있습니다. 이어서 작성하시겠습니까?`
+            );
+  
+            if (continueWriting) {
+              setActivePostId(latestPost.id); // 이어작성 게시글 ID 설정
+              await handleContinuePost(latestPost); // 이어작성 처리
+            } else {
+              setActivePostId(null); // 새 글 작성 모드로 초기화
+            }
+  
+            hasAlertShown.current = true; // Alert 실행 상태 업데이트
           }
-          hasAlertShown.current = true; // Alert 실행 상태 업데이트
-        } else {
-          // 임시 저장 게시글이 없을 때 초기화
-          handleChangeRef.current("isContinued", false);
+        } catch (error) {
+          console.error("임시 저장 게시물 처리 중 오류 발생:", error);
         }
       })();
     }
@@ -154,28 +161,21 @@ const WritePage = () => {
         purchasesLength={formState.purchases.length}
       />
 
-      {currentUser && (
-        <TempSaveModal
-          isOpen={isSaveModalOpen}
-          currentUser={currentUser}
-          fetchUnsavedPosts={async () => {
-            if (!currentUser) return [];
-            const posts = await fetchUnsavedPosts(currentUser.id);
-            setUnsavedPosts(posts);
-            return posts;
-          }}
-          onContinue={(post) => {
-            handleContinuePost(post);
-            handleChange("isContinued", true);
-            setIsSaveModalOpen(false);
-          }}
-          onDiscard={(postId) => {
-            handleDiscardPost(postId);
-            setUnsavedPosts((prev) => prev.filter((p) => p.id !== postId));
-          }}
-          onClose={() => setIsSaveModalOpen(false)}
-        />
-      )}
+  <TempSaveModal
+    isOpen={isSaveModalOpen}
+    currentUser={currentUser}
+    fetchUnsavedPosts={fetchUnsavedPosts}
+    onContinue={(post) => {
+      handleContinuePost(post);
+      setActivePostId(post.id); // 이어작성할 게시글 ID 설정
+    }}
+    onDiscard={(postId) => {
+      handleDiscardPost(postId);
+      if (postId === activePostId) setActivePostId(null); // 삭제 시 상태 초기화
+    }}
+    onClose={() => setIsSaveModalOpen(false)}
+    activePostId={activePostId} // 현재 작성 중인 Post ID 전달
+  />
     </div>
   );
 };

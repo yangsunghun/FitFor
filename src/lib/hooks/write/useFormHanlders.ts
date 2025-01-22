@@ -2,10 +2,9 @@
 
 import { useAuthStore } from "@/lib/store/authStore";
 import type { Database } from "@/lib/types/supabase";
-import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { useState,MutableRefObject } from "react";
+import { useState } from "react";
 
 const supabase = createClient();
 const genUniqueId = () => crypto.randomUUID(); // 고유 ID 생성
@@ -265,8 +264,9 @@ export const useFormHandlers = () => {
 // 이어서 작성 핸들러
 const handleContinuePost = async (post: PostWithPurchases) => {
   try {
-    // 폼 상태에 데이터 설정
+    // 폼 상태 초기화
     setInitialFormState(post);
+    handleChange("isContinued", true); // 이어작성 상태 활성화
     alert("이어 작성할 게시물이 불러와졌습니다.");
   } catch (error) {
     console.error("게시물 불러오기 실패:", error);
@@ -277,24 +277,23 @@ const handleContinuePost = async (post: PostWithPurchases) => {
   // 임시저장 삭제 핸들러
   const handleDiscardPost = async (postId: string) => {
     try {
-      const { error } = await supabase
-        .from("posts")
-        .delete()
-        .eq("id", postId);
-
+      const { error } = await supabase.from("posts").delete().eq("id", postId);
       if (error) throw error;
-
+  
       alert("임시 저장된 게시물이 삭제되었습니다.");
+  
+      // 삭제 후 리스트 갱신
+      const posts = await fetchUnsavedPosts(currentUser?.id || "");
+      setUnsavedPosts(posts);
     } catch (error) {
       console.error("게시물 삭제 실패:", error);
       alert("게시물 삭제 중 오류가 발생했습니다.");
     }
   };
-  
 
 // 임시 저장 핸들러 (기존 게시물 업데이트 및 새로운 게시물 생성)
 const handleTemporarySave = async () => {
-  const { content, address, body_size, images, tags, purchases, thumbnail_blur_url } = formState;
+  const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, isContinued } = formState;
 
   if (!content) {
     alert("내용을 입력해주세요.");
@@ -306,10 +305,29 @@ const handleTemporarySave = async () => {
     return;
   }
 
+  // 데이터 변경 여부 확인
+  if (isContinued && unsavedPosts[0]) {
+    const latestPost = unsavedPosts[0];
+    const isModified =
+      content !== latestPost.content ||
+      address !== latestPost.upload_place ||
+      JSON.stringify(body_size) !== JSON.stringify(latestPost.body_size) ||
+      JSON.stringify(images) !== JSON.stringify(latestPost.images) ||
+      JSON.stringify(tags) !== JSON.stringify(latestPost.tags) ||
+      JSON.stringify(purchases) !== JSON.stringify(latestPost.purchases);
+
+    if (!isModified) {
+      alert("수정된 내용이 없습니다.");
+      return;
+    }
+  }
+
   try {
     let postId: string;
-    if (formState.isContinued && formState.productToEdit?.id) {
-      postId = formState.productToEdit.id;
+
+    // 이어작성 중인 게시물 업데이트
+    if (isContinued && unsavedPosts[0]) {
+      postId = unsavedPosts[0].id;
 
       const updatedPost = {
         content,
@@ -322,10 +340,9 @@ const handleTemporarySave = async () => {
       };
 
       const { error: updateError } = await supabase.from("posts").update(updatedPost).eq("id", postId);
-      if (updateError) {
-        throw updateError;
-      }
+      if (updateError) throw updateError;
     } else {
+      // 새로운 임시 저장 게시물 생성
       const newPost = {
         content,
         upload_place: address,
@@ -342,24 +359,25 @@ const handleTemporarySave = async () => {
       };
 
       const { data: postData, error: insertError } = await supabase.from("posts").insert([newPost]).select();
-      if (insertError) {
-        throw insertError;
-      }
+      if (insertError) throw insertError;
 
       postId = postData[0].id;
     }
 
+    // 상품 데이터 저장
     const purchaseData = purchases.map((purchase) => ({
       ...purchase,
       post_id: postId,
     }));
 
     const { error: purchaseError } = await supabase.from("purchase").upsert(purchaseData);
-    if (purchaseError) {
-      throw purchaseError;
-    }
+    if (purchaseError) throw purchaseError;
 
     alert("임시 저장 완료!");
+
+    // 임시 저장 리스트 재로드
+    const posts = await fetchUnsavedPosts(currentUser.id);
+    setUnsavedPosts(posts);
   } catch (error) {
     console.error("임시 저장 실패:", error);
     alert("임시 저장 실패");

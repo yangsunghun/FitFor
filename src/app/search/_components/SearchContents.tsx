@@ -41,7 +41,7 @@ const SearchContents = () => {
 
   return (
     <>
-      <Link href="/home">
+      <Link href="/home" className="hidden mb:block">
         <CaretLeft className="absolute left-0 top-[40px]" size={20} weight="bold" />
       </Link>
       <section>

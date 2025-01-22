@@ -19,6 +19,7 @@ export const fetchPosts = async ({ pageParam = 1 }): Promise<FetchPostsResponse>
       )
     `
     )
+    .eq("is_saved", false)
     .order("created_at", { ascending: false })
     .range(from, to);
 

@@ -63,6 +63,7 @@ export const fetchUserPostsPerPage = async ({
   const { data: userPosts, error: userPostsError } = await supabase
     .from("posts")
     .select("*, users(nickname, profile_image)")
+    .eq("is_saved", false)
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .range(from, to);

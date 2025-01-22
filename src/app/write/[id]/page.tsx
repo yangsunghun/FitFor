@@ -14,6 +14,7 @@ import ImageUploadSection from "../_components/ImageUploadSection";
 import LocationSection from "../_components/LocationSection";
 import ProductSection from "../_components/ProductSection";
 import PurchaseModal from "../_components/PurchaseModal";
+import ErrorScreen from "@/components/common/ErrorScreen";
 
 type EditPageProps = {
   params: {
@@ -65,10 +66,12 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
 
   // 로딩 상태 처리
   if (isPending) return <LoadingSpinner />;
-  if (isError) return <p>게시물을 불러오는 데 문제가 발생했습니다.</p>;
+  if (isError) {
+    return <ErrorScreen error={new Error("게시물을 불러오는 데 문제가 발생했습니다.")} />;
+  }
 
   return (
-    <div className="mx-auto max-w-[700px] pb-20 pt-10">
+    <div className="mx-auto max-w-[700px] pb-20 pt-20">
       <div className="space-y-2 pb-10">
         <h1 className="text-title1 font-bold leading-[150%] text-text-04">게시물 수정하기</h1>
       </div>
@@ -116,13 +119,13 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
       <div className="flex justify-center gap-6 pt-20">
         <button
           onClick={() => router.push(`/detail/${id}`)}
-          className="rounded-lg border border-primary-default bg-bg-01 px-8 py-4 text-body font-medium text-primary-default"
+          className="rounded-lg border border-primary-default bg-bg-01 px-8 py-4 text-body text-primary-default"
         >
           뒤로 가기
         </button>
         <button
           onClick={() => handleUpdate(id)}
-          className="rounded-lg bg-primary-default px-8 py-4 text-body font-medium text-bg-01"
+          className="rounded-lg bg-primary-default px-8 py-4 text-body text-bg-01"
         >
           수정 완료
         </button>

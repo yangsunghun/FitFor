@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
-import ModalItem from "@/components/ui/Modal";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import ModalItem from "@/components/ui/Modal";
 import { PostWithPurchases } from "@/lib/hooks/write/useFormHanlders";
 import type { Database } from "@/lib/types/supabase";
+import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { useEffect, useRef, useState } from "react";
 
 type TempSaveModalProps = {
   isOpen: boolean;
@@ -32,9 +32,9 @@ const TempSaveModal = ({
 
   useEffect(() => {
     const loadUnsavedPosts = async () => {
-      if (!currentUser?.id) return;
+      if (!currentUser?.id) return; // 사용자 ID가 없으면 종료
       setLoading(true);
-  
+
       try {
         const posts = await fetchUnsavedPosts(currentUser.id); // userId 전달
         setUnsavedPosts(posts);
@@ -44,9 +44,11 @@ const TempSaveModal = ({
         setLoading(false);
       }
     };
-  
-    if (isOpen) {
+
+    if (isOpen && !hasFetched.current) {
+      // 모달이 열릴 때만 데이터 가져오기
       loadUnsavedPosts();
+      hasFetched.current = true; // 한 번 가져온 상태로 업데이트
     }
   }, [isOpen, currentUser, fetchUnsavedPosts]);
 
@@ -61,33 +63,33 @@ const TempSaveModal = ({
         <p>임시 저장된 게시물이 없습니다.</p>
       ) : (
 <ul>
-  {unsavedPosts.map((post) => (
-    <li key={post.id} className="mb-4">
-      <p>{post.content || "본문 없음"}</p>
-      <p>{relativeTimeDay(post.created_at)} 작성됨</p>
-      <div className="flex gap-2 mt-2">
-        {activePostId === post.id ? ( // 활성화된 Post ID와 비교
-          <span className="px-4 py-2 bg-gray-400 text-white rounded">작성 중...</span>
-        ) : (
-          <button
-            onClick={() => onContinue(post)}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            이어 작성하기
-          </button>
-        )}
+{unsavedPosts.map((post) => (
+  <li key={post.id} className="mb-4">
+    <p>{post.content || "본문 없음"}</p>
+    <p>{relativeTimeDay(post.created_at)} 작성됨</p>
+    <div className="flex gap-2 mt-2">
+      {post.id === activePostId ? (
+        <span className="px-4 py-2 bg-gray-400 text-white rounded">작성 중...</span>
+      ) : (
         <button
-          onClick={() => onDiscard(post.id)}
-          className="px-4 py-2 bg-red-500 text-white rounded"
+          onClick={() => onContinue(post)}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
         >
-          삭제하기
+          이어 작성하기
         </button>
-      </div>
-    </li>
-  ))}
+      )}
+      <button
+        onClick={() => onDiscard(post.id)}
+        className="px-4 py-2 bg-red-500 text-white rounded"
+      >
+        삭제하기
+      </button>
+    </div>
+  </li>
+))}
 </ul>
       )}
-      <button onClick={onClose} className="mt-4 px-4 py-2 bg-gray-300 rounded">
+      <button onClick={onClose} className="mt-4 rounded bg-gray-300 px-4 py-2">
         닫기
       </button>
     </ModalItem>

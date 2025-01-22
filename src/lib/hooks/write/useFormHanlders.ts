@@ -238,7 +238,8 @@ export const useFormHandlers = () => {
         .from("posts")
         .select("*")
         .eq("user_id", userId)
-        .eq("is_saved", true);
+        .eq("is_saved", true)
+        .order("created_at", { ascending: false }); // 최신 순 정렬
   
       if (postsError || !postsData) {
         console.error("임시 저장된 게시물 가져오기 실패:", postsError);
@@ -294,8 +295,18 @@ const handleContinuePost = async (post: PostWithPurchases) => {
       alert("임시 저장된 게시물이 삭제되었습니다.");
   
       // 삭제 후 리스트 갱신
-      const posts = await fetchUnsavedPosts(currentUser?.id || "");
-      setUnsavedPosts(posts);
+      const updatedPosts = await fetchUnsavedPosts(currentUser?.id || "");
+      setUnsavedPosts(
+        updatedPosts.map((post) => ({
+          ...post,
+          isActive: post.id === activePostId, // 활성화된 Post 유지
+        }))
+      );
+  
+      // 활성화된 게시글 삭제 시 상태 초기화
+      if (postId === activePostId) {
+        setActivePostId(null);
+      }
     } catch (error) {
       console.error("게시물 삭제 실패:", error);
       alert("게시물 삭제 중 오류가 발생했습니다.");
@@ -306,77 +317,119 @@ const handleContinuePost = async (post: PostWithPurchases) => {
 const handleTemporarySave = async () => {
   const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, isContinued, postId } = formState;
 
-    if (!content) {
-      alert("내용을 입력해주세요.");
-      return;
-    }
+  if (!content) {
+    alert("내용을 입력해주세요.");
+    return;
+  }
 
-    if (!currentUser?.id) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
+  if (!currentUser?.id) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
 
-    try {
-      if (isContinued && postId) {
-        // 이어작성: 기존 게시글 업데이트
-        const updatedPost = {
-          content,
-          upload_place: address,
-          body_size,
-          images,
-          tags,
-          thumbnail_blur_url,
-          is_saved: true,
-        };
+  try {
+    let newPostId = postId; // 새 게시글 ID 또는 기존 게시글 ID 저장
 
-        const { error: updateError } = await supabase
-          .from("posts")
-          .update(updatedPost)
-          .eq("id", postId);
-        if (updateError) throw updateError;
-      } else {
-        // 새 게시글 생성
-        const newPost = {
-          content,
-          upload_place: address,
-          created_at: new Date().toISOString(),
-          user_id: currentUser.id,
-          body_size,
-          images,
-          tags,
-          thumbnail_blur_url,
-          is_saved: true,
-          comments: 0,
-          likes: 0,
-          view: 0,
-        };
+    if (isContinued && postId) {
+      // 기존 게시글 가져오기
+      const { data: existingPost, error: fetchError } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("id", postId)
+        .single();
 
-        const { data: postData, error: insertError } = await supabase
-          .from("posts")
-          .insert([newPost])
-          .select();
-        if (insertError) throw insertError;
+      if (fetchError) throw fetchError;
 
-        handleChange("postId", postData[0].id); // 새 게시글 ID 저장
+      // 변경 사항 비교
+      const isIdentical =
+        existingPost?.content === content &&
+        existingPost?.upload_place === address &&
+        JSON.stringify(existingPost?.body_size) === JSON.stringify(body_size) &&
+        JSON.stringify(existingPost?.images) === JSON.stringify(images) &&
+        JSON.stringify(existingPost?.tags) === JSON.stringify(tags) &&
+        existingPost?.thumbnail_blur_url === thumbnail_blur_url;
+
+      if (isIdentical) {
+        alert("업데이트할 내용이 없습니다.");
+        return;
       }
 
-      // 상품 데이터 저장
-      const purchaseData = purchases.map((purchase) => ({
-        ...purchase,
-        post_id: postId || formState.postId, // 새 게시글 또는 이어작성 ID 사용
-      }));
+      // 이어작성: 기존 게시글 업데이트
+      const updatedPost = {
+        content,
+        upload_place: address,
+        created_at: new Date().toISOString(),
+        body_size,
+        images,
+        tags,
+        thumbnail_blur_url,
+        is_saved: true,
+      };
 
-      const { error: purchaseError } = await supabase
-        .from("purchase")
-        .upsert(purchaseData);
-      if (purchaseError) throw purchaseError;
+      const { error: updateError } = await supabase
+        .from("posts")
+        .update(updatedPost)
+        .eq("id", postId);
+      if (updateError) throw updateError;
+
+    // unsavedPosts 상태 즉시 반영
+    setUnsavedPosts((prevPosts) =>
+      prevPosts.map((post) => (post.id === postId ? { ...post, ...updatedPost } : post))
+    );
+
+      alert("임시 저장이 업데이트되었습니다.");
+    } else {
+      // 새 게시글 생성
+      const newPost = {
+        content,
+        upload_place: address,
+        created_at: new Date().toISOString(),
+        user_id: currentUser.id,
+        body_size,
+        images,
+        tags,
+        thumbnail_blur_url,
+        is_saved: true,
+        comments: 0,
+        likes: 0,
+        view: 0,
+      };
+
+      const { data: postData, error: insertError } = await supabase
+        .from("posts")
+        .insert([newPost])
+        .select();
+      if (insertError) throw insertError;
+
+      newPostId = postData[0].id; // 새 게시글 ID 저장
+
+      // unsavedPosts 상태 즉시 반영
+      setUnsavedPosts((prevPosts) => [...prevPosts, { ...newPost, id: newPostId, purchases: [] }]);
+
+      handleChange("postId", newPostId); // formState 업데이트
+      handleChange("isContinued", true); // 이어작성 상태 활성화
 
       alert("임시 저장 완료!");
-    } catch (error) {
-      console.error("임시 저장 실패:", error);
-      alert("임시 저장 실패");
     }
-  };
+
+    // 상품 데이터 저장
+    const purchaseData = purchases.map((purchase) => ({
+      ...purchase,
+      post_id: newPostId, 
+    }));
+
+    const { error: purchaseError } = await supabase
+      .from("purchase")
+      .upsert(purchaseData);
+    if (purchaseError) throw purchaseError;
+
+  // 활성화된 Post ID 즉시 반영
+  setActivePostId(newPostId);
+  } catch (error) {
+    console.error("임시 저장 실패:", error);
+    alert("임시 저장 실패");
+  }
+};
 
   // 토글선택 핸들러
   const toggleTagSelector = (tag: string, groupTags: string[], max: number) => {

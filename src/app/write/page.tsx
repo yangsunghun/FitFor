@@ -4,7 +4,7 @@ import TagSection from "@/components/shared/TagSection";
 import { PostWithPurchases, useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
-import { MouseEventHandler, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddressModal from "./_components/AddressModal";
 import BodySizeSection from "./_components/BodySizeSection";
 import ContentSection from "./_components/ContentSection";
@@ -38,31 +38,36 @@ const WritePage = () => {
   } = useFormHandlers();
 
   const hasAlertShown = useRef(false); // Alert 실행 상태
+
   const fetchUnsavedPostsRef = useRef(fetchUnsavedPosts);
   const handleContinuePostRef = useRef(handleContinuePost);
-  const handleChangeRef = useRef(handleChange);
+
+  useEffect(() => {
+    fetchUnsavedPostsRef.current = fetchUnsavedPosts; // 최신 함수 참조
+    handleContinuePostRef.current = handleContinuePost; // 최신 함수 참조
+  }, [fetchUnsavedPosts, handleContinuePost]);
 
   useEffect(() => {
     if (currentUser?.id) {
       (async () => {
         try {
-          const posts = await fetchUnsavedPosts(currentUser.id); // 임시 저장 게시물 가져오기
+          const posts = await fetchUnsavedPostsRef.current(currentUser.id);
           setUnsavedPosts(posts);
-  
+
           if (posts.length > 0 && !hasAlertShown.current) {
-            const latestPost = posts[0]; // 가장 최근의 임시 저장 게시물
+            const latestPost = posts[0];
             const continueWriting = confirm(
               `${relativeTimeDay(latestPost.created_at)}에 작성한 글이 있습니다. 이어서 작성하시겠습니까?`
             );
-  
+
             if (continueWriting) {
-              setActivePostId(latestPost.id); // 이어작성 게시글 ID 설정
-              await handleContinuePost(latestPost); // 이어작성 처리
+              setActivePostId(latestPost.id); // 활성화된 게시글 ID 업데이트
+              await handleContinuePostRef.current(latestPost);
             } else {
-              setActivePostId(null); // 새 글 작성 모드로 초기화
+              setActivePostId(null);
             }
-  
-            hasAlertShown.current = true; // Alert 실행 상태 업데이트
+
+            hasAlertShown.current = true;
           }
         } catch (error) {
           console.error("임시 저장 게시물 처리 중 오류 발생:", error);
@@ -123,9 +128,8 @@ const WritePage = () => {
         <button
           onClick={(e) => {
             const target = e.target as HTMLElement;
-            if (target.textContent === `저장된 게시물(${unsavedPosts.length})`) {
-              // unsavedPosts.length 부분을 클릭하면 모달 표시
-              setIsSaveModalOpen(true);
+            if (target.textContent === `${unsavedPosts.length}`) {
+              setIsSaveModalOpen(true); // 모달 표시
             } else {
               // "임시 저장" 부분을 클릭하면 임시 저장 수행
               handleTemporarySave();
@@ -135,7 +139,17 @@ const WritePage = () => {
         >
           <span>임시 저장</span>
           <span>|</span>
-          <span>저장된 게시물({unsavedPosts.length})</span>
+          <span
+            style={{
+              padding: "3px 6px", // 클릭 반경 확장
+              margin: "-3px -6px", // 레이아웃 영향을 최소화
+              display: "inline-block",
+              cursor: "pointer"
+            }}
+            onClick={() => setIsSaveModalOpen(true)} // 모달 열기
+          >
+            {unsavedPosts.length}
+          </span>
         </button>
         <button onClick={handleSubmit} className="rounded-lg bg-primary-default px-8 py-4 text-body text-bg-01">
           게시물 만들기
@@ -161,21 +175,23 @@ const WritePage = () => {
         purchasesLength={formState.purchases.length}
       />
 
-  <TempSaveModal
-    isOpen={isSaveModalOpen}
-    currentUser={currentUser}
-    fetchUnsavedPosts={fetchUnsavedPosts}
-    onContinue={(post) => {
-      handleContinuePost(post);
-      setActivePostId(post.id); // 이어작성할 게시글 ID 설정
-    }}
-    onDiscard={(postId) => {
-      handleDiscardPost(postId);
-      if (postId === activePostId) setActivePostId(null); // 삭제 시 상태 초기화
-    }}
-    onClose={() => setIsSaveModalOpen(false)}
-    activePostId={activePostId} // 현재 작성 중인 Post ID 전달
-  />
+      <TempSaveModal
+        isOpen={isSaveModalOpen}
+        currentUser={currentUser}
+        fetchUnsavedPosts={fetchUnsavedPosts}
+        onContinue={(post) => {
+          handleContinuePost(post);
+          setActivePostId(post.id); // 이어작성할 게시글 ID 설정
+        }}
+        onDiscard={(postId) => {
+          handleDiscardPost(postId);
+          if (postId === activePostId) {
+            setActivePostId(null); // 삭제 시 활성화 상태 초기화
+          }
+        }}
+        onClose={() => setIsSaveModalOpen(false)}
+        activePostId={activePostId} // 현재 작성 중인 Post ID 전달
+      />
     </div>
   );
 };

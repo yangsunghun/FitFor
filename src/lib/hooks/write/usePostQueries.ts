@@ -20,7 +20,7 @@ export const useEditPostQuery = (
   >({
     queryKey: ["post", id],
     queryFn: async () => {
-      const { data: postData, error: postError } = await supabase.from("posts").select("*").eq("id", id).single();
+      const { data: postData, error: postError } = await supabase.from("posts").select("*").eq("is_saved", false).eq("id", id).single();
 
       if (postError) {
         console.error("Post fetch error:", postError);

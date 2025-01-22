@@ -3,7 +3,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 
 const tagVariants = cva(
-  "inline-block px-3 rounded-[8px] font-medium", // 공통 스타일
+  "inline-block px-3 rounded-lg font-medium tb:px-2 tb:rounded-md", // 공통 스타일
   {
     variants: {
       variant: {
@@ -13,8 +13,8 @@ const tagVariants = cva(
         grayLine: "bg-bg-01 border border-line-02 !text-text-03"
       },
       size: {
-        md: "h-9 leading-9 text-body",
-        sm: "h-7 leading-7 text-caption"
+        md: "h-9 leading-9 text-body tb:h-[25px] tb:leading-[25px] tb:text-caption mb:text-small mb:leading-[25px]",
+        sm: "h-7 leading-7 text-caption tb:text-caption"
       }
     },
     defaultVariants: {

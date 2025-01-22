@@ -3,7 +3,7 @@ import SearchContents from "./_components/SearchContents";
 
 const SearchPage = () => {
   return (
-    <div className="inner pb-40">
+    <div className="inner pb-40 tb:pb-10">
       <Suspense fallback={<p></p>}>
         <SearchContents />
       </Suspense>

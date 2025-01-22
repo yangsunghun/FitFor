@@ -25,8 +25,8 @@ const GridPost = ({ post }: Props) => {
         />
       </figure>
 
-      <p className="ellip2 mt-4 text-title2 font-medium">{post.content}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <p className="ellip2 mt-4 text-title2 font-medium tb:mt-2 tb:text-body">{post.content}</p>
+      <div className="mt-3 flex flex-wrap gap-2 tb:mt-2 tb:gap-1">
         {post.tags.map((tag) => (
           <Tags key={tag} variant="grayLine" size="md" label={tag} />
         ))}

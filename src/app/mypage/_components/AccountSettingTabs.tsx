@@ -58,10 +58,10 @@ const AccountSettingTabs = () => {
           <button
             onClick={() => openModal(item.mode)}
             key={item.title}
-            className="flex items-center justify-between px-6 py-4 text-title2 font-medium text-text-04 hover:bg-gray-50"
+            className="flex items-center justify-between px-6 py-4 text-title2 font-medium tb:text-body text-text-04 hover:bg-gray-50"
           >
             <span>{item.title}</span>
-            <CaretRight size={24} />
+            <CaretRight className="text-title1 tb:text-body" />
           </button>
         ))}
         <SignoutButton />

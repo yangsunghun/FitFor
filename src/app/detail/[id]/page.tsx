@@ -45,7 +45,7 @@ const DetailPage = async ({ params }: DetailPageProps) => {
   const postId = params.id;
 
   return (
-    <div className="inner pb-40">
+    <div className="inner pb-40 pt-10">
       <ViewCounter postId={postId} />
 
       <section>

@@ -5,6 +5,7 @@ import ErrorScreen from "@/components/common/ErrorScreen";
 import KakaoScript from "@/components/common/KakaoScript";
 import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
@@ -24,6 +25,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   const { user } = useAuthStore();
   const userId = user?.id;
   const { post, isPending, isError } = usePostDetail(postId);
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   if (isPending) return <ContentsSkeleton />;
   if (isError) return <ErrorScreen error={new Error("데이터를 불러오는 중 에러가 발생했습니다.")} />;
@@ -48,10 +50,10 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   return (
     <>
       <article className="flex justify-between">
-        {mode === "page" ? (
-          <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
-        ) : (
+        {mode === "modal" || isTabletOrSmaller ? (
           <ImageCarousel images={images} blur={thumbnail_blur_url} />
+        ) : (
+          <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
         )}
         <div className="relative w-[46%]">
           <div className="flex items-center gap-4">
@@ -71,7 +73,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
 
           {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
 
-          <p className="mt-6 h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium">{content}</p>
+          <p className="mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium">{content}</p>
 
           {tags.length > 0 && (
             <div className="mt-10 flex flex-wrap gap-2">

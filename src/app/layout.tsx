@@ -40,7 +40,7 @@ export default function RootLayout({
           <body className={`${pretendard.className} text-body text-text-04`}>
             <Header />
             <main className="relative mx-auto w-full max-w-[1200px] pt-20 tb:pb-[77px] tb:pt-0">{children}</main>
-            {modal && <div>{modal}</div>}
+            {modal}
             <NavBar />
           </body>
         </TQProviders>

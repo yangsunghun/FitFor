@@ -1,7 +1,7 @@
 "use client";
 
-import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import TagSection from "@/components/shared/TagSection";
+import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
 import AddressModal from "./_components/AddressModal";
 import BodySizeSection from "./_components/BodySizeSection";
 import ContentSection from "./_components/ContentSection";
@@ -75,7 +75,12 @@ const WritePage = () => {
       </div>
 
       <div className="flex justify-center gap-6 pt-20">
-        <button className="rounded-lg border border-primary-default bg-bg-01 px-8 py-4 text-body font-medium text-primary-default">
+        <button
+          className="rounded-lg border border-primary-default bg-bg-01 px-8 py-4 text-body font-medium text-primary-default"
+          onClick={() => {
+            alert("준비중입니다!");
+          }}
+        >
           임시 저장
         </button>
         <button

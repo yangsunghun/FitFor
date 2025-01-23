@@ -19,7 +19,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Fit4`,
     description: `나만의 스타일, 모두의 코디! 어떻게 입을지 고민될 땐 핏포에서 답을 찾아보세요`,
-    url: `https://fit4.vercel.app`
+    url: `https://fit4.vercel.app`,
+    images: {
+      url: "https://fit4.vercel.app/images/fitfor-og-image.png"
+    }
   }
 };
 

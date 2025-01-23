@@ -1,6 +1,7 @@
 "use client";
 
 import ErrorScreen from "@/components/common/ErrorScreen";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { FloatingButton } from "@/components/ui/FloatingButton";
 import { usePosts } from "@/lib/hooks/home/usePosts";
 import { useAuthStore } from "@/lib/store/authStore";
@@ -44,7 +45,7 @@ const MainContent = () => {
           <MasonryLayout isPending={isPending} posts={posts} />
         )}
 
-        {hasNextPage && <div ref={observerRef}>{isFetchingNextPage ? "불러오는 중 로딩" : "더보기"}</div>}
+        {hasNextPage && <div ref={observerRef}>{isFetchingNextPage ? <LoadingSpinner /> : "더보기"}</div>}
 
         <OnboardingModal />
       </section>

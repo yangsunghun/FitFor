@@ -20,7 +20,7 @@ const ProfileSettingsForm = () => {
   const [imageFile, setImageFile] = useState<File | null>(null); // 이미지 storage 저장용
   const [imagePreview, setImagePreview] = useState<string | null>(null); // 이미지 미리보기
   const [isUploading, setIsUploading] = useState(false); // 저장 중 버튼 클릭 방지
-  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)"); // tablet 사이즈 감지
   const {
     register,
     handleSubmit,
@@ -113,7 +113,7 @@ const ProfileSettingsForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-auto mt-10 flex w-2/4 flex-col items-center tb:mx-4 tb:w-[21.375rem] tb:gap-6"
+      className="mx-auto mt-10 flex w-2/4 flex-col items-center tb:mx-4 tb:w-[21.375rem] tb:gap-6 mn:w-[95%]"
     >
       {/* 프로필 이미지 업로드 부분*/}
       <ProfileImageUploadSection
@@ -138,7 +138,7 @@ const ProfileSettingsForm = () => {
         size={isTabletOrSmaller ? "sm" : "lg"}
         type="submit"
         disabled={isUploading}
-        className={`mt-20 w-[30rem] tb:fixed tb:bottom-7 tb:z-50 tb:mx-4 tb:w-[21.375rem] tb:pb-7`}
+        className={`mt-20 w-[30rem] tb:fixed tb:bottom-7 tb:z-50 tb:mx-4 tb:w-[95%] tb:pb-7`}
       >
         {isUploading ? "저장 중..." : "저장하기"}
       </Button>

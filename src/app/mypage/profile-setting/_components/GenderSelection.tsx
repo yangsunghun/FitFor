@@ -7,9 +7,9 @@ type GenderSelectionProps = {
 
 const GenderSelection = ({ register, error }: GenderSelectionProps) => {
   return (
-    <div className="mt-10 w-[30rem] tb:w-full tb:mt-0">
+    <div className="mt-10 w-[30rem] tb:mt-0 tb:w-full">
       <label className="text-title2 font-bold text-text-04 tb:text-body tb:font-medium">성별</label>
-      <div className="mt-4 flex w-full flex-row gap-12">
+      <div className="mt-4 flex w-full flex-row gap-12 tb:gap-6">
         {["male", "female", "none"].map((gender) => (
           <label key={gender} className="flex items-center space-x-2">
             <input

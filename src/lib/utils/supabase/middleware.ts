@@ -46,9 +46,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   // 로그인을 하지 않았는데 마이페이지에 접근하면 로그인 페이지로 리다이렉트
-  if (!user && protectedPaths.some((path) => pathname.startsWith(path))) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // TODO: UT 끝나고 다시 해제할 것
+  // if (!user && protectedPaths.some((path) => pathname.startsWith(path))) {
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 
   return supabaseResponse;
 }

@@ -20,24 +20,26 @@ const ImageModal = ({ images, isOpen, onClose, selectedImage }: ImageModalProps)
 
   return (
     <ModalItem isOpen={isOpen} onClose={onClose} mode="imageView">
-      <Carousel
-        slidesPerView={1}
-        spaceBetween={0}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-        }}
-        onSlideChange={(activeIndex) => {
-          setCurrentImage(images[activeIndex]);
-        }}
-        initialSlide={images.indexOf(selectedImage)}
-        pagination={true}
-      >
-        {images.map((image, index) => (
-          <SwiperSlide key={index} className="relative h-screen w-fit self-center text-center">
-            <img src={image} alt={`이미지 ${index + 1}`} className="max-w-screen inline-block max-h-screen" />
-          </SwiperSlide>
-        ))}
-      </Carousel>
+      <div className="image-modal">
+        <Carousel
+          slidesPerView={1}
+          spaceBetween={0}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          onSlideChange={(activeIndex) => {
+            setCurrentImage(images[activeIndex]);
+          }}
+          initialSlide={images.indexOf(selectedImage)}
+          pagination={true}
+        >
+          {images.map((image, index) => (
+            <SwiperSlide key={index} className="relative h-screen w-fit self-center text-center">
+              <img src={image} alt={`이미지 ${index + 1}`} className="max-w-screen inline-block max-h-screen" />
+            </SwiperSlide>
+          ))}
+        </Carousel>
+      </div>
 
       {/* 상단 바 */}
       <div className="absolute left-0 top-0 z-20 flex h-16 w-full items-center bg-black/50 px-4">

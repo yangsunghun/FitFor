@@ -37,7 +37,7 @@ const Carousel = ({
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
 
   return (
-    <div className="relative">
+    <div className="carousel relative">
       <Swiper
         spaceBetween={spaceBetween}
         slidesPerView={slidesPerView}

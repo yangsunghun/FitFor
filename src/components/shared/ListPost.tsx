@@ -1,3 +1,4 @@
+import LikeButton from "@/app/detail/_components/ButtonLike";
 import sampleImage from "@/assets/images/image_sample.png";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import type { PostType } from "@/lib/types/post";
@@ -7,7 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Tags } from "../ui/Tags";
-import LikeSection from "./LikeSection";
 
 type Props = {
   post: PostType;
@@ -19,8 +19,8 @@ const Listpost = ({ post }: Props) => {
 
   return (
     <li className="relative mb-6 flex gap-6 py-4 mb:mb-[24px] mb:justify-between mb:gap-0 mb:py-0">
-      <Link href={`/detail/${post.id}/view`} className="click-box z-10"></Link>
-      <figure className="thumbnail aspect-square w-[11.25rem] rounded-2xl bg-gray-200 tb:w-[150px] tb:rounded-lg mb:w-[109px]">
+      <Link href={`/detail/${post.id}${isTabletOrSmaller ? "" : "/view"}`} className="click-box z-10"></Link>
+      <figure className="thumbnail aspect-square w-[11.25rem] rounded-2xl bg-gray-200 tb:w-[150px] tb:rounded-lg mb:w-[89px]">
         <Image
           src={isImgError ? sampleImage : post.images[0]}
           alt={post.content}
@@ -31,7 +31,7 @@ const Listpost = ({ post }: Props) => {
         />
       </figure>
 
-      <div className="relative w-[calc(100%-12.75rem)] mb:w-[calc(100%-130px)]">
+      <div className="relative w-[calc(100%-12.75rem)] mb:w-[calc(100%-110px)]">
         <div className="flex items-center gap-4 tb:hidden">
           <figure className="relative h-10 w-10 overflow-hidden rounded-full border border-line-02">
             <Image
@@ -47,12 +47,12 @@ const Listpost = ({ post }: Props) => {
           </div>
         </div>
 
-        <p className="clear-both mt-2 line-clamp-2 overflow-hidden text-ellipsis break-words text-subtitle font-medium text-text-04 tb:mt-0 tb:text-title2 mb:text-caption">
+        <p className="mb:ellip1 ellip2 mt-2 text-subtitle font-medium text-text-04 tb:mt-0 tb:text-title2 mb:line-clamp-none mb:break-all mb:text-body">
           {post.content}
         </p>
 
         <div className="absolute bottom-0 right-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03 tb:left-0 tb:right-auto tb:text-body mb:text-caption">
-          <LikeSection postId={post.id} styleType="list" />
+          <LikeButton postId={post.id} styleType="list" iconSize={28} showNumber />
           <span className="post-center pointer-events-none flex items-center gap-1">
             {isTabletOrSmaller ? (
               <ChatCircleDots size={16} className="text-text-02" weight="fill" />

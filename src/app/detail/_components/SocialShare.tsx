@@ -1,18 +1,20 @@
 "use client";
 import kakaoLogo from "@/assets/images/kakao-logo.svg";
 import Dropdown from "@/components/ui/Dropdown";
-import { Export, FacebookLogo, LinkSimple, XLogo } from "@phosphor-icons/react";
+import { FacebookLogo, LinkSimple, XLogo } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 type SocialShareProps = {
   postUrl: string;
   postTitle: string;
   thumbnail: string;
   writer: string;
+  showText?: boolean;
+  icon: ReactNode;
 };
 
-const SocialShare = ({ postUrl, postTitle, thumbnail, writer }: SocialShareProps) => {
+const SocialShare = ({ postUrl, postTitle, thumbnail, writer, showText, icon }: SocialShareProps) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopyUrl = () => {
@@ -69,9 +71,9 @@ const SocialShare = ({ postUrl, postTitle, thumbnail, writer }: SocialShareProps
   return (
     <Dropdown
       trigger={
-        <button className="flex flex-col gap-2">
-          <Export size={28} />
-          <span>공유</span>
+        <button className="flex flex-col gap-2 text-text-03">
+          {icon}
+          {showText && <span>공유</span>}
         </button>
       }
       className="flex gap-4"

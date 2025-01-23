@@ -9,7 +9,7 @@ type PurchaseListProps = {
   postId: string;
 };
 
-const PurchaseList = ({ postId }: PurchaseListProps) => {
+const PurchaseMobile = ({ postId }: PurchaseListProps) => {
   const { purchases, isPending, isError } = usePurchases(postId);
 
   if (isPending) {
@@ -17,34 +17,36 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
   }
 
   if (isError) {
+    return <p>구매처 데이터를 가져오는 중 오류가 발생했습니다.</p>;
+  }
+
+  if (!purchases || purchases.length === 0) {
     return (
-      <p className="text-center text-subtitle font-medium text-text-02">
-        구매처 데이터를 가져오는 중 오류가 발생했습니다.
+      <p className="w-full pb-[20px] pt-[30px] text-center text-body font-medium text-text-02">
+        등록된 구매처가 없습니다.
       </p>
     );
   }
 
-  if (!purchases || purchases.length === 0) {
-    return <p className="text-center text-subtitle font-medium text-text-02">등록된 구매처가 없습니다.</p>;
-  }
-
   return (
     <>
-      <p className="mb-4 text-title1 font-bold text-black">상품 정보</p>
-      <ul className="grid grid-cols-4 gap-6">
+      <ul className="flex gap-[16px] overflow-auto px-[4.375%] py-[12px]">
         {purchases.map((purchase: Purchase) => (
-          <li key={purchase.id} className="relative">
+          <li
+            key={purchase.id}
+            className="shadow-normal relative flex w-[256px] items-center gap-[12px] rounded-lg p-2"
+          >
             {purchase.buy_link && (
               <Link href={purchase.buy_link} title={purchase.title} target="_blank" className="click-box z-10"></Link>
             )}
             {purchase.image_url && (
-              <figure className="thumbnail aspect-square w-full rounded-lg border border-line-02">
+              <figure className="thumbnail aspect-square w-[48px] rounded-lg border bg-bg-02">
                 <Image src={purchase.image_url} alt={purchase.title} fill={true} className="object-cover" />
               </figure>
             )}
-            <div className="mt-4">
-              <p className="ellip1 text-title2 font-bold">{purchase.title}</p>
-              <p className="ellip1 text-title2 font-medium text-text-03">{purchase.description}</p>
+            <div className="w-[calc(100%-60px)]">
+              <p className="ellip1 text-body font-medium">{purchase.title}</p>
+              <p className="ellip1 text-caption text-text-03">{purchase.description}</p>
             </div>
           </li>
         ))}
@@ -53,4 +55,4 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
   );
 };
 
-export default PurchaseList;
+export default PurchaseMobile;

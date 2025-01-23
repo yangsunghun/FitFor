@@ -1,22 +1,34 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 type ToggleButtonProps = {
   isActive: boolean;
   count?: number | null;
   onClick?: () => void;
-  activeIcon?: React.ReactNode;
-  inactiveIcon: React.ReactNode;
+  activeIcon?: ReactNode;
+  inactiveIcon: ReactNode;
   btnStyle: string;
   text?: boolean;
+  showNumber?: boolean;
 };
 
-const ToggleButton = ({ isActive, count, onClick, activeIcon, inactiveIcon, btnStyle, text }: ToggleButtonProps) => {
+const ToggleButton = ({
+  isActive,
+  count,
+  onClick,
+  activeIcon,
+  inactiveIcon,
+  btnStyle,
+  text,
+  showNumber
+}: ToggleButtonProps) => {
   return (
     <span>
       <button onClick={onClick} className={btnStyle}>
         {isActive ? activeIcon : inactiveIcon}
         <span className="tb:text-text-03">
-          {typeof count === "number" && count}
+          {showNumber && typeof count === "number" && count}
           {text && "북마크"}
         </span>
       </button>

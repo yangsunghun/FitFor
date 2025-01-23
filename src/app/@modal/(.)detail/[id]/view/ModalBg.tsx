@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, type MouseEvent } from "react";
+import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 
 type ModalBgProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 const ModalBg = ({ children }: ModalBgProps) => {

@@ -126,13 +126,14 @@ const WritePage = () => {
       <div className="flex justify-center gap-6 pt-20">
         {/* 임시 저장 버튼 */}
         <button
-          onClick={(e) => {
-            const target = e.target as HTMLElement;
-            if (target.textContent === `${unsavedPosts.length}`) {
-              setIsSaveModalOpen(true); // 모달 표시
-            } else {
-              // "임시 저장" 부분을 클릭하면 임시 저장 수행
-              handleTemporarySave();
+          onClick={async () => {
+            try {
+              // "임시 저장" 버튼 클릭 시: 임시 저장 수행 후, 최신 데이터 가져오기
+              await handleTemporarySave();
+              const posts = await fetchUnsavedPosts(currentUser?.id || "");
+              setUnsavedPosts(posts); // 최신 데이터로 상태 갱신
+            } catch (error) {
+              console.error("임시 저장 처리 중 오류:", error);
             }
           }}
           className="flex items-center gap-1 rounded-lg border border-primary-default bg-bg-01 px-8 py-4 text-body text-primary-default"
@@ -146,7 +147,16 @@ const WritePage = () => {
               display: "inline-block",
               cursor: "pointer"
             }}
-            onClick={() => setIsSaveModalOpen(true)} // 모달 열기
+            onClick={async (e) => {
+              e.stopPropagation(); // 부모 버튼의 onClick 실행 방지
+              try {
+                const posts = await fetchUnsavedPosts(currentUser?.id || "");
+                setUnsavedPosts(posts); // 최신 데이터로 상태 갱신
+                setIsSaveModalOpen(true); // 모달 표시
+              } catch (error) {
+                console.error("모달 데이터 갱신 중 오류:", error);
+              }
+            }}
           >
             {unsavedPosts.length}
           </span>
@@ -175,23 +185,29 @@ const WritePage = () => {
         purchasesLength={formState.purchases.length}
       />
 
-      <TempSaveModal
-        isOpen={isSaveModalOpen}
-        currentUser={currentUser}
-        fetchUnsavedPosts={fetchUnsavedPosts}
-        onContinue={(post) => {
-          handleContinuePost(post);
-          setActivePostId(post.id); // 이어작성할 게시글 ID 설정
-        }}
-        onDiscard={(postId) => {
-          handleDiscardPost(postId);
-          if (postId === activePostId) {
-            setActivePostId(null); // 삭제 시 활성화 상태 초기화
-          }
-        }}
-        onClose={() => setIsSaveModalOpen(false)}
-        activePostId={activePostId} // 현재 작성 중인 Post ID 전달
-      />
+    <TempSaveModal
+      isOpen={isSaveModalOpen}
+      currentUser={currentUser}
+      fetchUnsavedPosts={fetchUnsavedPosts}
+      onContinue={(post) => {
+        handleContinuePost(post);
+        setActivePostId(post.id);
+      }}
+      onDiscard={async (postId) => {
+        try {
+          await handleDiscardPost(postId);
+          const posts = await fetchUnsavedPosts(currentUser?.id || "");
+          setUnsavedPosts(posts);
+        } catch (error) {
+          console.error("게시글 삭제 중 오류 발생:", error);
+          alert("삭제 중 문제가 발생했습니다.");
+        }
+      }}
+      onClose={() => {
+        setIsSaveModalOpen(false);
+      }}
+      activePostId={activePostId}
+    />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import ModalItem from "@/components/ui/Modal";
 import { PostWithPurchases } from "@/lib/hooks/write/useFormHanlders";
 import type { Database } from "@/lib/types/supabase";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type TempSaveModalProps = {
   isOpen: boolean;
@@ -14,7 +14,7 @@ type TempSaveModalProps = {
   onContinue: (post: PostWithPurchases) => void;
   onDiscard: (postId: string) => void;
   onClose: () => void;
-  activePostId: string | null; // 활성화된 Post ID
+  activePostId: string | null; // 현재 작성 중인 Post ID
 };
 
 const TempSaveModal = ({
@@ -28,7 +28,6 @@ const TempSaveModal = ({
 }: TempSaveModalProps) => {
   const [unsavedPosts, setUnsavedPosts] = useState<PostWithPurchases[]>([]);
   const [loading, setLoading] = useState(false);
-  const hasFetched = useRef(false); // 데이터 가져오기를 한 번만 수행
 
   useEffect(() => {
     const loadUnsavedPosts = async () => {
@@ -45,10 +44,8 @@ const TempSaveModal = ({
       }
     };
 
-    if (isOpen && !hasFetched.current) {
-      // 모달이 열릴 때만 데이터 가져오기
-      loadUnsavedPosts();
-      hasFetched.current = true; // 한 번 가져온 상태로 업데이트
+    if (isOpen) {
+      loadUnsavedPosts(); // 모달이 열릴 때마다 최신 데이터 가져오기
     }
   }, [isOpen, currentUser, fetchUnsavedPosts]);
 
@@ -72,14 +69,36 @@ const TempSaveModal = ({
                   <span className="rounded bg-gray-400 px-4 py-2 text-white">작성 중...</span>
                 ) : (
                   <button
-                    onClick={() => onContinue(post)} // 이어 작성하기
+                    onClick={() => {
+                      if (post.id === activePostId) {
+                        alert("현재 작성 중인 글입니다.");
+                        onClose(); // 모달 닫기
+                        return;
+                      }
+                      onContinue(post); // 이어 작성하기 로직 실행
+                      onClose(); // 모달 닫기
+                    }}
                     className="rounded bg-blue-500 px-4 py-2 text-white"
                   >
                     이어 작성하기
                   </button>
                 )}
                 <button
-                  onClick={() => onDiscard(post.id)} // 삭제하기
+                  onClick={async () => {
+                    try {
+                      // 활성화된 게시글인지 확인
+                      if (post.id === activePostId) {
+                        alert("현재 작성 중인 글은 삭제할 수 없습니다.");
+                        return; // 삭제 중단
+                      }
+
+                      // 삭제 핸들러 호출 후 상태에서 제거
+                      await onDiscard(post.id);
+                      setUnsavedPosts((prevPosts) => prevPosts.filter((p) => p.id !== post.id));
+                    } catch (error) {
+                      console.error("게시글 삭제 실패:", error);
+                    }
+                  }}
                   className="rounded bg-red-500 px-4 py-2 text-white"
                 >
                   삭제하기

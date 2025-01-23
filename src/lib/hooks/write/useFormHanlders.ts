@@ -63,7 +63,7 @@ export const useFormHandlers = () => {
         isContinued: false,
         productToEdit: null,
         thumbnail_blur_url: data.thumbnail_blur_url || "",
-        postId: data.id || "", // 이어작성 게시글 ID 설정
+        postId: data.id || "" // 이어작성 게시글 ID 설정
       });
     } catch (error) {
       console.error("Error initializing form state:", error);
@@ -230,9 +230,7 @@ export const useFormHandlers = () => {
   };
 
   // 임시 저장 게시글 가져오기 함수 (공용)
-  const fetchUnsavedPosts = async (
-    userId: string
-  ): Promise<PostWithPurchases[]> => {
+  const fetchUnsavedPosts = async (userId: string): Promise<PostWithPurchases[]> => {
     try {
       const { data: postsData, error: postsError } = await supabase
         .from("posts")
@@ -240,25 +238,25 @@ export const useFormHandlers = () => {
         .eq("user_id", userId)
         .eq("is_saved", true)
         .order("created_at", { ascending: false }); // 최신 순 정렬
-  
+
       if (postsError || !postsData) {
         console.error("임시 저장된 게시물 가져오기 실패:", postsError);
         return [];
       }
-  
+
       const postIds = postsData.map((post) => post.id);
       const { data: purchasesData, error: purchasesError } = await supabase
         .from("purchase")
         .select("*")
         .in("post_id", postIds);
-  
+
       if (purchasesError) {
         console.error("구매 데이터 가져오기 실패:", purchasesError);
       }
-  
+
       return postsData.map((post) => ({
         ...post,
-        purchases: purchasesData?.filter((purchase) => purchase.post_id === post.id) || [],
+        purchases: purchasesData?.filter((purchase) => purchase.post_id === post.id) || []
       }));
     } catch (error) {
       console.error("임시 저장된 게시물 가져오기 중 오류:", error);
@@ -266,29 +264,34 @@ export const useFormHandlers = () => {
     }
   };
 
-// 이어서 작성 핸들러
-const handleContinuePost = async (post: PostWithPurchases) => {
-  try {
-    // 폼 상태 초기화
-    await setInitialFormState(post);
+  // 이어서 작성 핸들러
+  const handleContinuePost = async (post: PostWithPurchases) => {
+    try {
+      if (post.id === activePostId) {
+        alert("현재 작성 중인 글입니다.");
+        return;
+      }
 
-    // 이어작성 상태 설정
-    handleChange("isContinued", true); // 이어작성 활성화
-    handleChange("postId", post.id); // 이어작성할 게시글 ID 설정
-
-    // 모달 상태와 동기화
-    setActivePostId(post.id); // 현재 작성 중인 Post ID 업데이트
-
-    alert("이어 작성할 게시물이 불러와졌습니다.");
-  } catch (error) {
-    console.error("게시물 불러오기 실패:", error);
-    alert("게시물 불러오기 중 오류가 발생했습니다.");
-  }
-};
+      // 이어작성 상태 초기화
+      await setInitialFormState(post); // 폼 상태 초기화
+      setActivePostId(post.id); // 활성화된 Post ID 업데이트
+      alert("이어 작성할 게시물이 불러와졌습니다.");
+    } catch (error) {
+      console.error("게시물 불러오기 실패:", error);
+      alert("게시물 불러오기 중 오류가 발생했습니다.");
+    }
+  };
 
   // 임시저장 삭제 핸들러
   const handleDiscardPost = async (postId: string) => {
     try {
+      // 활성화된 게시글은 삭제 불가능
+      if (postId === activePostId) {
+        alert("이미 작성 중인 게시글은 삭제가 불가능합니다.");
+        return;
+      }
+  
+      // 게시글 삭제
       const { error } = await supabase.from("posts").delete().eq("id", postId);
       if (error) throw error;
   
@@ -296,17 +299,7 @@ const handleContinuePost = async (post: PostWithPurchases) => {
   
       // 삭제 후 리스트 갱신
       const updatedPosts = await fetchUnsavedPosts(currentUser?.id || "");
-      setUnsavedPosts(
-        updatedPosts.map((post) => ({
-          ...post,
-          isActive: post.id === activePostId, // 활성화된 Post 유지
-        }))
-      );
-  
-      // 활성화된 게시글 삭제 시 상태 초기화
-      if (postId === activePostId) {
-        setActivePostId(null);
-      }
+      setUnsavedPosts(updatedPosts); // 최신 상태로 갱신
     } catch (error) {
       console.error("게시물 삭제 실패:", error);
       alert("게시물 삭제 중 오류가 발생했습니다.");
@@ -328,7 +321,7 @@ const handleTemporarySave = async () => {
   }
 
   try {
-    let newPostId = postId; // 새 게시글 ID 또는 기존 게시글 ID 저장
+    let newPostId = postId;
 
     if (isContinued && postId) {
       // 기존 게시글 가져오기
@@ -351,10 +344,10 @@ const handleTemporarySave = async () => {
 
       if (isIdentical) {
         alert("업데이트할 내용이 없습니다.");
-        return;
+        return; // 변경 사항이 없으면 저장 중단
       }
 
-      // 이어작성: 기존 게시글 업데이트
+      // 기존 게시글 업데이트 로직
       const updatedPost = {
         content,
         upload_place: address,
@@ -372,14 +365,16 @@ const handleTemporarySave = async () => {
         .eq("id", postId);
       if (updateError) throw updateError;
 
-    // unsavedPosts 상태 즉시 반영
-    setUnsavedPosts((prevPosts) =>
-      prevPosts.map((post) => (post.id === postId ? { ...post, ...updatedPost } : post))
-    );
+      // `unsavedPosts` 상태 업데이트
+      setUnsavedPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId ? { ...post, ...updatedPost } : post
+        )
+      );
 
       alert("임시 저장이 업데이트되었습니다.");
     } else {
-      // 새 게시글 생성
+      // 새로운 게시글 생성 로직
       const newPost = {
         content,
         upload_place: address,
@@ -401,13 +396,16 @@ const handleTemporarySave = async () => {
         .select();
       if (insertError) throw insertError;
 
-      newPostId = postData[0].id; // 새 게시글 ID 저장
+      newPostId = postData[0].id;
 
-      // unsavedPosts 상태 즉시 반영
-      setUnsavedPosts((prevPosts) => [...prevPosts, { ...newPost, id: newPostId, purchases: [] }]);
+      // `unsavedPosts` 상태 업데이트
+      setUnsavedPosts((prev) => [
+        { ...newPost, id: newPostId, purchases: [] },
+        ...prev,
+      ]);
 
-      handleChange("postId", newPostId); // formState 업데이트
-      handleChange("isContinued", true); // 이어작성 상태 활성화
+      handleChange("postId", newPostId);
+      handleChange("isContinued", true);
 
       alert("임시 저장 완료!");
     }
@@ -415,16 +413,13 @@ const handleTemporarySave = async () => {
     // 상품 데이터 저장
     const purchaseData = purchases.map((purchase) => ({
       ...purchase,
-      post_id: newPostId, 
+      post_id: newPostId,
     }));
 
-    const { error: purchaseError } = await supabase
-      .from("purchase")
-      .upsert(purchaseData);
+    const { error: purchaseError } = await supabase.from("purchase").upsert(purchaseData);
     if (purchaseError) throw purchaseError;
 
-  // 활성화된 Post ID 즉시 반영
-  setActivePostId(newPostId);
+    setActivePostId(newPostId); // 활성화된 Post ID 업데이트
   } catch (error) {
     console.error("임시 저장 실패:", error);
     alert("임시 저장 실패");

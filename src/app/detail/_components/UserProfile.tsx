@@ -4,9 +4,9 @@ import sampleImage from "@/assets/images/image_sample.png";
 import Image from "next/image";
 
 type UserProfileProps = {
-  profileImage?: string | null; // null 및 undefined 허용
-  nickname?: string | null; // null 및 undefined 허용
-  uploadPlace: string | null; // null 허용
+  profileImage?: string | null;
+  nickname: string;
+  uploadPlace?: string | null;
 };
 
 const UserProfile = ({ profileImage, nickname = "익명", uploadPlace }: UserProfileProps) => {

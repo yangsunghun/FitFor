@@ -1,6 +1,6 @@
 "use client";
 
-import { Tablet } from "@/components/common/BreakPoints";
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import KakaoScript from "@/components/common/KakaoScript";
 import LikeSection from "@/components/shared/LikeSection";
@@ -52,7 +52,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
       <article className="flex flex-wrap justify-between">
         <Tablet>
           <div>
-            <UserProfile profileImage={user?.profile_image} nickname={user?.nickname} uploadPlace={upload_place} />
+            <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
             {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
           </div>
         </Tablet>
@@ -62,9 +62,10 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
           <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
         )}
         <div className="relative w-[46%]">
-          <UserProfile profileImage={user?.profile_image} nickname={user?.nickname} uploadPlace={upload_place} />
-
-          {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
+          <MinTablet>
+            <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
+            {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
+          </MinTablet>
 
           <p className="mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium">{content}</p>
 

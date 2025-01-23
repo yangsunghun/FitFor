@@ -62,32 +62,32 @@ const TempSaveModal = ({
       ) : unsavedPosts.length === 0 ? (
         <p>임시 저장된 게시물이 없습니다.</p>
       ) : (
-<ul>
-{unsavedPosts.map((post) => (
-  <li key={post.id} className="mb-4">
-    <p>{post.content || "본문 없음"}</p>
-    <p>{relativeTimeDay(post.created_at)} 작성됨</p>
-    <div className="flex gap-2 mt-2">
-      {post.id === activePostId ? (
-        <span className="px-4 py-2 bg-gray-400 text-white rounded">작성 중...</span>
-      ) : (
-        <button
-          onClick={() => onContinue(post)}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          이어 작성하기
-        </button>
-      )}
-      <button
-        onClick={() => onDiscard(post.id)}
-        className="px-4 py-2 bg-red-500 text-white rounded"
-      >
-        삭제하기
-      </button>
-    </div>
-  </li>
-))}
-</ul>
+        <ul>
+          {unsavedPosts.map((post) => (
+            <li key={post.id} className="mb-4">
+              <p>{post.content || "본문 없음"}</p>
+              <p>{relativeTimeDay(post.created_at)} 작성됨</p>
+              <div className="mt-2 flex gap-2">
+                {post.id === activePostId ? (
+                  <span className="rounded bg-gray-400 px-4 py-2 text-white">작성 중...</span>
+                ) : (
+                  <button
+                    onClick={() => onContinue(post)} // 이어 작성하기
+                    className="rounded bg-blue-500 px-4 py-2 text-white"
+                  >
+                    이어 작성하기
+                  </button>
+                )}
+                <button
+                  onClick={() => onDiscard(post.id)} // 삭제하기
+                  className="rounded bg-red-500 px-4 py-2 text-white"
+                >
+                  삭제하기
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
       <button onClick={onClose} className="mt-4 rounded bg-gray-300 px-4 py-2">
         닫기

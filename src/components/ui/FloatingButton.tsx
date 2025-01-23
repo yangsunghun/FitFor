@@ -1,12 +1,13 @@
 "use client";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { cn } from "@/lib/utils/common/className";
 import { Plus } from "@phosphor-icons/react";
 import { cva, VariantProps } from "class-variance-authority";
 import Link from "next/link";
-import React, { forwardRef, type AnchorHTMLAttributes } from "react";
+import { forwardRef, type AnchorHTMLAttributes } from "react";
 
 const buttonVariants = cva(
-  "inline-block w-[4.5rem] h-[4.5rem] rounded-full transition duration-300 fixed bottom-12 right-[6.875rem] flex justify-center items-center", // 공통 스타일
+  "inline-block w-[4.5rem] h-[4.5rem] rounded-full transition duration-300 fixed bottom-12 right-[6.875rem] tb:bottom-[100px] tb:right-[24px] tb:w-[40px] tb:h-[40px] flex justify-center items-center", // 공통 스타일
   {
     variants: {
       variant: {
@@ -25,15 +26,14 @@ const buttonVariants = cva(
 
 export type ButtonProps = AnchorHTMLAttributes<HTMLAnchorElement> & VariantProps<typeof buttonVariants>;
 
-const FloatingButton = forwardRef<HTMLAnchorElement, ButtonProps>(
-  ({ className, variant, href, ...props }, ref) => {
-    return (
-      <Link ref={ref} href={href || "#"} className={cn(buttonVariants({ variant }), className)} {...props}>
-        <Plus size={48} />
-      </Link>
-    );
-  }
-);
+const FloatingButton = forwardRef<HTMLAnchorElement, ButtonProps>(({ className, variant, href, ...props }, ref) => {
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+  return (
+    <Link ref={ref} href={href || "#"} className={cn(buttonVariants({ variant }), className)} {...props}>
+      {isTabletOrSmaller ? <Plus size={24} weight="bold" /> : <Plus size={48} />}
+    </Link>
+  );
+});
 
 FloatingButton.displayName = "FloatingButton";
 

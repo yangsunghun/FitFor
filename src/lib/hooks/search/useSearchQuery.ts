@@ -58,9 +58,9 @@ export const useSearchQuery = () => {
       // 이미 선택된 태그라면 제거
       updatedTags[key] = updatedTags[key].filter((t) => t !== tag);
     } else {
-      // 새 태그를 추가하려고 할 때 최대 2개로 제한
-      if (updatedTags[key].length >= 2) {
-        alert("태그는 최대 2개까지만 선택할 수 있습니다.");
+      // 새 태그를 추가하려고 할 때 최대 4개로 제한
+      if (updatedTags[key].length >= 4) {
+        alert("태그는 최대 4개까지만 선택할 수 있습니다.");
         return;
       }
       updatedTags[key] = [...updatedTags[key], tag];
@@ -72,6 +72,19 @@ export const useSearchQuery = () => {
     router.replace(
       `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
         updatedTags
+      )}&sort=${encodeURIComponent(sort)}`
+    );
+  };
+
+  // 태그 초기화
+  const resetTags = () => {
+    const emptyTags = { gender: [], season: [], style: [], tpo: [] };
+    setTags(emptyTags);
+
+    // URL 동기화
+    router.replace(
+      `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
+        emptyTags
       )}&sort=${encodeURIComponent(sort)}`
     );
   };
@@ -97,6 +110,7 @@ export const useSearchQuery = () => {
     sort,
     handleSearch,
     handleToggleTag,
+    resetTags,
     handleSort,
     encodeTagsForUrl
   };

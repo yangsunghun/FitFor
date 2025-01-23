@@ -185,29 +185,36 @@ const WritePage = () => {
         purchasesLength={formState.purchases.length}
       />
 
-    <TempSaveModal
-      isOpen={isSaveModalOpen}
-      currentUser={currentUser}
-      fetchUnsavedPosts={fetchUnsavedPosts}
-      onContinue={(post) => {
-        handleContinuePost(post);
-        setActivePostId(post.id);
-      }}
-      onDiscard={async (postId) => {
-        try {
-          await handleDiscardPost(postId);
-          const posts = await fetchUnsavedPosts(currentUser?.id || "");
-          setUnsavedPosts(posts);
-        } catch (error) {
-          console.error("게시글 삭제 중 오류 발생:", error);
-          alert("삭제 중 문제가 발생했습니다.");
-        }
-      }}
-      onClose={() => {
-        setIsSaveModalOpen(false);
-      }}
-      activePostId={activePostId}
-    />
+      <TempSaveModal
+        isOpen={isSaveModalOpen}
+        currentUser={currentUser}
+        fetchUnsavedPosts={fetchUnsavedPosts}
+        onContinue={(post) => {
+          handleContinuePost(post);
+          setActivePostId(post.id);
+        }}
+        onDiscard={async (postId) => {
+          try {
+            await handleDiscardPost(postId);
+            const posts = await fetchUnsavedPosts(currentUser?.id || "");
+            setUnsavedPosts(posts);
+          } catch (error) {
+            console.error("게시글 삭제 중 오류 발생:", error);
+            alert("삭제 중 문제가 발생했습니다.");
+          }
+        }}
+        onClose={() => {
+          setIsSaveModalOpen(false);
+        }}
+        onTemporarySave={async () => {
+          try {
+            await handleTemporarySave(); // 임시 저장 호출
+          } catch (error) {
+            console.error("임시 저장 실패:", error);
+          }
+        }}
+        activePostId={activePostId}
+      />
     </div>
   );
 };

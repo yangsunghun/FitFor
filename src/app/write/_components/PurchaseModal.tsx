@@ -126,37 +126,37 @@ const PurchaseModal = ({
     });
   };
 
-      // Supabase에서 이미지 파일 경로 추출
-      const extractFilePath = (imageUrl: string): string => {
-        const bucketUrl = supabase.storage.from("post-images").getPublicUrl("").data.publicUrl;
-        return imageUrl.replace(bucketUrl, ""); // Bucket URL을 제거해 파일 경로만 반환
-      };
-    
-      // 이미지 삭제 핸들러
-      const handleDeleteImage = async () => {
-        try {
-          if (!image_url) {
-            alert("삭제할 이미지가 없습니다.");
-            return;
-          }
-    
-          const filePath = extractFilePath(image_url);
-    
-          // Supabase에서 이미지 삭제
-          const { error } = await supabase.storage.from("post-images").remove([filePath]);
-          if (error) {
-            console.error("Supabase에서 이미지 삭제 실패:", error);
-            alert("이미지 삭제에 실패했습니다.");
-            return;
-          }
-    
-          // 이미지 URL 제거
-          setFormState((prevState) => ({ ...prevState, image_url: "" }));
-        } catch (error) {
-          console.error("이미지 삭제 중 오류 발생:", error);
-          alert("이미지 삭제 중 문제가 발생했습니다.");
-        }
-      };
+  // Supabase에서 이미지 파일 경로 추출
+  const extractFilePath = (imageUrl: string): string => {
+    const bucketUrl = supabase.storage.from("post-images").getPublicUrl("").data.publicUrl;
+    return imageUrl.replace(bucketUrl, ""); // Bucket URL을 제거해 파일 경로만 반환
+  };
+
+  // 이미지 삭제 핸들러
+  const handleDeleteImage = async () => {
+    try {
+      if (!image_url) {
+        alert("삭제할 이미지가 없습니다.");
+        return;
+      }
+
+      const filePath = extractFilePath(image_url);
+
+      // Supabase에서 이미지 삭제
+      const { error } = await supabase.storage.from("post-images").remove([filePath]);
+      if (error) {
+        console.error("Supabase에서 이미지 삭제 실패:", error);
+        alert("이미지 삭제에 실패했습니다.");
+        return;
+      }
+
+      // 이미지 URL 제거
+      setFormState((prevState) => ({ ...prevState, image_url: "" }));
+    } catch (error) {
+      console.error("이미지 삭제 중 오류 발생:", error);
+      alert("이미지 삭제 중 문제가 발생했습니다.");
+    }
+  };
 
   // 폼 제출 핸들러
   const handleSubmit = () => {
@@ -208,20 +208,20 @@ const PurchaseModal = ({
           <div className="relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-lg border border-bg-02 bg-bg-02">
             {image_url ? (
               <>
-              <Image
-                src={image_url}
-                alt="Uploaded"
-                layout="fill" // 부모 요소를 기준으로 채움
-                objectFit="cover" // 이미지 비율 유지하며 영역을 꽉 채움
-                className="rounded-lg"
-              />
-              <button
-              onClick={handleDeleteImage}
-              className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
-            >
-              <Trash size={16} />
-            </button>
-            </>
+                <Image
+                  src={image_url}
+                  alt="Uploaded"
+                  layout="fill" // 부모 요소를 기준으로 채움
+                  objectFit="cover" // 이미지 비율 유지하며 영역을 꽉 채움
+                  className="rounded-lg"
+                />
+                <button
+                  onClick={handleDeleteImage}
+                  className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
+                >
+                  <Trash size={16} />
+                </button>
+              </>
             ) : (
               <div className="flex h-full w-full items-center justify-center">
                 <ImageIcon size={24} className="text-text-02" />
@@ -246,7 +246,7 @@ const PurchaseModal = ({
       </div>
 
       {/* 상품명 */}
-      <div className="space-y-2 pt-6">
+      <div className="w-[30vw] max-w-full space-y-2 pt-6">
         <label className="block text-title2 font-bold">상품명</label>
         <input
           type="text"

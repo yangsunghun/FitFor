@@ -1,10 +1,12 @@
 "use client";
 
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
 import { PostWithPurchases } from "@/lib/hooks/write/useFormHanlders";
 import type { Database } from "@/lib/types/supabase";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { Trash } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 
 type TempSaveModalProps = {
@@ -14,6 +16,7 @@ type TempSaveModalProps = {
   onContinue: (post: PostWithPurchases) => void;
   onDiscard: (postId: string) => void;
   onClose: () => void;
+  onTemporarySave: () => void; // 임시 저장 로직
   activePostId: string | null; // 현재 작성 중인 Post ID
 };
 
@@ -24,6 +27,7 @@ const TempSaveModal = ({
   onContinue,
   onDiscard,
   onClose,
+  onTemporarySave,
   activePostId
 }: TempSaveModalProps) => {
   const [unsavedPosts, setUnsavedPosts] = useState<PostWithPurchases[]>([]);
@@ -31,11 +35,11 @@ const TempSaveModal = ({
 
   useEffect(() => {
     const loadUnsavedPosts = async () => {
-      if (!currentUser?.id) return; // 사용자 ID가 없으면 종료
+      if (!currentUser?.id) return;
       setLoading(true);
 
       try {
-        const posts = await fetchUnsavedPosts(currentUser.id); // userId 전달
+        const posts = await fetchUnsavedPosts(currentUser.id);
         setUnsavedPosts(posts);
       } catch (error) {
         console.error("임시 저장 게시물 가져오기 실패:", error);
@@ -45,7 +49,7 @@ const TempSaveModal = ({
     };
 
     if (isOpen) {
-      loadUnsavedPosts(); // 모달이 열릴 때마다 최신 데이터 가져오기
+      loadUnsavedPosts();
     }
   }, [isOpen, currentUser, fetchUnsavedPosts]);
 
@@ -53,64 +57,65 @@ const TempSaveModal = ({
 
   return (
     <ModalItem isOpen={isOpen} onClose={onClose}>
-      <h2>임시 저장된 게시물</h2>
+      <h2 className="text-title2 font-bold text-text-04">임시 저장</h2>
+      <hr className="my-4 w-[30vw] max-w-full" />
       {loading ? (
         <LoadingSpinner />
       ) : unsavedPosts.length === 0 ? (
         <p>임시 저장된 게시물이 없습니다.</p>
       ) : (
-        <ul>
+        <ul className="space-y-2">
           {unsavedPosts.map((post) => (
-            <li key={post.id} className="mb-4">
-              <p>{post.content || "본문 없음"}</p>
-              <p>{relativeTimeDay(post.created_at)} 작성됨</p>
-              <div className="mt-2 flex gap-2">
-                {post.id === activePostId ? (
-                  <span className="rounded bg-gray-400 px-4 py-2 text-white">작성 중...</span>
-                ) : (
-                  <button
-                    onClick={() => {
-                      if (post.id === activePostId) {
-                        alert("현재 작성 중인 글입니다.");
-                        onClose(); // 모달 닫기
-                        return;
-                      }
-                      onContinue(post); // 이어 작성하기 로직 실행
-                      onClose(); // 모달 닫기
-                    }}
-                    className="rounded bg-blue-500 px-4 py-2 text-white"
-                  >
-                    이어 작성하기
-                  </button>
-                )}
-                <button
-                  onClick={async () => {
-                    try {
-                      // 활성화된 게시글인지 확인
-                      if (post.id === activePostId) {
-                        alert("현재 작성 중인 글은 삭제할 수 없습니다.");
-                        return; // 삭제 중단
-                      }
-
-                      // 삭제 핸들러 호출 후 상태에서 제거
-                      await onDiscard(post.id);
-                      setUnsavedPosts((prevPosts) => prevPosts.filter((p) => p.id !== post.id));
-                    } catch (error) {
-                      console.error("게시글 삭제 실패:", error);
+            <li key={post.id} className="group flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                {/* 날짜 */}
+                <p className="text-caption text-text-03">{relativeTimeDay(post.created_at)}</p>
+                {/* 본문 내용 */}
+                <p
+                  className="cursor-pointer text-body text-text-04 hover:text-text-03 hover:underline"
+                  onClick={() => {
+                    if (post.id === activePostId) {
+                      alert("현재 작성 중인 글입니다.");
+                      onClose();
+                      return;
                     }
+                    onContinue(post); // 이어 작성하기 로직
+                    onClose();
                   }}
-                  className="rounded bg-red-500 px-4 py-2 text-white"
                 >
-                  삭제하기
-                </button>
+                  {post.content || "제목 없음"}
+                </p>
               </div>
+              {/* 삭제 아이콘 */}
+              <button
+                onClick={async () => {
+                  try {
+                    if (post.id === activePostId) {
+                      alert("현재 작성 중인 글은 삭제할 수 없습니다.");
+                      return;
+                    }
+                    await onDiscard(post.id); // 삭제 핸들러 호출
+                    setUnsavedPosts((prev) => prev.filter((p) => p.id !== post.id));
+                  } catch (error) {
+                    console.error("게시글 삭제 실패:", error);
+                  }
+                }}
+                className="text-text-02 hover:text-text-04"
+              >
+                <Trash size={18} />
+              </button>
             </li>
           ))}
         </ul>
       )}
-      <button onClick={onClose} className="mt-4 rounded bg-gray-300 px-4 py-2">
-        닫기
-      </button>
+      <div className="flex items-center justify-center gap-4 pt-10">
+        <Button variant="grayLine" size="md" className="text-caption" onClick={onClose}>
+          취소
+        </Button>
+        <Button variant="secondary" size="md" className="text-caption" onClick={onTemporarySave}>
+          임시 저장하기
+        </Button>
+      </div>
     </ModalItem>
   );
 };

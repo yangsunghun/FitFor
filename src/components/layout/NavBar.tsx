@@ -1,10 +1,15 @@
 "use client";
 import profileIcon from "@/assets/images/profile.svg";
+import { useNavBarStore } from "@/lib/store/useNavBarStore";
 import { BookmarkSimple, House, MagnifyingGlass, VideoCamera } from "@phosphor-icons/react";
 import Image from "next/image";
 import NavItem from "./NavItem";
 
 const NavBar = () => {
+  const { isVisible } = useNavBarStore();
+
+  if (!isVisible) return null;
+
   return (
     <nav className="fixed bottom-0 z-40 hidden w-full bg-bg-01 pb-7 text-small text-text-02 tb:block">
       <ul className="flex justify-between">

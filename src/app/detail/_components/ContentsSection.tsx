@@ -18,6 +18,8 @@ import ImageCarousel from "./ImageCarousel";
 import ImageGallery from "./ImageGallery";
 import SocialShare from "./SocialShare";
 import UserProfile from "./UserProfile";
+import { useNavBarStore } from "@/lib/store/useNavBarStore";
+import { useEffect } from "react";
 
 type Props = {
   postId: string;
@@ -29,6 +31,14 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   const userId = user?.id;
   const { post, isPending, isError } = usePostDetail(postId);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
+  const { hideNavBar, showNavBar } = useNavBarStore();
+
+  useEffect(() => {
+    hideNavBar(); // 페이지에 들어오면 NavBar 숨기기
+    return () => showNavBar(); // 페이지를 떠나면 NavBar 다시 표시
+  }, [hideNavBar, showNavBar]);
+
 
   if (isPending) return <ContentsSkeleton />;
   if (isError) return <ErrorScreen error={new Error("데이터를 불러오는 중 에러가 발생했습니다.")} />;
@@ -95,17 +105,19 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             조회수 {view} · {relativeTimeDay(created_at)}
           </p>
 
-          <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
-            <LikeButton postId={postId} styleType="detail" />
-            <BookmarkButton postId={postId} styleType="detail" showText />
-            <KakaoScript />
-            <SocialShare
-              postUrl={`https://fit4.vercel.app/detail/${postId}`}
-              postTitle={content}
-              writer={users?.nickname}
-              thumbnail={images[0]}
-            />
-          </div>
+          <MinTablet>
+            <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
+              <LikeButton postId={postId} styleType="detail" />
+              <BookmarkButton postId={postId} styleType="detail" showText />
+              <KakaoScript />
+              <SocialShare
+                postUrl={`https://fit4.vercel.app/detail/${postId}`}
+                postTitle={content}
+                writer={users?.nickname}
+                thumbnail={images[0]}
+              />
+            </div>
+          </MinTablet>
         </div>
       </article>
     </>

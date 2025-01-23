@@ -45,18 +45,18 @@ const DetailPage = async ({ params }: DetailPageProps) => {
   const postId = params.id;
 
   return (
-    <div className="md:inner pb-40 pt-10 tb:pt-[70px]">
+    <div className="md:inner pb-40 pt-10 tb:pb-20 tb:pt-[70px]">
       <ViewCounter postId={postId} />
 
       <section>
         <ContentsSection postId={postId} />
       </section>
-      <hr className="my-[3.75rem] border-line-02" />
+      <hr className="my-[3.75rem] border-line-02 tb:hidden" />
       <section className="tb:hidden">
         <PurchaseList postId={postId} />
       </section>
       <hr className="my-[3.75rem] border-line-02 tb:hidden" />
-      <section>
+      <section className="tb:hidden">
         <CommentSection postId={postId} />
       </section>
     </div>

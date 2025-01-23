@@ -1,19 +1,24 @@
 "use client";
 
+import iconExport from "@/assets/images/export.svg";
 import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import KakaoScript from "@/components/common/KakaoScript";
+import SlideOver from "@/components/ui/SlideOver";
 import { Tags } from "@/components/ui/Tags";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useNavBarStore } from "@/lib/store/useNavBarStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
-import { CaretLeft } from "@phosphor-icons/react";
+import { CaretLeft, ChatCircleDots, Export } from "@phosphor-icons/react";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import BookmarkButton from "./ButtonBookmark";
 import LikeButton from "./ButtonLike";
+import CommentListMobile from "./CommentListMobile";
+import CommentMobile from "./CommentMoblie";
 import ContentsSkeleton from "./ContentsSkeleton";
 import EditDelete from "./EditDelete";
 import ImageCarousel from "./ImageCarousel";
@@ -32,12 +37,13 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   const userId = user?.id;
   const { post, isPending, isError } = usePostDetail(postId);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
 
   const { hideNavBar, showNavBar } = useNavBarStore();
 
   useEffect(() => {
-    hideNavBar(); // 페이지에 들어오면 NavBar 숨기기
-    return () => showNavBar(); // 페이지를 떠나면 NavBar 다시 표시
+    hideNavBar();
+    return () => showNavBar();
   }, [hideNavBar, showNavBar]);
 
   if (isPending) return <ContentsSkeleton />;
@@ -48,6 +54,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   }
 
   const {
+    id,
     user_id,
     users,
     created_at,
@@ -57,6 +64,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
     view,
     images = [],
     upload_place,
+    comments,
     thumbnail_blur_url
   } = post!;
 
@@ -71,7 +79,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             <h2 className="text-title2 font-medium">게시물</h2>
           </div>
         </div>
-        <div className="inner mb-[8px]">
+        <div className="inner relative mb-[8px]">
           <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
           {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
         </div>
@@ -103,23 +111,64 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             </div>
           )}
 
-          <p className="mt-4 font-medium text-text-03">
+          <Tablet>
+            <CommentListMobile postId={postId} />
+          </Tablet>
+
+          <p className="mt-4 font-medium text-text-03 tb:mt-0 tb:text-caption mb:text-small">
             조회수 {view} · {relativeTimeDay(created_at)}
           </p>
 
           <MinTablet>
             <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
-              <LikeButton postId={postId} styleType="detail" />
-              <BookmarkButton postId={postId} styleType="detail" showText />
+              <LikeButton postId={postId} styleType="detail" iconSize={28} showNumber />
+              <BookmarkButton postId={postId} styleType="detail" iconSize={28} showText />
               <KakaoScript />
               <SocialShare
                 postUrl={`https://fit4.vercel.app/detail/${postId}`}
                 postTitle={content}
                 writer={users?.nickname}
                 thumbnail={images[0]}
+                icon={<Export size={28} />}
+                showText
               />
             </div>
           </MinTablet>
+          <Tablet>
+            <aside className="shadow-normal fixed bottom-[20px] left-1/2 flex h-[52px] min-w-[311px] -translate-x-1/2 items-center rounded-full bg-bg-01 px-[16px] text-caption font-medium">
+              <span className="flex flex-1 justify-center">
+                <LikeButton postId={postId} styleType="detailMob" iconSize={24} iconWeight="fill" showNumber />
+              </span>
+              <button
+                className="flex flex-1 items-center justify-center gap-1 text-text-02"
+                onClick={() => {
+                  setIsCommentOpen(true);
+                }}
+              >
+                <ChatCircleDots size={24} weight="fill" />
+                <span className="text-text-03">{comments}</span>
+              </button>
+              <span className="flex flex-1 justify-center">
+                <BookmarkButton postId={postId} styleType="detailMob" iconSize={24} iconWeight="fill" />
+              </span>
+              <span className="flex flex-1 justify-center">
+                <KakaoScript />
+                <SocialShare
+                  postUrl={`https://fit4.vercel.app/detail/${postId}`}
+                  postTitle={content}
+                  writer={users?.nickname}
+                  thumbnail={images[0]}
+                  icon={<Image src={iconExport} alt="" width={24} height={24} />}
+                />
+              </span>
+            </aside>
+
+            {isCommentOpen && (
+              <SlideOver title={`댓글 ${comments}`} onClose={() => setIsCommentOpen(false)}>
+                <CommentMobile postId={id} />
+              </SlideOver>
+            )}
+          </Tablet>
         </div>
       </article>
     </>

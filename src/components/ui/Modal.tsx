@@ -1,11 +1,11 @@
 "use client";
 
 import clsx from "clsx";
-import { useEffect, useRef, type MouseEvent } from "react";
+import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 
 type Props = {
   isOpen: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
   onClose: () => void;
   mode?: "default" | "imageView";
 };

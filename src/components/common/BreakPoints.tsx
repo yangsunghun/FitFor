@@ -1,8 +1,9 @@
 "use client";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import type { ReactNode } from "react";
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export const Desktop = ({ children }: Props) => {

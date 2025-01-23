@@ -36,8 +36,8 @@ const Cardpost = ({ post, isMasonry }: Props) => {
       </figure>
       <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100 tb:hidden">
         <div className="absolute right-4 top-4 z-20 flex gap-2">
-          <LikeButton postId={post.id} styleType="masonry" />
-          <BookmarkButton postId={post.id} styleType="masonry" />
+          <LikeButton postId={post.id} styleType="masonry" iconSize={20} />
+          <BookmarkButton postId={post.id} styleType="masonry" iconSize={20} />
         </div>
         <div className="absolute bottom-4 left-4 flex items-center gap-2">
           <div className="posts-center relative h-7 w-7 overflow-hidden rounded-full bg-gray-300">

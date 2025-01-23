@@ -52,7 +52,7 @@ const Listpost = ({ post }: Props) => {
         </p>
 
         <div className="absolute bottom-0 right-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03 tb:left-0 tb:right-auto tb:text-body mb:text-caption">
-          <LikeButton postId={post.id} styleType="list" />
+          <LikeButton postId={post.id} styleType="list" iconSize={28} showNumber />
           <span className="post-center pointer-events-none flex items-center gap-1">
             {isTabletOrSmaller ? (
               <ChatCircleDots size={16} className="text-text-02" weight="fill" />

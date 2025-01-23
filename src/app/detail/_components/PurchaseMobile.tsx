@@ -21,7 +21,11 @@ const PurchaseMobile = ({ postId }: PurchaseListProps) => {
   }
 
   if (!purchases || purchases.length === 0) {
-    return <p className="text-center text-subtitle font-medium text-text-02">등록된 구매처가 없습니다.</p>;
+    return (
+      <p className="w-full pb-[20px] pt-[30px] text-center text-body font-medium text-text-02">
+        등록된 구매처가 없습니다.
+      </p>
+    );
   }
 
   return (

@@ -5,6 +5,7 @@ import TQProviders from "@/components/providers/TQProvider";
 import "@/lib/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import type { ReactNode } from "react";
 
 const pretendard = localFont({
   src: "../assets/fonts/PretendardVariable.woff2",
@@ -30,8 +31,8 @@ export default function RootLayout({
   children,
   modal
 }: Readonly<{
-  children: React.ReactNode;
-  modal: React.ReactNode;
+  children: ReactNode;
+  modal: ReactNode;
 }>) {
   return (
     <html lang="ko" className="min-h-full">

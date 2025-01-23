@@ -37,7 +37,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
     "flex gap-10": styleType === "detail"
   });
 
-  const buttonClass = cn("flex justify-center items-center", {
+  const buttonClass = cn("flex justify-center items-center ", {
     "w-7 h-7 rounded-lg bg-bg-01": styleType === "masonry",
     "gap-1 tb:text-text-02": styleType === "list",
     "flex-col gap-2": styleType === "detail"
@@ -52,7 +52,7 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
           isActive={false}
           count={styleType !== "masonry" ? likeCount : null}
           onClick={() => alert("로그인이 필요합니다")}
-          inactiveIcon={<Heart {...getIconProps(false, styleType, isTabletOrSmaller)} />}
+          inactiveIcon={<Heart className="text-text-03" {...getIconProps(false, styleType, isTabletOrSmaller)} />}
           text={false}
         />
         {styleType !== "list" && (
@@ -60,7 +60,9 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
             btnStyle={buttonClass}
             isActive={false}
             onClick={() => alert("로그인이 필요합니다")}
-            inactiveIcon={<BookmarkSimple {...getIconProps(false, styleType, isTabletOrSmaller)} />}
+            inactiveIcon={
+              <BookmarkSimple className="text-text-03" {...getIconProps(false, styleType, isTabletOrSmaller)} />
+            }
             text={styleType === "detail"}
           />
         )}
@@ -81,8 +83,18 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
         isActive={isLiked}
         count={styleType !== "masonry" ? likeCount : null}
         onClick={toggleLike}
-        activeIcon={<Heart className="text-primary-default" {...getIconProps(true, styleType, isTabletOrSmaller)} />}
-        inactiveIcon={<Heart {...getIconProps(false, styleType, isTabletOrSmaller)} />}
+        activeIcon={
+          <Heart
+            className="transition-color text-primary-default duration-300"
+            {...getIconProps(true, styleType, isTabletOrSmaller)}
+          />
+        }
+        inactiveIcon={
+          <Heart
+            className="transition-color text-text-03 duration-300"
+            {...getIconProps(false, styleType, isTabletOrSmaller)}
+          />
+        }
         text={false}
       />
       {styleType !== "list" && (
@@ -91,9 +103,17 @@ const LikeSection = ({ postId, styleType = "masonry" }: LikeSectionProps) => {
           isActive={isBookmarked}
           onClick={toggleBookmark}
           activeIcon={
-            <BookmarkSimple className="text-status-info" {...getIconProps(true, styleType, isTabletOrSmaller)} />
+            <BookmarkSimple
+              className="transition-color text-status-info duration-300"
+              {...getIconProps(true, styleType, isTabletOrSmaller)}
+            />
           }
-          inactiveIcon={<BookmarkSimple {...getIconProps(false, styleType, isTabletOrSmaller)} />}
+          inactiveIcon={
+            <BookmarkSimple
+              className="transition-color text-text-03 duration-300"
+              {...getIconProps(false, styleType, isTabletOrSmaller)}
+            />
+          }
           text={styleType === "detail"}
         />
       )}

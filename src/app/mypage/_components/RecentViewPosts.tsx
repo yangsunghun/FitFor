@@ -28,7 +28,7 @@ const RecentViewPosts = () => {
       {isPending ? (
         <LoadingSpinner />
       ) : (
-        <ul className="mt-10 grid grid-cols-4 gap-6">
+        <ul className="mt-10 grid grid-cols-4 gap-6 mb:grid-cols-2 tb:grid-cols-3 tb:gap-[12px] lt:mx-4">
           {recentPosts?.map((post) => <GridPost key={post.id} post={post} />)}
         </ul>
       )}

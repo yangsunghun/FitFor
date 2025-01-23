@@ -10,7 +10,7 @@ const StatsCard = ({ title, value, className }: StatsCardProps) => {
   return (
     <div
       className={cn(
-        "container inline-flex h-[7.5rem] flex-col items-center justify-center gap-1 rounded-2xl p-6 mb:p-4 mb:h-auto text-center shadow-[0px_0px_1px_0px_rgba(0,0,0,0.08)] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.12)]",
+        "container inline-flex h-[7.5rem] flex-col items-center justify-center gap-1 rounded-2xl p-6 text-center shadow-[0px_0px_1px_0px_rgba(0,0,0,0.08)] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.12)] mb:h-auto mb:p-4 mb:shadow-none",
         className
       )}
     >

@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/Button";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 
 type AgreementContentProps = {
   closeModal: () => void;
 };
 
 const AgreementContent = ({ closeModal }: AgreementContentProps) => {
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
   return (
-    <div className="flex w-[27rem] flex-col gap-4">
-      <p className="text-title1 font-bold">개인정보 수집 방침</p>
-      <ol className="space-y-4 break-keep text-subtitle font-medium text-text-03">
+    <div className="flex w-[25.125rem] flex-col gap-4 mb:max-w-[15rem]">
+      <p className="text-title1 font-bold tb:text-title2">개인정보 수집 방침</p>
+      <ol className="space-y-4 break-keep text-subtitle font-medium text-text-03 tb:text-body">
         <li>
           <strong className="text-black">수집 항목</strong>
           <p>이름, 이메일 주소 등 서비스 이용에 필요한 최소한의 개인정보를 수집합니다.</p>
@@ -30,7 +33,7 @@ const AgreementContent = ({ closeModal }: AgreementContentProps) => {
         </li>
       </ol>
       <div className="flex w-full flex-row gap-3">
-        <Button variant="whiteLine" size="lg" className="w-full" onClick={closeModal}>
+        <Button variant="whiteLine" size={isTabletOrSmaller ? "sm" : "lg"} className="w-full" onClick={closeModal}>
           확인했습니다.
         </Button>
       </div>

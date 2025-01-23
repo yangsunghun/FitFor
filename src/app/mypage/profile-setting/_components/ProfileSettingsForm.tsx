@@ -14,8 +14,8 @@ import ProfileEditTextField from "./ProfileEditTextField";
 import ProfileImageUploadSection from "./ProfileImageUploadSection";
 
 const ProfileSettingsForm = () => {
-  const { user, setUser } = useAuthStore();
-  const router = useRouter();
+  const { user, setUser } = useAuthStore(); // 유저 정보
+  const router = useRouter(); // 저장 후 마이페이지로 이동시 필요
   const [imageFile, setImageFile] = useState<File | null>(null); // 이미지 storage 저장용
   const [imagePreview, setImagePreview] = useState<string | null>(null); // 이미지 미리보기
   const [isUploading, setIsUploading] = useState(false); // 저장 중 버튼 클릭 방지
@@ -32,7 +32,7 @@ const ProfileSettingsForm = () => {
       gender: user?.gender || ""
     },
     resolver: zodResolver(profileSettingSchema)
-  });
+  }); // 회원정보 수정 폼
 
   // 유저 정보 반영
   useEffect(() => {

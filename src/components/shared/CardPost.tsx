@@ -33,7 +33,7 @@ const Cardpost = ({ post, isMasonry }: Props) => {
           onError={() => setIsImgError(true)}
         />
       </figure>
-      <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100">
+      <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100 tb:hidden">
         <div className="absolute right-4 top-4 z-20">
           <LikeSection postId={post.id} styleType="masonry" />
         </div>

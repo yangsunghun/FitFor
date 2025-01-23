@@ -1,3 +1,4 @@
+import LikeButton from "@/app/detail/_components/ButtonLike";
 import sampleImage from "@/assets/images/image_sample.png";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import type { PostType } from "@/lib/types/post";
@@ -7,7 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Tags } from "../ui/Tags";
-import LikeSection from "./LikeSection";
 
 type Props = {
   post: PostType;
@@ -52,7 +52,7 @@ const Listpost = ({ post }: Props) => {
         </p>
 
         <div className="absolute bottom-0 right-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03 tb:left-0 tb:right-auto tb:text-body mb:text-caption">
-          <LikeSection postId={post.id} styleType="list" />
+          <LikeButton postId={post.id} styleType="list" />
           <span className="post-center pointer-events-none flex items-center gap-1">
             {isTabletOrSmaller ? (
               <ChatCircleDots size={16} className="text-text-02" weight="fill" />

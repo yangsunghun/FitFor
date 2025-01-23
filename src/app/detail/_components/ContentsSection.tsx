@@ -3,7 +3,6 @@
 import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import KakaoScript from "@/components/common/KakaoScript";
-import LikeSection from "@/components/shared/LikeSection";
 import { Tags } from "@/components/ui/Tags";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
@@ -11,6 +10,8 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { CaretLeft } from "@phosphor-icons/react";
 import Link from "next/link";
+import BookmarkButton from "./ButtonBookmark";
+import LikeButton from "./ButtonLike";
 import ContentsSkeleton from "./ContentsSkeleton";
 import EditDelete from "./EditDelete";
 import ImageCarousel from "./ImageCarousel";
@@ -76,11 +77,15 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
             {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
           </MinTablet>
-
-          <p className="mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium">{content}</p>
+          {/* <Tablet>
+            <PurchaseMobile postId={postId} />
+          </Tablet> */}
+          <p className="mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium tb:text-body">
+            {content}
+          </p>
 
           {tags.length > 0 && (
-            <div className="mt-10 flex flex-wrap gap-2">
+            <div className="mt-10 flex flex-wrap gap-2 tb:mt-[12px]">
               {tags.map((tag) => (
                 <Tags key={tag} variant="gray" size="md" label={tag} />
               ))}
@@ -91,7 +96,8 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
           </p>
 
           <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
-            <LikeSection postId={postId} styleType="detail" />
+            <LikeButton postId={postId} styleType="detail" />
+            <BookmarkButton postId={postId} styleType="detail" showText />
             <KakaoScript />
             <SocialShare
               postUrl={`https://fit4.vercel.app/detail/${postId}`}

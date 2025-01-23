@@ -1,10 +1,11 @@
+import BookmarkButton from "@/app/detail/_components/ButtonBookmark";
+import LikeButton from "@/app/detail/_components/ButtonLike";
 import sampleImage from "@/assets/images/image_sample.png";
 import type { PostType } from "@/lib/types/post";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import LikeSection from "./LikeSection";
 
 type Props = {
   post: PostType;
@@ -34,8 +35,9 @@ const Cardpost = ({ post, isMasonry }: Props) => {
         />
       </figure>
       <div className="click-box bg-black p-4 text-white opacity-0 transition-all duration-300 group-hover:bg-opacity-50 group-hover:opacity-100 tb:hidden">
-        <div className="absolute right-4 top-4 z-20">
-          <LikeSection postId={post.id} styleType="masonry" />
+        <div className="absolute right-4 top-4 z-20 flex gap-2">
+          <LikeButton postId={post.id} styleType="masonry" />
+          <BookmarkButton postId={post.id} styleType="masonry" />
         </div>
         <div className="absolute bottom-4 left-4 flex items-center gap-2">
           <div className="posts-center relative h-7 w-7 overflow-hidden rounded-full bg-gray-300">

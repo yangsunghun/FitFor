@@ -60,6 +60,10 @@
   .shadow-heavy {
     @apply shadow-[0px_0px_8px_0px_rgba(0,0,0,0.08)] shadow-[0px_16px_20px_0px_rgba(0,0,0,0.12)] shadow-[0px_8px_16px_0px_rgba(0,0,0,0.08)];
   }
+
+  .image-modal .carousel {
+    @apply fixed inset-0 flex h-screen w-screen items-center;
+  }
 }
 
 .image-modal .swiper .swiper-pagination {

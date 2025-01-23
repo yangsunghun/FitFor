@@ -9,6 +9,8 @@ import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { CaretLeft } from "@phosphor-icons/react";
+import Link from "next/link";
 import ContentsSkeleton from "./ContentsSkeleton";
 import EditDelete from "./EditDelete";
 import ImageCarousel from "./ImageCarousel";
@@ -49,19 +51,27 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
 
   return (
     <>
-      <article className="flex flex-wrap justify-between">
-        <Tablet>
-          <div>
-            <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
-            {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
+      <Tablet>
+        <div className="fixed left-0 top-0 z-30 w-full bg-bg-01">
+          <div className="inner flex h-[60px] items-center gap-2">
+            <Link href="/home">
+              <CaretLeft className="" size={24} weight="bold" />
+            </Link>
+            <h2 className="text-title2 font-medium">게시물</h2>
           </div>
-        </Tablet>
+        </div>
+        <div className="inner mb-[8px]">
+          <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
+          {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
+        </div>
+      </Tablet>
+      <article className="relative flex flex-wrap justify-between">
         {mode === "modal" || isTabletOrSmaller ? (
           <ImageCarousel images={images} blur={thumbnail_blur_url} />
         ) : (
           <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
         )}
-        <div className="relative w-[46%]">
+        <div className="tb:inner relative w-[46%]">
           <MinTablet>
             <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
             {mode === "page" && userId === user_id && <EditDelete postId={postId} />}

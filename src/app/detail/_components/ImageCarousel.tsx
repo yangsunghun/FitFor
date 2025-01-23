@@ -18,7 +18,7 @@ const ImageCarousel = ({ images, blur }: Props) => {
   return (
     <>
       <ImageModal isOpen={isOpen} images={images} selectedImage={selectedImage} onClose={closeModal} />
-      <div className="relative w-[48%] overflow-hidden rounded-2xl">
+      <div className="w-[48%] overflow-hidden rounded-2xl tb:w-screen tb:rounded-none">
         <Carousel slidesPerView={1} spaceBetween={0} arrow={false} pagination={true}>
           {images.map((image, index) => (
             <SwiperSlide key={index} className="thumbnail relative aspect-square w-full">

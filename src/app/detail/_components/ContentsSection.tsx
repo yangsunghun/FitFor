@@ -7,19 +7,20 @@ import { Tags } from "@/components/ui/Tags";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useNavBarStore } from "@/lib/store/useNavBarStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { CaretLeft } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useEffect } from "react";
 import BookmarkButton from "./ButtonBookmark";
 import LikeButton from "./ButtonLike";
 import ContentsSkeleton from "./ContentsSkeleton";
 import EditDelete from "./EditDelete";
 import ImageCarousel from "./ImageCarousel";
 import ImageGallery from "./ImageGallery";
+import PurchaseMobile from "./PurchaseMobile";
 import SocialShare from "./SocialShare";
 import UserProfile from "./UserProfile";
-import { useNavBarStore } from "@/lib/store/useNavBarStore";
-import { useEffect } from "react";
 
 type Props = {
   postId: string;
@@ -39,12 +40,11 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
     return () => showNavBar(); // 페이지를 떠나면 NavBar 다시 표시
   }, [hideNavBar, showNavBar]);
 
-
   if (isPending) return <ContentsSkeleton />;
   if (isError) return <ErrorScreen error={new Error("데이터를 불러오는 중 에러가 발생했습니다.")} />;
 
   if (!post) {
-    return <div>게시물을 찾을 수 없습니다.</div>;
+    return <p className="text-center text-subtitle font-medium text-text-02">게시물을 찾을 수 없습니다.</p>;
   }
 
   const {
@@ -82,15 +82,16 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
         ) : (
           <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
         )}
+        <Tablet>
+          <PurchaseMobile postId={postId} />
+        </Tablet>
         <div className="tb:inner relative w-[46%]">
           <MinTablet>
             <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
             {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
           </MinTablet>
-          {/* <Tablet>
-            <PurchaseMobile postId={postId} />
-          </Tablet> */}
-          <p className="mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium tb:text-body">
+
+          <p className="mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium tb:mt-[8px] tb:text-body">
             {content}
           </p>
 
@@ -101,6 +102,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
               ))}
             </div>
           )}
+
           <p className="mt-4 font-medium text-text-03">
             조회수 {view} · {relativeTimeDay(created_at)}
           </p>

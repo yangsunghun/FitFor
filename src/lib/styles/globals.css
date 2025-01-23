@@ -45,7 +45,7 @@
     display: none;
   }
 
-  .shadow-nomal {
+  .shadow-normal {
     @apply shadow-[0px_0px_1px_0px_rgba(0,0,0,0.08)] shadow-[0px_0px_8px_0px_rgba(0,0,0,0.12)];
   }
 

@@ -1,5 +1,5 @@
 "use client";
-import { REGIONS, TAG_GROUPS } from "@/lib/constants/constants";
+import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import useCategoryStore from "@/lib/store/useCategoryStore";
 import { useRouter } from "next/navigation";
@@ -54,7 +54,8 @@ const HeaderCategorys = ({ handleClose }: Props) => {
       <div className="text-title2">
         <p className="mb-8 font-bold">지역</p>
 
-        <ul className="flex h-[32rem] flex-col flex-wrap">
+        <p className="text-text-02">준비중입니다</p>
+        {/* <ul className="flex h-[32rem] flex-col flex-wrap">
           {REGIONS.map((region, index) => (
             <li
               key={index}
@@ -63,7 +64,7 @@ const HeaderCategorys = ({ handleClose }: Props) => {
               <button className="">{region}</button>
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
     </>
   );

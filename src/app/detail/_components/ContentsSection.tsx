@@ -1,6 +1,6 @@
 "use client";
 
-import sampleImage from "@/assets/images/image_sample.png";
+import { Tablet } from "@/components/common/BreakPoints";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import KakaoScript from "@/components/common/KakaoScript";
 import LikeSection from "@/components/shared/LikeSection";
@@ -9,12 +9,12 @@ import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
-import Image from "next/image";
 import ContentsSkeleton from "./ContentsSkeleton";
 import EditDelete from "./EditDelete";
 import ImageCarousel from "./ImageCarousel";
 import ImageGallery from "./ImageGallery";
 import SocialShare from "./SocialShare";
+import UserProfile from "./UserProfile";
 
 type Props = {
   postId: string;
@@ -49,27 +49,20 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
 
   return (
     <>
-      <article className="flex justify-between">
+      <article className="flex flex-wrap justify-between">
+        <Tablet>
+          <div>
+            <UserProfile profileImage={user?.profile_image} nickname={user?.nickname} uploadPlace={upload_place} />
+            {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
+          </div>
+        </Tablet>
         {mode === "modal" || isTabletOrSmaller ? (
           <ImageCarousel images={images} blur={thumbnail_blur_url} />
         ) : (
           <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
         )}
         <div className="relative w-[46%]">
-          <div className="flex items-center gap-4">
-            <figure className="relative h-12 w-12 overflow-hidden rounded-full border bg-gray-100">
-              <Image
-                src={users?.profile_image || sampleImage}
-                alt={`${users?.nickname || "익명"}의 프로필 이미지`}
-                fill
-                className="object-cover"
-              />
-            </figure>
-            <div>
-              <p className="text-title2 font-bold">{users?.nickname || "익명"}</p>
-              <p className="text-text-03">{upload_place}</p>
-            </div>
-          </div>
+          <UserProfile profileImage={user?.profile_image} nickname={user?.nickname} uploadPlace={upload_place} />
 
           {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
 

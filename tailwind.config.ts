@@ -153,6 +153,14 @@ const config: Config = {
           from: { transform: "scale(1)" },
           to: { transform: "scale(0.95)" }
         },
+        slideIn: {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" }
+        },
+        slideOut: {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(100%)" }
+        },
         gradient: {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
@@ -164,10 +172,44 @@ const config: Config = {
         fadeIn: "fadeIn 0.3s ease-out",
         fadeOut: "fadeOut 0.3s ease-out",
         scaleUp: "scaleUp 0.3s ease-out",
-        scaleDown: "scaleDown 0.3s ease-out"
+        scaleDown: "scaleDown 0.3s ease-out",
+        slideIn: "slideIn 0.3s ease-in-out",
+        slideOut: "slideOut 0.3s ease-in-out"
+      },
+      screens: {
+        lt: { max: "1200px" }, // 일반 노트북 크기
+        tb: { max: "768px" }, // 일반 타블렛 크기
+        mb: { max: "480px" }, // 가장 큰 폰 크기
+        mn: { max: "375px" } // 우리 모바일 디자인 시안 크기
       }
     }
   },
-  plugins: [require("tailwindcss-animate")]
+  variants: {
+    extend: {
+      backgroundColor: ["checked"], // checked 상태에서 배경색 활성화
+      borderColor: ["checked"], // checked 상태에서 테두리색 활성화
+      textColor: ["checked"] // checked 상태에서 텍스트 색상 활성화
+    }
+  },
+  plugins: [
+    require("tailwindcss-animate")
+    // function ({ addBase }: PluginAPI) { 나중에 rem 크기를 한번에 바꿀 때 사용 , 사용안할 수도 있음.
+    //   addBase({
+    //     html: {
+    //       fontSize: "16px" // 기본 크기
+    //     },
+    //     "@screen tb": {
+    //       html: {
+    //         fontSize: "14px" // 중간 값
+    //       }
+    //     },
+    //     "@screen mb": {
+    //       html: {
+    //         fontSize: "12px" // 모바일 시안을 보면 폰트가 딱 3/4 크기로 줄어들어서 12로 함.
+    //       }
+    //     }
+    //   });
+    // }
+  ]
 };
 export default config;

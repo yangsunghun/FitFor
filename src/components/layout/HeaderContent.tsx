@@ -7,7 +7,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/Button";
 import HeaderCategorys from "./HeaderCategorys";
 import SearchBar from "./SearchBar";
@@ -18,6 +18,7 @@ const HeaderContent = () => {
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
@@ -34,13 +35,15 @@ const HeaderContent = () => {
 
   return (
     <>
-      <div className="relative z-10 w-full bg-white px-6 py-3">
+      <div className="relative z-10 w-full bg-white px-6 py-4">
         <div className="relative mx-auto flex max-w-[1200px] items-center gap-[4vw]">
           <Link href="/">
-            <Image src={logoImage} alt="fitfor" />
+            <h1>
+              <Image src={logoImage} alt="fitfor" />
+            </h1>
           </Link>
 
-          <nav className="flex w-[22%] max-w-[16.5rem] justify-between text-title2 font-medium text-text-03">
+          <nav className="flex w-[22%] min-w-[190px] max-w-[16.5rem] justify-between text-title2 font-medium text-text-03">
             {!user ? (
               <button
                 onClick={() => {
@@ -51,7 +54,7 @@ const HeaderContent = () => {
                 북마크
               </button>
             ) : (
-              <Link href="/bookmarks" className="text-center">
+              <Link href="/bookmark" className="text-center">
                 북마크
               </Link>
             )}
@@ -106,13 +109,13 @@ const HeaderContent = () => {
       <div
         className={clsx(
           "absolute left-0 top-full z-10 w-full overflow-hidden bg-bg-01 shadow-sm transition-all duration-300 ease-in-out",
-          {
-            "max-h-[600px]": isOpen,
-            "max-h-0": !isOpen
-          }
+          { "pointer-events-auto visible": isOpen, "pointer-events-none invisible": !isOpen }
         )}
+        style={{ maxHeight: isOpen ? `${contentRef.current?.scrollHeight}px` : 0 }}
       >
-        <HeaderCategorys handleClose={handleClose} />
+        <div ref={contentRef} className="mx-auto flex max-w-[1200px] pb-8 pt-4">
+          <HeaderCategorys handleClose={handleClose} />
+        </div>
       </div>
       {isOpen && (
         <div

@@ -2,6 +2,7 @@
 
 import Carousel from "@/components/common/Carousel";
 import ImageModal from "@/components/shared/ImageModal";
+import useModal from "@/lib/hooks/common/useModal";
 import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
@@ -14,11 +15,8 @@ type Props = {
 };
 
 const ImageGallery = ({ images, writerSpec, blur }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, openModal, closeModal } = useModal();
   const [selectedImage, setSelectedImage] = useState(images[0]);
-
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
 
   return (
     <>

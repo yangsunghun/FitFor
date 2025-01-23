@@ -1,4 +1,5 @@
 import Header from "@/components/layout/Header";
+import NavBar from "@/components/layout/NavBar";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import TQProviders from "@/components/providers/TQProvider";
 import "@/lib/styles/globals.css";
@@ -35,8 +36,9 @@ export default function RootLayout({
         <TQProviders>
           <body className={`${pretendard.className} text-body text-text-04`}>
             <Header />
-            <main className="relative mx-auto w-[1200px] pt-24">{children}</main>
+            <main className="relative mx-auto w-full max-w-[1200px] pt-20 tb:pb-[77px] tb:pt-0">{children}</main>
             {modal && <div>{modal}</div>}
+            <NavBar />
           </body>
         </TQProviders>
       </AuthProvider>

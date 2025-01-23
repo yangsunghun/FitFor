@@ -1,27 +1,26 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { MYPAGE_MENU } from "@/lib/constants/constants";
+import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
 import AccountSettingTabs from "./AccountSettingTabs";
 import MyPosts from "./MyPosts";
 import RecentViewPosts from "./RecentViewPosts";
 import VerificationSection from "./VerificationSection";
 
-const menuTabs = ["내 게시물", "히스토리", "인증", "계정 관리"];
-
 const MypageMenu = () => {
-  // const { activeTab, handleTabChange } = useActiveTab("0");
-  // value={`tab-${activeTab}`} onValueChange={(value) => handleTabChange(value.replace('tab-', ''))}
+  const { activeTab, handleTabChange } = useActiveTabs(4);
 
   return (
     <div className="container mx-auto max-w-7xl">
       {/* 탭 네비게이션 */}
-      <Tabs defaultValue="tab-0" className="w-full h-14">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="h-14 w-full">
         <TabsList className="h-full w-full justify-start rounded-none border-t bg-transparent p-0">
-          {menuTabs.map((tab, index) => (
+          {MYPAGE_MENU.map((tab, index) => (
             <TabsTrigger
               key={`tab-${index}`}
               value={`tab-${index}`}
-              className="w-1/4 h-full rounded-none border-t-2 border-transparent px-2 py-2 text-title2 data-[state=active]:border-black data-[state=active]:shadow-none"
+              className="h-full w-1/4 rounded-none border-t-2 border-transparent px-2 py-2 text-title2 data-[state=active]:border-black data-[state=active]:shadow-none tb:text-body tb:data-[state=active]:border-primary-default tb:data-[state=active]:text-primary-default"
             >
               {tab}
             </TabsTrigger>

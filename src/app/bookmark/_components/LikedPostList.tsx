@@ -3,20 +3,20 @@
 import ErrorScreen from "@/components/common/ErrorScreen";
 import Cardpost from "@/components/shared/CardPost";
 import CardSkeleton from "@/components/shared/CardSkeleton";
-import { useBookmarks } from "@/lib/hooks/bookmarks/useBookmark";
+import { useLikedPosts } from "@/lib/hooks/bookmarks/useLikedPosts";
 import { useAuthStore } from "@/lib/store/authStore";
 import { X } from "@phosphor-icons/react";
 import { useState } from "react";
 
-const BookmarkList = () => {
+const LikedPostList = () => {
   const { user } = useAuthStore();
   const userId = user?.id;
 
-  const { ownBookmarks, isPending, isError, deleteBookmarks } = useBookmarks(userId || "");
+  const { ownlikedPosts, isPending, isError, deleteLikedPosts } = useLikedPosts(userId || "");
   const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태
 
   if (!userId) {
-    return <p>로그인이 필요합니다.</p>;
+    return <p className="mt-32 text-center text-subtitle font-medium text-text-02">로그인이 필요합니다.</p>;
   }
 
   if (isError) {
@@ -24,32 +24,34 @@ const BookmarkList = () => {
   }
 
   const handleRemoveBookmark = (postId: string) => {
-    deleteBookmarks(postId);
+    deleteLikedPosts(postId);
   };
 
   return (
     <>
-      <div className="mb-12 flex items-center justify-between">
-        <h2 className="text-title1 font-bold text-text-04">
-          북마크
-          <span className="text-title2 font-medium">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{ownBookmarks?.length}개</span>
+      <div className="mb-12 mt-8 flex items-center justify-between mb:mb-[24px]">
+        <h2 className="text-title1 font-bold text-text-04 mb:text-title2">
+          좋아요한 게시물
+          <span className="text-title2 font-medium mb:hidden">
+            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{ownlikedPosts?.length}개
+          </span>
         </h2>
         <button
           onClick={() => setIsEditing(!isEditing)}
-          className="text-title2 font-medium underline underline-offset-4"
+          className="text-title2 font-medium underline underline-offset-4 mb:text-caption"
         >
           {isEditing ? "완료" : "편집"}
         </button>
       </div>
-      {!ownBookmarks || ownBookmarks.length === 0 ? (
+      {!ownlikedPosts || ownlikedPosts.length === 0 ? (
         <p className="mt-32 text-center text-subtitle font-medium text-text-02">아직 북마크한 게시물이 없습니다.</p>
       ) : (
-        <ul className="square-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className="grid grid-cols-4 gap-6 pb-24 mb:grid-cols-2 mb:gap-[11px] tb:grid-cols-3 tb:gap-4">
           {isPending
             ? [...Array(8)].map((_, index) => <CardSkeleton key={index} />)
-            : ownBookmarks.map((post) =>
+            : ownlikedPosts.map((post) =>
                 post ? (
-                  <li key={post.id} className="searchbar-shadow relative rounded-2xl p-1">
+                  <li key={post.id} className="shadow-emphasize relative rounded-2xl p-1">
                     {isEditing && (
                       <button
                         onClick={() => handleRemoveBookmark(post.id)}
@@ -68,4 +70,4 @@ const BookmarkList = () => {
   );
 };
 
-export default BookmarkList;
+export default LikedPostList;

@@ -1,5 +1,8 @@
 import { Trash, UploadSimple } from "@phosphor-icons/react";
 import Image from "next/image";
+import { createClient } from "@/lib/utils/supabase/client";
+
+const supabase = createClient();
 
 type ProductSectionProps = {
   purchases: { image_url?: string; title?: string }[];
@@ -8,7 +11,40 @@ type ProductSectionProps = {
   onDelete: (index: number) => void;
 };
 
-const ProductSection = ({ purchases, onAdd, onEdit, onDelete }: ProductSectionProps) => (
+const ProductSection = ({ purchases, onAdd, onEdit, onDelete }: ProductSectionProps) => {
+  // Supabase에서 파일 경로 추출
+  const extractFilePath = (imageUrl: string): string => {
+    const bucketUrl = supabase.storage.from("post-images").getPublicUrl("").data.publicUrl;
+    return imageUrl.replace(bucketUrl, ""); // Bucket URL을 제거해 파일 경로만 반환
+  };
+
+  // 삭제 핸들러 (Supabase와 연동)
+  const handleDelete = async (index: number) => {
+    try {
+      const purchase = purchases[index];
+      const imageUrl = purchase.image_url;
+
+      if (!imageUrl) {
+        onDelete(index); // Supabase 없이 로컬 상태만 업데이트
+        return;
+      }
+
+      const filePath = extractFilePath(imageUrl);
+
+      // Supabase에서 파일 삭제
+      const { error } = await supabase.storage.from("post-images").remove([filePath]);
+      if (error) {
+        alert("이미지 삭제에 실패했습니다.");
+        return;
+      }
+
+      onDelete(index); // 상태 업데이트 (부모 컴포넌트에서 처리)
+    } catch (error) {
+      alert("이미지 삭제 중 문제가 발생했습니다.");
+    }
+  };
+
+  return (
   <div className="space-y-6 pt-10">
     <div className="space-y-2">
       <div className="flex items-center gap-1">
@@ -57,7 +93,7 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete }: ProductSectionPr
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete(index);
+                  handleDelete(index); // Supabase와 연동된 삭제 핸들러 호출
                 }}
                 className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
               >
@@ -75,5 +111,6 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete }: ProductSectionPr
     </div>
   </div>
 );
+}
 
 export default ProductSection;

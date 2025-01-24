@@ -59,7 +59,7 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
   const mobileUI = (
     <>
       <div className={className} ref={dropdownRef}>
-        <button onClick={toggleDropdown}>{trigger}</button>
+        <div onClick={toggleDropdown}>{trigger}</div>
       </div>
       {isOpen && (
         <>
@@ -112,7 +112,7 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
 
   return (
     <div className={className} ref={dropdownRef}>
-      <button onClick={toggleDropdown}>{trigger}</button>
+      <div onClick={toggleDropdown}>{trigger}</div>
       {isOpen && (isTabletOrSmaller ? mobileUI : desktopUI)}
     </div>
   );

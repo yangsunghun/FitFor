@@ -1,6 +1,7 @@
 "use client";
 
 import TagSection from "@/components/shared/TagSection";
+import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import { PostWithPurchases } from "@/lib/hooks/write/useFormStateHandlers";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
@@ -13,7 +14,7 @@ import LocationSection from "./_components/LocationSection";
 import ProductSection from "./_components/ProductSection";
 import PurchaseModal from "./_components/PurchaseModal";
 import TempSaveModal from "./_components/TempSaveModal";
-import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
+import ScrollTopButton from "@/components/shared/ScrollTopButton";
 
 const WritePage = () => {
   const currentUser = useAuthStore((state) => state.user);
@@ -131,10 +132,13 @@ const WritePage = () => {
         <button
           onClick={async () => {
             try {
-              // "임시 저장" 버튼 클릭 시: 임시 저장 수행 후, 최신 데이터 가져오기
-              await handleTemporarySave();
+              await handleTemporarySave(); // 임시 저장 호출
               const posts = await fetchUnsavedPosts(currentUser?.id || "");
-              setState((prev) => ({ ...prev, unsavedPosts: posts })); // 최신 데이터로 상태 갱신
+              setState((prev) => ({
+                ...prev,
+                unsavedPosts: posts,
+                activePostId: formState.postId || state.activePostId // activePostId 유지
+              }));
             } catch (error) {
               console.error("임시 저장 처리 중 오류:", error);
             }
@@ -167,6 +171,9 @@ const WritePage = () => {
           게시물 만들기
         </button>
       </div>
+
+      {/* 최상단 이동 플로팅 버튼 */}
+      <ScrollTopButton />
 
       <AddressModal
         isOpen={formState.isModalOpen}

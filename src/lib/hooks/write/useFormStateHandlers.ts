@@ -1,10 +1,10 @@
 "use client";
 
-import type { Database } from "@/lib/types/supabase";
+import { Database } from "@/lib/types/supabase";
 import { useState } from "react";
 
 // Form 상태 타입 정의
-export type FormState = {
+type FormState = {
   address: string;
   content: string;
   body_size: number[];
@@ -17,11 +17,18 @@ export type FormState = {
   isContinued: boolean;
   productToEdit: Database["public"]["Tables"]["purchase"]["Insert"] | null;
   thumbnail_blur_url: string;
-  postId: string; // 이어작성 게시글 ID
+  postId: string; // 이어작성 게시글 ID (추가)
 };
 
 export type PostWithPurchases = Database["public"]["Tables"]["posts"]["Row"] & {
   purchases: Database["public"]["Tables"]["purchase"]["Row"][];
+};
+
+export type UseFormStateHandlersReturn = {
+  formState: FormState;
+  setInitialFormState: (data: PostWithPurchases) => Promise<void>;
+  handleChange: <T extends keyof FormState>(key: T, value: FormState[T]) => void;
+  handleBodySizeChange: (index: number, value: string) => void;
 };
 
 export const useFormStateHandlers = () => {

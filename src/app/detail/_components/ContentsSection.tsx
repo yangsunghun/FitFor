@@ -7,6 +7,7 @@ import KakaoScript from "@/components/common/KakaoScript";
 import SlideOver from "@/components/ui/SlideOver";
 import { Tags } from "@/components/ui/Tags";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import { useComment } from "@/lib/hooks/detail/useComment";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useNavBarStore } from "@/lib/store/useNavBarStore";
@@ -39,6 +40,8 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const [isCommentOpen, setIsCommentOpen] = useState(false);
 
+  const { comments } = useComment(postId);
+
   const { hideNavBar, showNavBar } = useNavBarStore();
 
   useEffect(() => {
@@ -64,7 +67,6 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
     view,
     images = [],
     upload_place,
-    comments,
     thumbnail_blur_url
   } = post!;
 
@@ -86,7 +88,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
       </Tablet>
       <article className="relative flex flex-wrap justify-between">
         {mode === "modal" || isTabletOrSmaller ? (
-          <ImageCarousel images={images} blur={thumbnail_blur_url} />
+          <ImageCarousel images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
         ) : (
           <ImageGallery images={images} writerSpec={body_size} blur={thumbnail_blur_url} />
         )}
@@ -135,7 +137,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             </div>
           </MinTablet>
           <Tablet>
-            <aside className="shadow-normal fixed bottom-[20px] left-1/2 flex h-[52px] min-w-[311px] -translate-x-1/2 items-center rounded-full bg-bg-01 px-[16px] text-caption font-medium">
+            <aside className="shadow-normal fixed bottom-[20px] left-1/2 z-40 -ml-[155px] flex h-[52px] min-w-[310px] items-center rounded-full bg-bg-01 px-[16px] text-caption font-medium">
               <span className="flex flex-1 justify-center">
                 <LikeButton postId={postId} styleType="detailMob" iconSize={24} iconWeight="fill" showNumber />
               </span>
@@ -146,7 +148,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
                 }}
               >
                 <ChatCircleDots size={24} weight="fill" />
-                <span className="text-text-03">{comments}</span>
+                <span className="text-text-03">{comments.length}</span>
               </button>
               <span className="flex flex-1 justify-center">
                 <BookmarkButton postId={postId} styleType="detailMob" iconSize={24} iconWeight="fill" />
@@ -164,7 +166,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             </aside>
 
             {isCommentOpen && (
-              <SlideOver title={`댓글 ${comments}`} onClose={() => setIsCommentOpen(false)}>
+              <SlideOver title={`댓글 ${comments.length}`} onClose={() => setIsCommentOpen(false)}>
                 <CommentMobile postId={id} />
               </SlideOver>
             )}

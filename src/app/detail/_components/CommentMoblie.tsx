@@ -1,12 +1,14 @@
 "use client";
 
 import sampleImage from "@/assets/images/image_sample.png";
-import { Button } from "@/components/ui/Button";
+import { TextField } from "@/components/ui/TextField";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { PaperPlaneTilt } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CommentSectionProps = {
   postId: string;
@@ -18,9 +20,19 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
   const [comment, setComment] = useState("");
   const { comments, isPending, addComment, deleteComment } = useComment(postId);
 
-  if (isPending) {
-    return;
-  }
+  const commentsRef = useRef<HTMLUListElement>(null); // 스크롤 컨테이너 ref
+
+  // 스크롤을 맨 아래로 이동시키는 함수
+  const scrollToBottom = () => {
+    if (commentsRef.current) {
+      commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
+    }
+  };
+
+  // 댓글 배열이 변경될 때 스크롤 이동
+  useEffect(() => {
+    scrollToBottom();
+  }, [comments]);
 
   const handleDeleteComment = (id: string) => {
     if (confirm("삭제하시겠습니까?")) {
@@ -29,60 +41,75 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
     }
   };
 
+  // 로딩 중일 때
+  if (isPending) {
+    return <p>댓글을 불러오는 중입니다...</p>;
+  }
+
   return (
     <div className="inner">
-      <ul className="mt-10">
-        {comments?.map((comment) => (
-          <li key={comment.id} className="mb-4 flex w-full items-start justify-between pb-4">
-            <figure className="relative h-12 w-12 overflow-hidden rounded-full">
-              <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
-            </figure>
-            <div className="w-[calc(100%-4.25rem)]">
-              <div className="flex justify-between">
-                <p className="text-title2 font-bold">{comment.users.nickname}</p>
-                <div className="flex gap-4">
-                  <p className="text-text-03">{relativeTimeDay(comment.created_at)}</p>
-                  {userId === comment.user_id && (
-                    <button onClick={() => handleDeleteComment(comment.id)} className="text-[14px] text-red-500">
-                      삭제
-                    </button>
-                  )}
+      {/* 댓글 리스트 */}
+      <ul ref={commentsRef} className="h-[70vh] overflow-auto">
+        {comments
+          ?.slice()
+          .reverse()
+          .map((comment) => (
+            <li key={comment.id} className="mb-[24px] flex w-full items-start justify-between">
+              <figure className="relative h-[36px] w-[36px] overflow-hidden rounded-full">
+                <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
+              </figure>
+              <div className="w-[calc(100%-48px)]">
+                <div className="flex justify-between">
+                  <p className="text-body font-medium">{comment.users.nickname}</p>
+                  <div className="flex gap-2">
+                    <p className="text-small text-text-03">{relativeTimeDay(comment.created_at)}</p>
+                    {userId === comment.user_id && (
+                      <button onClick={() => handleDeleteComment(comment.id)} className="text-small text-red-500">
+                        삭제
+                      </button>
+                    )}
+                  </div>
                 </div>
+                <p className="text-body font-medium">{comment.content}</p>
               </div>
-              <p className="mt-2 text-title2 font-medium">{comment.content}</p>
-            </div>
-          </li>
-        ))}
+            </li>
+          ))}
       </ul>
 
-      <div className="mb-4 flex items-center justify-between">
-        <figure className="relative h-12 w-12 overflow-hidden rounded-full">
-          <Image src={(user && user.profile_image) || sampleImage} alt={user ? user.nickname : "비회원"} fill={true} />
-        </figure>
-        <div className="relative flex h-16 w-[calc(100%-4rem)] gap-4 overflow-hidden rounded-2xl border border-line-02">
-          <textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className="scrollbar-hide w-full max-w-[calc(100%-5rem)] resize-none px-4 py-4 text-title2 outline-none disabled:bg-bg-01"
-            placeholder={userId ? "댓글을 입력해주세요." : "로그인이 필요합니다"}
-            disabled={!userId}
-          />
+      {/* 댓글 입력 */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (userId) {
+            addComment(comment);
+            setComment("");
+          } else {
+            alert("로그인이 필요합니다.");
+          }
+        }}
+        className="relative mb-2"
+      >
+        <TextField
+          variant="default"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder={userId ? "메시지를 입력해주세요." : "로그인이 필요합니다"}
+          disabled={!userId}
+          className="w-full pr-[50px] focus:outline-none"
+        />
 
-          <Button
-            onClick={() => {
-              {
-                userId ? addComment(comment) : alert("로그인이 필요합니다.");
-              }
-              setComment("");
-            }}
-            variant={comment.trim() ? "primary" : "disabled"}
-            className="absolute right-4 top-1/2 -translate-y-1/2 whitespace-nowrap"
-            disabled={!comment.trim()}
-          >
-            입력
-          </Button>
-        </div>
-      </div>
+        <button
+          type="submit"
+          className="absolute right-4 top-1/2 -translate-y-1/2 whitespace-nowrap"
+          disabled={!comment.trim()}
+        >
+          <PaperPlaneTilt
+            size={24}
+            weight="fill"
+            className={clsx(comment.trim() ? "text-primary-default" : "text-text-02")}
+          />
+        </button>
+      </form>
     </div>
   );
 };

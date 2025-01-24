@@ -6,7 +6,7 @@ type StatsCardProps = {
   value: number;
   className?: string;
 };
-const StatsCard = ({ title, value, className }: StatsCardProps) => {
+const StatCard = ({ title, value, className }: StatsCardProps) => {
   return (
     <div
       className={cn(
@@ -23,4 +23,4 @@ const StatsCard = ({ title, value, className }: StatsCardProps) => {
   );
 };
 
-export default StatsCard;
+export default StatCard;

@@ -1,10 +1,10 @@
-import LoginContent from "@/app/(auth)/login/_components/LoginContent";
 import ModalBg from "../(.)detail/[id]/view/ModalBg";
+import LoginContentWrapper from "./_components/LoginContentWrapper";
 
 const LoginModal = () => {
   return (
     <ModalBg>
-      <LoginContent />
+      <LoginContentWrapper />
     </ModalBg>
   );
 };

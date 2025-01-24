@@ -22,7 +22,7 @@ const BookmarkButton = ({
   showText
 }: BookmarkButtonProps) => {
   const buttonClass = cn("flex justify-center items-center ", {
-    "w-7 h-7 rounded-lg bg-bg-01": styleType === "masonry",
+    "w-7 h-7 rounded-lg bg-bg-01 text-text-03": styleType === "masonry",
     "gap-1 tb:text-text-02": styleType === "list",
     "flex-col gap-2 text-text-03": styleType === "detail",
     "text-text-02": styleType === "detailMob"

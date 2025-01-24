@@ -53,6 +53,12 @@ const TempSaveModal = ({
       loadUnsavedPosts();
     }
   }, [isOpen, currentUser, fetchUnsavedPosts]);
+  
+    // 모달 닫기 핸들러
+    const handleClose = () => {
+      window.scrollTo(0, 0); // 즉시 최상단으로 이동
+      onClose(); // 기존 onClose 호출
+    };
 
   if (!isOpen) return null;
 
@@ -77,11 +83,11 @@ const TempSaveModal = ({
                   onClick={() => {
                     if (post.id === activePostId) {
                       alert("현재 작성 중인 글입니다.");
-                      onClose();
+                      handleClose(); // 최상단 이동 후 모달 닫기
                       return;
                     }
                     onContinue(post); // 이어 작성하기 로직
-                    onClose();
+                    handleClose(); // 최상단 이동 후 모달 닫기
                   }}
                 >
                   {post.content || "제목 없음"}
@@ -110,7 +116,7 @@ const TempSaveModal = ({
         </ul>
       )}
       <div className="flex items-center justify-center gap-4 pt-10">
-        <Button variant="grayLine" size="md" className="text-caption" onClick={onClose}>
+        <Button variant="grayLine" size="md" className="text-caption" onClick={handleClose}>
           취소
         </Button>
         <Button variant="secondary" size="md" className="text-caption" onClick={onTemporarySave}>

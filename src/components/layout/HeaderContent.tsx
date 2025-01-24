@@ -1,7 +1,9 @@
 "use client";
 
 import logoImage from "@/assets/images/logo.svg";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useHeaderStore } from "@/lib/store/useHeaderStore";
 import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -20,6 +22,9 @@ const HeaderContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const { isVisible } = useHeaderStore();
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
@@ -32,6 +37,8 @@ const HeaderContent = () => {
     setIsOpen(false);
     setIsLoading(false);
   }, [pathname]);
+
+  if (!isVisible || isTabletOrSmaller) return null;
 
   return (
     <>

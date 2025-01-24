@@ -1,6 +1,7 @@
 import BookmarkButton from "@/app/detail/_components/ButtonBookmark";
 import LikeButton from "@/app/detail/_components/ButtonLike";
 import sampleImage from "@/assets/images/image_sample.png";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import type { PostType } from "@/lib/types/post";
 import clsx from "clsx";
 import Image from "next/image";
@@ -15,6 +16,8 @@ type Props = {
 const Cardpost = ({ post, isMasonry }: Props) => {
   const [isImgError, setIsImgError] = useState<boolean>(false);
   const imageProps = isMasonry ? { width: 500, height: 700 } : { fill: true };
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
   return (
     <div
       className={clsx(
@@ -22,7 +25,7 @@ const Cardpost = ({ post, isMasonry }: Props) => {
         isMasonry || "aspect-square"
       )}
     >
-      <Link href={`/detail/${post.id}/view`} className="click-box z-20"></Link>
+      <Link href={`/detail/${post.id}${isTabletOrSmaller ? "" : "/view"}`} className="click-box z-20"></Link>
       <figure className="relative h-full w-full">
         <Image
           src={isImgError ? sampleImage : post.images[0]}

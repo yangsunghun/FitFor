@@ -7,6 +7,8 @@ const SearchPage = () => {
     <div className="inner relative pb-40 pt-10 tb:pb-10">
       <Suspense fallback={<p></p>}>
         <SearchMobile />
+      </Suspense>
+      <Suspense fallback={<p></p>}>
         <SearchContents />
       </Suspense>
     </div>

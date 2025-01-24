@@ -61,12 +61,12 @@ const SearchBar = () => {
           onChange={(e) => handleInputChange(e.target.value)}
           className="h-12 w-full bg-transparent px-2 text-title2 font-medium outline-none placeholder:text-text-03 tb:h-[44px] tb:text-body tb:text-text-03"
         />
-        {showDropdown && (filteredTags.length > 0 || searchHistory.length > 0) && (
-          <ul className="dropdown shadow-emphasize absolute left-0 top-[calc(100%+0.75rem)] z-50 min-h-[360px] w-full rounded-2xl bg-white p-6 tb:top-[calc(100%+17px)] tb:rounded-none tb:p-0 tb:shadow-none">
+        {
+          <ul className="dropdown shadow-emphasize absolute left-0 top-[calc(100%+0.75rem)] z-50 min-h-[360px] w-full rounded-2xl bg-white p-6 tb:left-[-4.55%] tb:top-[calc(100%+17px)] tb:w-screen tb:rounded-none tb:p-0 tb:shadow-none">
             {/* 검색 기록 */}
             {searchHistory.length > 0 && inputValue.length === 0 && (
               <>
-                <li className="flex items-center justify-between py-2 tb:h-[55px] tb:p-0">
+                <li className="tb:inner flex items-center justify-between py-2 tb:h-[55px] tb:p-0">
                   <strong className="text-title2 tb:mt-[1px] tb:text-body tb:font-medium">최근 검색어</strong>
                   <button
                     className="text-text-03 tb:text-caption"
@@ -82,7 +82,7 @@ const SearchBar = () => {
                 {searchHistory.map((query, index) => (
                   <li
                     key={index}
-                    className="flex cursor-pointer justify-between py-2 text-title2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
+                    className="tb:inner flex cursor-pointer justify-between py-2 text-title2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
                   >
                     <button onClick={() => handleSelectHistory(query)} className="ellip1 flex-1 text-left">
                       {query}
@@ -103,14 +103,14 @@ const SearchBar = () => {
             {/* 자동완성(태그 중에서) */}
             {filteredTags.length > 0 && (
               <>
-                <li className="flex items-center justify-between py-2 tb:h-[55px] tb:p-0">
+                <li className="tb:inner flex items-center justify-between py-2 tb:h-[55px] tb:p-0">
                   <strong className="text-title2 tb:mt-[1px] tb:text-body tb:font-medium">연관 검색어</strong>
                 </li>
                 <li className="my-2 h-[1px] w-full bg-line-02 tb:my-0"></li>
                 {filteredTags.map((tag) => (
                   <li
                     key={tag}
-                    className="flex cursor-pointer justify-between py-2 text-title2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
+                    className="tb:inner flex cursor-pointer justify-between py-2 text-title2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
                   >
                     <button
                       onClick={() => {
@@ -125,7 +125,7 @@ const SearchBar = () => {
               </>
             )}
           </ul>
-        )}
+        }
       </form>
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { Tablet } from "@/components/common/BreakPoints";
 import Carousel from "@/components/common/Carousel";
 import ImageModal from "@/components/shared/ImageModal";
 import useModal from "@/lib/hooks/common/useModal";
@@ -29,7 +30,9 @@ const ImageCarousel = ({ images, writerSpec, blur }: Props) => {
           {images.map((image, index) => (
             <SwiperSlide key={index} className="thumbnail relative aspect-square w-full">
               <Image src={image} alt={`이미지 ${index + 1}`} fill={true} placeholder="blur" blurDataURL={blur} />
-              <button className="click-box outline-none" onClick={openModal}></button>
+              <Tablet>
+                <button className="click-box outline-none" onClick={openModal}></button>
+              </Tablet>
             </SwiperSlide>
           ))}
         </Carousel>

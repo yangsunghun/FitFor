@@ -2,6 +2,7 @@
 
 import HeaderCategorys from "@/components/layout/HeaderCategorys";
 import SearchBar from "@/components/layout/SearchBar";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -11,6 +12,8 @@ const SearchMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const bodyRef = useRef<HTMLElement | null>(null);
+
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const popup = searchParams.get("popup");
@@ -45,7 +48,7 @@ const SearchMobile = () => {
 
   return (
     <>
-      {isOpen && (
+      {isOpen && isTabletOrSmaller && (
         <div className="fixed inset-0 z-20 h-screen w-screen bg-bg-01">
           <SearchBar />
           <HeaderCategorys />

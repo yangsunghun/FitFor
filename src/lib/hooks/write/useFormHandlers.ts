@@ -19,6 +19,7 @@ export const useFormHandlers = () => {
     formState: formStateHandlers.formState,
     handleChange: formStateHandlers.handleChange,
     handleBodySizeChange: formStateHandlers.handleBodySizeChange,
+    setInitialFormState: formStateHandlers.setInitialFormState || (() => {}),
 
     // Purchase 관련 핸들러
     handleAddPurchase: purchaseHandlers.handleAddPurchase,
@@ -27,6 +28,7 @@ export const useFormHandlers = () => {
 
     // Post 관련 핸들러
     handleSubmit: postHandlers.handleSubmit,
+    handleUpdate: postHandlers.handleUpdate,
 
     // Category & Tag 관련 핸들러
     toggleTagSelector: categoryTagHandlers.toggleTagSelector,

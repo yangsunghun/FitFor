@@ -3,7 +3,7 @@
 import ErrorScreen from "@/components/common/ErrorScreen";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import TagSection from "@/components/shared/TagSection";
-import { useFormHandlers } from "@/lib/hooks/write/useFormStateHandlers";
+import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import { useEditPostQuery } from "@/lib/hooks/write/usePostQueries";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";

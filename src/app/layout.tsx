@@ -49,3 +49,6 @@ export default function RootLayout({
     </html>
   );
 }
+
+// Desktop , mobile 사이즈에 따라 렌더링 시킬지 말지 => client component
+// react/responsive

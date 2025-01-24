@@ -30,7 +30,7 @@ const PurchaseMobile = ({ postId }: PurchaseListProps) => {
 
   return (
     <>
-      <ul className="flex gap-[16px] overflow-auto px-[4.375%] py-[12px]">
+      <ul className="flex gap-[16px] overflow-auto px-[4.275%] py-[12px]">
         {purchases.map((purchase: Purchase) => (
           <li
             key={purchase.id}

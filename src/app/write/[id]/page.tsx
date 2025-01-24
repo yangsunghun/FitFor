@@ -15,6 +15,7 @@ import ImageUploadSection from "../_components/ImageUploadSection";
 import LocationSection from "../_components/LocationSection";
 import ProductSection from "../_components/ProductSection";
 import PurchaseModal from "../_components/PurchaseModal";
+import ScrollTopButton from "@/components/shared/ScrollTopButton";
 
 type EditPageProps = {
   params: {
@@ -130,6 +131,9 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
           수정 완료
         </button>
       </div>
+
+      {/* 최상단 이동 플로팅 버튼 */}
+      <ScrollTopButton />
 
       <AddressModal
         isOpen={formState.isModalOpen}

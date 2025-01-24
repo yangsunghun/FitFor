@@ -3,52 +3,53 @@
 import { useAuthStore } from "@/lib/store/authStore";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useState } from "react";
-import { PostWithPurchases, useFormStateHandlers } from "./useFormStateHandlers";
+import { PostWithPurchases, UseFormStateHandlersReturn } from "./useFormStateHandlers";
 
 const supabase = createClient();
+type UseTempSaveHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "handleChange" | "setInitialFormState">;
 
-export const useTempSaveHandlers = () => {
-  const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
-  const { formState, handleChange, setInitialFormState } = useFormStateHandlers();
+// 임시 저장 게시글 가져오기 함수 (개별 내보내기)
+export const fetchUnsavedPosts = async (userId: string): Promise<PostWithPurchases[]> => {
+  try {
+    const { data: postsData, error: postsError } = await supabase
+      .from("posts")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("is_saved", true)
+      .order("created_at", { ascending: false });
+
+    if (postsError || !postsData) {
+      console.error("임시 저장된 게시물 가져오기 실패:", postsError);
+      return [];
+    }
+
+    const postIds = postsData.map((post) => post.id);
+    const { data: purchasesData, error: purchasesError } = await supabase
+      .from("purchase")
+      .select("*")
+      .in("post_id", postIds);
+
+    if (purchasesError) {
+      console.error("구매 데이터 가져오기 실패:", purchasesError);
+    }
+
+    return postsData.map((post) => ({
+      ...post,
+      purchases: purchasesData?.filter((purchase) => purchase.post_id === post.id) || []
+    }));
+  } catch (error) {
+    console.error("임시 저장된 게시물 가져오기 중 오류:", error);
+    return [];
+  }
+};
+
+// useTempSaveHandlers
+export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormState }: UseTempSaveHandlersProps) => {
+  const currentUser = useAuthStore((state) => state.user);
   const [tempSaveState, setTempSaveState] = useState({
     unsavedPosts: [] as PostWithPurchases[],
     activePostId: null as string | null
   });
-
-  // 임시 저장 게시글 가져오기 함수 (공용)
-  const fetchUnsavedPosts = async (userId: string): Promise<PostWithPurchases[]> => {
-    try {
-      const { data: postsData, error: postsError } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("is_saved", true)
-        .order("created_at", { ascending: false }); // 최신 순 정렬
-
-      if (postsError || !postsData) {
-        console.error("임시 저장된 게시물 가져오기 실패:", postsError);
-        return [];
-      }
-
-      const postIds = postsData.map((post) => post.id);
-      const { data: purchasesData, error: purchasesError } = await supabase
-        .from("purchase")
-        .select("*")
-        .in("post_id", postIds);
-
-      if (purchasesError) {
-        console.error("구매 데이터 가져오기 실패:", purchasesError);
-      }
-
-      return postsData.map((post) => ({
-        ...post,
-        purchases: purchasesData?.filter((purchase) => purchase.post_id === post.id) || []
-      }));
-    } catch (error) {
-      console.error("임시 저장된 게시물 가져오기 중 오류:", error);
-      return [];
-    }
-  };
 
   // 이어서 작성 핸들러
   const handleContinuePost = async (post: PostWithPurchases) => {
@@ -58,9 +59,8 @@ export const useTempSaveHandlers = () => {
         return;
       }
 
-      // 이어작성 상태 초기화
-      await setInitialFormState(post); // 폼 상태 초기화
-      setTempSaveState((prevState) => ({ ...prevState, activePostId: post.id })); // 활성화된 Post ID 업데이트
+      await setInitialFormState(post);
+      setTempSaveState((prevState) => ({ ...prevState, activePostId: post.id }));
       alert("이어 작성할 게시물이 불러와졌습니다.");
     } catch (error) {
       console.error("게시물 불러오기 실패:", error);
@@ -86,6 +86,7 @@ export const useTempSaveHandlers = () => {
       // 삭제 후 리스트 갱신
       const updatedPosts = await fetchUnsavedPosts(currentUser?.id || "");
       setTempSaveState((prevState) => ({ ...prevState, unsavedPosts: updatedPosts })); // 최신 상태로 갱신
+      return; // 삭제 완료 후 로직 종료
     } catch (error) {
       console.error("게시물 삭제 실패:", error);
       alert("게시물 삭제 중 오류가 발생했습니다.");
@@ -107,9 +108,9 @@ export const useTempSaveHandlers = () => {
     }
 
     try {
-      let newPostId = postId;
+      let newPostId = postId; // postId로 업데이트 여부 확인
 
-      if (isContinued && postId) {
+      if (postId) {
         // 기존 게시글 가져오기
         const { data: existingPost, error: fetchError } = await supabase
           .from("posts")
@@ -186,13 +187,13 @@ export const useTempSaveHandlers = () => {
         handleChange("postId", newPostId);
         handleChange("isContinued", true);
 
-        alert("임시 저장 완료!");
+        alert("새 게시글이 임시 저장되었습니다.");
       }
 
-      // 상품 데이터 저장
+      // 상품 데이터 저장 (공통)
       const purchaseData = purchases.map((purchase) => ({
         ...purchase,
-        post_id: newPostId
+        post_id: newPostId // 업데이트 또는 새 저장된 Post ID
       }));
 
       const { error: purchaseError } = await supabase.from("purchase").upsert(purchaseData);
@@ -206,6 +207,8 @@ export const useTempSaveHandlers = () => {
   };
 
   return {
+    tempSaveState,
+    setTempSaveState,
     fetchUnsavedPosts,
     handleContinuePost,
     handleDiscardPost,

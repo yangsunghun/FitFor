@@ -2,17 +2,20 @@
 
 import HeaderCategorys from "@/components/layout/HeaderCategorys";
 import SearchBar from "@/components/layout/SearchBar";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const SearchMobile = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
   const bodyRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const popup = params.get("popup");
+    const popup = searchParams.get("popup");
     setIsOpen(popup === "true");
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     if (!bodyRef.current) {
@@ -35,14 +38,17 @@ const SearchMobile = () => {
     };
   }, [isOpen]);
 
+  const handleClosePopup = () => {
+    setIsOpen(false);
+    router.replace("/search");
+  };
+
   return (
     <>
       {isOpen && (
         <div className="fixed inset-0 z-20 h-screen w-screen bg-bg-01">
-          <Suspense fallback={<p></p>}>
-            <SearchBar />
-            <HeaderCategorys />
-          </Suspense>
+          <SearchBar />
+          <HeaderCategorys />
         </div>
       )}
     </>

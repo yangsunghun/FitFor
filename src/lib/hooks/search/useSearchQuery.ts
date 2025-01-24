@@ -1,16 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 
 export const useSearchQuery = () => {
   const router = useRouter();
-  const queryFromUrl = new URLSearchParams(window.location.search).get("query") || "";
-  const pageFromUrl = parseInt(new URLSearchParams(window.location.search).get("page") || "1", 10);
-  const tagsFromUrl = new URLSearchParams(window.location.search).get("category")
-    ? JSON.parse(decodeURIComponent(new URLSearchParams(window.location.search).get("category") || "[]"))
+  const searchParams = useSearchParams();
+  const queryFromUrl = searchParams.get("query") || "";
+  const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
+  const tagsFromUrl = searchParams.get("category")
+    ? JSON.parse(decodeURIComponent(searchParams.get("category") || "[]"))
     : { gender: [], season: [], style: [], tpo: [] };
-  const sortFromUrl = new URLSearchParams(window.location.search).get("sort") || "created_at";
+  const sortFromUrl = searchParams.get("sort") || "created_at";
 
   const [inputValue, setInputValue] = useState(queryFromUrl);
   const [query, setQuery] = useState(queryFromUrl);

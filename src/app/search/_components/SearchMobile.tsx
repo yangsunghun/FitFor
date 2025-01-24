@@ -39,7 +39,7 @@ const SearchMobile = () => {
     <>
       {isOpen && (
         <div className="fixed inset-0 z-20 h-screen w-screen bg-bg-01">
-          <Suspense>
+          <Suspense fallback={<p></p>}>
             <SearchBar />
             <HeaderCategorys />
           </Suspense>

@@ -34,13 +34,18 @@ const ProfileImageUploadSection = ({ setImageFile, setImagePreview, imagePreview
 
   return (
     <div
-      className="relative flex h-[12.5rem] w-[12.5rem] items-center justify-center rounded-full bg-gray-300"
+      className="relative flex h-[12.5rem] w-[12.5rem] items-center justify-center rounded-full bg-gray-300 tb:h-[7.5rem] tb:w-[7.5rem]"
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleImageDrop}
     >
       {/* 이미지 preview */}
       {imagePreview && (
-        <Image src={imagePreview} alt="Preview" fill className="h-full w-full rounded-full object-cover border border-gray-100" />
+        <Image
+          src={imagePreview}
+          alt="Preview"
+          fill
+          className="h-full w-full rounded-full border border-gray-100 object-cover"
+        />
       )}
 
       {/* 카메라 버튼 */}
@@ -52,7 +57,7 @@ const ProfileImageUploadSection = ({ setImageFile, setImagePreview, imagePreview
         id="fileInput"
         accept="image/*"
         onChange={handleImageUpload}
-        className="max-w-20 absolute -bottom-[14px] z-10 cursor-pointer opacity-0 overflow-hidden"
+        className="absolute -bottom-[14px] z-10 max-w-20 cursor-pointer overflow-hidden opacity-0 tb:-bottom-[9px] tb:max-w-12"
       />
     </div>
   );

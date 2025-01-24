@@ -22,7 +22,7 @@ const NavItem = ({ href, icon, label }: NavItemProps) => {
         href={href}
         className={clsx(
           "flex flex-col items-center py-[4px] text-center transition-colors",
-          isActive ? "font-bold text-primary-default" : "text-text-02"
+          isActive ? "fill-primary-default font-bold text-primary-default" : "text-text-02"
         )}
       >
         {icon}

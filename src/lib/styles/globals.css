@@ -67,7 +67,7 @@
 }
 
 .image-modal .swiper .swiper-pagination {
-  @apply bottom-20;
+  @apply bottom-20 tb:bottom-5;
 }
 
 .swiper .swiper-pagination .swiper-pagination-bullet {

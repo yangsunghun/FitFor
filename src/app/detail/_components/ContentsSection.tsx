@@ -135,7 +135,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             </div>
           </MinTablet>
           <Tablet>
-            <aside className="shadow-normal fixed bottom-[20px] left-1/2 flex h-[52px] min-w-[311px] -translate-x-1/2 items-center rounded-full bg-bg-01 px-[16px] text-caption font-medium">
+            <aside className="shadow-normal fixed bottom-[20px] left-1/2 z-50 -ml-[155px] flex h-[52px] min-w-[310px] items-center rounded-full bg-bg-01 px-[16px] text-caption font-medium">
               <span className="flex flex-1 justify-center">
                 <LikeButton postId={postId} styleType="detailMob" iconSize={24} iconWeight="fill" showNumber />
               </span>

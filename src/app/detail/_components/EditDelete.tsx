@@ -34,10 +34,10 @@ const EditDelete = ({ postId }: Props) => {
     <>
       <Dropdown trigger={<DotsThreeVertical size={isTabletOrSmaller ? 24 : 28} />} className="absolute right-0 top-3">
         <ul>
-          <li className="w-full whitespace-nowrap py-2 text-left font-medium transition duration-300 hover:text-primary-default">
+          <li className="w-full whitespace-nowrap py-2 text-left font-medium transition duration-300 tb:font-normal">
             <Link href={`/write/${postId}`}>수정하기</Link>
           </li>
-          <li className="w-full whitespace-nowrap py-2 text-left font-medium transition duration-300 hover:text-primary-default">
+          <li className="w-full whitespace-nowrap py-2 text-left font-medium text-primary-default transition duration-300 tb:font-normal">
             <button onClick={openModal}>삭제하기</button>
           </li>
         </ul>

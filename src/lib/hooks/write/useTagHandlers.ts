@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useFormStateHandlers } from "./useFormStateHandlers";
+import { UseFormStateHandlersReturn } from "./useFormStateHandlers";
 
-export const useTagHandlers = () => {
-  const { formState, handleChange } = useFormStateHandlers();
+type UsePurchaseHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "handleChange">;
+
+export const useTagHandlers = ({ formState, handleChange }: UsePurchaseHandlersProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // 카테고리 변경 핸들러

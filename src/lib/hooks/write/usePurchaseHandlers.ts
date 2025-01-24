@@ -1,10 +1,11 @@
 "use client";
 
-import type { Database } from "@/lib/types/supabase";
-import { useFormStateHandlers } from "./useFormStateHandlers";
+import { Database } from "@/lib/types/supabase";
+import { UseFormStateHandlersReturn } from "./useFormStateHandlers";
 
-export const usePurchaseHandlers = () => {
-  const { formState, handleChange } = useFormStateHandlers();
+type UsePurchaseHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "handleChange">;
+
+export const usePurchaseHandlers = ({ formState, handleChange }: UsePurchaseHandlersProps) => {
   const genUniqueId = () => crypto.randomUUID(); // 고유 ID 생성
 
   // 상품 추가 핸들러

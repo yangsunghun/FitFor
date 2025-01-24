@@ -7,6 +7,7 @@ import KakaoScript from "@/components/common/KakaoScript";
 import SlideOver from "@/components/ui/SlideOver";
 import { Tags } from "@/components/ui/Tags";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import { useComment } from "@/lib/hooks/detail/useComment";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useNavBarStore } from "@/lib/store/useNavBarStore";
@@ -39,6 +40,8 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const [isCommentOpen, setIsCommentOpen] = useState(false);
 
+  const { comments } = useComment(postId);
+
   const { hideNavBar, showNavBar } = useNavBarStore();
 
   useEffect(() => {
@@ -64,7 +67,6 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
     view,
     images = [],
     upload_place,
-    comments,
     thumbnail_blur_url
   } = post!;
 
@@ -146,7 +148,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
                 }}
               >
                 <ChatCircleDots size={24} weight="fill" />
-                <span className="text-text-03">{comments}</span>
+                <span className="text-text-03">{comments.length}</span>
               </button>
               <span className="flex flex-1 justify-center">
                 <BookmarkButton postId={postId} styleType="detailMob" iconSize={24} iconWeight="fill" />
@@ -164,7 +166,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             </aside>
 
             {isCommentOpen && (
-              <SlideOver title={`댓글 ${comments}`} onClose={() => setIsCommentOpen(false)}>
+              <SlideOver title={`댓글 ${comments.length}`} onClose={() => setIsCommentOpen(false)}>
                 <CommentMobile postId={id} />
               </SlideOver>
             )}

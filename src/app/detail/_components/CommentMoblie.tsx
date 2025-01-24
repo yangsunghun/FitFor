@@ -46,7 +46,7 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
 
   return (
     <div className="inner">
-      <ul ref={commentsRef} className="max-h-[70vh] overflow-auto">
+      <ul ref={commentsRef} className="h-[70vh] overflow-auto">
         {comments
           ?.slice()
           .reverse()

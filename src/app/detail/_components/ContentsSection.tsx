@@ -10,11 +10,12 @@ import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useNavBarStore } from "@/lib/store/useNavBarStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { CaretLeft, ChatCircleDots, Export } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BookmarkButton from "./ButtonBookmark";
 import LikeButton from "./ButtonLike";
 import CommentListMobile from "./CommentListMobile";
@@ -34,13 +35,19 @@ type Props = {
 
 const ContentsSection = ({ postId, mode = "page" }: Props) => {
   const { user } = useAuthStore();
-
   const userId = user?.id;
   const { post, isPending, isError } = usePostDetail(postId);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const [isCommentOpen, setIsCommentOpen] = useState(false);
 
   const { comments } = useComment(postId);
+
+  const { hideNavBar, showNavBar } = useNavBarStore();
+
+  useEffect(() => {
+    hideNavBar();
+    return () => showNavBar();
+  }, [hideNavBar, showNavBar]);
 
   if (isPending) return <ContentsSkeleton />;
   if (isError) return <ErrorScreen error={new Error("데이터를 불러오는 중 에러가 발생했습니다.")} />;

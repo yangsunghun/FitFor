@@ -7,6 +7,7 @@ import useCategoryStore from "@/lib/store/useCategoryStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
+import { Tags } from "../ui/Tags";
 
 type Tags = { [key: string]: string[] };
 type Props = {
@@ -38,29 +39,35 @@ const HeaderCategorys = ({ handleClose }: Props) => {
 
   const mobileUI = (
     <>
-      <Tabs defaultValue={TAG_GROUPS[0].key} value={activeTab} onValueChange={handleTabChange} className="h-14 w-full">
+      <Tabs
+        defaultValue={TAG_GROUPS[0].key}
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="h-[48px] w-full"
+      >
         <TabsList className="h-full w-full justify-start rounded-none border-t bg-transparent p-0">
           {TAG_GROUPS.map((group, index) => (
             <TabsTrigger
               key={group.key}
               value={`tab-${index}`}
-              className="h-full border-t-2 border-transparent px-4 py-2 text-title2 font-medium data-[state=active]:border-black data-[state=active]:text-black"
+              className="h-full rounded-none border-b-2 border-transparent px-[15px] py-[12px] text-body font-medium !shadow-none data-[state=active]:border-primary-default data-[state=active]:text-primary-default"
             >
               {group.title}
             </TabsTrigger>
           ))}
         </TabsList>
-
+        <div className="inner py-[16px]">
+          <p className="text-title2 font-bold">카테고리별 키워드</p>
+          <p className="mt-[4px] text-body text-text-03">검색이 어렵거나 생각이 나지 않을 때 이용해보세요!</p>
+        </div>
         {TAG_GROUPS.map((group, index) => (
           <TabsContent key={group.key} value={`tab-${index}`}>
-            <ul className="mr-6 flex h-[32rem] flex-col flex-wrap border-r border-line-02">
+            <ul className="inner mr-6 flex flex-wrap gap-[8px]">
               {group.tags.map((tag) => (
-                <li
-                  key={tag}
-                  onClick={handleClose}
-                  className="mb-6 w-[8.75rem] font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
-                >
-                  <button onClick={() => handleCategoryClick(group.key, tag)}>{tag}</button>
+                <li key={tag} onClick={handleClose} className="font-medium text-text-03 transition-colors duration-200">
+                  <button onClick={() => handleCategoryClick(group.key, tag)}>
+                    <Tags label={tag} variant="grayLine" size="lg" />
+                  </button>
                 </li>
               ))}
             </ul>

@@ -16,7 +16,7 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
@@ -37,7 +37,7 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
   const bodyRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (isMobile) {
+    if (isTabletOrSmaller) {
       if (!bodyRef.current) {
         bodyRef.current = document.body;
       }
@@ -54,7 +54,7 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
         }
       };
     }
-  }, [isOpen, isMobile]);
+  }, [isOpen, isTabletOrSmaller]);
 
   const mobileUI = (
     <>
@@ -113,7 +113,7 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
   return (
     <div className={className} ref={dropdownRef}>
       <button onClick={toggleDropdown}>{trigger}</button>
-      {isOpen && (isMobile ? mobileUI : desktopUI)}
+      {isOpen && (isTabletOrSmaller ? mobileUI : desktopUI)}
     </div>
   );
 };

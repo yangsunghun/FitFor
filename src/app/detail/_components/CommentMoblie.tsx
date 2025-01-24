@@ -43,7 +43,7 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
 
   // 로딩 중일 때
   if (isPending) {
-    return <p>댓글을 불러오는 중입니다...</p>;
+    return <p></p>;
   }
 
   return (
@@ -95,7 +95,7 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
           onChange={(e) => setComment(e.target.value)}
           placeholder={userId ? "메시지를 입력해주세요." : "로그인이 필요합니다"}
           disabled={!userId}
-          className="w-full pr-[50px] focus:outline-none"
+          className="w-full pr-[50px] !outline-none"
         />
 
         <button

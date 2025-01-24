@@ -1,7 +1,7 @@
 "use client";
 
 import TagSection from "@/components/shared/TagSection";
-import { PostWithPurchases, useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
+import { PostWithPurchases } from "@/lib/hooks/write/useFormStateHandlers";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { useEffect, useRef, useState } from "react";
@@ -13,12 +13,15 @@ import LocationSection from "./_components/LocationSection";
 import ProductSection from "./_components/ProductSection";
 import PurchaseModal from "./_components/PurchaseModal";
 import TempSaveModal from "./_components/TempSaveModal";
+import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 
 const WritePage = () => {
   const currentUser = useAuthStore((state) => state.user);
-  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
-  const [unsavedPosts, setUnsavedPosts] = useState<PostWithPurchases[]>([]);
-  const [activePostId, setActivePostId] = useState<string | null>(null); // 현재 작성 중인 Post ID
+  const [state, setState] = useState({
+    isSaveModalOpen: false,
+    unsavedPosts: [] as PostWithPurchases[],
+    activePostId: null as string | null
+  });
 
   const {
     formState,
@@ -52,7 +55,7 @@ const WritePage = () => {
       (async () => {
         try {
           const posts = await fetchUnsavedPostsRef.current(currentUser.id);
-          setUnsavedPosts(posts);
+          setState((prev) => ({ ...prev, unsavedPosts: posts }));
 
           if (posts.length > 0 && !hasAlertShown.current) {
             const latestPost = posts[0];
@@ -61,10 +64,10 @@ const WritePage = () => {
             );
 
             if (continueWriting) {
-              setActivePostId(latestPost.id); // 활성화된 게시글 ID 업데이트
+              setState((prev) => ({ ...prev, activePostId: latestPost.id })); // 활성화된 게시글 ID 업데이트
               await handleContinuePostRef.current(latestPost);
             } else {
-              setActivePostId(null);
+              setState((prev) => ({ ...prev, activePostId: null }));
             }
 
             hasAlertShown.current = true;
@@ -131,7 +134,7 @@ const WritePage = () => {
               // "임시 저장" 버튼 클릭 시: 임시 저장 수행 후, 최신 데이터 가져오기
               await handleTemporarySave();
               const posts = await fetchUnsavedPosts(currentUser?.id || "");
-              setUnsavedPosts(posts); // 최신 데이터로 상태 갱신
+              setState((prev) => ({ ...prev, unsavedPosts: posts })); // 최신 데이터로 상태 갱신
             } catch (error) {
               console.error("임시 저장 처리 중 오류:", error);
             }
@@ -151,14 +154,13 @@ const WritePage = () => {
               e.stopPropagation(); // 부모 버튼의 onClick 실행 방지
               try {
                 const posts = await fetchUnsavedPosts(currentUser?.id || "");
-                setUnsavedPosts(posts); // 최신 데이터로 상태 갱신
-                setIsSaveModalOpen(true); // 모달 표시
+                setState((prev) => ({ ...prev, unsavedPosts: posts, isSaveModalOpen: true }));
               } catch (error) {
                 console.error("모달 데이터 갱신 중 오류:", error);
               }
             }}
           >
-            {unsavedPosts.length}
+            {state.unsavedPosts.length}
           </span>
         </button>
         <button onClick={handleSubmit} className="rounded-lg bg-primary-default px-8 py-4 text-body text-bg-01">
@@ -186,25 +188,25 @@ const WritePage = () => {
       />
 
       <TempSaveModal
-        isOpen={isSaveModalOpen}
+        isOpen={state.isSaveModalOpen}
         currentUser={currentUser}
         fetchUnsavedPosts={fetchUnsavedPosts}
         onContinue={(post) => {
           handleContinuePost(post);
-          setActivePostId(post.id);
+          setState((prev) => ({ ...prev, activePostId: post.id }));
         }}
         onDiscard={async (postId) => {
           try {
             await handleDiscardPost(postId);
             const posts = await fetchUnsavedPosts(currentUser?.id || "");
-            setUnsavedPosts(posts);
+            setState((prev) => ({ ...prev, unsavedPosts: posts }));
           } catch (error) {
             console.error("게시글 삭제 중 오류 발생:", error);
             alert("삭제 중 문제가 발생했습니다.");
           }
         }}
         onClose={() => {
-          setIsSaveModalOpen(false);
+          setState((prev) => ({ ...prev, isSaveModalOpen: false }));
         }}
         onTemporarySave={async () => {
           try {
@@ -213,7 +215,7 @@ const WritePage = () => {
             console.error("임시 저장 실패:", error);
           }
         }}
-        activePostId={activePostId}
+        activePostId={state.activePostId}
       />
     </div>
   );

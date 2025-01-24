@@ -1,11 +1,11 @@
 "use client";
+import AuthInput from "@/archive/login/_components/AuthInput";
 import { signup } from "@/lib/utils/auth/auth";
 import { SIGNUP_FIELDS } from "@/lib/validations/authFields";
 import { signupSchema } from "@/lib/validations/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm, type FieldValues } from "react-hook-form";
-import AuthInput from "@/app/(auth)/_components/AuthInput";
 
 const RegistrationForm = () => {
   const { register, handleSubmit, formState } = useForm({

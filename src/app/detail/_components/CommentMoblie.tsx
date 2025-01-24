@@ -20,9 +20,6 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
   const [comment, setComment] = useState("");
   const { comments, isPending, addComment, deleteComment } = useComment(postId);
 
-  if (isPending) {
-    return;
-  }
   const commentsRef = useRef<HTMLUListElement>(null); // 스크롤 컨테이너 ref
 
   // 스크롤을 맨 아래로 이동시키는 함수
@@ -35,7 +32,7 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
   // 댓글 배열이 변경될 때 스크롤 이동
   useEffect(() => {
     scrollToBottom();
-  }, [comments]); // comments가 변경될 때 실행
+  }, [comments]);
 
   const handleDeleteComment = (id: string) => {
     if (confirm("삭제하시겠습니까?")) {
@@ -44,8 +41,14 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
     }
   };
 
+  // 로딩 중일 때
+  if (isPending) {
+    return <p>댓글을 불러오는 중입니다...</p>;
+  }
+
   return (
     <div className="inner">
+      {/* 댓글 리스트 */}
       <ul ref={commentsRef} className="h-[70vh] overflow-auto">
         {comments
           ?.slice()
@@ -73,7 +76,19 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
           ))}
       </ul>
 
-      <form className="relative mb-2">
+      {/* 댓글 입력 */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (userId) {
+            addComment(comment);
+            setComment("");
+          } else {
+            alert("로그인이 필요합니다.");
+          }
+        }}
+        className="relative mb-2"
+      >
         <TextField
           variant="default"
           value={comment}
@@ -84,12 +99,7 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
         />
 
         <button
-          onClick={() => {
-            {
-              userId ? addComment(comment) : alert("로그인이 필요합니다.");
-            }
-            setComment("");
-          }}
+          type="submit"
           className="absolute right-4 top-1/2 -translate-y-1/2 whitespace-nowrap"
           disabled={!comment.trim()}
         >

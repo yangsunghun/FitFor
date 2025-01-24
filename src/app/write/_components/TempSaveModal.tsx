@@ -3,7 +3,7 @@
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
-import { PostWithPurchases } from "@/lib/hooks/write/useFormHanlders";
+import { PostWithPurchases } from "@/lib/hooks/write/useFormStateHandlers";
 import type { Database } from "@/lib/types/supabase";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { Trash } from "@phosphor-icons/react";
@@ -30,21 +30,22 @@ const TempSaveModal = ({
   onTemporarySave,
   activePostId
 }: TempSaveModalProps) => {
-  const [unsavedPosts, setUnsavedPosts] = useState<PostWithPurchases[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({
+    unsavedPosts: [] as PostWithPurchases[],
+    loading: false
+  });
 
   useEffect(() => {
     const loadUnsavedPosts = async () => {
       if (!currentUser?.id) return;
-      setLoading(true);
+      setState((prev) => ({ ...prev, loading: true }));
 
       try {
         const posts = await fetchUnsavedPosts(currentUser.id);
-        setUnsavedPosts(posts);
+        setState({ unsavedPosts: posts, loading: false });
       } catch (error) {
         console.error("임시 저장 게시물 가져오기 실패:", error);
-      } finally {
-        setLoading(false);
+        setState((prev) => ({ ...prev, loading: false }));
       }
     };
 
@@ -59,13 +60,13 @@ const TempSaveModal = ({
     <ModalItem isOpen={isOpen} onClose={onClose}>
       <h2 className="text-title2 font-bold text-text-04">임시 저장</h2>
       <hr className="my-4 w-[30vw] max-w-full" />
-      {loading ? (
+      {state.loading ? (
         <LoadingSpinner />
-      ) : unsavedPosts.length === 0 ? (
+      ) : state.unsavedPosts.length === 0 ? (
         <p>임시 저장된 게시물이 없습니다.</p>
       ) : (
         <ul className="space-y-2">
-          {unsavedPosts.map((post) => (
+          {state.unsavedPosts.map((post) => (
             <li key={post.id} className="group flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {/* 날짜 */}
@@ -95,7 +96,7 @@ const TempSaveModal = ({
                       return;
                     }
                     await onDiscard(post.id); // 삭제 핸들러 호출
-                    setUnsavedPosts((prev) => prev.filter((p) => p.id !== post.id));
+                    setState((prev) => ({ ...prev, unsavedPosts: prev.unsavedPosts.filter((p) => p.id !== post.id) }));
                   } catch (error) {
                     console.error("게시글 삭제 실패:", error);
                   }

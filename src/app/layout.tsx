@@ -44,7 +44,7 @@ export default function RootLayout({
               <Header />
             </MinTablet>
             <main className="relative mx-auto w-full max-w-[1200px] pt-20 tb:pb-[77px] tb:pt-0">{children}</main>
-            <MinTablet>{modal}</MinTablet>
+            {modal}
             <Tablet>
               <NavBar />
             </Tablet>

@@ -61,7 +61,7 @@ const SearchBar = () => {
           onChange={(e) => handleInputChange(e.target.value)}
           className="h-12 w-full bg-transparent px-2 text-title2 font-medium outline-none placeholder:text-text-03 tb:h-[44px] tb:text-body tb:text-text-03"
         />
-        {
+        {showDropdown && (filteredTags.length > 0 || searchHistory.length > 0) && (
           <ul className="dropdown shadow-emphasize absolute left-0 top-[calc(100%+0.75rem)] z-50 min-h-[360px] w-full rounded-2xl bg-white p-6 tb:left-[-4.55%] tb:top-[calc(100%+17px)] tb:w-screen tb:rounded-none tb:p-0 tb:shadow-none">
             {/* 검색 기록 */}
             {searchHistory.length > 0 && inputValue.length === 0 && (
@@ -125,7 +125,7 @@ const SearchBar = () => {
               </>
             )}
           </ul>
-        }
+        )}
       </form>
     </div>
   );

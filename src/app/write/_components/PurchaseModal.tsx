@@ -6,7 +6,7 @@ import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 
 const supabase = createClient();
 const genUniqueId = () => {
@@ -44,6 +44,9 @@ const PurchaseModal = ({
 
   const { title, description, buy_link, image_url, post_id } = formState;
 
+  // 로딩 상태 추가
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (productToEdit) {
       // 수정 모드에서 데이터 초기화
@@ -61,7 +64,7 @@ const PurchaseModal = ({
   }, [productToEdit]);
 
   // 입력 필드 값 변경 처리
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
@@ -104,11 +107,14 @@ const PurchaseModal = ({
     fileInput.onchange = async (e: Event) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
+        setLoading(true); // 로딩 상태 활성화
         try {
           const url = await uploadImage(file); // 이미지 업로드
           setFormState((prevState) => ({ ...prevState, image_url: url }));
         } catch (error: any) {
           alert(error.message); // 에러 알림
+        } finally {
+          setLoading(false); // 로딩 상태 비활성화
         }
       }
     };
@@ -206,13 +212,17 @@ const PurchaseModal = ({
         <div className="flex items-start gap-6">
           {/* 이미지 영역 */}
           <div className="relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-lg border border-bg-02 bg-bg-02">
-            {image_url ? (
+            {loading ? (
+              <div className="flex h-full w-full items-center justify-center bg-bg-03">
+                <span className="text-caption font-medium text-text-02">이미지 업로드 중...</span>
+              </div>
+            ) : image_url ? (
               <>
                 <Image
                   src={image_url}
                   alt="Uploaded"
-                  layout="fill" // 부모 요소를 기준으로 채움
-                  objectFit="cover" // 이미지 비율 유지하며 영역을 꽉 채움
+                  layout="fill"
+                  objectFit="cover"
                   className="rounded-lg"
                 />
                 <button
@@ -238,8 +248,9 @@ const PurchaseModal = ({
             <button
               className="mt-4 h-9 rounded-lg bg-bg-03 px-3 py-1 text-text-01 hover:bg-gray-800"
               onClick={handleImageUpload}
+              disabled={loading} // 로딩 중일 때 버튼 비활성화
             >
-              이미지 업로드
+              {loading ? "업로드 중..." : "이미지 업로드"}
             </button>
           </div>
         </div>

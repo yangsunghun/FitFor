@@ -99,7 +99,6 @@ const WritePage = () => {
 
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      e.returnValue = ""; // 경고 메시지 표시
       cleanupImages(); // 이미지 정리 호출
     };
 

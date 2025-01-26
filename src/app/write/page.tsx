@@ -1,10 +1,12 @@
 "use client";
 
+import ScrollTopButton from "@/components/shared/ScrollTopButton";
 import TagSection from "@/components/shared/TagSection";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import { PostWithPurchases } from "@/lib/hooks/write/useFormStateHandlers";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { createClient } from "@/lib/utils/supabase/client";
 import { useEffect, useRef, useState } from "react";
 import AddressModal from "./_components/AddressModal";
 import BodySizeSection from "./_components/BodySizeSection";
@@ -14,7 +16,8 @@ import LocationSection from "./_components/LocationSection";
 import ProductSection from "./_components/ProductSection";
 import PurchaseModal from "./_components/PurchaseModal";
 import TempSaveModal from "./_components/TempSaveModal";
-import ScrollTopButton from "@/components/shared/ScrollTopButton";
+
+const supabase = createClient();
 
 const WritePage = () => {
   const currentUser = useAuthStore((state) => state.user);
@@ -80,6 +83,41 @@ const WritePage = () => {
     }
   }, [currentUser]);
 
+  // 새로고침/뒤로가기/페이지 이동 시 이미지 정리 로직 추가
+  useEffect(() => {
+    const cleanupImages = async () => {
+      if (formState.images.length > 0) {
+        const filePaths = formState.images.map((url) => extractFilePath(url));
+
+        const { error } = await supabase.storage.from("post-images").remove(filePaths);
+
+        if (error) {
+          console.error("이미지 삭제 실패:", error.message);
+        }
+      }
+    };
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = ""; // 경고 메시지 표시
+      cleanupImages(); // 이미지 정리 호출
+    };
+
+    // 페이지 떠날 때 이벤트 연결
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      cleanupImages(); // 컴포넌트 언마운트 시 호출
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [formState.images]);
+
+  // Supabase 파일 경로 추출 함수 (WritePage 컴포넌트 내부에 추가)
+  const extractFilePath = (imageUrl: string): string => {
+    const bucketUrl = supabase.storage.from("post-images").getPublicUrl("").data.publicUrl;
+    return imageUrl.replace(bucketUrl, ""); // URL에서 파일 경로만 추출
+  };
+
   return (
     <div className="mx-auto max-w-[700px] pb-20 pt-20">
       <div className="space-y-2 pb-10">
@@ -94,8 +132,7 @@ const WritePage = () => {
           images={formState.images}
           blur={formState.thumbnail_blur_url}
           setImages={(updateFn) => {
-            const updatedImages =
-              typeof updateFn === "function" ? updateFn(formState.images) : updateFn;
+            const updatedImages = typeof updateFn === "function" ? updateFn(formState.images) : updateFn;
             handleChange("images", updatedImages);
           }}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}

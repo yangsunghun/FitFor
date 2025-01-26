@@ -142,31 +142,21 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
           const url = await uploadImage(file);
           newImages.push(url);
           newHashes.push(hash); // 새로운 해시 추가
+
+          // 업로드 완료 후에도 Blur 이미지를 유지
+          setBlurDataCache((prev) => {
+            const updatedCache = [...prev];
+            updatedCache[targetIndex] = url; // 최종 업로드된 URL로 대체
+            return updatedCache;
+          });
         } catch (err) {
-          // 에러 메시지를 안전하게 처리
-          if (err instanceof Error) {
-            console.error("파일 업로드 중 오류:", err.message);
-            alert(err.message); // 에러 메시지 표시
-          } else {
-            console.error("파일 업로드 중 알 수 없는 오류:", err);
-            alert("알 수 없는 오류가 발생했습니다.");
-          }
+          console.error("파일 업로드 중 오류:", err);
         } finally {
-          // 로딩 상태 업데이트
           setLoadingStatus((prev) => {
             const updatedStatus = [...prev];
             updatedStatus[targetIndex] = false;
             return updatedStatus;
           });
-
-          // 블러 데이터 초기화
-          setBlurDataCache((prev) => {
-            const updatedCache = [...prev];
-            updatedCache[targetIndex] = null;
-            return updatedCache;
-          });
-
-          setBlur(""); // 현재 표시된 블러 데이터 초기화
         }
       })
     );
@@ -198,16 +188,31 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
         return;
       }
 
-      // 상태 업데이트
-      const updatedImages = images.filter((_, i) => i !== index);
-      setImages(updatedImages);
+    // 상태 업데이트
+    const updatedImages = images.filter((_, i) => i !== index);
+    setImages(updatedImages);
 
-      // 해시도 제거
-      setImageHashes((prev) => prev.filter((_, i) => i !== index));
-    } catch (error) {
-      alert("이미지 삭제 중 문제가 발생했습니다.");
+    // 해시 배열도 업데이트
+    setImageHashes((prev) => prev.filter((_, i) => i !== index));
+
+    // Blur 데이터 캐시도 업데이트
+    setBlurDataCache((prev) => {
+      const updatedCache = [...prev];
+      updatedCache.splice(index, 1); // 삭제된 인덱스 제거
+      return updatedCache;
+    });
+
+    // 썸네일이 삭제된 경우, 첫 번째 이미지로 Blur URL 재설정
+    if (index === 0 && updatedImages.length > 0) {
+      setBlur(updatedImages[0]);
+    } else if (updatedImages.length === 0) {
+      setBlur(""); // 이미지가 모두 삭제된 경우 Blur URL 초기화
     }
-  };
+  } catch (error) {
+    console.error("이미지 삭제 중 오류 발생:", error);
+    alert("이미지 삭제 중 문제가 발생했습니다.");
+  }
+};
 
   // Supabase에서 이미지 파일 경로를 추출하는 유틸리티 함수
   const extractFilePath = (imageUrl: string): string => {
@@ -250,7 +255,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             추천 사이즈 : OOO x OOO / OOO x OOO
           </p>
         </div>
-
+  
         {/* 상단 업로드 섹션 */}
         <div
           className="flex h-48 w-full items-center justify-center overflow-hidden rounded-lg bg-bg-02"
@@ -269,7 +274,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             <div className="mt-1 text-caption font-medium leading-[1.5] text-text-03">이미지 업로드하기</div>
           </div>
         </div>
-
+  
         {/* 하단 이미지 섹션 */}
         <div className="grid w-full grid-cols-4 gap-6">
           {Array(MAX_IMAGES)
@@ -278,7 +283,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
               const url = images[index]; // 현재 인덱스에 해당하는 이미지 URL
               const isUploading = loadingStatus[index];
               const currentBlur = blurDataCache[index]; // 각 이미지의 블러 데이터를 가져옴
-
+  
               return (
                 <div
                   key={index}
@@ -287,45 +292,51 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
                   }`}
                 >
                   {/* 업로드된 이미지 */}
-                  {isUploading && currentBlur ? (
-                    <div className="relative flex h-full w-full items-center justify-center">
-                      {/* 현재 블러 데이터를 사용하여 로딩 중 표시 */}
-                      {currentBlur && (
-                        <Image src={currentBlur} alt="Uploading" layout="fill" className="object-cover" />
-                      )}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white">
-                        <span>이미지 업로드 중...</span>
-                      </div>
+                  {currentBlur && (
+                    <Image
+                      src={currentBlur}
+                      alt="Uploading or Uploaded"
+                      layout="fill"
+                      className="object-cover"
+                    />
+                  )}
+                  {isUploading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white">
+                      <span>이미지 업로드 중...</span>
                     </div>
-                  ) : (
-                    url && (
-                      <>
-                        <Image src={url} alt={`Uploaded Image ${index + 1}`} layout="fill" className="object-cover" />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center space-y-2 bg-black bg-opacity-50 opacity-0 transition-opacity hover:opacity-100">
-                          {/* 삭제 버튼 */}
-                          <button
-                            onClick={() => handleDelete(index)}
-                            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
+                  )}
+                  {url && !isUploading && (
+                    <>
+                      <Image
+                        src={url}
+                        alt={`Uploaded Image ${index + 1}`}
+                        layout="fill"
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center space-y-2 bg-black bg-opacity-50 opacity-0 transition-opacity hover:opacity-100">
+                        {/* 삭제 버튼 */}
+                        <button
+                          onClick={() => handleDelete(index)}
+                          className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
+                        >
+                          <Trash size={16} />
+                        </button>
+                        {/* 썸네일 등록 버튼 */}
+                        {index !== 0 && (
+                          <Button
+                            variant="whiteLine"
+                            size="sm"
+                            className="h-6 w-24 border-none bg-transparent text-caption leading-none !text-text-01"
+                            onClick={() => {
+                              const updatedImages = [url, ...images.filter((img, i) => i !== index)];
+                              setImages(updatedImages);
+                            }}
                           >
-                            <Trash size={16} />
-                          </button>
-                          {/* 썸네일 등록 버튼 */}
-                          {index !== 0 && (
-                            <Button
-                              variant="whiteLine"
-                              size="sm"
-                              className="h-6 w-24 border-none bg-transparent text-caption leading-none !text-text-01"
-                              onClick={() => {
-                                const updatedImages = [url, ...images.filter((img, i) => i !== index)];
-                                setImages(updatedImages);
-                              }}
-                            >
-                              썸네일 등록
-                            </Button>
-                          )}
-                        </div>
-                      </>
-                    )
+                            썸네일 등록
+                          </Button>
+                        )}
+                      </div>
+                    </>
                   )}
                   {/* 첫 번째 이미지에 썸네일 표시 */}
                   {index === 0 && url && (

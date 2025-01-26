@@ -5,6 +5,7 @@ import ModalItem from "@/components/ui/Modal";
 import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Image as ImageIcon, Trash } from "@phosphor-icons/react";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useState, ChangeEvent } from "react";
 
@@ -63,6 +64,41 @@ const PurchaseModal = ({
     }
   }, [productToEdit]);
 
+    // Supabase에 이미지 업로드를 처리하는 useMutation 훅
+    const { mutate: uploadImage, isPending } = useMutation<string, Error, File>({
+      mutationFn: async (file: File): Promise<string> => {
+        if (file.size > MAX_FILE_SIZE) {
+          throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다."); // 파일 크기 확인
+        }
+  
+        // 고유 파일 이름 생성
+        const timestamp = Date.now();
+        const extension = file.name.split(".").pop() || "unknown";
+        const filePath = `purchase/${timestamp}.${extension}`;
+  
+        // Supabase 스토리지에 이미지 업로드
+        const { error } = await supabase.storage.from("post-images").upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false
+        });
+  
+        if (error) throw new Error(`이미지 업로드 실패: ${error.message}`);
+  
+        // 업로드된 이미지의 공개 URL 반환
+        const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
+  
+        if (!publicUrl) throw new Error("이미지 URL 생성 실패");
+  
+        return publicUrl;
+      },
+      onSuccess: (url: string) => {
+        setFormState((prevState) => ({ ...prevState, image_url: url })); // 이미지 URL 업데이트
+      },
+      onError: (error: Error) => {
+        alert(error.message); // 에러 알림
+      }
+    });
+
   // 입력 필드 값 변경 처리
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -72,32 +108,6 @@ const PurchaseModal = ({
     }));
   };
 
-  // 이미지 업로드 함수
-  const uploadImage = async (file: File): Promise<string> => {
-    if (file.size > MAX_FILE_SIZE) {
-      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다."); // 파일 크기 확인
-    }
-
-    // 고유 파일 이름 생성
-    const timestamp = Date.now();
-    const extension = file.name.split(".").pop() || "unknown";
-    const filePath = `purchase/${timestamp}.${extension}`;
-
-    // Supabase 스토리지에 이미지 업로드
-    const { error } = await supabase.storage.from("post-images").upload(filePath, file, {
-      cacheControl: "3600",
-      upsert: false
-    });
-
-    if (error) throw new Error(`이미지 업로드 실패: ${error.message}`);
-
-    // 업로드된 이미지의 공개 URL 반환
-    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
-
-    if (!publicUrl) throw new Error("이미지 URL 생성 실패");
-
-    return publicUrl;
-  };
 
   // 이미지 업로드 핸들러
   const handleImageUpload = () => {
@@ -107,15 +117,7 @@ const PurchaseModal = ({
     fileInput.onchange = async (e: Event) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        setLoading(true); // 로딩 상태 활성화
-        try {
-          const url = await uploadImage(file); // 이미지 업로드
-          setFormState((prevState) => ({ ...prevState, image_url: url }));
-        } catch (error: any) {
-          alert(error.message); // 에러 알림
-        } finally {
-          setLoading(false); // 로딩 상태 비활성화
-        }
+        uploadImage(file); // 업로드 실행
       }
     };
     fileInput.click(); // 파일 선택 창 열기
@@ -212,7 +214,7 @@ const PurchaseModal = ({
         <div className="flex items-start gap-6">
           {/* 이미지 영역 */}
           <div className="relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-lg border border-bg-02 bg-bg-02">
-            {loading ? (
+            {isPending ? (
               <div className="flex h-full w-full items-center justify-center bg-bg-03">
                 <span className="text-caption font-medium text-text-02">이미지 업로드 중...</span>
               </div>

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { Dispatch, DragEvent, SetStateAction, useState } from "react";
 
@@ -19,15 +20,6 @@ type ImageUploadSectionProps = {
 
 function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSectionProps) {
   const [imageHashes, setImageHashes] = useState<string[]>([]); // 업로드된 이미지 해시를 배열로 관리
-  const [loadingStatus, setLoadingStatus] = useState<boolean[]>(new Array(MAX_IMAGES).fill(false)); // 로딩 상태 배열
-
-  // 고유 파일 경로 생성
-  const genFilePath = (file: File): string => {
-    const timestamp = Date.now(); // 고유 타임스탬프 추가
-    const extension = file.name.split(".").pop() || "unknown";
-    const folder = "images";
-    return `${folder}/${timestamp}.${extension}`;
-  };
 
   // 파일 해시 생성 (SHA-256)
   const genFileHash = async (file: File): Promise<string> => {
@@ -69,32 +61,65 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
     }
   };
 
-  // Supabase에 파일 업로드
-  const uploadImage = async (file: File, index: number): Promise<string> => {
-    validateFile(file);
+  // React Query의 useMutation을 활용하여 Supabase에 파일 업로드
+  const uploadMutation = useMutation<string, Error, File>({
+    mutationFn: async (file: File): Promise<string> => {
+      validateFile(file);
 
-    // 고유 파일 경로 생성
-    const filePath = genFilePath(file);
+      // 고유 파일 경로 생성
+      const genFilePath = (file: File): string => {
+        const timestamp = Date.now(); // 고유 타임스탬프 추가
+        const extension = file.name.split(".").pop() || "unknown";
+        const folder = "images";
+        return `${folder}/${timestamp}.${extension}`;
+      };
 
-    const { error } = await supabase.storage
-      .from("post-images")
-      .upload(filePath, file, { cacheControl: "3600", upsert: false });
+      const filePath = genFilePath(file);
 
-    if (error) {
-      throw new Error(`이미지 업로드 실패: ${error.message}`);
+      // Supabase에 업로드
+      const { error } = await supabase.storage
+        .from("post-images")
+        .upload(filePath, file, { cacheControl: "3600", upsert: false });
+
+      if (error) {
+        throw new Error(`이미지 업로드 실패: ${error.message}`);
+      }
+
+      const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
+
+      if (!publicUrl) {
+        throw new Error("이미지 URL 생성 실패");
+      }
+
+      return publicUrl;
+    },
+    onSuccess: async (url, file) => {
+      const hash = await genFileHash(file);
+
+      // 중복 이미지 업로드 방지
+      if (imageHashes.includes(hash)) {
+        alert("이미 업로드된 이미지입니다.");
+        return;
+      }
+
+      // 이미지 URL 및 해시 저장
+      setImages((prev) => [...prev, url]);
+      setImageHashes((prev) => [...prev, hash]);
+
+      // Blur 데이터 생성
+      if (!blur) {
+        const blurData = await generateBlurData(file);
+        if (blurData) setBlur(blurData);
+      }
+    },
+    onError: (err) => {
+      console.error("업로드 중 오류:", err);
+      alert("이미지 업로드 중 문제가 발생했습니다.");
     }
-
-    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
-
-    if (!publicUrl) {
-      throw new Error("이미지 URL 생성 실패");
-    }
-
-    return publicUrl;
-  };
+  });
 
   // 파일 업로드와 중복 제거 로직
-  const handleFiles = async (files: File[]) => {
+  const handleFiles = (files: File[]) => {
     const existingCount = images.length;
 
     if (existingCount + files.length > MAX_IMAGES) {
@@ -102,51 +127,9 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
       return;
     }
 
-    // 새로 추가된 이미지 관련 변수
-    const newImages: string[] = [];
-    const newHashes: string[] = [];
-    const newLoadingStatus = [...loadingStatus];
-
-    files.forEach((_, index) => {
-      newLoadingStatus[existingCount + index] = true;
+    files.forEach((file) => {
+      uploadMutation.mutate(file);
     });
-    setLoadingStatus(newLoadingStatus);
-
-    await Promise.all(
-      files.map(async (file, index) => {
-        const targetIndex = existingCount + index;
-        try {
-          const hash = await genFileHash(file);
-
-          if (imageHashes.includes(hash)) {
-            alert("이미 업로드된 이미지입니다.");
-            throw new Error("중복된 파일");
-          }
-
-          const url = await uploadImage(file, targetIndex);
-          newImages.push(url);
-          newHashes.push(hash);
-
-          if (!blur) {
-            const blurData = await generateBlurData(file);
-            if (blurData) setBlur(blurData);
-          }
-        } catch (err) {
-          console.error("파일 업로드 중 오류:", err);
-        } finally {
-          setLoadingStatus((prev) => {
-            const updatedStatus = [...prev];
-            updatedStatus[targetIndex] = false;
-            return updatedStatus;
-          });
-        }
-      })
-    );
-
-    // 상태 업데이트
-    const updatedImages = [...images, ...newImages];
-    setImages(updatedImages);
-    setImageHashes((prev) => [...prev, ...newHashes]);
   };
 
   // 삭제 핸들러
@@ -248,7 +231,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             .fill(null)
             .map((_, index) => {
               const url = images[index]; // 현재 인덱스에 해당하는 이미지 URL
-              const isLoading = loadingStatus[index];
+              const isPending = uploadMutation.isPending && index >= images.length;
 
               return (
                 <div
@@ -258,7 +241,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
                   }`}
                 >
                   {/* 업로드된 이미지 */}
-                  {isLoading ? (
+                  {isPending ? (
                     <div className="relative flex h-full w-full items-center justify-center">
                       {blur && <Image src={blur} alt="Uploading" layout="fill" className="object-cover" />}
                       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white">

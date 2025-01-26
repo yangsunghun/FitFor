@@ -45,7 +45,11 @@ const MainContent = () => {
           <MasonryLayout isPending={isPending} posts={posts} />
         )}
 
-        {hasNextPage && <div ref={observerRef}>{isFetchingNextPage ? <LoadingSpinner /> : "더보기"}</div>}
+        {hasNextPage && (
+          <div ref={observerRef}>
+            {isFetchingNextPage ? <LoadingSpinner /> : <p className="text-center">스크롤하여 더보기</p>}
+          </div>
+        )}
 
         <OnboardingModal />
       </section>

@@ -4,6 +4,7 @@ import iconExport from "@/assets/images/export.svg";
 import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import KakaoScript from "@/components/common/KakaoScript";
+import MoblieHeader from "@/components/layout/MoblieHeader";
 import SlideOver from "@/components/ui/SlideOver";
 import { Tags } from "@/components/ui/Tags";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
@@ -12,9 +13,8 @@ import { usePostDetail } from "@/lib/hooks/detail/usePostDetail";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useNavBarStore } from "@/lib/store/useNavBarStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
-import { CaretLeft, ChatCircleDots, Export } from "@phosphor-icons/react";
+import { ChatCircleDots, Export } from "@phosphor-icons/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import BookmarkButton from "./ButtonBookmark";
 import LikeButton from "./ButtonLike";
@@ -73,14 +73,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   return (
     <>
       <Tablet>
-        <div className="fixed left-0 top-0 z-30 w-full bg-bg-01">
-          <div className="inner flex h-[60px] items-center gap-2">
-            <Link href="/home">
-              <CaretLeft className="" size={24} weight="bold" />
-            </Link>
-            <h2 className="text-title2 font-medium">게시물</h2>
-          </div>
-        </div>
+        <MoblieHeader pageName="게시물" action="back" />
         <div className="inner relative mb-[8px]">
           <UserProfile
             profileImage={users.profile_image}
@@ -127,8 +120,8 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             <CommentListMobile postId={postId} />
           </Tablet>
 
-          <p className="mt-4 font-medium text-text-03 tb:mt-0 tb:text-caption mb:text-small">
-            조회수 {view} · {relativeTimeDay(created_at)}
+          <p className="mt-4 font-medium text-text-03 tb:mt-2 tb:text-caption mb:text-small">
+            View {view} · {relativeTimeDay(created_at)}
           </p>
 
           <MinTablet>

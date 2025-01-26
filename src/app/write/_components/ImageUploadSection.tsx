@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/Button";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Check, Image as ImageIcon, Trash } from "@phosphor-icons/react";
-import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { Dispatch, DragEvent, SetStateAction, useState } from "react";
 
@@ -20,14 +19,7 @@ type ImageUploadSectionProps = {
 
 function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSectionProps) {
   const [imageHashes, setImageHashes] = useState<string[]>([]); // 업로드된 이미지 해시를 배열로 관리
-  const [uploadingIndexes, setUploadingIndexes] = useState<number[]>([]); // 업로드 중인 이미지 인덱스 관리
-
-  // 업로드 상태 업데이트 함수
-  const updateUploadingIndexes = (index: number, isUploading: boolean) => {
-    setUploadingIndexes((prev) =>
-      isUploading ? [...prev, index] : prev.filter((i) => i !== index)
-    );
-  };
+  const [loadingStatus, setLoadingStatus] = useState<boolean[]>(new Array(MAX_IMAGES).fill(false)); // 로딩 상태 배열
 
   // 파일 해시 생성 (SHA-256)
   const genFileHash = async (file: File): Promise<string> => {
@@ -35,6 +27,14 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
     const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  };
+
+  // 고유 파일 경로 생성
+  const genFilePath = (file: File): string => {
+    const timestamp = Date.now();
+    const extension = file.name.split(".").pop() || "unknown";
+    const folder = "images";
+    return `${folder}/${timestamp}.${extension}`;
   };
 
   // Base64 Blur 데이터 생성
@@ -69,82 +69,90 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
     }
   };
 
-  // React Query의 useMutation을 활용하여 Supabase에 파일 업로드
-  const uploadMutation = useMutation<string, Error, { file: File; index: number }>({
-    mutationFn: async ({ file, index }): Promise<string> => {
-      validateFile(file);
+  // Supabase에 파일 업로드
+  const uploadImage = async (file: File): Promise<string> => {
+    const filePath = genFilePath(file);
 
-      // 고유 파일 경로 생성
-      const genFilePath = (file: File): string => {
-        const timestamp = Date.now(); // 고유 타임스탬프 추가
-        const extension = file.name.split(".").pop() || "unknown";
-        const folder = "images";
-        return `${folder}/${timestamp}.${extension}`;
-      };
+    // Supabase에 업로드
+    const { error } = await supabase.storage
+      .from("post-images")
+      .upload(filePath, file, { cacheControl: "3600", upsert: false });
 
-      const filePath = genFilePath(file);
+    if (error) {
+      throw new Error(`이미지 업로드 실패: ${error.message}`);
+    }
 
-      // Supabase에 업로드
-      const { error } = await supabase.storage
-        .from("post-images")
-        .upload(filePath, file, { cacheControl: "3600", upsert: false });
+    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
 
-      if (error) {
-        throw new Error(`이미지 업로드 실패: ${error.message}`);
-      }
+    if (!publicUrl) {
+      throw new Error("이미지 URL 생성 실패");
+    }
 
-      const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
+    return publicUrl;
+  };
 
-      if (!publicUrl) {
-        throw new Error("이미지 URL 생성 실패");
-      }
-
-      return publicUrl;
-    },
-    onMutate: async ({ index }) => {
-      // 업로드 시작 시 해당 인덱스 추가
-      updateUploadingIndexes(index, true);
-    },
-    onSuccess: async (url, { file, index }) => {
-      const hash = await genFileHash(file);
-
-      if (imageHashes.includes(hash)) {
-        alert("이미 업로드된 이미지입니다.");
-        updateUploadingIndexes(index, false); // 업로드 상태 제거
-        return;
-      }
-
-      setImages((prev) => [...prev, url]);
-      setImageHashes((prev) => [...prev, hash]);
-
-      if (!blur) {
-        const blurData = await generateBlurData(file);
-        if (blurData) setBlur(blurData);
-      }
-
-      updateUploadingIndexes(index, false); // 업로드 상태 제거
-    },
-    onError: (_, { index }) => {
-      console.error("이미지 업로드 중 문제가 발생했습니다.");
-      alert("이미지 업로드 중 문제가 발생했습니다.");
-      updateUploadingIndexes(index, false); // 업로드 상태 제거
-    },
-    // `isPending`으로 상태 확인 가능
-  });
-
-  // 파일 업로드와 중복 제거 로직
-  const handleFiles = (files: File[]) => {
+  // 파일 업로드와 상태 업데이트 로직
+  const handleFiles = async (files: File[]) => {
     const existingCount = images.length;
-
+  
     if (existingCount + files.length > MAX_IMAGES) {
       alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
       return;
     }
-
-    files.forEach((file, idx) => {
-      const index = existingCount + idx; // 이미지 인덱스 계산
-      uploadMutation.mutate({ file, index });
+  
+    const newImages: string[] = [];
+    const newHashes: string[] = [];
+    const newLoadingStatus = [...loadingStatus];
+  
+    files.forEach((_, index) => {
+      newLoadingStatus[existingCount + index] = true;
     });
+    setLoadingStatus(newLoadingStatus);
+  
+    await Promise.all(
+      files.map(async (file, index) => {
+        const targetIndex = existingCount + index;
+        try {
+          // 해시 생성 및 중복 확인
+          const hash = await genFileHash(file);
+          if (imageHashes.includes(hash)) {
+            alert("이미 업로드된 이미지입니다.");
+            throw new Error("중복된 파일");
+          }
+  
+          const blurData = await generateBlurData(file);
+          if (blurData) {
+            setBlur(blurData); // 업로드 중 블러 이미지를 표시
+          }
+  
+          const url = await uploadImage(file);
+          newImages.push(url);
+          newHashes.push(hash); // 새로운 해시 추가
+        } catch (err) {
+          console.error("파일 업로드 중 오류:", err);
+        } finally {
+          setLoadingStatus((prev) => {
+            const updatedStatus = [...prev];
+            updatedStatus[targetIndex] = false;
+            return updatedStatus;
+          });
+  
+          setBlur(""); // 블러 이미지 제거
+        }
+      })
+    );
+  
+    // 상태 업데이트
+    const updatedImages = [...images, ...newImages];
+    setImages(updatedImages);
+  
+    // 해시 업데이트
+    setImageHashes((prev) => [...prev, ...newHashes]);
+  
+    // 가장 첫 번째 이미지 URL을 Blur URL로 설정
+    if (updatedImages.length > 0) {
+      setBlur(updatedImages[0]); // 항상 첫 번째 이미지를 thumbnail_blur_url로 설정
+    }
   };
 
   // 삭제 핸들러
@@ -246,7 +254,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             .fill(null)
             .map((_, index) => {
               const url = images[index]; // 현재 인덱스에 해당하는 이미지 URL
-              const isUploading = uploadingIndexes.includes(index);
+              const isUploading = loadingStatus[index];
 
               return (
                 <div

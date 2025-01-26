@@ -1,4 +1,5 @@
 import LikeButton from "@/app/detail/_components/ButtonLike";
+import VerifiedBadge from "@/app/mypage/_components/VerifiedBadge";
 import sampleImage from "@/assets/images/image_sample.png";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import type { PostType } from "@/lib/types/post";
@@ -33,13 +34,15 @@ const Listpost = ({ post }: Props) => {
 
       <div className="relative w-[calc(100%-12.75rem)] mb:w-[calc(100%-110px)]">
         <div className="flex items-center gap-4 tb:hidden">
-          <figure className="relative h-10 w-10 overflow-hidden rounded-full border border-line-02">
+          <figure className="relative">
             <Image
               src={post.users.profile_image || sampleImage}
               alt={`${post.users.nickname || "익명"}의 프로필 이미지`}
-              fill
-              className="object-cover"
+              width={40}
+              height={40}
+              className="h-10 w-10 overflow-hidden rounded-full border border-line-02 bg-bg-02 object-cover"
             />
+            <VerifiedBadge isVerified={post.users.is_verified || false} />
           </figure>
           <div>
             <p className="text-title2 font-bold">{post.users.nickname || "익명"}</p>

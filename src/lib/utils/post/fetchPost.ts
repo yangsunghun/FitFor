@@ -15,7 +15,8 @@ export const fetchPosts = async ({ pageParam = 1 }): Promise<FetchPostsResponse>
       *,
       users (
         nickname,
-        profile_image
+        profile_image,
+        is_verified
       )
     `
     )

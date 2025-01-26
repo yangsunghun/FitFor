@@ -82,7 +82,12 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
           </div>
         </div>
         <div className="inner relative mb-[8px]">
-          <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
+          <UserProfile
+            profileImage={users.profile_image}
+            nickname={users.nickname}
+            isVerified={users.is_verified}
+            uploadPlace={upload_place}
+          />
           {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
         </div>
       </Tablet>
@@ -97,7 +102,12 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
         </Tablet>
         <div className="tb:inner relative w-[46%]">
           <MinTablet>
-            <UserProfile profileImage={users.profile_image} nickname={users.nickname} uploadPlace={upload_place} />
+            <UserProfile
+              profileImage={users.profile_image}
+              nickname={users.nickname}
+              isVerified={users.is_verified}
+              uploadPlace={upload_place}
+            />
             {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
           </MinTablet>
 

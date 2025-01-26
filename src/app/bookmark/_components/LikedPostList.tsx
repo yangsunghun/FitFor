@@ -44,9 +44,9 @@ const LikedPostList = () => {
         </button>
       </div>
       {!ownlikedPosts || ownlikedPosts.length === 0 ? (
-        <p className="mt-32 text-center text-subtitle font-medium text-text-02">아직 북마크한 게시물이 없습니다.</p>
+        <p className="mt-32 text-center text-subtitle font-medium text-text-02">아직 좋아요한 게시물이 없습니다.</p>
       ) : (
-        <ul className="grid grid-cols-4 gap-6 pb-24 mb:grid-cols-2 mb:gap-[11px] tb:grid-cols-3 tb:gap-4">
+        <ul className="grid grid-cols-4 gap-6 pb-24 tb:grid-cols-3 tb:gap-4 mb:grid-cols-2 mb:gap-[11px]">
           {isPending
             ? [...Array(8)].map((_, index) => <CardSkeleton key={index} />)
             : ownlikedPosts.map((post) =>

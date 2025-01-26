@@ -19,9 +19,12 @@ const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: Ta
     <>
       <div className="relative flex flex-wrap justify-between bg-bg-02 text-caption font-medium text-text-03">
         {selectedTags.length > 0 && (
-          <div className="inner flex flex-wrap gap-3 py-[12px] pr-[33px]">
+          <div className="inner flex flex-wrap gap-2 py-[12px] pr-[33px]">
             {selectedTags.map(({ groupKey, tag }) => (
-              <div key={tag} className="flex items-center gap-1">
+              <div
+                key={tag}
+                className="flex items-center gap-1 rounded-[4px] border border-line-02 bg-bg-01 px-[8px] py-[4px] text-caption text-text-03"
+              >
                 <span>{tag}</span>
                 <button onClick={() => handleToggleTag(groupKey, tag)}>
                   <X />

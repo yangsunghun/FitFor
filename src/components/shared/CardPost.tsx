@@ -1,5 +1,6 @@
 import BookmarkButton from "@/app/detail/_components/ButtonBookmark";
 import LikeButton from "@/app/detail/_components/ButtonLike";
+import VerifiedBadge from "@/app/mypage/_components/VerifiedBadge";
 import sampleImage from "@/assets/images/image_sample.png";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import type { PostType } from "@/lib/types/post";
@@ -43,13 +44,16 @@ const Cardpost = ({ post, isMasonry }: Props) => {
           <BookmarkButton postId={post.id} styleType="masonry" iconSize={20} />
         </div>
         <div className="absolute bottom-4 left-4 flex items-center gap-2">
-          <div className="posts-center relative h-7 w-7 overflow-hidden rounded-full bg-gray-300">
+          <figure className="relative">
             <Image
               src={post.users.profile_image || sampleImage}
               alt={`${post.users.nickname}의 프로필 이미지`}
-              fill={true}
+              width={28}
+              height={28}
+              className="h-7 w-7 overflow-hidden rounded-full bg-bg-02 object-cover"
             />
-          </div>
+            <VerifiedBadge isVerified={post.users.is_verified || false} />
+          </figure>
           <p className="text-text-01">{post.users.nickname}</p>
         </div>
       </div>

@@ -1,18 +1,17 @@
 "use client";
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import SlideOver from "@/components/ui/SlideOver";
 import { useSearchPosts } from "@/lib/hooks/search/useSearchPosts";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import useCategoryStore from "@/lib/store/useCategoryStore";
-import { CaretLeft, SlidersHorizontal, X } from "@phosphor-icons/react";
-import clsx from "clsx";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import SearchResults from "./SearchResults";
 import SortPosts from "./SortPosts";
 import TagCheckFilters from "./TagCheckFilters";
+import TagFilterMoblie from "./TagFilterMoblie";
 import TagFilters from "./TagFilters";
 
 const SearchContents = () => {
@@ -41,35 +40,21 @@ const SearchContents = () => {
 
   return (
     <>
-      <Link href="/home" className="hidden mb:block">
-        <CaretLeft className="absolute left-0 top-[40px]" size={20} weight="bold" />
-      </Link>
       <section>
-        <TagFilters selectedGroup={selectedCategory} tags={tags} handleToggleTag={handleToggleTag} />
-        {selectedTags.length > 0 && (
-          <div className="absolute left-[35px] top-[82px] z-10 hidden flex-wrap gap-3 text-caption text-text-03 mb:flex">
-            {selectedTags.map(({ groupKey, tag }) => (
-              <div key={tag} className="flex items-center gap-1">
-                <span>{tag}</span>
-                <button onClick={() => handleToggleTag(groupKey, tag)}>
-                  <X />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        <MinTablet>
+          <TagFilters selectedGroup={selectedCategory} tags={tags} handleToggleTag={handleToggleTag} />
+        </MinTablet>
+        <Tablet>
+          <TagFilterMoblie
+            selectedGroup={selectedCategory}
+            selectedTags={selectedTags}
+            handleToggleTag={handleToggleTag}
+            setIsOpen={setIsOpen}
+          />
+        </Tablet>
       </section>
 
-      <div className="relative mb-10 flex items-center justify-end mb:mb-0 mb:h-[48px] mb:justify-between">
-        <button
-          onClick={() => setIsOpen(true)}
-          className={clsx("hidden h-[24px] w-[24px] items-center justify-center mb:flex", {
-            "text-text-03": selectedTags.length === 0,
-            "text-primary-default": selectedTags.length > 0
-          })}
-        >
-          <SlidersHorizontal size={16} weight="fill" />
-        </button>
+      <div className="relative mb-10 flex items-center justify-end tb:mb-0 tb:h-[48px]">
         <SortPosts sort={sort} handleSort={handleSort} />
       </div>
 

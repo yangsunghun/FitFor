@@ -12,7 +12,6 @@ type TagFiltersProps = {
 };
 
 const TagFilterMoblie = ({ selectedGroup, selectedTags, handleToggleTag, setIsOpen, query }: TagFiltersProps) => {
-  console.log("시발", selectedGroup);
   return (
     <>
       {selectedGroup ? (

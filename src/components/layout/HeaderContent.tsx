@@ -1,6 +1,6 @@
 "use client";
 
-import logoImage from "@/assets/images/logo.svg";
+import LogoImage from "@/assets/images/LogoImage";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useHeaderStore } from "@/lib/store/useHeaderStore";
@@ -46,7 +46,7 @@ const HeaderContent = () => {
         <div className="relative mx-auto flex max-w-[1200px] items-center gap-[4vw]">
           <Link href="/">
             <h1 className="tb:w-[80px]">
-              <Image src={logoImage} alt="fitfor" />
+              <LogoImage />
             </h1>
           </Link>
 

@@ -2,7 +2,7 @@ import MainContent from "./_components/MainContent";
 
 const MainPage = () => {
   return (
-    <div className="inner">
+    <div className="inner pb-10">
       <MainContent />
     </div>
   );

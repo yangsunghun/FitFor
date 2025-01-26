@@ -4,6 +4,7 @@ import ToggleButton from "@/components/shared/ToggleButton";
 import { useBookmarks } from "@/lib/hooks/detail/useBookmark";
 import { useAuthStore } from "@/lib/store/authStore";
 import { cn } from "@/lib/utils/common/className";
+import { toast } from "@/lib/utils/common/toast";
 import { BookmarkSimple } from "@phosphor-icons/react";
 
 type BookmarkButtonProps = {
@@ -37,7 +38,7 @@ const BookmarkButton = ({
       <ToggleButton
         btnStyle={buttonClass}
         isActive={false}
-        onClick={() => alert("로그인이 필요합니다")}
+        onClick={() => toast("로그인이 필요합니다", "warning")}
         inactiveIcon={<BookmarkSimple className="transition-color duration-300" size={iconSize} weight={iconWeight} />}
         text={showText || false}
       />

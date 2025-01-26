@@ -58,9 +58,6 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
 
   const mobileUI = (
     <>
-      <div className={className} ref={dropdownRef}>
-        <div onClick={toggleDropdown}>{trigger}</div>
-      </div>
       {isOpen && (
         <>
           <div

@@ -3,6 +3,7 @@ import Header from "@/components/layout/Header";
 import NavBar from "@/components/layout/NavBar";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import TQProviders from "@/components/providers/TQProvider";
+import Toast from "@/components/shared/Toast";
 import "@/lib/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -48,6 +49,7 @@ export default function RootLayout({
             <Tablet>
               <NavBar />
             </Tablet>
+            <Toast />
           </body>
         </TQProviders>
       </AuthProvider>

@@ -38,7 +38,7 @@ const config: Config = {
           light: "#464653"
         },
         status: {
-          success: "#00F050",
+          success: "#00bf40",
           danger: "#E74646",
           warning: "#FFCD38",
           info: "#3F8CFD"

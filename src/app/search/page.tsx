@@ -4,7 +4,7 @@ import SearchMobile from "./_components/SearchMobile";
 
 const SearchPage = () => {
   return (
-    <div className="inner relative pb-40 pt-10 tb:pb-10">
+    <div className="inner relative pb-40 pt-10 tb:pb-10 tb:pt-[60px]">
       <Suspense fallback={<p></p>}>
         <SearchMobile />
         <SearchContents />

@@ -1,40 +1,51 @@
 "use client";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
-import { cn } from "@/lib/utils/common/className";
-import { Plus } from "@phosphor-icons/react";
-import { cva, VariantProps } from "class-variance-authority";
+import { Plus, X } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Link from "next/link";
-import { forwardRef, type AnchorHTMLAttributes } from "react";
+import { useState, type ReactNode } from "react";
 
-const buttonVariants = cva(
-  "inline-block w-[4.5rem] h-[4.5rem] rounded-full transition duration-300 fixed bottom-12 right-[6.875rem] tb:bottom-[100px] tb:right-[24px] tb:w-[40px] tb:h-[40px] flex justify-center items-center", // 공통 스타일
-  {
-    variants: {
-      variant: {
-        primary: "bg-primary-default !text-text-01 hover:bg-primary-light active:bg-primary-strong",
-        primaryLine: "bg-white border border-primary-default !text-primary-default hover:bg-pink-50 active:bg-pink-100",
-        disabled: "bg-bg-02 !text-text-01",
-        disabledLine: "bg-bg-01 border border-line-02 !text-text-02",
-        whiteLine: "bg-bg-01 border border-line-03 !text-text-04"
-      }
-    },
-    defaultVariants: {
-      variant: "primary"
-    }
-  }
-);
+type Props = {
+  href: string;
+  icon: ReactNode;
+};
 
-export type ButtonProps = AnchorHTMLAttributes<HTMLAnchorElement> & VariantProps<typeof buttonVariants>;
+const FloatingButton = ({ href, icon }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-const FloatingButton = forwardRef<HTMLAnchorElement, ButtonProps>(({ className, variant, href, ...props }, ref) => {
+  const toggleOpen = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+  const Icon = isOpen ? X : Plus; // isOpen 상태에 따라 사용할 컴포넌트 선택
+  const size = isTabletOrSmaller ? 24 : 48; // 디바이스 크기에 따라 아이콘 크기 설정
   return (
-    <Link ref={ref} href={href || "#"} className={cn(buttonVariants({ variant }), className)} {...props}>
-      {isTabletOrSmaller ? <Plus size={24} weight="bold" /> : <Plus size={48} />}
-    </Link>
+    <div className="fixed bottom-12 right-[6.875rem] z-50 h-fit w-fit transition duration-300 tb:bottom-[80px] tb:right-[24px]">
+      <button
+        onClick={toggleOpen}
+        className={clsx(
+          "flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full !text-text-01 transition duration-300 tb:h-[40px] tb:w-[40px]",
+          { "bg-primary-default": !isOpen, "bg-secondary-light": isOpen }
+        )}
+      >
+        <Icon size={size} weight="bold" />
+      </button>
+      <ul
+        className={clsx(
+          "shadow-emphasize absolute bottom-[calc(100%+10px)] right-0 rounded-lg bg-bg-01 px-3 transition duration-300",
+          {
+            "pointer-events-auto animate-slideIn opacity-100": isOpen,
+            "pointer-events-none animate-slideOut opacity-0": !isOpen
+          }
+        )}
+      >
+        <li className="w-full whitespace-nowrap py-2 text-left font-medium tb:font-normal">
+          <Link href={href || "#"}>{icon}새 글 작성하기</Link>
+        </li>
+      </ul>
+    </div>
   );
-});
+};
 
-FloatingButton.displayName = "FloatingButton";
-
-export { buttonVariants, FloatingButton };
+export default FloatingButton;

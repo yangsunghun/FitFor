@@ -4,6 +4,7 @@ import Dropdown from "@/components/ui/Dropdown";
 import ModalItem from "@/components/ui/Modal";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import useModal from "@/lib/hooks/common/useModal";
+import { toast } from "@/lib/utils/common/toast";
 import { deletePost } from "@/lib/utils/post/deletePost";
 import { DotsThreeVertical } from "@phosphor-icons/react";
 import Link from "next/link";
@@ -23,10 +24,10 @@ const EditDelete = ({ postId }: Props) => {
     const isDeleted = await deletePost(postId);
 
     if (isDeleted) {
-      alert("삭제되었습니다."); //alert 는 전부 토스트로 교체체
+      toast("삭제되었습니다.", "success");
       router.replace("/");
     } else {
-      alert("삭제 중 오류가 발생했습니다.");
+      toast("삭제 중 오류가 발생했습니다.", "warning");
     }
   };
 

@@ -10,14 +10,15 @@ const LoginContentWrapper = () => {
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
+    console.log("loginContentWrapper useEffect 실행됨");
     if (isTabletOrSmaller) {
-      console.log("여기인가?");
+      console.log("태블릿보다 작음");
       window.location.reload();
     }
   }, [isTabletOrSmaller, router]);
 
   return (
-    <div className="bg-priamry-50">
+    <div>
       <MinTablet>
         <LoginContent />
       </MinTablet>

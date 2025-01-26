@@ -2,10 +2,12 @@
 
 import ErrorScreen from "@/components/common/ErrorScreen";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import { FloatingButton } from "@/components/ui/FloatingButton";
+import FloatingButton from "@/components/ui/FloatingButton";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { usePosts } from "@/lib/hooks/home/usePosts";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
+import { PencilSimple } from "@phosphor-icons/react";
 import { useEffect, useRef } from "react";
 import LayoutToggle from "./LayoutToggle";
 import ListLayout from "./ListLayout";
@@ -17,6 +19,8 @@ const MainContent = () => {
   const { isMasonry, toggleLayout } = useLayoutStore();
   const { posts, fetchNextPage, hasNextPage, isPending, isFetchingNextPage, isError } = usePosts();
   const observerRef = useRef(null);
+
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     // 무한 스크롤 observer
@@ -54,7 +58,14 @@ const MainContent = () => {
         <OnboardingModal />
       </section>
 
-      {user && <FloatingButton variant="primary" href="/write" />}
+      {user && (
+        <FloatingButton
+          href="/write"
+          icon={
+            <PencilSimple className="mr-2 inline-block text-text-03" size={isTabletOrSmaller ? 16 : 20} weight="fill" />
+          }
+        />
+      )}
     </>
   );
 };

@@ -1,4 +1,5 @@
 import LikeButton from "@/app/detail/_components/ButtonLike";
+import VerifiedBadge from "@/app/mypage/_components/VerifiedBadge";
 import sampleImage from "@/assets/images/image_sample.png";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import type { PostType } from "@/lib/types/post";
@@ -33,13 +34,15 @@ const Listpost = ({ post }: Props) => {
 
       <div className="relative w-[calc(100%-12.75rem)] mb:w-[calc(100%-110px)]">
         <div className="flex items-center gap-4 tb:hidden">
-          <figure className="relative h-10 w-10 overflow-hidden rounded-full border border-line-02">
+          <figure className="relative">
             <Image
               src={post.users.profile_image || sampleImage}
               alt={`${post.users.nickname || "익명"}의 프로필 이미지`}
-              fill
-              className="object-cover"
+              width={40}
+              height={40}
+              className="h-10 w-10 overflow-hidden rounded-full border border-line-02 bg-bg-02 object-cover"
             />
+            <VerifiedBadge isVerified={post.users.is_verified || false} />
           </figure>
           <div>
             <p className="text-title2 font-bold">{post.users.nickname || "익명"}</p>
@@ -51,7 +54,7 @@ const Listpost = ({ post }: Props) => {
           {post.content}
         </p>
 
-        <div className="absolute bottom-0 right-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03 tb:left-0 tb:right-auto tb:text-body mb:text-caption">
+        <div className="absolute bottom-0 right-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03 tb:bottom-[7px] tb:left-0 tb:right-auto tb:text-body mb:text-caption">
           <LikeButton postId={post.id} styleType="list" iconSize={28} showNumber />
           <span className="post-center pointer-events-none flex items-center gap-1">
             {isTabletOrSmaller ? (
@@ -64,7 +67,7 @@ const Listpost = ({ post }: Props) => {
           </span>
         </div>
 
-        <div className="absolute bottom-0 left-0 flex gap-2 tb:relative tb:mt-2">
+        <div className="absolute bottom-0 left-0 flex gap-2 tb:relative tb:mt-1 tb:gap-1">
           {isTabletOrSmaller
             ? post.tags.slice(0, 3).map((tag) => <Tags key={tag} variant="gray" size="md" label={tag} />)
             : post.tags.map((tag) => <Tags key={tag} variant="gray" size="md" label={tag} />)}

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { toast } from "@/lib/utils/common/toast";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -24,7 +25,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
 
   const handleDeleteComment = (id: string) => {
     if (confirm("삭제하시겠습니까?")) {
-      alert("삭제되었습니다.");
+      toast("삭제되었습니다.", "success");
       deleteComment(id);
     }
   };
@@ -48,7 +49,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
           <Button
             onClick={() => {
               {
-                userId ? addComment(comment) : alert("로그인이 필요합니다.");
+                userId ? addComment(comment) : toast("로그인이 필요합니다.", "success");
               }
               setComment("");
             }}

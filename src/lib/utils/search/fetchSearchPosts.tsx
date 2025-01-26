@@ -36,11 +36,11 @@ export const fetchSearchPosts = async ({
     .range(from, to);
 
   // query를 content, upload_place, tags에서 검색
-  if (query) {
+  if (query?.trim()) {
     baseQuery = baseQuery.or(`content.ilike.%${query}%,upload_place.ilike.%${query}%,tags.cs.{${query}}`);
   }
 
-  // 태그 포함시 결과로 출력
+  // 태그 필터 조건 추가
   if (tags.length > 0) {
     baseQuery = baseQuery.contains("tags", tags);
   }
@@ -48,6 +48,7 @@ export const fetchSearchPosts = async ({
   const { data: posts, error, count } = await baseQuery;
 
   if (error) {
+    console.error("Supabase error:", error);
     throw new Error(`검색 결과를 가져오는 중 오류 발생: ${error.message}`);
   }
 

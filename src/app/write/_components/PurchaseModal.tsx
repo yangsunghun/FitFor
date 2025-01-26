@@ -5,7 +5,6 @@ import ModalItem from "@/components/ui/Modal";
 import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Image as ImageIcon, Trash } from "@phosphor-icons/react";
-import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useState, ChangeEvent } from "react";
 
@@ -45,6 +44,9 @@ const PurchaseModal = ({
 
   const { title, description, buy_link, image_url, post_id } = formState;
 
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
+  const [blurData, setBlurData] = useState<string | null>(null); // Blur 데이터 추가
+
   useEffect(() => {
     if (productToEdit) {
       // 수정 모드에서 데이터 초기화
@@ -61,40 +63,28 @@ const PurchaseModal = ({
     }
   }, [productToEdit]);
 
-    // Supabase에 이미지 업로드를 처리하는 useMutation 훅
-    const { mutate: uploadImage, isPending } = useMutation<string, Error, File>({
-      mutationFn: async (file: File): Promise<string> => {
-        if (file.size > MAX_FILE_SIZE) {
-          throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다."); // 파일 크기 확인
-        }
-  
-        // 고유 파일 이름 생성
-        const timestamp = Date.now();
-        const extension = file.name.split(".").pop() || "unknown";
-        const filePath = `purchase/${timestamp}.${extension}`;
-  
-        // Supabase 스토리지에 이미지 업로드
-        const { error } = await supabase.storage.from("post-images").upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false
-        });
-  
-        if (error) throw new Error(`이미지 업로드 실패: ${error.message}`);
-  
-        // 업로드된 이미지의 공개 URL 반환
-        const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
-  
-        if (!publicUrl) throw new Error("이미지 URL 생성 실패");
-  
-        return publicUrl;
-      },
-      onSuccess: (url: string) => {
-        setFormState((prevState) => ({ ...prevState, image_url: url })); // 이미지 URL 업데이트
-      },
-      onError: (error: Error) => {
-        alert(error.message); // 에러 알림
-      }
-    });
+  const generateBlurData = async (file: File): Promise<string | null> => {
+    try {
+      const imageBitmap = await createImageBitmap(file);
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) return null;
+
+      const width = 5; // 축소된 너비
+      const height = (imageBitmap.height / imageBitmap.width) * width; // 비율 유지
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx.drawImage(imageBitmap, 0, 0, width, height);
+
+      return canvas.toDataURL("image/jpeg", 0.5); // Base64 데이터로 반환
+    } catch (error) {
+      console.error("Blur 처리 실패:", error);
+      return null;
+    }
+  };
 
   // 입력 필드 값 변경 처리
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -105,6 +95,37 @@ const PurchaseModal = ({
     }));
   };
 
+    // 고유 파일 이름 생성
+    const genFilePath = (file: File): string => {
+      const timestamp = Date.now();
+      const extension = file.name.split(".").pop() || "unknown";
+      const folder = "purchase";
+      return `${folder}/${timestamp}.${extension}`;
+    };
+
+  // 이미지 업로드 함수
+  const uploadImage = async (file: File): Promise<string> => {
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다."); // 파일 크기 확인
+    }
+
+    const filePath = genFilePath(file); // 파일 경로 생성
+
+    // Supabase 스토리지에 이미지 업로드
+    const { error } = await supabase.storage.from("post-images").upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: false
+    });
+
+    if (error) throw new Error(`이미지 업로드 실패: ${error.message}`);
+
+    // 업로드된 이미지의 공개 URL 반환
+    const { publicUrl } = supabase.storage.from("post-images").getPublicUrl(filePath).data;
+
+    if (!publicUrl) throw new Error("이미지 URL 생성 실패");
+
+    return publicUrl;
+  };
 
   // 이미지 업로드 핸들러
   const handleImageUpload = () => {
@@ -114,7 +135,17 @@ const PurchaseModal = ({
     fileInput.onchange = async (e: Event) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        uploadImage(file); // 업로드 실행
+        setLoading(true); // 로딩 상태 활성화
+        try {
+          const blur = await generateBlurData(file);
+          setBlurData(blur); // Blur 데이터 설정
+          const url = await uploadImage(file); // 이미지 업로드
+          setFormState((prevState) => ({ ...prevState, image_url: url }));
+        } catch (error: any) {
+          alert(error.message); // 에러 알림
+        } finally {
+          setLoading(false); // 로딩 상태 비활성화
+        }
       }
     };
     fileInput.click(); // 파일 선택 창 열기
@@ -157,6 +188,7 @@ const PurchaseModal = ({
 
       // 이미지 URL 제거
       setFormState((prevState) => ({ ...prevState, image_url: "" }));
+      setBlurData(null);
     } catch (error) {
       console.error("이미지 삭제 중 오류 발생:", error);
       alert("이미지 삭제 중 문제가 발생했습니다.");
@@ -211,10 +243,13 @@ const PurchaseModal = ({
         <div className="flex items-start gap-6">
           {/* 이미지 영역 */}
           <div className="relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-lg border border-bg-02 bg-bg-02">
-            {isPending ? (
-              <div className="flex h-full w-full items-center justify-center bg-bg-03">
-                <span className="text-caption font-medium text-text-02">이미지 업로드 중...</span>
-              </div>
+          {loading && blurData ? (
+              <>
+                <Image src={blurData} alt="Uploading" layout="fill" objectFit="cover" className="rounded-lg" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                  <span className="text-caption font-medium text-white">이미지 업로드 중...</span>
+                </div>
+              </>
             ) : image_url ? (
               <>
                 <Image
@@ -247,9 +282,9 @@ const PurchaseModal = ({
             <button
               className="mt-4 h-9 rounded-lg bg-bg-03 px-3 py-1 text-text-01 hover:bg-gray-800"
               onClick={handleImageUpload}
-              disabled={isPending} // 로딩 중일 때 버튼 비활성화
+              disabled={loading} // 로딩 중일 때 버튼 비활성화
             >
-              {isPending ? "업로드 중..." : "이미지 업로드"}
+              {loading ? "업로드 중..." : "이미지 업로드"}
             </button>
           </div>
         </div>

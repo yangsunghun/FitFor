@@ -20,6 +20,7 @@ type ImageUploadSectionProps = {
 function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSectionProps) {
   const [imageHashes, setImageHashes] = useState<string[]>([]); // 업로드된 이미지 해시를 배열로 관리
   const [loadingStatus, setLoadingStatus] = useState<boolean[]>(new Array(MAX_IMAGES).fill(false)); // 로딩 상태 배열
+  const [blurDataCache, setBlurDataCache] = useState<(string | null)[]>(new Array(MAX_IMAGES).fill(null));
 
   // 파일 해시 생성 (SHA-256)
   const genFileHash = async (file: File): Promise<string> => {
@@ -100,6 +101,12 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
       return;
     }
 
+    const oversizedFile = files.find((file) => file.size > MAX_FILE_SIZE);
+    if (oversizedFile) {
+      alert(`파일 크기는 5MB 이하만 업로드할 수 있습니다. (${oversizedFile.name})`);
+      return;
+    }
+
     const newImages: string[] = [];
     const newHashes: string[] = [];
     const newLoadingStatus = [...loadingStatus];
@@ -120,24 +127,46 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             throw new Error("중복된 파일");
           }
 
+          // 블러 데이터 생성
           const blurData = await generateBlurData(file);
           if (blurData) {
+            setBlurDataCache((prev) => {
+              const updatedCache = [...prev];
+              updatedCache[targetIndex] = blurData;
+              return updatedCache;
+            });
             setBlur(blurData); // 업로드 중 블러 이미지를 표시
           }
 
+          // 파일 업로드
           const url = await uploadImage(file);
           newImages.push(url);
           newHashes.push(hash); // 새로운 해시 추가
         } catch (err) {
-          console.error("파일 업로드 중 오류:", err);
+          // 에러 메시지를 안전하게 처리
+          if (err instanceof Error) {
+            console.error("파일 업로드 중 오류:", err.message);
+            alert(err.message); // 에러 메시지 표시
+          } else {
+            console.error("파일 업로드 중 알 수 없는 오류:", err);
+            alert("알 수 없는 오류가 발생했습니다.");
+          }
         } finally {
+          // 로딩 상태 업데이트
           setLoadingStatus((prev) => {
             const updatedStatus = [...prev];
             updatedStatus[targetIndex] = false;
             return updatedStatus;
           });
 
-          setBlur(""); // 블러 이미지 제거
+          // 블러 데이터 초기화
+          setBlurDataCache((prev) => {
+            const updatedCache = [...prev];
+            updatedCache[targetIndex] = null;
+            return updatedCache;
+          });
+
+          setBlur(""); // 현재 표시된 블러 데이터 초기화
         }
       })
     );
@@ -206,13 +235,6 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
     handleFiles(files);
   };
 
-  // 파일 크기 확인
-  const validateFile = (file: File) => {
-    if (file.size > MAX_FILE_SIZE) {
-      throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다.");
-    }
-  };
-
   return (
     <div className="space-y-6 pt-10">
       <div className="space-y-6">
@@ -255,18 +277,22 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             .map((_, index) => {
               const url = images[index]; // 현재 인덱스에 해당하는 이미지 URL
               const isUploading = loadingStatus[index];
+              const currentBlur = blurDataCache[index]; // 각 이미지의 블러 데이터를 가져옴
 
               return (
                 <div
                   key={index}
                   className={`relative flex h-36 w-36 items-center justify-center overflow-hidden rounded-lg ${
-                    index === 0 ? "border-2 border-primary-default" : "border border-line-02"
+                    index === 0 && url ? "border-2 border-primary-default" : "border border-line-02"
                   }`}
                 >
                   {/* 업로드된 이미지 */}
-                  {isUploading ? (
+                  {isUploading && currentBlur ? (
                     <div className="relative flex h-full w-full items-center justify-center">
-                      {blur && <Image src={blur} alt="Uploading" layout="fill" className="object-cover" />}
+                      {/* 현재 블러 데이터를 사용하여 로딩 중 표시 */}
+                      {currentBlur && (
+                        <Image src={currentBlur} alt="Uploading" layout="fill" className="object-cover" />
+                      )}
                       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white">
                         <span>이미지 업로드 중...</span>
                       </div>
@@ -302,7 +328,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
                     )
                   )}
                   {/* 첫 번째 이미지에 썸네일 표시 */}
-                  {index === 0 && (
+                  {index === 0 && url && (
                     <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded bg-primary-default px-2 py-1 text-white">
                       <Check size={8} weight="bold" />
                       <span className="text-caption font-medium">썸네일</span>

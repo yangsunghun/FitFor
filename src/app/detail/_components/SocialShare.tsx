@@ -1,9 +1,10 @@
 "use client";
 import kakaoLogo from "@/assets/images/kakao-logo.svg";
 import Dropdown from "@/components/ui/Dropdown";
+import { toast } from "@/lib/utils/common/toast";
 import { FacebookLogo, LinkSimple, XLogo } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 type SocialShareProps = {
   postUrl: string;
@@ -15,15 +16,9 @@ type SocialShareProps = {
 };
 
 const SocialShare = ({ postUrl, postTitle, thumbnail, writer, showText, icon }: SocialShareProps) => {
-  const [copied, setCopied] = useState(false);
-
   const handleCopyUrl = () => {
-    // navigator.clipboard.writeText(postUrl).then(() => {
-    //   setCopied(true);
-    //   setTimeout(() => setCopied(false), 2000);
-    // });
     navigator.clipboard.writeText(postUrl);
-    alert("링크가 복사되었습니다!");
+    toast("링크가 복사되었습니다!", "success");
   };
   const handleFacebookShare = () => {
     const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(

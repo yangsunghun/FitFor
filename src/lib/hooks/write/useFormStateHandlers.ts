@@ -72,17 +72,9 @@ export const useFormStateHandlers = () => {
   };
 
   // 폼 상태 변경 핸들러
-  function handleChange<K extends keyof FormState>(
-    key: K,
-    value: FormState[K] | ((prev: FormState[K]) => FormState[K])
-  ) {
-    setFormState((prev) => ({
-      ...prev,
-      [key]: typeof value === "function" 
-        ? (value as (prev: FormState[K]) => FormState[K])(prev[key]) 
-        : value,
-    }));
-  }
+  const handleChange = <T extends keyof FormState>(key: T, value: FormState[T]) => {
+    setFormState((prev) => ({ ...prev, [key]: value }));
+  };
 
   // 키와 몸무게 변경 핸들러
   const handleBodySizeChange = (index: number, value: string) => {

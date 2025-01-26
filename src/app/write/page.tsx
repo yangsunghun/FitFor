@@ -93,7 +93,11 @@ const WritePage = () => {
         <ImageUploadSection
           images={formState.images}
           blur={formState.thumbnail_blur_url}
-          setImages={(images) => handleChange("images", images)}
+          setImages={(updateFn) => {
+            const updatedImages =
+              typeof updateFn === "function" ? updateFn(formState.images) : updateFn;
+            handleChange("images", updatedImages);
+          }}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
         />
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/lib/utils/common/toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 
@@ -60,7 +61,7 @@ export const useSearchQuery = () => {
     } else {
       // 새 태그를 추가하려고 할 때 최대 4개로 제한
       if (updatedTags[key].length >= 4) {
-        alert("태그는 최대 4개까지만 선택할 수 있습니다.");
+        toast("태그는 최대 4개까지만 선택할 수 있습니다.", "warning");
         return;
       }
       updatedTags[key] = [...updatedTags[key], tag];

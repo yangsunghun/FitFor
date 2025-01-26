@@ -5,6 +5,7 @@ import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useLike, useLikeCount } from "@/lib/hooks/detail/useLike";
 import { useAuthStore } from "@/lib/store/authStore";
 import { cn } from "@/lib/utils/common/className";
+import { toast } from "@/lib/utils/common/toast";
 import { Heart } from "@phosphor-icons/react";
 
 type LikeButtonProps = {
@@ -44,7 +45,7 @@ const LikeButton = ({
         btnStyle={buttonClass}
         isActive={false}
         count={styleType !== "masonry" ? likeCount : null}
-        onClick={() => alert("로그인이 필요합니다")}
+        onClick={() => toast("로그인이 필요합니다", 'warning')}
         inactiveIcon={<Heart className="transition-color duration-300" size={responsiveIconSize} weight={iconWeight} />}
         text={false}
         showNumber={showNumber}

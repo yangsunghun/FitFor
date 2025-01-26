@@ -36,7 +36,7 @@ const SocialShare = ({ postUrl, postTitle, thumbnail, writer, showText, icon }: 
 
   const handleKakaoShare = () => {
     if (!window.Kakao) {
-      alert("카카오톡 공유를 사용할 수 없습니다.");
+      toast("카카오톡 공유를 사용할 수 없습니다.", "warning");
       return;
     }
 

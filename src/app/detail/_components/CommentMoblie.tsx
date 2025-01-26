@@ -5,6 +5,7 @@ import { TextField } from "@/components/ui/TextField";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { toast } from "@/lib/utils/common/toast";
 import { PaperPlaneTilt } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -36,7 +37,7 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
 
   const handleDeleteComment = (id: string) => {
     if (confirm("삭제하시겠습니까?")) {
-      alert("삭제되었습니다.");
+      toast("삭제되었습니다.", "success");
       deleteComment(id);
     }
   };
@@ -84,7 +85,7 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
             addComment(comment);
             setComment("");
           } else {
-            alert("로그인이 필요합니다.");
+            toast("로그인이 필요합니다.", "warning");
           }
         }}
         className="relative mb-2"

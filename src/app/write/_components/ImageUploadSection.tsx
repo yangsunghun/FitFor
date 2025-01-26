@@ -94,21 +94,21 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
   // 파일 업로드와 상태 업데이트 로직
   const handleFiles = async (files: File[]) => {
     const existingCount = images.length;
-  
+
     if (existingCount + files.length > MAX_IMAGES) {
       alert(`최대 ${MAX_IMAGES}개의 이미지만 업로드할 수 있습니다.`);
       return;
     }
-  
+
     const newImages: string[] = [];
     const newHashes: string[] = [];
     const newLoadingStatus = [...loadingStatus];
-  
+
     files.forEach((_, index) => {
       newLoadingStatus[existingCount + index] = true;
     });
     setLoadingStatus(newLoadingStatus);
-  
+
     await Promise.all(
       files.map(async (file, index) => {
         const targetIndex = existingCount + index;
@@ -119,12 +119,12 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             alert("이미 업로드된 이미지입니다.");
             throw new Error("중복된 파일");
           }
-  
+
           const blurData = await generateBlurData(file);
           if (blurData) {
             setBlur(blurData); // 업로드 중 블러 이미지를 표시
           }
-  
+
           const url = await uploadImage(file);
           newImages.push(url);
           newHashes.push(hash); // 새로운 해시 추가
@@ -136,19 +136,19 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             updatedStatus[targetIndex] = false;
             return updatedStatus;
           });
-  
+
           setBlur(""); // 블러 이미지 제거
         }
       })
     );
-  
+
     // 상태 업데이트
     const updatedImages = [...images, ...newImages];
     setImages(updatedImages);
-  
+
     // 해시 업데이트
     setImageHashes((prev) => [...prev, ...newHashes]);
-  
+
     // 가장 첫 번째 이미지 URL을 Blur URL로 설정
     if (updatedImages.length > 0) {
       setBlur(updatedImages[0]); // 항상 첫 번째 이미지를 thumbnail_blur_url로 설정

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { forwardRef, type AnchorHTMLAttributes } from "react";
 
 const buttonVariants = cva(
-  "inline-block w-[4.5rem] h-[4.5rem] rounded-full transition duration-300 fixed bottom-12 right-[6.875rem] tb:bottom-[100px] tb:right-[24px] tb:w-[40px] tb:h-[40px] flex justify-center items-center", // 공통 스타일
+  "inline-block w-[4.5rem] h-[4.5rem] rounded-full transition duration-300 fixed bottom-12 right-[6.875rem] tb:bottom-[80px] tb:right-[24px] tb:w-[40px] tb:h-[40px] flex justify-center items-center", // 공통 스타일
   {
     variants: {
       variant: {

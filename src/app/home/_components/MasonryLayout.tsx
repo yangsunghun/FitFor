@@ -13,7 +13,7 @@ const MasonryLayout = ({ posts, isPending }: MasonryLayoutProps) => {
   const breakpointColumnsObj = {
     default: 4,
     1200: 4,
-    480: 3
+    768: 3
   };
 
   return isPending ? (

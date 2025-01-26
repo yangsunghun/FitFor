@@ -54,7 +54,7 @@ const Listpost = ({ post }: Props) => {
           {post.content}
         </p>
 
-        <div className="absolute bottom-0 right-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03 tb:left-0 tb:right-auto tb:text-body mb:text-caption">
+        <div className="absolute bottom-0 right-0 z-20 flex gap-4 text-title2 font-medium leading-7 text-text-03 tb:bottom-[7px] tb:left-0 tb:right-auto tb:text-body mb:text-caption">
           <LikeButton postId={post.id} styleType="list" iconSize={28} showNumber />
           <span className="post-center pointer-events-none flex items-center gap-1">
             {isTabletOrSmaller ? (
@@ -67,7 +67,7 @@ const Listpost = ({ post }: Props) => {
           </span>
         </div>
 
-        <div className="absolute bottom-0 left-0 flex gap-2 tb:relative tb:mt-2">
+        <div className="absolute bottom-0 left-0 flex gap-2 tb:relative tb:mt-1 tb:gap-1">
           {isTabletOrSmaller
             ? post.tags.slice(0, 3).map((tag) => <Tags key={tag} variant="gray" size="md" label={tag} />)
             : post.tags.map((tag) => <Tags key={tag} variant="gray" size="md" label={tag} />)}

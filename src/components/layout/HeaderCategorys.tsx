@@ -45,7 +45,7 @@ const HeaderCategorys = ({ handleClose }: Props) => {
         onValueChange={handleTabChange}
         className="h-[48px] w-full"
       >
-        <TabsList className="h-full w-full justify-start rounded-none border-t bg-transparent p-0">
+        <TabsList className="h-full w-full justify-start rounded-none border-b border-line-02 bg-transparent p-0">
           {TAG_GROUPS.map((group, index) => (
             <TabsTrigger
               key={group.key}

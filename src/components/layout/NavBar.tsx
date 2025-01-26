@@ -11,7 +11,7 @@ const NavBar = () => {
   if (!isVisible) return null;
 
   return (
-    <nav className="fixed bottom-0 z-40 hidden w-full bg-bg-01 pb-7 text-small text-text-02 tb:block">
+    <nav className="fixed bottom-0 z-40 hidden w-full bg-bg-01 text-small text-text-02 tb:block">
       <ul className="flex justify-between">
         <Suspense fallback={<p></p>}>
           <NavItem href="/home" location="/home" icon={<House weight="fill" size={24} />} label="홈" />

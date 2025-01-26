@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import FloatingButton from "@/components/ui/FloatingButton";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import { useAuthStore } from "@/lib/store/authStore";
 import { ChatRoomType } from "@/lib/types/chat";
 import { createClient } from "@/lib/utils/supabase/client";
+import { VideoCamera } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import ChatRoomCard from "./_components/ChatRoomCard";
 import FilterTabs from "./_components/RoomFilters";
-import { FloatingButton } from "@/components/ui/FloatingButton";
-import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import SortChatRooms from "./_components/SortChatRooms";
-import { useAuthStore } from "@/lib/store/authStore";
 
 const supabase = createClient();
 
@@ -45,8 +47,9 @@ const fetchChatRooms = async (): Promise<ChatRoomType[]> => {
 const ChatRoomListPage = () => {
   const [sortKey, setSortKey] = useState("created_at");
   const [selectedTags, setSelectedTags] = useState<{ [key: string]: string[] }>({});
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
-   const { user } = useAuthStore((state) => state);
+  const { user } = useAuthStore((state) => state);
 
   const { data: chatRooms = [], isLoading } = useQuery<ChatRoomType[]>({
     queryKey: ["chatRooms"],
@@ -111,7 +114,14 @@ const ChatRoomListPage = () => {
       </section>
 
       {/* 플로팅 버튼 */}
-      {user && <FloatingButton variant="primary" href="/chat/new" />}
+      {user && (
+        <FloatingButton
+          href="/chat/new"
+          icon={
+            <VideoCamera className="mr-2 inline-block text-text-03" size={isTabletOrSmaller ? 16 : 20} weight="fill" />
+          }
+        />
+      )}
     </div>
   );
 };

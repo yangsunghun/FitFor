@@ -45,9 +45,6 @@ const PurchaseModal = ({
 
   const { title, description, buy_link, image_url, post_id } = formState;
 
-  // 로딩 상태 추가
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     if (productToEdit) {
       // 수정 모드에서 데이터 초기화
@@ -250,9 +247,9 @@ const PurchaseModal = ({
             <button
               className="mt-4 h-9 rounded-lg bg-bg-03 px-3 py-1 text-text-01 hover:bg-gray-800"
               onClick={handleImageUpload}
-              disabled={loading} // 로딩 중일 때 버튼 비활성화
+              disabled={isPending} // 로딩 중일 때 버튼 비활성화
             >
-              {loading ? "업로드 중..." : "이미지 업로드"}
+              {isPending ? "업로드 중..." : "이미지 업로드"}
             </button>
           </div>
         </div>

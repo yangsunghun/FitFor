@@ -8,7 +8,7 @@ type UserProfileProps = {
   profileImage?: string | null;
   nickname: string;
   uploadPlace?: string | null;
-  isVerified: boolean;
+  isVerified?: boolean;
 };
 
 const UserProfile = ({ profileImage, nickname = "익명", isVerified, uploadPlace }: UserProfileProps) => {

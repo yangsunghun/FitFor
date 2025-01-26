@@ -32,9 +32,13 @@ export const fetchSearchPosts = async ({
       { count: "exact" }
     )
     .eq("is_saved", false)
-    .ilike("content", `%${query}%`)
     .order(sort, { ascending: false })
     .range(from, to);
+
+  // query를 content, upload_place, tags에서 검색
+  if (query) {
+    baseQuery = baseQuery.or(`content.ilike.%${query}%,upload_place.ilike.%${query}%,tags.cs.{${query}}`);
+  }
 
   // 태그 포함시 결과로 출력
   if (tags.length > 0) {

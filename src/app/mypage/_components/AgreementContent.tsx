@@ -11,7 +11,7 @@ const AgreementContent = ({ closeModal }: AgreementContentProps) => {
   return (
     <div className="flex w-[25.125rem] flex-col gap-4 mb:max-w-[15rem]">
       <p className="text-title1 font-bold tb:text-title2">개인정보 수집 방침</p>
-      <ol className="space-y-4 break-keep text-subtitle font-medium text-text-03 tb:text-body">
+      <ol className="space-y-4 break-keep text-subtitle font-medium text-text-03 tb:text-body tb:h-[40vh] tb:overflow-auto">
         <li>
           <strong className="text-black">수집 항목</strong>
           <p>이름, 이메일 주소 등 서비스 이용에 필요한 최소한의 개인정보를 수집합니다.</p>

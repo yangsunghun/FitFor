@@ -189,31 +189,31 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
         return;
       }
 
-    // 상태 업데이트
-    const updatedImages = images.filter((_, i) => i !== index);
-    setImages(updatedImages);
+      // 상태 업데이트
+      const updatedImages = images.filter((_, i) => i !== index);
+      setImages(updatedImages);
 
-    // 해시 배열도 업데이트
-    setImageHashes((prev) => prev.filter((_, i) => i !== index));
+      // 해시 배열도 업데이트
+      setImageHashes((prev) => prev.filter((_, i) => i !== index));
 
-    // Blur 데이터 캐시도 업데이트
-    setBlurDataCache((prev) => {
-      const updatedCache = [...prev];
-      updatedCache.splice(index, 1); // 삭제된 인덱스 제거
-      return updatedCache;
-    });
+      // Blur 데이터 캐시도 업데이트
+      setBlurDataCache((prev) => {
+        const updatedCache = [...prev];
+        updatedCache.splice(index, 1); // 삭제된 인덱스 제거
+        return updatedCache;
+      });
 
-    // 썸네일이 삭제된 경우, 첫 번째 이미지로 Blur URL 재설정
-    if (index === 0 && updatedImages.length > 0) {
-      setBlur(updatedImages[0]);
-    } else if (updatedImages.length === 0) {
-      setBlur(""); // 이미지가 모두 삭제된 경우 Blur URL 초기화
+      // 썸네일이 삭제된 경우, 첫 번째 이미지로 Blur URL 재설정
+      if (index === 0 && updatedImages.length > 0) {
+        setBlur(updatedImages[0]);
+      } else if (updatedImages.length === 0) {
+        setBlur(""); // 이미지가 모두 삭제된 경우 Blur URL 초기화
+      }
+    } catch (error) {
+      console.error("이미지 삭제 중 오류 발생:", error);
+      alert("이미지 삭제 중 문제가 발생했습니다.");
     }
-  } catch (error) {
-    console.error("이미지 삭제 중 오류 발생:", error);
-    alert("이미지 삭제 중 문제가 발생했습니다.");
-  }
-};
+  };
 
   // Supabase에서 이미지 파일 경로를 추출하는 유틸리티 함수
   const extractFilePath = (imageUrl: string): string => {
@@ -256,7 +256,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
             추천 사이즈 : OOO x OOO / OOO x OOO
           </p>
         </div>
-  
+
         {/* 상단 업로드 섹션 */}
         <div
           className="flex h-48 w-full items-center justify-center overflow-hidden rounded-lg bg-bg-02"
@@ -275,7 +275,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
             <div className="mt-1 text-caption font-medium leading-[1.5] text-text-03">이미지 업로드하기</div>
           </div>
         </div>
-  
+
         {/* 하단 이미지 섹션 */}
         <div className="grid w-full grid-cols-4 gap-6">
           {Array(MAX_IMAGES)
@@ -284,7 +284,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
               const url = images[index]; // 현재 인덱스에 해당하는 이미지 URL
               const isUploading = loadingStatus[index];
               const currentBlur = blurDataCache[index]; // 각 이미지의 블러 데이터를 가져옴
-  
+
               return (
                 <div
                   key={index}
@@ -294,12 +294,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
                 >
                   {/* 업로드된 이미지 */}
                   {currentBlur && (
-                    <Image
-                      src={currentBlur}
-                      alt="Uploading or Uploaded"
-                      layout="fill"
-                      className="object-cover"
-                    />
+                    <Image src={currentBlur} alt="Uploading or Uploaded" layout="fill" className="object-cover" />
                   )}
                   {isUploading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white">
@@ -308,12 +303,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
                   )}
                   {url && !isUploading && (
                     <>
-                      <Image
-                        src={url}
-                        alt={`Uploaded Image ${index + 1}`}
-                        layout="fill"
-                        className="object-cover"
-                      />
+                      <Image src={url} alt={`Uploaded Image ${index + 1}`} layout="fill" className="object-cover" />
                       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-2 bg-black bg-opacity-50 opacity-0 transition-opacity hover:opacity-100">
                         {/* 삭제 버튼 */}
                         <button
@@ -351,10 +341,8 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
             })}
         </div>
       </div>
-                  {/* 필수 입력 경고 메시지 */}
-                  {isMissing && (
-            <p className="pl-2 text-body text-status-danger">이미지를 업로드해주세요.</p>
-          )}
+      {/* 필수 입력 경고 메시지 */}
+      {isMissing && <p className="pl-2 text-body text-status-danger">이미지를 업로드해주세요.</p>}
     </div>
   );
 }

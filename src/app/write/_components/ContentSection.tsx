@@ -7,7 +7,7 @@ type ContentSectionProps = {
   isMissing?: boolean; // 필수 입력 경고 표시 여부
 };
 
-const ContentSection = ({ content, onChange,isMissing }: ContentSectionProps) => (
+const ContentSection = ({ content, onChange, isMissing }: ContentSectionProps) => (
   <div className="space-y-2">
     {/* 제목 영역 */}
     <div className="flex items-center gap-1">

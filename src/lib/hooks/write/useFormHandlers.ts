@@ -35,6 +35,7 @@ export const useFormHandlers = () => {
 
     // Post 관련 핸들러
     missingFields: postHandlers.missingFields,
+    updateMissingFields: postHandlers.updateMissingFields,
     handleSubmit: postHandlers.handleSubmit,
     handleUpdate: postHandlers.handleUpdate,
 

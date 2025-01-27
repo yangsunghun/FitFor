@@ -203,11 +203,11 @@ const PurchaseModal = ({
       return;
     }
 
-    // 필수 입력 항목 확인
-    if (!title || !image_url) {
-      alert("모든 필드를 입력해주세요.");
-      return;
-    }
+    // // 필수 입력 항목 확인
+    // if (!title || !image_url || !buy_link) {
+    //   alert("모든 필드를 입력해주세요.");
+    //   return;
+    // }
 
     const product = { title, description, buy_link, image_url, post_id };
     if (mode === "add") {
@@ -336,7 +336,7 @@ const PurchaseModal = ({
           size="lg"
           className="w-full"
           onClick={handleSubmit}
-          disabled={!title || !image_url} // 비활성화 조건 추가
+          disabled={!title || !image_url || !buy_link} // 비활성화 조건 추가
         >
           {mode === "add" ? "완료" : "수정하기"}
         </Button>

@@ -52,7 +52,7 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete }: ProductSectionPr
         <span className="text-title2 font-bold text-primary-default">*</span>
       </div>
       <p className="text-caption text-text-03">
-        다양한 각도에서 찍은 이미지가 있다면 추가해주세요. (최대 5개)
+        착용한 상품의 이름과 구매 링크를 추가해보세요! (최대 5개)
       </p>
     </div>
     <div className="flex gap-6">

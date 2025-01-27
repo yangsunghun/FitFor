@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["via.placeholder.com"],
     remotePatterns: [
       // HTTPS domains
       ...["lh3.googleusercontent.com", "czcbonajmenirmxdslhj.supabase.co"].map((hostname) => ({

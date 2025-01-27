@@ -34,6 +34,7 @@ const WritePage = () => {
     handleEditPurchase,
     handleDeletePurchase,
     handleBodySizeChange,
+    missingFields,
     handleSubmit,
     handleContinuePost,
     handleDiscardPost,
@@ -125,7 +126,9 @@ const WritePage = () => {
       </div>
 
       <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
-        <ContentSection content={formState.content} onChange={(value) => handleChange("content", value)} />
+        <ContentSection content={formState.content} onChange={(value) => handleChange("content", value)} 
+          isMissing={missingFields.includes("content")} // 필수 입력 경고 전달
+        />
 
         <ImageUploadSection
           images={formState.images}
@@ -135,6 +138,7 @@ const WritePage = () => {
             handleChange("images", updatedImages);
           }}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
+          isMissing={missingFields.includes("images")} // 필수 입력 경고 전달
         />
 
         <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />
@@ -156,6 +160,7 @@ const WritePage = () => {
             handleChange("isPurchaseModalOpen", true);
           }}
           onDelete={handleDeletePurchase}
+          isMissing={missingFields.includes("purchases")} // 필수 입력 경고 전달
         />
 
         <TagSection
@@ -164,6 +169,7 @@ const WritePage = () => {
           selectedCategory={selectedCategory}
           onChangeCategory={handleChangeCategory}
           toggleTagSelector={toggleTagSelector}
+          isRequired={false} // 이거 추가해주삼!
         />
       </div>
 

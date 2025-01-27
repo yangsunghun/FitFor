@@ -35,8 +35,9 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
     handleEditPurchase,
     handleDeletePurchase,
     handleBodySizeChange,
-    toggleTagSelector,
+    missingFields,
     handleUpdate,
+    toggleTagSelector,
     handleChangeCategory,
     selectedCategory,
     setInitialFormState = () => {}
@@ -78,7 +79,9 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
       </div>
 
       <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
-        <ContentSection content={formState.content} onChange={(value) => handleChange("content", value)} />
+        <ContentSection content={formState.content} onChange={(value) => handleChange("content", value)}
+          isMissing={missingFields.includes("content")} // 필수 입력 경고 전달
+        />
 
         <ImageUploadSection
           images={formState.images}
@@ -88,6 +91,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
             handleChange("images", updatedImages);
           }}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
+          isMissing={missingFields.includes("images")} // 필수 입력 경고
         />
 
         <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />
@@ -109,6 +113,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
             handleChange("isPurchaseModalOpen", true);
           }}
           onDelete={handleDeletePurchase}
+          isMissing={missingFields.includes("purchases")} // 필수 입력 경고 전달
         />
 
         <TagSection

@@ -11,7 +11,6 @@ const LocationSection = ({ address, onOpenModal }: LocationSectionProps) => (
     <div className="space-y-2">
       <div className="flex items-center gap-1">
         <span className="text-title2 font-bold text-text-04">위치 찾기</span>
-        <span className="text-title2 font-bold text-primary-default">*</span>
       </div>
       <div className="flex h-14 items-center rounded-lg bg-bg-02 p-4">
         <MagnifyingGlass size={24} className="text-text-02" />

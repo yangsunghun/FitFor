@@ -4,7 +4,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { PostWithPurchases, UseFormStateHandlersReturn } from "./useFormStateHandlers"; // formState 타입 가져오기
 import { fetchUnsavedPosts } from "./useTempSaveHandlers";
 
@@ -18,21 +18,25 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
   const router = useRouter();
 
+  const [missingFields, setMissingFields] = useState<string[]>([]); // 누락된 필드를 상태로 관리
+  const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
+
+  const validateFields = () => {
+  const newMissingFields = [];
+  if (!content) newMissingFields.push("content");
+  if (!images || images.length === 0) newMissingFields.push("images");
+  if (!purchases || purchases.length === 0) newMissingFields.push("purchases");
+
+  setMissingFields(newMissingFields); // 누락된 필드 상태 업데이트
+  return newMissingFields.length === 0; // 모든 필드가 채워졌는지 여부 반환
+};
+
   // 폼 제출 핸들러
   const handleSubmit = async () => {
-    const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
 
-    // 누락된 필드 확인
-    const missingFields = [];
-    if (!content) missingFields.push("본문");
-    if (!images || images.length === 0) missingFields.push("이미지");
-    if (!address) missingFields.push("주소");
-    if (!tags || tags.length === 0) missingFields.push("태그");
-    if (!purchases || purchases.length === 0) missingFields.push("구매 정보");
-
-    // 필수 입력 값 확인
-    if (missingFields.length > 0) {
-      alert(`다음 항목을 입력해주세요: ${missingFields.join(", ")}`);
+    if (!validateFields()) {
+      // 유효하지 않은 경우 메시지 표시
+      alert("필수 입력 항목을 모두 입력해주세요!");
       return;
     }
 
@@ -120,21 +124,11 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
 
   //업데이트 핸들러
   const handleUpdate = async (id: string) => {
-    const { content, address, body_size, images, tags, purchases } = formState;
-
-    // 누락된 필드 확인
-    const missingFields = [];
-    if (!content) missingFields.push("본문");
-    if (!images || images.length === 0) missingFields.push("이미지");
-    if (!address) missingFields.push("주소");
-    if (!tags || tags.length === 0) missingFields.push("태그");
-    if (!purchases || purchases.length === 0) missingFields.push("구매 정보");
-
-    // 필수 입력 값 확인
-    if (missingFields.length > 0) {
-      alert(`다음 항목을 입력해주세요: ${missingFields.join(", ")}`);
-      return;
-    }
+  if (!validateFields()) {
+    // 유효하지 않은 경우 메시지 표시
+    alert("필수 입력 항목을 모두 입력해주세요!");
+    return;
+  }
 
     try {
       const updatedPost = {
@@ -173,6 +167,7 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
   };
 
   return {
+    missingFields,
     handleSubmit,
     handleUpdate
   };

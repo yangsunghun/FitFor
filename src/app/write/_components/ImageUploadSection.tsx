@@ -15,9 +15,10 @@ type ImageUploadSectionProps = {
   setImages: Dispatch<SetStateAction<string[]>>; // 이미지 배열 업데이트 함수
   blur: string | null;
   setBlur: (blurUrl: string) => void; // Base64 블러 데이터 업데이트 함수
+  isMissing?: boolean; // 필수 입력 경고 표시 여부
 };
 
-function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSectionProps) {
+function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: ImageUploadSectionProps) {
   const [imageHashes, setImageHashes] = useState<string[]>([]); // 업로드된 이미지 해시를 배열로 관리
   const [loadingStatus, setLoadingStatus] = useState<boolean[]>(new Array(MAX_IMAGES).fill(false)); // 로딩 상태 배열
   const [blurDataCache, setBlurDataCache] = useState<(string | null)[]>(new Array(MAX_IMAGES).fill(null));
@@ -350,6 +351,10 @@ function ImageUploadSection({ images, setImages, blur, setBlur }: ImageUploadSec
             })}
         </div>
       </div>
+                  {/* 필수 입력 경고 메시지 */}
+                  {isMissing && (
+            <p className="pl-2 text-body text-status-danger">이미지를 업로드해주세요.</p>
+          )}
     </div>
   );
 }

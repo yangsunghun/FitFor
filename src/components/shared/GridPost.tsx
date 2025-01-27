@@ -1,4 +1,5 @@
 import sampleImage from "@/assets/images/image_sample.png";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import type { PostType } from "@/lib/types/post";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,9 +12,11 @@ type Props = {
 
 const GridPost = ({ post }: Props) => {
   const [isImgError, setIsImgError] = useState<boolean>(false);
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
   return (
     <li key={post.id} className="relative mb-4">
-      <Link href={`/detail/${post.id}/view`} className="click-box z-10"></Link>
+      <Link href={`/detail/${post.id}${isTabletOrSmaller ? "" : "/view"}`} className="click-box z-10"></Link>
       <figure className="thumbnail aspect-square rounded-2xl mb:rounded-lg">
         <Image
           src={isImgError ? sampleImage : post.images[0]}

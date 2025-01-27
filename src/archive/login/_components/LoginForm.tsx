@@ -1,5 +1,5 @@
 "use client";
-import AuthInput from "@/app/(auth)/_components/AuthInput";
+import AuthInput from "@/archive/login/_components/AuthInput";
 import { login } from "@/lib/utils/auth/auth";
 import { LOGIN_FIELDS } from "@/lib/validations/authFields";
 import { loginSchema } from "@/lib/validations/authSchema";

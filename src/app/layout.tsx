@@ -1,10 +1,13 @@
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import Header from "@/components/layout/Header";
 import NavBar from "@/components/layout/NavBar";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import TQProviders from "@/components/providers/TQProvider";
+import Toast from "@/components/shared/Toast";
 import "@/lib/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import type { ReactNode } from "react";
 
 const pretendard = localFont({
   src: "../assets/fonts/PretendardVariable.woff2",
@@ -30,18 +33,23 @@ export default function RootLayout({
   children,
   modal
 }: Readonly<{
-  children: React.ReactNode;
-  modal: React.ReactNode;
+  children: ReactNode;
+  modal: ReactNode;
 }>) {
   return (
     <html lang="ko" className="min-h-full">
       <AuthProvider>
         <TQProviders>
           <body className={`${pretendard.className} text-body text-text-04`}>
-            <Header />
+            <MinTablet>
+              <Header />
+            </MinTablet>
             <main className="relative mx-auto w-full max-w-[1200px] pt-20 tb:pb-[77px] tb:pt-0">{children}</main>
-            {modal && <div>{modal}</div>}
-            <NavBar />
+            {modal}
+            <Tablet>
+              <NavBar />
+            </Tablet>
+            <Toast />
           </body>
         </TQProviders>
       </AuthProvider>

@@ -6,7 +6,7 @@ import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 
 const supabase = createClient();
 const genUniqueId = () => {
@@ -44,6 +44,9 @@ const PurchaseModal = ({
 
   const { title, description, buy_link, image_url, post_id } = formState;
 
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
+  const [blurData, setBlurData] = useState<string | null>(null); // Blur 데이터 추가
+
   useEffect(() => {
     if (productToEdit) {
       // 수정 모드에서 데이터 초기화
@@ -60,8 +63,31 @@ const PurchaseModal = ({
     }
   }, [productToEdit]);
 
+  const generateBlurData = async (file: File): Promise<string | null> => {
+    try {
+      const imageBitmap = await createImageBitmap(file);
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) return null;
+
+      const width = 5; // 축소된 너비
+      const height = (imageBitmap.height / imageBitmap.width) * width; // 비율 유지
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx.drawImage(imageBitmap, 0, 0, width, height);
+
+      return canvas.toDataURL("image/jpeg", 0.5); // Base64 데이터로 반환
+    } catch (error) {
+      console.error("Blur 처리 실패:", error);
+      return null;
+    }
+  };
+
   // 입력 필드 값 변경 처리
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
@@ -69,16 +95,21 @@ const PurchaseModal = ({
     }));
   };
 
+    // 고유 파일 이름 생성
+    const genFilePath = (file: File): string => {
+      const timestamp = Date.now();
+      const extension = file.name.split(".").pop() || "unknown";
+      const folder = "purchase";
+      return `${folder}/${timestamp}.${extension}`;
+    };
+
   // 이미지 업로드 함수
   const uploadImage = async (file: File): Promise<string> => {
     if (file.size > MAX_FILE_SIZE) {
       throw new Error("파일 크기는 5MB 이하만 업로드할 수 있습니다."); // 파일 크기 확인
     }
 
-    // 고유 파일 이름 생성
-    const timestamp = Date.now();
-    const extension = file.name.split(".").pop() || "unknown";
-    const filePath = `purchase/${timestamp}.${extension}`;
+    const filePath = genFilePath(file); // 파일 경로 생성
 
     // Supabase 스토리지에 이미지 업로드
     const { error } = await supabase.storage.from("post-images").upload(filePath, file, {
@@ -104,11 +135,16 @@ const PurchaseModal = ({
     fileInput.onchange = async (e: Event) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
+        setLoading(true); // 로딩 상태 활성화
         try {
+          const blur = await generateBlurData(file);
+          setBlurData(blur); // Blur 데이터 설정
           const url = await uploadImage(file); // 이미지 업로드
           setFormState((prevState) => ({ ...prevState, image_url: url }));
         } catch (error: any) {
           alert(error.message); // 에러 알림
+        } finally {
+          setLoading(false); // 로딩 상태 비활성화
         }
       }
     };
@@ -126,37 +162,38 @@ const PurchaseModal = ({
     });
   };
 
-      // Supabase에서 이미지 파일 경로 추출
-      const extractFilePath = (imageUrl: string): string => {
-        const bucketUrl = supabase.storage.from("post-images").getPublicUrl("").data.publicUrl;
-        return imageUrl.replace(bucketUrl, ""); // Bucket URL을 제거해 파일 경로만 반환
-      };
-    
-      // 이미지 삭제 핸들러
-      const handleDeleteImage = async () => {
-        try {
-          if (!image_url) {
-            alert("삭제할 이미지가 없습니다.");
-            return;
-          }
-    
-          const filePath = extractFilePath(image_url);
-    
-          // Supabase에서 이미지 삭제
-          const { error } = await supabase.storage.from("post-images").remove([filePath]);
-          if (error) {
-            console.error("Supabase에서 이미지 삭제 실패:", error);
-            alert("이미지 삭제에 실패했습니다.");
-            return;
-          }
-    
-          // 이미지 URL 제거
-          setFormState((prevState) => ({ ...prevState, image_url: "" }));
-        } catch (error) {
-          console.error("이미지 삭제 중 오류 발생:", error);
-          alert("이미지 삭제 중 문제가 발생했습니다.");
-        }
-      };
+  // Supabase에서 이미지 파일 경로 추출
+  const extractFilePath = (imageUrl: string): string => {
+    const bucketUrl = supabase.storage.from("post-images").getPublicUrl("").data.publicUrl;
+    return imageUrl.replace(bucketUrl, ""); // Bucket URL을 제거해 파일 경로만 반환
+  };
+
+  // 이미지 삭제 핸들러
+  const handleDeleteImage = async () => {
+    try {
+      if (!image_url) {
+        alert("삭제할 이미지가 없습니다.");
+        return;
+      }
+
+      const filePath = extractFilePath(image_url);
+
+      // Supabase에서 이미지 삭제
+      const { error } = await supabase.storage.from("post-images").remove([filePath]);
+      if (error) {
+        console.error("Supabase에서 이미지 삭제 실패:", error);
+        alert("이미지 삭제에 실패했습니다.");
+        return;
+      }
+
+      // 이미지 URL 제거
+      setFormState((prevState) => ({ ...prevState, image_url: "" }));
+      setBlurData(null);
+    } catch (error) {
+      console.error("이미지 삭제 중 오류 발생:", error);
+      alert("이미지 삭제 중 문제가 발생했습니다.");
+    }
+  };
 
   // 폼 제출 핸들러
   const handleSubmit = () => {
@@ -206,22 +243,29 @@ const PurchaseModal = ({
         <div className="flex items-start gap-6">
           {/* 이미지 영역 */}
           <div className="relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-lg border border-bg-02 bg-bg-02">
-            {image_url ? (
+          {loading && blurData ? (
               <>
-              <Image
-                src={image_url}
-                alt="Uploaded"
-                layout="fill" // 부모 요소를 기준으로 채움
-                objectFit="cover" // 이미지 비율 유지하며 영역을 꽉 채움
-                className="rounded-lg"
-              />
-              <button
-              onClick={handleDeleteImage}
-              className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
-            >
-              <Trash size={16} />
-            </button>
-            </>
+                <Image src={blurData} alt="Uploading" layout="fill" objectFit="cover" className="rounded-lg" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                  <span className="text-caption font-medium text-white">이미지 업로드 중...</span>
+                </div>
+              </>
+            ) : image_url ? (
+              <>
+                <Image
+                  src={image_url}
+                  alt="Uploaded"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg"
+                />
+                <button
+                  onClick={handleDeleteImage}
+                  className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
+                >
+                  <Trash size={16} />
+                </button>
+              </>
             ) : (
               <div className="flex h-full w-full items-center justify-center">
                 <ImageIcon size={24} className="text-text-02" />
@@ -238,15 +282,16 @@ const PurchaseModal = ({
             <button
               className="mt-4 h-9 rounded-lg bg-bg-03 px-3 py-1 text-text-01 hover:bg-gray-800"
               onClick={handleImageUpload}
+              disabled={loading} // 로딩 중일 때 버튼 비활성화
             >
-              이미지 업로드
+              {loading ? "업로드 중..." : "이미지 업로드"}
             </button>
           </div>
         </div>
       </div>
 
       {/* 상품명 */}
-      <div className="space-y-2 pt-6">
+      <div className="w-[30vw] max-w-full space-y-2 pt-6">
         <label className="block text-title2 font-bold">상품명</label>
         <input
           type="text"

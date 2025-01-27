@@ -1,16 +1,17 @@
 "use client";
 
 import clsx from "clsx";
-import { useEffect, useRef, type MouseEvent } from "react";
+import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 
 type Props = {
   isOpen: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
   onClose: () => void;
   mode?: "default" | "imageView";
+  className?: string;
 };
 
-const ModalItem = ({ isOpen, onClose, children, mode = "default" }: Props) => {
+const ModalItem = ({ isOpen, onClose, children, mode = "default", className }: Props) => {
   // 서버에서 브라우저 객체 undefined 방지
   const bodyRef = useRef<HTMLElement | null>(null);
 
@@ -57,7 +58,8 @@ const ModalItem = ({ isOpen, onClose, children, mode = "default" }: Props) => {
             "inline-block h-fit w-auto max-w-lg bg-bg-01 p-6": mode === "default",
             "h-full w-full max-w-none bg-transparent": mode === "imageView"
           },
-          isOpen ? "animate-fadeIn animate-scaleUp" : "animate-fadeOut animate-scaleDown"
+          isOpen ? "animate-fadeIn animate-scaleUp" : "animate-fadeOut animate-scaleDown",
+          className
         )}
       >
         {children}

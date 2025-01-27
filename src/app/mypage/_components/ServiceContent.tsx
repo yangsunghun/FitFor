@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/Button";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 
 type ServiceContentProps = {
   closeModal: () => void;
 };
 
 const ServiceContent = ({ closeModal }: ServiceContentProps) => {
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
   return (
-    <div className="flex w-[27rem] flex-col gap-4">
-      <p className="text-title1 font-bold">서비스 이용 약관</p>
-      <ol className="space-y-4 break-keep text-subtitle font-medium text-text-03">
+    <div className="flex w-[25.125rem] flex-col gap-4 mb:max-w-[15rem]">
+      <p className="text-title1 font-bold tb:text-title2">서비스 이용 약관</p>
+      <ol className="space-y-4 break-keep text-subtitle font-medium text-text-03 tb:text-body">
         <li>
           <strong className="text-black">목적</strong>
           <p>
@@ -40,7 +43,7 @@ const ServiceContent = ({ closeModal }: ServiceContentProps) => {
       </ol>
 
       <div className="flex w-full flex-row gap-3">
-        <Button variant="whiteLine" size="lg" className="w-full" onClick={closeModal}>
+        <Button variant="whiteLine" size={isTabletOrSmaller ? "sm" : "lg"} className="w-full" onClick={closeModal}>
           확인했습니다.
         </Button>
       </div>

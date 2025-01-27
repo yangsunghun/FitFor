@@ -1,27 +1,24 @@
 "use client";
 import kakaoLogo from "@/assets/images/kakao-logo.svg";
 import Dropdown from "@/components/ui/Dropdown";
-import { Export, FacebookLogo, LinkSimple, XLogo } from "@phosphor-icons/react";
+import { toast } from "@/lib/utils/common/toast";
+import { FacebookLogo, LinkSimple, XLogo } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useState } from "react";
+import { type ReactNode } from "react";
 
 type SocialShareProps = {
   postUrl: string;
   postTitle: string;
   thumbnail: string;
   writer: string;
+  showText?: boolean;
+  icon: ReactNode;
 };
 
-const SocialShare = ({ postUrl, postTitle, thumbnail, writer }: SocialShareProps) => {
-  const [copied, setCopied] = useState(false);
-
+const SocialShare = ({ postUrl, postTitle, thumbnail, writer, showText, icon }: SocialShareProps) => {
   const handleCopyUrl = () => {
-    // navigator.clipboard.writeText(postUrl).then(() => {
-    //   setCopied(true);
-    //   setTimeout(() => setCopied(false), 2000);
-    // });
     navigator.clipboard.writeText(postUrl);
-    alert("링크가 복사되었습니다!");
+    toast("링크가 복사되었습니다!", "success");
   };
   const handleFacebookShare = () => {
     const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -39,7 +36,7 @@ const SocialShare = ({ postUrl, postTitle, thumbnail, writer }: SocialShareProps
 
   const handleKakaoShare = () => {
     if (!window.Kakao) {
-      alert("카카오톡 공유를 사용할 수 없습니다.");
+      toast("카카오톡 공유를 사용할 수 없습니다.", "warning");
       return;
     }
 
@@ -69,9 +66,9 @@ const SocialShare = ({ postUrl, postTitle, thumbnail, writer }: SocialShareProps
   return (
     <Dropdown
       trigger={
-        <button className="flex flex-col gap-2">
-          <Export size={28} />
-          <span>공유</span>
+        <button className="flex flex-col gap-2 text-text-03">
+          {icon}
+          {showText && <span>공유</span>}
         </button>
       }
       className="flex gap-4"

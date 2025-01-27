@@ -17,7 +17,11 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
   }
 
   if (isError) {
-    return <p>구매처 데이터를 가져오는 중 오류가 발생했습니다.</p>;
+    return (
+      <p className="text-center text-subtitle font-medium text-text-02">
+        구매처 데이터를 가져오는 중 오류가 발생했습니다.
+      </p>
+    );
   }
 
   if (!purchases || purchases.length === 0) {

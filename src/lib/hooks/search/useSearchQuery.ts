@@ -1,17 +1,22 @@
 "use client";
 
+import useCategoryStore from "@/lib/store/useCategoryStore";
+import { toast } from "@/lib/utils/common/toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 export const useSearchQuery = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryFromUrl = searchParams.get("query") || "";
   const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
-  const tagsFromUrl = searchParams.get("category")
-    ? JSON.parse(decodeURIComponent(searchParams.get("category") || "[]"))
-    : { gender: [], season: [], style: [], tpo: [] };
+  const tagsFromUrl = useMemo(() => {
+    const category = searchParams.get("category");
+    return category ? JSON.parse(decodeURIComponent(category || "[]")) : { gender: [], season: [], style: [], tpo: [] };
+  }, [searchParams]);
   const sortFromUrl = searchParams.get("sort") || "created_at";
+
+  const setSelectedCategory = useCategoryStore((state) => state.setSelectedCategory);
 
   const [inputValue, setInputValue] = useState(queryFromUrl);
   const [query, setQuery] = useState(queryFromUrl);
@@ -43,6 +48,8 @@ export const useSearchQuery = () => {
         )}&sort=${encodeURIComponent(sort)}`
       );
     }
+
+    setSelectedCategory(null);
   };
 
   // 태그 토글
@@ -60,7 +67,7 @@ export const useSearchQuery = () => {
     } else {
       // 새 태그를 추가하려고 할 때 최대 4개로 제한
       if (updatedTags[key].length >= 4) {
-        alert("태그는 최대 4개까지만 선택할 수 있습니다.");
+        toast("태그는 최대 4개까지만 선택할 수 있습니다.", "warning");
         return;
       }
       updatedTags[key] = [...updatedTags[key], tag];

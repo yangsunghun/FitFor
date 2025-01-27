@@ -1,7 +1,9 @@
 "use client";
 
-import logoImage from "@/assets/images/logo.svg";
+import LogoImage from "@/assets/images/LogoImage";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useHeaderStore } from "@/lib/store/useHeaderStore";
 import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -20,6 +22,9 @@ const HeaderContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const { isVisible } = useHeaderStore();
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
@@ -33,13 +38,15 @@ const HeaderContent = () => {
     setIsLoading(false);
   }, [pathname]);
 
+  if (!isVisible || isTabletOrSmaller) return null;
+
   return (
     <>
       <div className="relative z-10 w-full bg-white px-6 py-4">
         <div className="relative mx-auto flex max-w-[1200px] items-center gap-[4vw]">
           <Link href="/">
-            <h1>
-              <Image src={logoImage} alt="fitfor" />
+            <h1 className="tb:w-[80px]">
+              <LogoImage />
             </h1>
           </Link>
 

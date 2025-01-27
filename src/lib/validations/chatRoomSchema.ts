@@ -14,3 +14,5 @@ export const chatRoomSchema = z.object({
     .refine((file) => file.size <= 5 * 1024 * 1024, "이미지 크기는 최대 5MB까지 허용됩니다.")
     .refine((file) => ["image/jpeg", "image/png"].includes(file.type), "이미지 파일은 JPG 또는 PNG 형식만 허용됩니다.")
 });
+
+export type ChatRoomValidate = z.infer<typeof chatRoomSchema>;

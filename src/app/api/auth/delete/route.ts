@@ -13,13 +13,17 @@ export async function DELETE() {
       return NextResponse.json({ error: "유저가 확인되지 않습니다." });
     }
 
-    const { error } = await adminAuthClient.deleteUser(user.id);
+    // public.users에서도 지우기
+    const { error: publicUserError } = await supabase.from("users").delete().eq("id", user.id);
 
-    if (error) throw error;
+    if (publicUserError) throw publicUserError;
 
+    const { error: authUserError } = await adminAuthClient.deleteUser(user.id);
+
+    if (authUserError) throw authUserError;
     return NextResponse.json({ message: "회원 탈퇴 성공" });
   } catch (error: any) {
-    console.error("회원 탈퇴 오류", error.message);
+    console.error("[회원 탈퇴 오류]", error.message);
     return NextResponse.json({ error: error.message });
   }
 }

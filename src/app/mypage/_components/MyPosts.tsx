@@ -1,6 +1,7 @@
 "use client";
 
 import Cardpost from "@/components/shared/CardPost";
+import CardSkeleton from "@/components/shared/CardSkeleton";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { useUserPosts } from "@/lib/hooks/mypage/useUserPosts";
 import { useEffect, useRef } from "react";
@@ -22,25 +23,32 @@ const MyPosts = () => {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage]);
 
-  if (isPending) return <LoadingSpinner />;
   if (isError) return <p>내 게시물 불러오기 에러...</p>;
 
   return (
     <>
-      {/* 작성한 게시물 없는 경우 */}
-      {userPosts?.pages[0].items.length === 0 && (
+      {isPending ? (
+        <div className="mt-10 grid grid-cols-4 gap-6 lt:mx-4 tb:grid-cols-3 tb:gap-4 mb:grid-cols-2 mb:gap-[12px]">
+          {[...Array(8)].map((_, index) => (
+            <CardSkeleton key={index} />
+          ))}
+        </div>
+      ) : userPosts?.pages[0].items.length === 0 ? (
         <div className="mt-32 flex items-center justify-center">
           <p className="text-title2 font-medium text-text-03">작성한 게시물이 없습니다.</p>
         </div>
+      ) : (
+        userPosts?.pages.map((page, i) => (
+          <div
+            className="mt-10 grid grid-cols-4 gap-6 lt:mx-4 tb:grid-cols-3 tb:gap-4 mb:grid-cols-2 mb:gap-[12px]"
+            key={`${page}_${i}`}
+          >
+            {page.items.map((post) => (
+              <Cardpost key={post.id} post={post} isMasonry={false} />
+            ))}
+          </div>
+        ))
       )}
-      {/* 작성한 게시물 무한 스크롤 */}
-      {userPosts?.pages.map((page, i) => (
-        <div className="mt-10 grid grid-cols-4 gap-6" key={`${page}_${i}`}>
-          {page.items.map((post) => (
-            <Cardpost key={post.id} post={post} isMasonry={false} />
-          ))}
-        </div>
-      ))}
       {hasNextPage && (
         <div ref={observerRef} className="h-5">
           {isFetchingNextPage ? <LoadingSpinner /> : <p>더 보기</p>}

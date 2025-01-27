@@ -11,7 +11,8 @@ export const fetchPostDetail = async (postId: string): Promise<PostType | null> 
       *,
       users (
         nickname,
-        profile_image
+        profile_image,
+        is_verified
       )
     `
     )

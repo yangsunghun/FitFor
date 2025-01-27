@@ -1,12 +1,14 @@
 "use client";
 
+import ErrorScreen from "@/components/common/ErrorScreen";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import { useFormHandlers } from "@/lib/hooks/write/useFormHanlders";
+import ScrollTopButton from "@/components/shared/ScrollTopButton";
+import TagSection from "@/components/shared/TagSection";
+import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import { useEditPostQuery } from "@/lib/hooks/write/usePostQueries";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import TagSection from "@/components/shared/TagSection";
 import AddressModal from "../_components/AddressModal";
 import BodySizeSection from "../_components/BodySizeSection";
 import ContentSection from "../_components/ContentSection";
@@ -14,7 +16,6 @@ import ImageUploadSection from "../_components/ImageUploadSection";
 import LocationSection from "../_components/LocationSection";
 import ProductSection from "../_components/ProductSection";
 import PurchaseModal from "../_components/PurchaseModal";
-import ErrorScreen from "@/components/common/ErrorScreen";
 
 type EditPageProps = {
   params: {
@@ -82,7 +83,10 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
         <ImageUploadSection
           images={formState.images}
           blur={formState.thumbnail_blur_url}
-          setImages={(images) => handleChange("images", images)}
+          setImages={(updateFn) => {
+            const updatedImages = typeof updateFn === "function" ? updateFn(formState.images) : updateFn;
+            handleChange("images", updatedImages);
+          }}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
         />
 
@@ -130,6 +134,9 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
           수정 완료
         </button>
       </div>
+
+      {/* 최상단 이동 플로팅 버튼 */}
+      <ScrollTopButton />
 
       <AddressModal
         isOpen={formState.isModalOpen}

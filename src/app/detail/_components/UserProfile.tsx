@@ -14,13 +14,13 @@ type UserProfileProps = {
 const UserProfile = ({ profileImage, nickname = "익명", isVerified, uploadPlace }: UserProfileProps) => {
   return (
     <div className="flex items-center gap-4">
-      <figure className="relative h-12 w-12 overflow-hidden tb:h-[40px] tb:w-[40px]">
+      <figure className="relative">
         <Image
           src={profileImage || sampleImage} // 프로필 이미지 또는 기본 이미지 사용
           alt={`${nickname}의 프로필 이미지`}
           width={48}
           height={48}
-          className="rounded-full border border-line-03 bg-bg-02 object-cover"
+          className="h-12 w-12 overflow-hidden rounded-full border border-line-03 bg-bg-02 object-cover tb:h-[40px] tb:w-[40px]"
         />
         <VerifiedBadge isVerified={isVerified || false} />
       </figure>

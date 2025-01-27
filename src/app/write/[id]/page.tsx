@@ -7,7 +7,6 @@ import TagSection from "@/components/shared/TagSection";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import { useEditPostQuery } from "@/lib/hooks/write/usePostQueries";
 import { useAuthStore } from "@/lib/store/authStore";
-import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import AddressModal from "../_components/AddressModal";
@@ -17,8 +16,6 @@ import ImageUploadSection from "../_components/ImageUploadSection";
 import LocationSection from "../_components/LocationSection";
 import ProductSection from "../_components/ProductSection";
 import PurchaseModal from "../_components/PurchaseModal";
-
-const supabase = createClient();
 
 type EditPageProps = {
   params: {
@@ -69,53 +66,6 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
       isFormInitialized.current = true; // 초기화 플래그 설정
     }
   }, [fetchedData, setInitialFormState, currentUser, router]);
-
-  // 새로고침/뒤로가기/페이지 이동 시 이미지 정리 로직 추가
-  useEffect(() => {
-    const cleanupImages = async () => {
-      const allFilePaths: string[] = [];
-
-      // 게시물 이미지 정리
-      if (formState.images.length > 0) {
-        const imageFilePaths = formState.images.map((url) => extractFilePath(url));
-        allFilePaths.push(...imageFilePaths);
-      }
-
-      // 구매 정보 이미지 정리
-      if (formState.purchases.length > 0) {
-        const purchaseImagePaths = formState.purchases
-          .filter((purchase) => purchase.image_url)
-          .map((purchase) => extractFilePath(purchase.image_url!));
-        allFilePaths.push(...purchaseImagePaths);
-      }
-
-      if (allFilePaths.length > 0) {
-        const { error } = await supabase.storage.from("post-images").remove(allFilePaths);
-        if (error) {
-          console.error("이미지 삭제 실패:", error.message);
-        }
-      }
-    };
-
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      cleanupImages(); // 이미 정리 호출
-    };
-
-    // 페이지 떠날 때 이벤트 연결
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      cleanupImages(); // 컴포넌트 언마운트 시 호출
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [formState.images, formState.purchases]); // 구매 정보도 의존성에 추가
-
-  // Supabase 파일 경로 추출 함수 (WritePage 컴포넌트 내부에 추가)
-  const extractFilePath = (imageUrl: string): string => {
-    const bucketUrl = supabase.storage.from("post-images").getPublicUrl("").data.publicUrl;
-    return imageUrl.replace(bucketUrl, ""); // URL에서 파일 경로만 추출
-  };
 
   // 로딩 상태 처리
   if (isPending) return <LoadingSpinner />;

@@ -1,17 +1,17 @@
 "use client";
 
 import TagSection from "@/components/shared/TagSection";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonVariants } from "@/components/ui/Button";
 import { useAuthStore } from "@/lib/store/authStore";
-import { chatRoomSchema } from "@/lib/validations/chatRoomSchema";
+import { chatRoomSchema, type ChatRoomValidate } from "@/lib/validations/chatRoomSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import ThumbnailUploadSection from "./ThumbnailUploadSection";
 import TitleSection from "./TitleSection";
-import type { ChatRoomFormInputs } from "../page";
 import { uploadThumbnail } from "@/lib/utils/chat/uploadThumbnail";
 import { createChatRoom } from "@/lib/utils/chat/chat";
+import { cn } from "@/lib/utils/common/className";
 
 const ChatRoomForm = () => {
   const router = useRouter();
@@ -19,9 +19,10 @@ const ChatRoomForm = () => {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors }
-  } = useForm<ChatRoomFormInputs>({
+    formState: { errors, isValid }
+  } = useForm<ChatRoomValidate>({
     resolver: zodResolver(chatRoomSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       category: "",
@@ -32,7 +33,7 @@ const ChatRoomForm = () => {
 
   const currentUser = useAuthStore((state) => state.user);
 
-  const onSubmit: SubmitHandler<ChatRoomFormInputs> = async (data) => {
+  const onSubmit: SubmitHandler<ChatRoomValidate> = async (data) => {
     try {
       if (!currentUser?.id) {
         alert("로그인이 필요합니다.");
@@ -69,7 +70,7 @@ const ChatRoomForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="mb-20 rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
+      <div className="mb-20 rounded-2xl border border-line-02 bg-bg-01 px-8 py-9 mb:p-4">
         {/* 타이틀 */}
         <TitleSection
           title={watch("name")}
@@ -85,25 +86,21 @@ const ChatRoomForm = () => {
           onChangeCategory={(category) => setValue("category", category)}
           toggleTagSelector={(tag, allTags, max) => {
             const currentTags = watch("tags");
-            const selectedGroupTags = currentTags.filter((t) => allTags.includes(t));
-
-            if (!currentTags.includes(tag) && currentTags.length >= 7) {
-              alert("태그는 최대 7개까지 선택 가능합니다.");
-              return;
-            }
-
-            if (selectedGroupTags.includes(tag)) {
+            if (currentTags.includes(tag)) {
               setValue(
                 "tags",
                 currentTags.filter((t) => t !== tag)
-              ); // 선택 해제
-            } else if (selectedGroupTags.length < max) {
-              setValue("tags", [...currentTags, tag]); // 태그 추가
+              );
+            } else if (currentTags.length >= 1) {
+              // 여기에서도 동일한 maxTags와 제한을 적용 가능
+              alert("하나의 태그만 선택해주세요.");
             } else {
-              alert(`해당 카테고리에서는 최대 ${max}개의 태그만 선택 가능합니다.`);
+              setValue("tags", [...currentTags, tag]);
             }
           }}
+          maxTags={1} // 이 값을 5로 설정하여 최대 5개로 표시
         />
+
         {errors.tags && <p className="text-sm mt-2 text-red-600">{errors.tags.message}</p>}
 
         {/* 썸네일 업로드 */}
@@ -116,7 +113,13 @@ const ChatRoomForm = () => {
 
       {/* 제출 버튼 */}
       <div className="flex justify-center">
-        <Button type="submit" variant={"primary"}>
+        <Button
+          type="submit"
+          className={cn(
+            buttonVariants({ variant: isValid ? "primary" : "disabled", size: "md" }), // 상태에 따라 스타일 동적 변경
+            "mb:w-full" // 추가적인 스타일
+          )}
+        >
           Live 만들기
         </Button>
       </div>

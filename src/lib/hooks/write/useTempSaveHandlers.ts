@@ -61,7 +61,6 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
 
       await setInitialFormState(post);
       setTempSaveState((prevState) => ({ ...prevState, activePostId: post.id }));
-      alert("이어 작성할 게시물이 불러와졌습니다.");
     } catch (error) {
       console.error("게시물 불러오기 실패:", error);
       alert("게시물 불러오기 중 오류가 발생했습니다.");
@@ -81,7 +80,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
       const { error } = await supabase.from("posts").delete().eq("id", postId);
       if (error) throw error;
 
-      alert("임시 저장된 게시물이 삭제되었습니다.");
+      alert("임시 저장 게시물이 삭제되었습니다.");
 
       // 삭제 후 리스트 갱신
       const updatedPosts = await fetchUnsavedPosts(currentUser?.id || "");
@@ -155,7 +154,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
           unsavedPosts: prevState.unsavedPosts.map((post) => (post.id === postId ? { ...post, ...updatedPost } : post))
         }));
 
-        alert("임시 저장이 업데이트되었습니다.");
+        alert("업데이트 완료!");
       } else {
         // 새로운 게시글 생성 로직
         const newPost = {
@@ -187,7 +186,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
         handleChange("postId", newPostId);
         handleChange("isContinued", true);
 
-        alert("새 게시글이 임시 저장되었습니다.");
+        alert("임시 저장 완료!");
       }
 
       // 상품 데이터 저장 (공통)

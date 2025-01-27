@@ -27,21 +27,21 @@ export const Default = ({ children }: Props) => {
 };
 
 export const MinDesktop = ({ children }: Props) => {
-  const isDesktopOrLarger = useMediaQuery("(min-width: 1200px)");
+  const isDesktopOrLarger = useMediaQuery("(min-width: 1201px)");
   return isDesktopOrLarger ? children : null;
 };
 
 export const MinTablet = ({ children }: Props) => {
-  const isTabletOrLarger = useMediaQuery("(min-width: 768px)");
+  const isTabletOrLarger = useMediaQuery("(min-width: 769px)");
   return isTabletOrLarger ? children : null;
 };
 
 export const MinMobile = ({ children }: Props) => {
-  const isMobileOrLarger = useMediaQuery("(min-width: 480px)");
+  const isMobileOrLarger = useMediaQuery("(min-width: 481px)");
   return isMobileOrLarger ? children : null;
 };
 
 export const MinDefault = ({ children }: Props) => {
-  const isMiniOrLarger = useMediaQuery("(min-width: 375px)");
+  const isMiniOrLarger = useMediaQuery("(min-width: 377px)");
   return isMiniOrLarger ? children : null;
 };

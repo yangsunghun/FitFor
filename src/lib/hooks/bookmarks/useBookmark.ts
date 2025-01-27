@@ -17,7 +17,7 @@ export const useBookmarks = (userId: string) => {
   });
 
   // 북마크 삭제 Mutation
-  const { mutate: deleteBookmarks, isPending: isRemoving } = useMutation({
+  const { mutateAsync: deleteBookmarks, isPending: isRemoving } = useMutation({
     mutationFn: (postId: string) => removeBookmark(userId, postId),
     onSuccess: () => {
       queryClient.invalidateQueries({

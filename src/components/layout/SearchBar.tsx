@@ -104,7 +104,7 @@ const SearchBar = () => {
             {filteredTags.length > 0 && (
               <>
                 <li className="tb:inner flex items-center justify-between py-2 tb:h-[55px] tb:p-0">
-                  <strong className="text-title2 tb:mt-[1px] tb:text-body tb:font-medium">연관 검색어</strong>
+                  <strong className="text-title2 tb:mt-[1px] tb:text-body tb:font-medium">연관 태그</strong>
                 </li>
                 <li className="my-2 h-[1px] w-full bg-line-02 tb:my-0"></li>
                 {filteredTags.map((tag) => (

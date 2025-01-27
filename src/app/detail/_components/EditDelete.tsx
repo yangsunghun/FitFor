@@ -1,5 +1,6 @@
 "use client";
 
+import DeleteConfirm from "@/components/shared/DeleteConfirm";
 import Dropdown from "@/components/ui/Dropdown";
 import ModalItem from "@/components/ui/Modal";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
@@ -9,7 +10,6 @@ import { deletePost } from "@/lib/utils/post/deletePost";
 import { DotsThreeVertical } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import DeleteConfirm from "./DeleteConfirm";
 
 type Props = {
   postId: string;
@@ -44,7 +44,7 @@ const EditDelete = ({ postId }: Props) => {
         </ul>
       </Dropdown>
       <ModalItem isOpen={isOpen} onClose={closeModal}>
-        <DeleteConfirm closeModal={closeModal} handleDeletePost={handleDeletePost} />
+        <DeleteConfirm closeModal={closeModal} handleDeletePost={handleDeletePost} kind="게시물" />
       </ModalItem>
     </>
   );

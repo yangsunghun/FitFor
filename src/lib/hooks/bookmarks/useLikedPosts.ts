@@ -16,8 +16,8 @@ export const useLikedPosts = (userId: string) => {
     staleTime: 5000
   });
 
-  // 북마크 삭제 Mutation
-  const { mutate: deleteLikedPosts, isPending: isRemoving } = useMutation({
+  // 좋아요한 게시물 삭제 Mutation
+  const { mutateAsync: deleteLikedPosts, isPending: isRemoving } = useMutation({
     mutationFn: (postId: string) => removeLike(userId, postId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -25,7 +25,7 @@ export const useLikedPosts = (userId: string) => {
       });
     },
     onError: (error) => {
-      console.error("북마크 삭제 중 오류 발생:", error);
+      console.error("좋아요한 게시물 삭제 중 오류 발생:", error);
     }
   });
 

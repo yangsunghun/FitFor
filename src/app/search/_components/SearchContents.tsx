@@ -50,11 +50,15 @@ const SearchContents = () => {
             selectedTags={selectedTags}
             handleToggleTag={handleToggleTag}
             setIsOpen={setIsOpen}
+            query={query}
           />
         </Tablet>
       </section>
 
-      <div className="relative mb-10 flex items-center justify-end tb:mb-0 tb:h-[48px]">
+      <div className="relative mb-10 flex items-center justify-between tb:mb-0 tb:h-[48px]">
+        <p>
+          총 <b>{Results?.total}</b>개
+        </p>
         <SortPosts sort={sort} handleSort={handleSort} />
       </div>
 

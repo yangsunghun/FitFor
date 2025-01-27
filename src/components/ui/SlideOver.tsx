@@ -50,15 +50,17 @@ const SlideOver = ({ title, children, onClose }: SlideOverProps) => {
 
       <div
         className={clsx(
-          "z-[100] w-full max-h- rounded-t-2xl bg-white pb-[35px] shadow-lg transition-transform duration-300",
+          "relative z-[100] max-h-[90vh] w-full overflow-y-auto rounded-t-2xl bg-white pb-[35px] shadow-lg transition-transform duration-300",
           isVisible ? "animate-slideIn" : "animate-slideOut"
         )}
       >
-        <div className="inner flex items-center justify-between py-[24px]">
-          <p className="text-title2 font-medium">{title}</p>
-          <button className="text-text-03" onClick={handleClose}>
-            <X size={20} weight="bold" />
-          </button>
+        <div className="sticky top-0 z-10 w-full bg-white">
+          <div className="inner flex h-[75px] items-center justify-between">
+            <p className="text-title2 font-medium">{title}</p>
+            <button className="text-text-03" onClick={handleClose}>
+              <X size={20} weight="bold" />
+            </button>
+          </div>
         </div>
 
         <div className="overflow-y-auto">{children}</div>

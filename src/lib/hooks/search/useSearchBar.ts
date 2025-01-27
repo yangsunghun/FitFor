@@ -1,5 +1,6 @@
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
+import useCategoryStore from "@/lib/store/useCategoryStore";
 import { extractUnicode } from "@/lib/utils/common/extractUnicode";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
@@ -7,6 +8,7 @@ import { useEffect, useState, type FormEvent } from "react";
 export const useSearchBar = () => {
   const router = useRouter();
   const { inputValue, setInputValue, handleSearch } = useSearchQuery();
+  const setSelectedCategory = useCategoryStore((state) => state.setSelectedCategory);
   const [showDropdown, setShowDropdown] = useState(false);
   const [filteredTags, setFilteredTags] = useState<string[]>([]);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
@@ -22,7 +24,7 @@ export const useSearchBar = () => {
     }
   }, []);
 
-  // 입력값 변경 처리 연관검색 풍성해보이도록 초성 일치할 시 출력
+  // 입력값 변경 처리 연관검색
   const handleInputChange = (value: string) => {
     setInputValue(value);
 
@@ -67,6 +69,7 @@ export const useSearchBar = () => {
 
   // 검색 기록 항목 클릭
   const handleSelectHistory = (query: string) => {
+    setSelectedCategory(null);
     setInputValue(query);
     setShowDropdown(false);
     const updatedUrl = `/search?query=${encodeURIComponent(query)}&page=1`;

@@ -150,6 +150,10 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
             updatedCache[targetIndex] = url; // 최종 업로드된 URL로 대체
             return updatedCache;
           });
+          // 첫 번째 이미지에 대해 thumbnail_blur_url 설정
+          if (images.length === 0 && index === 0 && blurData) {
+            setBlur(blurData); // thumbnail_blur_url 업데이트
+          }
         } catch (err) {
           console.error("파일 업로드 중 오류:", err);
         } finally {
@@ -168,11 +172,6 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
 
     // 해시 업데이트
     setImageHashes((prev) => [...prev, ...newHashes]);
-
-    // 가장 첫 번째 이미지 URL을 Blur URL로 설정
-    if (updatedImages.length > 0) {
-      setBlur(updatedImages[0]); // 항상 첫 번째 이미지를 thumbnail_blur_url로 설정
-    }
   };
 
   // 삭제 핸들러
@@ -205,7 +204,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
 
       // 썸네일이 삭제된 경우, 첫 번째 이미지로 Blur URL 재설정
       if (index === 0 && updatedImages.length > 0) {
-        setBlur(updatedImages[0]);
+        setBlur(blurDataCache[1] || ""); // 다음 Blur 데이터를 설정
       } else if (updatedImages.length === 0) {
         setBlur(""); // 이미지가 모두 삭제된 경우 Blur URL 초기화
       }

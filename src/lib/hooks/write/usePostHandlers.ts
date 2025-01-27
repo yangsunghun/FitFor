@@ -22,9 +22,17 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
   const handleSubmit = async () => {
     const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
 
+    // 누락된 필드 확인
+    const missingFields = [];
+    if (!content) missingFields.push("본문");
+    if (!images || images.length === 0) missingFields.push("이미지");
+    if (!address) missingFields.push("주소");
+    if (!tags || tags.length === 0) missingFields.push("태그");
+    if (!purchases || purchases.length === 0) missingFields.push("구매 정보");
+
     // 필수 입력 값 확인
-    if (!content) {
-      alert("내용을 입력해주세요.");
+    if (missingFields.length > 0) {
+      alert(`다음 항목을 입력해주세요: ${missingFields.join(", ")}`);
       return;
     }
 
@@ -113,6 +121,20 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
   //업데이트 핸들러
   const handleUpdate = async (id: string) => {
     const { content, address, body_size, images, tags, purchases } = formState;
+
+    // 누락된 필드 확인
+    const missingFields = [];
+    if (!content) missingFields.push("본문");
+    if (!images || images.length === 0) missingFields.push("이미지");
+    if (!address) missingFields.push("주소");
+    if (!tags || tags.length === 0) missingFields.push("태그");
+    if (!purchases || purchases.length === 0) missingFields.push("구매 정보");
+
+    // 필수 입력 값 확인
+    if (missingFields.length > 0) {
+      alert(`다음 항목을 입력해주세요: ${missingFields.join(", ")}`);
+      return;
+    }
 
     try {
       const updatedPost = {

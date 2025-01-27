@@ -34,6 +34,8 @@ const WritePage = () => {
     handleEditPurchase,
     handleDeletePurchase,
     handleBodySizeChange,
+    missingFields,
+    updateMissingFields,
     handleSubmit,
     handleContinuePost,
     handleDiscardPost,
@@ -86,11 +88,25 @@ const WritePage = () => {
   // 새로고침/뒤로가기/페이지 이동 시 이미지 정리 로직 추가
   useEffect(() => {
     const cleanupImages = async () => {
+      const allFilePaths: string[] = [];
+
+      // 게시물 이미지 정리
       if (formState.images.length > 0) {
-        const filePaths = formState.images.map((url) => extractFilePath(url));
+        const imageFilePaths = formState.images.map((url) => extractFilePath(url));
+        allFilePaths.push(...imageFilePaths);
+      }
 
-        const { error } = await supabase.storage.from("post-images").remove(filePaths);
+      // 구매 정보 이미지 정리
+      if (formState.purchases.length > 0) {
+        const purchaseImagePaths = formState.purchases
+          .filter((purchase) => purchase.image_url) // image_url이 존재하는 항목만 처리
+          .map((purchase) => extractFilePath(purchase.image_url!)); // filePath 추출
+        allFilePaths.push(...purchaseImagePaths);
+      }
 
+      // Supabase에서 이미지 파일 삭제
+      if (allFilePaths.length > 0) {
+        const { error } = await supabase.storage.from("post-images").remove(allFilePaths);
         if (error) {
           console.error("이미지 삭제 실패:", error.message);
         }
@@ -109,7 +125,7 @@ const WritePage = () => {
       cleanupImages(); // 컴포넌트 언마운트 시 호출
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [formState.images]);
+  }, [formState.images, formState.purchases]); // 구매 정보도 의존성에 추가
 
   // Supabase 파일 경로 추출 함수 (WritePage 컴포넌트 내부에 추가)
   const extractFilePath = (imageUrl: string): string => {
@@ -125,7 +141,14 @@ const WritePage = () => {
       </div>
 
       <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
-        <ContentSection content={formState.content} onChange={(value) => handleChange("content", value)} />
+        <ContentSection
+          content={formState.content}
+          onChange={(value) => {
+            handleChange("content", value);
+            updateMissingFields("content", value); // 실시간 필드 상태 업데이트
+          }}
+          isMissing={missingFields.includes("content")} // 필수 입력 경고 전달
+        />
 
         <ImageUploadSection
           images={formState.images}
@@ -133,8 +156,10 @@ const WritePage = () => {
           setImages={(updateFn) => {
             const updatedImages = typeof updateFn === "function" ? updateFn(formState.images) : updateFn;
             handleChange("images", updatedImages);
+            updateMissingFields("images", updatedImages); // 실시간 필드 상태 업데이트
           }}
           setBlur={(blurUrl) => handleChange("thumbnail_blur_url", blurUrl)}
+          isMissing={missingFields.includes("images")} // 필수 입력 경고 전달
         />
 
         <LocationSection address={formState.address} onOpenModal={() => handleChange("isModalOpen", true)} />
@@ -150,12 +175,20 @@ const WritePage = () => {
             }
             handleChange("productToEdit", null);
             handleChange("isPurchaseModalOpen", true);
+
+            // 상품 추가로 인해 missingFields 업데이트
+            updateMissingFields("purchases", [...formState.purchases, {}]); // 빈 객체로 추가된 상태를 가정
           }}
           onEdit={(index) => {
             handleChange("productToEdit", formState.purchases[index]);
             handleChange("isPurchaseModalOpen", true);
           }}
-          onDelete={handleDeletePurchase}
+          onDelete={(index) => {
+            const updatedPurchases = formState.purchases.filter((_, i) => i !== index);
+            handleDeletePurchase(index);
+            updateMissingFields("purchases", updatedPurchases); // 실시간 필드 상태 업데이트
+          }}
+          isMissing={missingFields.includes("purchases")} // 필수 입력 경고 전달
         />
 
         <TagSection
@@ -164,6 +197,7 @@ const WritePage = () => {
           selectedCategory={selectedCategory}
           onChangeCategory={handleChangeCategory}
           toggleTagSelector={toggleTagSelector}
+          isRequired={false} // 이거 추가해주삼!
         />
       </div>
 

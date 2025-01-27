@@ -53,12 +53,12 @@ const TempSaveModal = ({
       loadUnsavedPosts();
     }
   }, [isOpen, currentUser, fetchUnsavedPosts]);
-  
-    // 모달 닫기 핸들러
-    const handleClose = () => {
-      window.scrollTo(0, 0); // 즉시 최상단으로 이동
-      onClose(); // 기존 onClose 호출
-    };
+
+  // 모달 닫기 핸들러
+  const handleClose = () => {
+    window.scrollTo(0, 0); // 즉시 최상단으로 이동
+    onClose(); // 기존 onClose 호출
+  };
 
   if (!isOpen) return null;
 

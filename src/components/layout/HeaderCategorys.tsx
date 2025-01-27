@@ -27,14 +27,9 @@ const HeaderCategorys = ({ handleClose }: Props) => {
 
     const updatedTags = { ...tags, [key]: [...(tags[key] || []), tag] };
 
-    const params = new URLSearchParams();
-    params.set("query", "");
-    params.set("page", "1");
-    params.set("category", encodeTagsForUrl(updatedTags));
-
     setSelectedCategory(key);
 
-    router.push(`/search?${params.toString()}`);
+    router.push(`/search?query=&page=1&category=${encodeTagsForUrl(updatedTags)}`);
   };
 
   const mobileUI = (

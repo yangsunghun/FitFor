@@ -8,14 +8,19 @@ type TagFiltersProps = {
   selectedTags: { groupKey: string; tag: string }[];
   handleToggleTag: (groupKey: string, tag: string) => void;
   setIsOpen: (isOpen: boolean) => void;
+  query: string;
 };
 
-const TagFilterMoblie = ({ selectedGroup, selectedTags, handleToggleTag, setIsOpen }: TagFiltersProps) => {
+const TagFilterMoblie = ({ selectedGroup, selectedTags, handleToggleTag, setIsOpen, query }: TagFiltersProps) => {
   return (
     <>
-      {TAG_GROUPS.filter((group) => !selectedGroup || group.key === selectedGroup).map((group) => (
-        <MoblieHeader key={group.key} pageName={group.title} action="back" />
-      ))}
+      {selectedGroup ? (
+        TAG_GROUPS.filter((group) => !selectedGroup || group.key === selectedGroup).map((group) => (
+          <MoblieHeader key={group.key} pageName={group.title} action="back" />
+        ))
+      ) : (
+        <MoblieHeader pageName={`"${query}" 검색결과`} action="back" />
+      )}
       <div className="flex h-[48px] w-full items-start justify-between">
         {selectedTags.length > 0 && (
           <div className="flex flex-wrap gap-2">

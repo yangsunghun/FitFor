@@ -7,6 +7,7 @@ type TagSectionProps = {
   selectedCategory: string | null;
   onChangeCategory: (category: string) => void;
   toggleTagSelector: (tag: string, allTags: string[], max: number) => void;
+  isRequired?: boolean; // 새로운 prop 추가
   maxTags?: number;
 };
 
@@ -16,6 +17,7 @@ const TagSection = ({
   selectedCategory,
   onChangeCategory,
   toggleTagSelector,
+  isRequired,
   maxTags = 7
 }: TagSectionProps) => {
   const selectedGroup = TAG_GROUPS.find((group) => group.key === selectedCategory);
@@ -25,7 +27,7 @@ const TagSection = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <p className="text-title2 font-bold text-text-04">{title}</p>
-          <p className="text-title2 font-bold text-primary-default">*</p>
+          {isRequired && <p className="text-title2 font-bold text-primary-default">*</p>}
         </div>
         <p className="text-sm text-body text-text-04">
           {tags.length} / {maxTags}

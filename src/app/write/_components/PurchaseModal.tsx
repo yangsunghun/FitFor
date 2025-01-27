@@ -6,7 +6,7 @@ import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useEffect, useState, ChangeEvent } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const supabase = createClient();
 const genUniqueId = () => {
@@ -95,13 +95,13 @@ const PurchaseModal = ({
     }));
   };
 
-    // 고유 파일 이름 생성
-    const genFilePath = (file: File): string => {
-      const timestamp = Date.now();
-      const extension = file.name.split(".").pop() || "unknown";
-      const folder = "purchase";
-      return `${folder}/${timestamp}.${extension}`;
-    };
+  // 고유 파일 이름 생성
+  const genFilePath = (file: File): string => {
+    const timestamp = Date.now();
+    const extension = file.name.split(".").pop() || "unknown";
+    const folder = "purchase";
+    return `${folder}/${timestamp}.${extension}`;
+  };
 
   // 이미지 업로드 함수
   const uploadImage = async (file: File): Promise<string> => {
@@ -203,11 +203,11 @@ const PurchaseModal = ({
       return;
     }
 
-    // 필수 입력 항목 확인
-    if (!title || !image_url) {
-      alert("모든 필드를 입력해주세요.");
-      return;
-    }
+    // // 필수 입력 항목 확인
+    // if (!title || !image_url || !buy_link) {
+    //   alert("모든 필드를 입력해주세요.");
+    //   return;
+    // }
 
     const product = { title, description, buy_link, image_url, post_id };
     if (mode === "add") {
@@ -243,7 +243,7 @@ const PurchaseModal = ({
         <div className="flex items-start gap-6">
           {/* 이미지 영역 */}
           <div className="relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-lg border border-bg-02 bg-bg-02">
-          {loading && blurData ? (
+            {loading && blurData ? (
               <>
                 <Image src={blurData} alt="Uploading" layout="fill" objectFit="cover" className="rounded-lg" />
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -252,13 +252,7 @@ const PurchaseModal = ({
               </>
             ) : image_url ? (
               <>
-                <Image
-                  src={image_url}
-                  alt="Uploaded"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-lg"
-                />
+                <Image src={image_url} alt="Uploaded" layout="fill" objectFit="cover" className="rounded-lg" />
                 <button
                   onClick={handleDeleteImage}
                   className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
@@ -292,7 +286,10 @@ const PurchaseModal = ({
 
       {/* 상품명 */}
       <div className="w-[30vw] max-w-full space-y-2 pt-6">
+      <div className="flex items-center gap-1">
         <label className="block text-title2 font-bold">상품명</label>
+        <span className="text-title2 font-bold text-primary-default">*</span>
+        </div>
         <input
           type="text"
           name="title"

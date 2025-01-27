@@ -21,7 +21,6 @@ export async function DELETE() {
     const { error: authUserError } = await adminAuthClient.deleteUser(user.id);
 
     if (authUserError) throw authUserError;
-    console.log("[회원 탈퇴 성공]");
     return NextResponse.json({ message: "회원 탈퇴 성공" });
   } catch (error: any) {
     console.error("[회원 탈퇴 오류]", error.message);

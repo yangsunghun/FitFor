@@ -5,13 +5,13 @@ import { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import { PostWithPurchases, UseFormStateHandlersReturn } from "./useFormStateHandlers"; // formState 타입 가져오기
-import { fetchUnsavedPosts } from "./useTempSaveHandlers";
+import { UseFormStateHandlersReturn } from "./useFormStateHandlers"; // formState 타입 가져오기
+import { fetchUnsavedPosts, TempSaveState } from "./useTempSaveHandlers";
 
 const supabase = createClient();
 
 type UsePostHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "handleChange"> & {
-  setTempSaveState: Dispatch<SetStateAction<{ unsavedPosts: PostWithPurchases[]; activePostId: string | null }>>;
+  setTempSaveState: Dispatch<SetStateAction<TempSaveState>>;
 };
 
 export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlersProps) => {
@@ -125,7 +125,8 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
       const updatedUnsavedPosts = await fetchUnsavedPosts(currentUser.id);
       setTempSaveState((prevState) => ({
         ...prevState,
-        unsavedPosts: updatedUnsavedPosts.filter((post) => post.is_saved)
+        unsavedPosts: updatedUnsavedPosts.filter((post) => post.is_saved),
+        isWriting: prevState.isWriting, // 누락 방지
       }));
 
       alert("저장 성공!");

@@ -140,7 +140,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
         {state.searchResults.map((result, index) => (
           <li
             key={index}
-            className="cursor-pointer bg-bg-02 p-3 text-text-03"
+            className="cursor-pointer bg-bg-02 p-3 text-text-03 hover:text-text-04"
             onClick={() => {
               if (result !== "검색 결과가 없습니다." && result !== "검색 중 오류가 발생했습니다.") {
                 onSelectAddress(result);
@@ -154,22 +154,9 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
       </ul>
 
       {/* 검색 버튼 */}
-      <Button onClick={handleSearch} className="mt-10 w-full" disabled={state.loading}>
+      <Button onClick={handleSearch} className="mt-6 w-full" disabled={state.loading}>
         {state.loading ? "검색 중..." : "검색"}
       </Button>
-
-      {/* 현재 위치 가져오기 버튼 */}
-      {/* <Button
-        onClick={handleGetCurrentLocation}
-        variant="primaryLine"
-        className="mt-4 w-full"
-        disabled={state.geoLoading}
-      >
-        {state.geoLoading ? "현재 위치 가져오는 중..." : "현재 위치 가져오기"}
-      </Button>  */}
-
-      {/* 에러 메시지 */}
-      {state.errorMessage && <p className="text-sm mt-2 text-red-600">{state.errorMessage}</p>}
     </ModalItem>
   );
 };

@@ -25,7 +25,7 @@ const ContentSection = ({ content, onChange, isMissing }: ContentSectionProps) =
       )}
       placeholder="예시 - 소개팅 가야하는데 도와주세요"
     />
-    {isMissing && <p className="pt-4 pl-2 text-body text-status-danger">본문을 입력해주세요.</p>}
+    {isMissing && <p className="pt-2 text-body text-status-danger">본문을 입력해주세요.</p>}
   </div>
 );
 

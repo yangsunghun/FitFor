@@ -53,7 +53,6 @@ const WritePage = () => {
 
   const isWriting = checkIsWriting(); // 작성 중 여부 확인
   const hasAlertShown = useRef(false);
-  const hasTriggeredPopState = useRef(false); // popstate 중복 방지
 
   const fetchUnsavedPostsRef = useRef(fetchUnsavedPosts);
   const handleContinuePostRef = useRef(handleContinuePost);
@@ -63,14 +62,16 @@ const WritePage = () => {
     handleContinuePostRef.current = handleContinuePost; // 최신 함수 참조
   }, [fetchUnsavedPosts, handleContinuePost]);
 
+  // 페이지 진입 시 임시 저장 게시글 확인
   useEffect(() => {
-    if (currentUser?.id) {
+    if (currentUser?.id && !hasAlertShown.current) {
+      hasAlertShown.current = true; // 첫 실행 시 플래그 설정
       (async () => {
         try {
           const posts = await fetchUnsavedPostsRef.current(currentUser.id);
           setState((prev) => ({ ...prev, unsavedPosts: posts }));
 
-          if (posts.length > 0 && !hasAlertShown.current) {
+          if (posts.length > 0) {
             const latestPost = posts[0];
             const continueWriting = confirm(
               `${relativeTimeDay(latestPost.created_at)}에 작성한 글이 있습니다. 이어서 작성하시겠습니까?`
@@ -80,30 +81,28 @@ const WritePage = () => {
               setState((prev) => ({ ...prev, activePostId: latestPost.id })); // 활성화된 게시글 ID 업데이트
               await handleContinuePostRef.current(latestPost);
             } else {
-              setState((prev) => ({ ...prev, activePostId: null }));
+              // 취소 시 임시 저장 삭제
+              await handleDiscardPost(latestPost.id); // 임시 저장 삭제
+              setState((prev) => ({ ...prev, activePostId: null })); // 활성화 ID 초기화
             }
-
-            hasAlertShown.current = true;
           }
         } catch (error) {
           console.error("임시 저장 게시물 처리 중 오류 발생:", error);
         }
       })();
     }
-  }, [currentUser]);
+  }, [currentUser, handleDiscardPost]);
 
   // 히스토리 상태 초기화
   useEffect(() => {
     window.history.pushState(null, "", window.location.href); // 현재 상태 저장
     const handlePopState = () => {
-      if (isWriting && !hasTriggeredPopState.current) {
+      if (isWriting) {
         setState((prevState) => ({
           ...prevState,
           isExitModalOpen: true,
           pendingNavigation: "/", // 기본적으로 메인 페이지 이동
         }));
-        hasTriggeredPopState.current = true; // popstate 중복 방지
-        window.history.pushState(null, "", window.location.href); // 뒤로가기 취소
       }
     };
 
@@ -122,15 +121,16 @@ const WritePage = () => {
     }
   };
 
-  // 모달 취소 클릭 시
-  const handleCancelExit = () => {
-    setState((prevState) => ({
-      ...prevState,
-      isExitModalOpen: false,
-      pendingNavigation: null, // 경로 초기화
-    }));
-    hasTriggeredPopState.current = false; // popstate 플래그 초기화
-  };
+// 모달 취소 클릭 시 (나가기 버튼 처리)
+const handleCancelExit = () => {
+  const targetNavigation = state.pendingNavigation || "/"; // 경로가 없으면 기본적으로 메인 페이지로 이동
+  setState((prevState) => ({
+    ...prevState,
+    isExitModalOpen: false, // 모달 닫기
+    pendingNavigation: null, // 경로 초기화
+  }));
+  router.push(targetNavigation); // 경로 이동
+};
 
   return (
     <div className="mx-auto max-w-[700px] pb-20 pt-20">

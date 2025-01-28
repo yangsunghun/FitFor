@@ -107,10 +107,19 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
   const handleTemporarySave = async () => {
     const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
 
-    if (!content) {
-      alert("내용을 입력해주세요.");
-      return;
-    }
+   // 작성 여부 판단: 하나라도 입력된 값이 있으면 저장 가능
+   const isFormFilled =
+   content.trim().length > 0 ||
+   address.trim().length > 0 ||
+   images.length > 0 ||
+   tags.length > 0 ||
+   Object.values(body_size || {}).some((value) => value) || // body_size 필드 값 체크
+   purchases.length > 0;
+
+ if (!isFormFilled) {
+   alert("작성된 항목이 없습니다. 내용을 입력해주세요.");
+   return;
+ }
 
     if (!currentUser?.id) {
       alert("로그인이 필요합니다.");

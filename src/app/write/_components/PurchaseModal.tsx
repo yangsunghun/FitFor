@@ -329,7 +329,7 @@ const PurchaseModal = ({
       <div className="pt-10">
         {/* 완료 버튼 */}
         <Button
-          variant={title && image_url ? "secondary" : "disabled"} // 입력값에 따라 variant 변경
+          variant={title && image_url ? "primary" : "disabled"} // 입력값에 따라 variant 변경
           size="lg"
           className="w-full"
           onClick={handleSubmit}

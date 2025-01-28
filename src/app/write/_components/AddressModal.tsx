@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
 import { getAddressFromCoordinates, getCurrentPosition } from "@/lib/utils/write/location";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { CircleNotch, MagnifyingGlass, MapPin } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 
 type AddressModalProps = {
@@ -103,7 +103,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
   return (
     <ModalItem isOpen={isOpen} onClose={onClose}>
       {/* 모달 제목 */}
-      <h2 className="mb-6 items-center text-subtitle">위치 찾기</h2>
+      <h2 className="mb-6 items-center font-bold text-title2">위치 찾기</h2>
 
       {/* 검색 입력 필드 */}
       <div className="relative w-[30vw] max-w-full">
@@ -116,7 +116,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
           value={state.searchTerm}
           onChange={handleInputChange}
           placeholder="주소 입력 (예: 서초동)"
-          className="w-full rounded-md border border-line-03 bg-bg-01 p-3 pl-10 text-body text-text-04 focus:outline-none"
+          className="w-full rounded-lg bg-bg-02 p-4 pl-12 pr-10 text-body text-text-03 focus:outline-none"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -124,19 +124,23 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
             }
           }}
         />
+        <div className="absolute inset-y-0 right-3 flex items-center">
+          <button
+            onClick={handleGetCurrentLocation}
+            className="flex items-center justify-center text-text-03"
+            disabled={state.geoLoading}
+          >
+            {state.geoLoading ? <CircleNotch className="text-primary h-6 w-6 animate-spin tb:h-6 tb:w-6" /> : <MapPin size={24} />}
+          </button>
+        </div>
       </div>
 
-      {/* 검색 버튼 */}
-      <Button onClick={handleSearch} className="mt-2 w-full" disabled={state.loading}>
-        {state.loading ? "검색 중..." : "검색"}
-      </Button>
-
       {/* 검색 결과 목록 */}
-      <ul className="mt-4 max-h-60 overflow-y-auto rounded-md border border-line-03 bg-bg-01">
+      <ul className="mt-4 max-h-60 overflow-y-auto rounded-md bg-bg-02 text-text-03">
         {state.searchResults.map((result, index) => (
           <li
             key={index}
-            className="cursor-pointer border-b border-line-02 p-3 text-text-04 hover:bg-gray-100"
+            className="cursor-pointer bg-bg-02 p-3 text-text-03"
             onClick={() => {
               if (result !== "검색 결과가 없습니다." && result !== "검색 중 오류가 발생했습니다.") {
                 onSelectAddress(result);
@@ -149,15 +153,20 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
         ))}
       </ul>
 
+      {/* 검색 버튼 */}
+      <Button onClick={handleSearch} className="mt-10 w-full" disabled={state.loading}>
+        {state.loading ? "검색 중..." : "검색"}
+      </Button>
+
       {/* 현재 위치 가져오기 버튼 */}
-      <Button
+      {/* <Button
         onClick={handleGetCurrentLocation}
         variant="primaryLine"
         className="mt-4 w-full"
         disabled={state.geoLoading}
       >
         {state.geoLoading ? "현재 위치 가져오는 중..." : "현재 위치 가져오기"}
-      </Button>
+      </Button>  */}
 
       {/* 에러 메시지 */}
       {state.errorMessage && <p className="text-sm mt-2 text-red-600">{state.errorMessage}</p>}

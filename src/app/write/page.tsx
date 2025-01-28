@@ -15,6 +15,7 @@ import LocationSection from "./_components/LocationSection";
 import ProductSection from "./_components/ProductSection";
 import PurchaseModal from "./_components/PurchaseModal";
 import TempSaveModal from "./_components/TempSaveModal";
+import { Button } from "@/components/ui/Button";
 
 const WritePage = () => {
   const currentUser = useAuthStore((state) => state.user);
@@ -151,7 +152,7 @@ const WritePage = () => {
       </div>
 
       <div className="flex justify-center gap-6 pt-20">
-        {/* 임시 저장 버튼 */}
+        {/* 임시 저장 버튼
         <button
           onClick={async () => {
             try {
@@ -189,10 +190,10 @@ const WritePage = () => {
           >
             {state.unsavedPosts.length}
           </span>
-        </button>
-        <button onClick={handleSubmit} className="rounded-lg bg-primary-default px-8 py-4 text-body text-bg-01">
-          게시물 만들기
-        </button>
+        </button> */}
+        <Button variant="primary" size="lg" onClick={handleSubmit} className="w-[180px]">
+          등록하기
+        </Button>
       </div>
 
       {/* 최상단 이동 플로팅 버튼 */}

@@ -27,7 +27,7 @@ const WritePage = () => {
     isWriting: false,
     unsavedPosts: [] as PostWithPurchases[],
     activePostId: null as string | null,
-    pendingNavigation: null as string | null, // 이동 예정 경로 저장
+    pendingNavigation: null as string | null // 이동 예정 경로 저장
   });
 
   const {
@@ -48,12 +48,13 @@ const WritePage = () => {
     handleContinuePost,
     handleDiscardPost,
     handleTemporarySave,
-    handleFieldChange,
+    handleFieldChange
   } = useFormHandlers();
 
   const isWriting = checkIsWriting(); // 작성 중 여부 확인
   const hasAlertShown = useRef(false);
   const navigationBlocked = useRef(false); // 네비게이션 중복 방지 플래그
+  const popStateTriggered = useRef(false); // 뒤로가기 이벤트 중복 방지
 
   const fetchUnsavedPostsRef = useRef(fetchUnsavedPosts);
   const handleContinuePostRef = useRef(handleContinuePost);
@@ -94,27 +95,6 @@ const WritePage = () => {
     }
   }, [currentUser, handleDiscardPost]);
 
-  // 뒤로가기 및 페이지 이탈 감지
-  useEffect(() => {
-    const handlePopState = () => {
-      if (isWriting && !navigationBlocked.current) {
-        setState((prevState) => ({
-          ...prevState,
-          isExitModalOpen: true, // 모달 열기
-          pendingNavigation: null, // 뒤로가기는 경로 저장 필요 없음
-        }));
-        navigationBlocked.current = true;
-        window.history.pushState(null, "", window.location.href); // 뒤로가기 취소
-      }
-    };
-
-    window.addEventListener("popstate", handlePopState);
-
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, [isWriting]);
-
   // 페이지 이동 처리 (Next.js의 router.push 포함)
   useEffect(() => {
     const originalPush = router.push; // 원래 push 함수 저장
@@ -123,7 +103,7 @@ const WritePage = () => {
         setState((prevState) => ({
           ...prevState,
           isExitModalOpen: true, // 모달 열기
-          pendingNavigation: url, // 이동하려는 경로 저장
+          pendingNavigation: url // 이동하려는 경로 저장
         }));
         navigationBlocked.current = true; // 중복 방지
       } else {
@@ -136,22 +116,57 @@ const WritePage = () => {
     };
   }, [isWriting, router]);
 
-  // 모달 확인 클릭 시
+  // 뒤로가기 및 페이지 이탈 감지
+  useEffect(() => {
+    const handlePopState = () => {
+      if (isWriting && !popStateTriggered.current) {
+        popStateTriggered.current = true; // 중복 실행 방지
+        setState((prevState) => ({
+          ...prevState,
+          isExitModalOpen: true, // 모달 열기
+          pendingNavigation: document.referrer || "/" // 🔹 뒤로가기 경로 저장
+        }));
+        window.history.pushState(null, "", window.location.href); // 🔹 다시 현재 페이지를 push
+      }
+    };
+
+    window.history.pushState(null, "", window.location.href); // 🔹 추가: 최초 로딩 시 pushState 실행
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [isWriting]);
+
+  // 모달 확인 클릭 시 (임시 저장 후 이동)
   const handleConfirmExit = async () => {
-    await handleTemporarySave(); // 임시 저장
+    await handleTemporarySave(); // 🔹 임시 저장 수행
     if (state.pendingNavigation) {
-      router.push(state.pendingNavigation); // 저장된 경로로 이동
+      router.push(state.pendingNavigation); // 🔹 저장된 경로로 이동
+    } else {
+      window.history.back(); // 🔹 뒤로가기 실행 (fallback)
     }
   };
 
-  // 모달 취소 클릭 시
+  // 모달 취소 클릭 시 (뒤로가기 취소 & 지정된 경로로 이동)
   const handleCancelExit = () => {
     setState((prevState) => ({
       ...prevState,
-      isExitModalOpen: false, // 모달 닫기
-      pendingNavigation: null, // 경로 초기화
+      isExitModalOpen: false, // 🔹 모달 닫기
+      pendingNavigation: null // 🔹 경로 초기화
     }));
-    navigationBlocked.current = false; // 중복 방지 초기화
+
+    setTimeout(() => {
+      popStateTriggered.current = false; // 🔹 뒤로가기 플래그 초기화
+    }, 100);
+
+    if (state.pendingNavigation) {
+      router.push(state.pendingNavigation); // 🔹 저장된 경로로 이동
+    } else if (document.referrer) {
+      window.location.href = document.referrer; // 🔹 이전 페이지로 이동 (정확한 referrer가 있을 때만)
+    } else {
+      router.push("/"); // 🔹 이전 페이지 정보가 없으면 홈으로 이동
+    }
   };
 
   return (

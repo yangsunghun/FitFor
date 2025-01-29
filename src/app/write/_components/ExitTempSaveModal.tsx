@@ -20,10 +20,10 @@ const ExitTempSaveModal = ({ isOpen, onConfirm, onCancel }: ExitTempSaveModalPro
           페이지를 떠나게 되면 입력하신 정보가 모두 사라져요.
         </p>
         <div className="mt-6 flex justify-center gap-4">
-          <Button variant="grayLine" onClick={onCancel}>
+          <Button variant="disabled" size="lg" onClick={onCancel} className="w-full !text-text-04">
             나가기
           </Button>
-          <Button variant="primary" onClick={onConfirm}>
+          <Button variant="primary" size="lg" onClick={onConfirm} className="w-full">
             저장하기
           </Button>
         </div>

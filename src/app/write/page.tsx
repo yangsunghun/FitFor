@@ -53,6 +53,7 @@ const WritePage = () => {
 
   const isWriting = checkIsWriting(); // 작성 중 여부 확인
   const hasAlertShown = useRef(false);
+  const navigationBlocked = useRef(false); // 네비게이션 중복 방지 플래그
 
   const fetchUnsavedPostsRef = useRef(fetchUnsavedPosts);
   const handleContinuePostRef = useRef(handleContinuePost);
@@ -93,16 +94,17 @@ const WritePage = () => {
     }
   }, [currentUser, handleDiscardPost]);
 
-  // 히스토리 상태 초기화
+  // 뒤로가기 및 페이지 이탈 감지
   useEffect(() => {
-    window.history.pushState(null, "", window.location.href); // 현재 상태 저장
     const handlePopState = () => {
-      if (isWriting) {
+      if (isWriting && !navigationBlocked.current) {
         setState((prevState) => ({
           ...prevState,
-          isExitModalOpen: true,
-          pendingNavigation: "/", // 기본적으로 메인 페이지 이동
+          isExitModalOpen: true, // 모달 열기
+          pendingNavigation: null, // 뒤로가기는 경로 저장 필요 없음
         }));
+        navigationBlocked.current = true;
+        window.history.pushState(null, "", window.location.href); // 뒤로가기 취소
       }
     };
 
@@ -113,24 +115,44 @@ const WritePage = () => {
     };
   }, [isWriting]);
 
+  // 페이지 이동 처리 (Next.js의 router.push 포함)
+  useEffect(() => {
+    const originalPush = router.push; // 원래 push 함수 저장
+    router.push = (url: string) => {
+      if (isWriting && !navigationBlocked.current) {
+        setState((prevState) => ({
+          ...prevState,
+          isExitModalOpen: true, // 모달 열기
+          pendingNavigation: url, // 이동하려는 경로 저장
+        }));
+        navigationBlocked.current = true; // 중복 방지
+      } else {
+        originalPush(url); // 바로 이동
+      }
+    };
+
+    return () => {
+      router.push = originalPush; // 원래 push 함수로 복원
+    };
+  }, [isWriting, router]);
+
   // 모달 확인 클릭 시
   const handleConfirmExit = async () => {
     await handleTemporarySave(); // 임시 저장
     if (state.pendingNavigation) {
-      router.push(state.pendingNavigation);
+      router.push(state.pendingNavigation); // 저장된 경로로 이동
     }
   };
 
-// 모달 취소 클릭 시 (나가기 버튼 처리)
-const handleCancelExit = () => {
-  const targetNavigation = state.pendingNavigation || "/"; // 경로가 없으면 기본적으로 메인 페이지로 이동
-  setState((prevState) => ({
-    ...prevState,
-    isExitModalOpen: false, // 모달 닫기
-    pendingNavigation: null, // 경로 초기화
-  }));
-  router.push(targetNavigation); // 경로 이동
-};
+  // 모달 취소 클릭 시
+  const handleCancelExit = () => {
+    setState((prevState) => ({
+      ...prevState,
+      isExitModalOpen: false, // 모달 닫기
+      pendingNavigation: null, // 경로 초기화
+    }));
+    navigationBlocked.current = false; // 중복 방지 초기화
+  };
 
   return (
     <div className="mx-auto max-w-[700px] pb-20 pt-20">

@@ -124,13 +124,13 @@ const WritePage = () => {
         setState((prevState) => ({
           ...prevState,
           isExitModalOpen: true, // 모달 열기
-          pendingNavigation: document.referrer || "/" // 🔹 뒤로가기 경로 저장
+          pendingNavigation: document.referrer || "/" // 뒤로가기 경로 저장
         }));
-        window.history.pushState(null, "", window.location.href); // 🔹 다시 현재 페이지를 push
+        window.history.pushState(null, "", window.location.href); // 다시 현재 페이지를 push
       }
     };
 
-    window.history.pushState(null, "", window.location.href); // 🔹 추가: 최초 로딩 시 pushState 실행
+    window.history.pushState(null, "", window.location.href); // 추가: 최초 로딩 시 pushState 실행
     window.addEventListener("popstate", handlePopState);
 
     return () => {
@@ -140,11 +140,11 @@ const WritePage = () => {
 
   // 모달 확인 클릭 시 (임시 저장 후 이동)
   const handleConfirmExit = async () => {
-    await handleTemporarySave(); // 🔹 임시 저장 수행
+    await handleTemporarySave(); // 임시 저장 수행
     if (state.pendingNavigation) {
-      router.push(state.pendingNavigation); // 🔹 저장된 경로로 이동
+      router.push(state.pendingNavigation); // 저장된 경로로 이동
     } else {
-      window.history.back(); // 🔹 뒤로가기 실행 (fallback)
+      window.history.back(); // 뒤로가기 실행 (fallback)
     }
   };
 
@@ -152,20 +152,20 @@ const WritePage = () => {
   const handleCancelExit = () => {
     setState((prevState) => ({
       ...prevState,
-      isExitModalOpen: false, // 🔹 모달 닫기
-      pendingNavigation: null // 🔹 경로 초기화
+      isExitModalOpen: false, // 모달 닫기
+      pendingNavigation: null // 경로 초기화
     }));
 
     setTimeout(() => {
-      popStateTriggered.current = false; // 🔹 뒤로가기 플래그 초기화
+      popStateTriggered.current = false; // 뒤로가기 플래그 초기화
     }, 100);
 
     if (state.pendingNavigation) {
-      router.push(state.pendingNavigation); // 🔹 저장된 경로로 이동
+      router.push(state.pendingNavigation); // 저장된 경로로 이동
     } else if (document.referrer) {
-      window.location.href = document.referrer; // 🔹 이전 페이지로 이동 (정확한 referrer가 있을 때만)
+      window.location.href = document.referrer; // 이전 페이지로 이동 (정확한 referrer가 있을 때만)
     } else {
-      router.push("/"); // 🔹 이전 페이지 정보가 없으면 홈으로 이동
+      router.push("/"); // 이전 페이지 정보가 없으면 홈으로 이동
     }
   };
 

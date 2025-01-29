@@ -203,12 +203,6 @@ const PurchaseModal = ({
       return;
     }
 
-    // // 필수 입력 항목 확인
-    // if (!title || !image_url || !buy_link) {
-    //   alert("모든 필드를 입력해주세요.");
-    //   return;
-    // }
-
     const product = { title, description, buy_link, image_url, post_id };
     if (mode === "add") {
       // 추가 모드
@@ -235,7 +229,7 @@ const PurchaseModal = ({
     <ModalItem isOpen={isOpen} onClose={handleClose}>
       <div className="space-y-2">
         <div className="flex items-center gap-1">
-          <span className="text-title2 font-bold text-text-04">게시물 이미지</span>
+          <span className="text-title2 font-bold leading-[27px] text-text-04">상품 이미지</span>
           <span className="text-title2 font-bold text-primary-default">*</span>
         </div>
 
@@ -273,22 +267,24 @@ const PurchaseModal = ({
               <p className="text-body text-text-03">추천 사이즈 : OOO x OOO</p>
               <p className="text-body text-text-03">JPG, PNG. 최대 5MB</p>
             </div>
-            <button
-              className="mt-4 h-9 rounded-lg bg-bg-03 px-3 py-1 text-text-01 hover:bg-gray-800"
+            <Button
+              variant={loading ? "disabled" : "secondary"}
+              size="sm"
+              className="mt-4 flex h-9 items-center justify-center px-4 leading-snug"
               onClick={handleImageUpload}
               disabled={loading} // 로딩 중일 때 버튼 비활성화
             >
               {loading ? "업로드 중..." : "이미지 업로드"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
       {/* 상품명 */}
       <div className="w-[30vw] max-w-full space-y-2 pt-6">
-      <div className="flex items-center gap-1">
-        <label className="block text-title2 font-bold">상품명</label>
-        <span className="text-title2 font-bold text-primary-default">*</span>
+        <div className="flex items-center gap-1">
+          <label className="block text-title2 font-bold">상품명</label>
+          <span className="text-title2 font-bold text-primary-default">*</span>
         </div>
         <input
           type="text"

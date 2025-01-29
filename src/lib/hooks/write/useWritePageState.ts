@@ -1,9 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { PostWithPurchases } from "@/lib/hooks/write/useFormStateHandlers";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import { useAuthStore } from "@/lib/store/authStore";
-import { useRouter } from "next/navigation";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
+import { useEffect, useRef, useState } from "react";
 
 export type UseWritePageStateReturn = ReturnType<typeof useWritePageState>;
 
@@ -14,7 +12,7 @@ export const useWritePageState = () => {
     isWriting: false,
     pendingNavigation: null as string | null,
     unsavedPosts: [] as any[],
-    activePostId: null as string | null,
+    activePostId: null as string | null
   });
 
   const {
@@ -39,7 +37,7 @@ export const useWritePageState = () => {
     setInitialFormState,
     handleUpdate,
     tempSaveState,
-    setTempSaveState,
+    setTempSaveState
   } = useFormHandlers();
 
   const isWritingRef = useRef(false);
@@ -61,7 +59,7 @@ export const useWritePageState = () => {
   useEffect(() => {
     if (!currentUser?.id || hasAlertShown.current) return;
 
-    hasAlertShown.current = true; // ✅ 실행 전에 플래그 설정
+    hasAlertShown.current = true; // 실행 전에 플래그 설정
 
     const checkUnsavedPosts = async () => {
       try {
@@ -80,14 +78,14 @@ export const useWritePageState = () => {
           setState((prev) => ({
             ...prev,
             activePostId: latestPost.id,
-            isWriting: true,
+            isWriting: true
           }));
         } else {
           await handleDiscardPost(latestPost.id);
           setState((prev) => ({
             ...prev,
             isWriting: false,
-            unsavedPosts: prev.unsavedPosts.filter((p) => p.id !== latestPost.id),
+            unsavedPosts: prev.unsavedPosts.filter((p) => p.id !== latestPost.id)
           }));
         }
       } finally {
@@ -125,6 +123,6 @@ export const useWritePageState = () => {
     setTempSaveState,
     isWritingRef,
     navigationBlocked,
-    popStateTriggered,
+    popStateTriggered
   };
 };

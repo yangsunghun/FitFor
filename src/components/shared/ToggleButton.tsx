@@ -3,39 +3,37 @@
 import clsx from "clsx";
 import type { ReactNode } from "react";
 
-type ToggleButtonProps = {
+type Props = {
   isActive: boolean;
-
   count?: number | null;
   onClick?: () => void;
   activeIcon?: ReactNode;
   inactiveIcon: ReactNode;
-  btnStyle: string;
-  text?: boolean;
+  btnStyle?: string;
+  textLabel?: string;
   showNumber?: boolean;
 };
 
 const ToggleButton = ({
   isActive,
-
   count,
   onClick,
   activeIcon,
   inactiveIcon,
-  btnStyle,
-  text,
+  btnStyle = "",
+  textLabel,
   showNumber
-}: ToggleButtonProps) => {
+}: Props) => {
   return (
-    <span>
-      <button onClick={onClick} className={btnStyle}>
-        {isActive ? activeIcon : inactiveIcon}
+    <button onClick={onClick} className={clsx("flex items-center gap-1 transition-all", btnStyle)}>
+      {isActive ? activeIcon : inactiveIcon}
+      {(showNumber || textLabel) && (
         <span className={clsx({ "text-text-03": !isActive, "text-inherit": isActive })}>
           {showNumber && typeof count === "number" && count}
-          {text && "북마크"}
+          {textLabel && ` ${textLabel}`}
         </span>
-      </button>
-    </span>
+      )}
+    </button>
   );
 };
 

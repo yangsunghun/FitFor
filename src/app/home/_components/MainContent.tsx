@@ -30,7 +30,7 @@ const MainContent = () => {
           fetchNextPage();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 1 }
     );
     if (observerRef.current) observer.observe(observerRef.current);
     return () => observer.disconnect();
@@ -40,7 +40,7 @@ const MainContent = () => {
 
   return (
     <>
-      <section className="pb-10">
+      <section className="relative">
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
 
         {isMasonry ? (
@@ -49,16 +49,22 @@ const MainContent = () => {
           <MasonryLayout isPending={isPending} posts={posts} />
         )}
 
-        {hasNextPage ? (
-          <div ref={observerRef}>
-            {isFetchingNextPage ? <LoadingSpinner /> : <p className="text-center">스크롤하여 더보기</p>}
-          </div>
-        ) : (
-          <p className="mt-20 text-center text-subtitle font-medium text-text-02">마지막 게시물 입니다</p>
-        )}
-
-        <OnboardingModal />
+        <div className="absolute bottom-0 left-0 h-[10vh] w-full bg-gradient-to-t from-bg-01 to-transparent"></div>
       </section>
+
+      {hasNextPage ? (
+        <div ref={observerRef}>
+          {isFetchingNextPage ? (
+            <LoadingSpinner />
+          ) : (
+            <p className="pt-[10vh] text-center text-subtitle font-medium text-text-02">스크롤하여 더보기</p>
+          )}
+        </div>
+      ) : (
+        <p className="pt-[10vh] text-center text-subtitle font-medium text-text-02">마지막 게시물 입니다</p>
+      )}
+
+      <OnboardingModal />
 
       {user && (
         <FloatingButton

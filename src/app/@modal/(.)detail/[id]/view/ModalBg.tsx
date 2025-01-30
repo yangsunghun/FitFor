@@ -1,7 +1,8 @@
 "use client";
 
+import useLockScroll from "@/lib/hooks/common/useLockScroll";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
+import { type MouseEvent, type ReactNode } from "react";
 
 type ModalBgProps = {
   children: ReactNode;
@@ -9,21 +10,8 @@ type ModalBgProps = {
 
 const ModalBg = ({ children }: ModalBgProps) => {
   const router = useRouter();
-  const bodyRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    bodyRef.current = document.body;
-
-    if (bodyRef.current) {
-      bodyRef.current.style.overflow = "hidden";
-    }
-
-    return () => {
-      if (bodyRef.current) {
-        bodyRef.current.style.overflow = "";
-      }
-    };
-  }, []);
+  useLockScroll();
 
   const handleClose = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {

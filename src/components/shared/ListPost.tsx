@@ -20,7 +20,7 @@ const Listpost = ({ post }: Props) => {
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   return (
-    <li className="relative mb-6 flex gap-6 py-4 mb:mb-[24px] mb:justify-between mb:gap-0 mb:py-0">
+    <li className="relative mb-10 flex gap-6 mb:mb-[24px] mb:justify-between mb:gap-0">
       <Link href={`/detail/${post.id}${isTabletOrSmaller ? "" : "/view"}`} className="click-box z-10"></Link>
       <figure className="thumbnail aspect-square w-[11.25rem] rounded-2xl bg-gray-200 tb:w-[150px] tb:rounded-lg mb:w-[89px]">
         <Image
@@ -34,20 +34,23 @@ const Listpost = ({ post }: Props) => {
       </figure>
 
       <div className="relative w-[calc(100%-12.75rem)] mb:w-[calc(100%-110px)]">
-        <div className="flex items-center gap-4 tb:hidden">
-          <figure className="relative">
-            <ProfileImageCircle
-              profileImage={post.users.profile_image}
-              nickname={post.users.nickname}
-              size={40}
-              className="h-10 w-10"
-            />
-            <VerifiedBadge isVerified={post.users.is_verified || false} />
-          </figure>
-          <div>
-            <p className="text-title2 font-bold">{post.users.nickname || "익명"}</p>
-            <p className="text-text-03">{relativeTimeDay(post.created_at)}</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 tb:hidden">
+            <figure className="relative">
+              <ProfileImageCircle
+                profileImage={post.users.profile_image}
+                nickname={post.users.nickname}
+                size={40}
+                className="h-10 w-10"
+              />
+              <VerifiedBadge isVerified={post.users.is_verified || false} />
+            </figure>
+            <div>
+              <p className="text-title2 font-bold">{post.users.nickname || "익명"}</p>
+              <p className="text-text-03">{post.upload_place}</p>
+            </div>
           </div>
+          <p className="text-text-03 tb:hidden">{relativeTimeDay(post.created_at)}</p>
         </div>
 
         <p className="mb:ellip1 ellip2 mt-2 text-subtitle font-medium text-text-04 tb:mt-0 tb:text-title2 mb:line-clamp-none mb:break-all mb:text-body">

@@ -35,6 +35,7 @@ const ContentsSkeleton = () => {
             <div className="skeleton-effect h-12 w-8"></div>
             <div className="skeleton-effect h-12 w-8"></div>
             <div className="skeleton-effect h-12 w-8"></div>
+            <div className="skeleton-effect h-12 w-8"></div>
           </div>
         </div>
       </article>

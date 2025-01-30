@@ -1,7 +1,8 @@
 "use client";
+import useLockScroll from "@/lib/hooks/common/useLockScroll";
 import { X } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useState } from "react";
 
 type SlideOverProps = {
   title: string;
@@ -12,24 +13,7 @@ type SlideOverProps = {
 const SlideOver = ({ title, children, onClose }: SlideOverProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
-  // Prevent body scrolling
-  const bodyRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    bodyRef.current = document.body;
-
-    if (isVisible && bodyRef.current) {
-      bodyRef.current.style.overflow = "hidden";
-    } else if (bodyRef.current) {
-      bodyRef.current.style.overflow = "";
-    }
-
-    return () => {
-      if (bodyRef.current) {
-        bodyRef.current.style.overflow = "";
-      }
-    };
-  }, [isVisible]);
+  useLockScroll(isVisible);
 
   if (!isVisible) return null;
 

@@ -1,7 +1,8 @@
 "use client";
 
+import useLockScroll from "@/lib/hooks/common/useLockScroll";
 import clsx from "clsx";
-import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
+import { type MouseEvent, type ReactNode } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -12,25 +13,7 @@ type Props = {
 };
 
 const ModalItem = ({ isOpen, onClose, children, mode = "default", className }: Props) => {
-  // 서버에서 브라우저 객체 undefined 방지
-  const bodyRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    // 클라이언트에서 초기화
-    bodyRef.current = document.body;
-
-    if (isOpen && bodyRef.current) {
-      bodyRef.current.style.overflow = "hidden";
-    } else if (bodyRef.current) {
-      bodyRef.current.style.overflow = "";
-    }
-
-    return () => {
-      if (bodyRef.current) {
-        bodyRef.current.style.overflow = "";
-      }
-    };
-  }, [isOpen]);
+  useLockScroll(isOpen);
   if (!isOpen) return null;
 
   const handleOverlayClick = (event: MouseEvent<HTMLDivElement>) => {

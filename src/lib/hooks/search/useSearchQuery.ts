@@ -65,8 +65,8 @@ export const useSearchQuery = () => {
       // 이미 선택된 태그라면 제거
       updatedTags[key] = updatedTags[key].filter((t) => t !== tag);
     } else {
-      // 새 태그를 추가하려고 할 때 최대 4개로 제한
-      if (updatedTags[key].length >= 4) {
+      // 새 태그를 추가하려고 할 때 최대 5개로 제한
+      if (updatedTags[key].length >= 5) {
         toast("태그는 최대 4개까지만 선택할 수 있습니다.", "warning");
         return;
       }

@@ -3,10 +3,17 @@ import { Tags } from "@/components/ui/Tags";
 const ContentsSkeleton = () => {
   return (
     <>
-      <article className="flex justify-between">
-        <div className="skeleton-effect aspect-square w-[48%] rounded-2xl"></div>
-        <div className="relative w-[46%]">
-          <div className="flex items-center gap-4">
+      <article className="flex justify-between tb:flex-wrap">
+        <div className="inner hidden h-[60px] items-center gap-4 tb:flex">
+          <div className="skeleton-effect h-[40px] w-[40px] rounded-full"></div>
+          <div>
+            <p className="skeleton-effect2 h-4 w-10"></p>
+            <p className="skeleton-effect2 mt-1 h-3 w-16"></p>
+          </div>
+        </div>
+        <div className="skeleton-effect aspect-square w-[48%] rounded-2xl tb:w-full tb:rounded-none"></div>
+        <div className="tb:inner relative w-[46%]">
+          <div className="flex items-center gap-4 tb:hidden">
             <div className="skeleton-effect h-12 w-12 rounded-full"></div>
             <div>
               <p className="skeleton-effect2 h-4 w-10"></p>
@@ -24,7 +31,8 @@ const ContentsSkeleton = () => {
           </div>
           <p className="skeleton-effect2 mt-4 h-4 w-24"></p>
 
-          <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
+          <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium tb:hidden">
+            <div className="skeleton-effect h-12 w-8"></div>
             <div className="skeleton-effect h-12 w-8"></div>
             <div className="skeleton-effect h-12 w-8"></div>
             <div className="skeleton-effect h-12 w-8"></div>

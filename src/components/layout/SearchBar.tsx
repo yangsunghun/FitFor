@@ -49,6 +49,12 @@ const SearchBar = ({ pathname }: Props) => {
     }, 200);
   };
 
+  const highlightMatch = (text: string, query: string) => {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, "gi");
+    return text.replace(regex, `<span class="text-primary-default">$1</span>`);
+  };
+
   // 검색 기록 삭제
   const handleDeleteHistoryItem = (index: number) => {
     const updatedHistory = searchHistory.filter((_, i) => i !== index);
@@ -120,7 +126,7 @@ const SearchBar = ({ pathname }: Props) => {
                   <strong className="text-title2 tb:mt-[1px] tb:text-body tb:font-medium">연관 태그</strong>
                 </li>
                 <li className="my-2 h-[1px] w-full bg-line-02 tb:my-0"></li>
-                {filteredTags.map((tag) => (
+                {filteredTags.slice(0, 5).map((tag) => (
                   <li
                     key={tag}
                     className="tb:inner flex cursor-pointer justify-between py-2 text-title2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
@@ -130,9 +136,10 @@ const SearchBar = ({ pathname }: Props) => {
                         handleSelectTag(tag);
                         setShowDropdown(false);
                       }}
-                    >
-                      {tag}
-                    </button>
+                      dangerouslySetInnerHTML={{
+                        __html: highlightMatch(tag, inputValue) // ✅ 일치하는 부분 강조
+                      }}
+                    />
                   </li>
                 ))}
               </>

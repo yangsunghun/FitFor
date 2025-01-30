@@ -29,15 +29,18 @@ export const useSearchBar = () => {
     setInputValue(value);
 
     if (value.trim() !== "") {
-      const chosungInput = extractUnicode(value); // 입력값의 초성 추출
-      const filtered = allTags.filter((tag) => {
-        const tagChosung = extractUnicode(tag); // 태그의 초성 추출
-        return (
-          tag.toLowerCase().includes(value.toLowerCase()) || // 일반 검색
-          tagChosung.includes(chosungInput) // 초성 검색
-        );
+      const chosungInput = extractUnicode(value); // 입력값 초성 변환
+
+      // 음절 일치 태그
+      const directMatchTags = allTags.filter((tag) => tag.toLowerCase().includes(value.toLowerCase()));
+
+      // 초성 일치 태그
+      const chosungMatchTags = allTags.filter((tag) => {
+        const tagChosung = extractUnicode(tag);
+        return !directMatchTags.includes(tag) && tagChosung.includes(chosungInput);
       });
-      setFilteredTags(filtered);
+
+      setFilteredTags([...directMatchTags, ...chosungMatchTags]);
     } else {
       setFilteredTags([]);
     }

@@ -8,22 +8,21 @@ import ServiceContent from "./ServiceContent";
 
 type AccountModalMode = "agreement" | "serviceRule" | "deleteAccount" | "logout";
 
+const contentComponents: Record<AccountModalMode, React.ComponentType<{ closeModal: () => void }>> = {
+  serviceRule: ServiceContent,
+  agreement: AgreementContent,
+  deleteAccount: AccountDeleteContent,
+  logout: LogOutContent
+};
+
 const AccountSettingTabs = () => {
   const [modal, setModal] = useState(false);
   const [mode, setMode] = useState<AccountModalMode>("agreement");
+
   const menuItems: { title: string; mode: AccountModalMode }[] = [
-    {
-      title: "서비스 약관",
-      mode: "serviceRule"
-    },
-    {
-      title: "개인정보 수집 처리방침",
-      mode: "agreement"
-    },
-    {
-      title: "로그아웃",
-      mode: "logout"
-    },
+    { title: "서비스 약관", mode: "serviceRule" },
+    { title: "개인정보 수집 처리방침", mode: "agreement" },
+    { title: "로그아웃", mode: "logout" },
     { title: "탈퇴하기", mode: "deleteAccount" }
   ];
 
@@ -35,6 +34,8 @@ const AccountSettingTabs = () => {
   const closeModal = () => {
     setModal(false);
   };
+
+  const SelectedContent = contentComponents[mode];
 
   return (
     <>
@@ -51,12 +52,8 @@ const AccountSettingTabs = () => {
         ))}
       </div>
 
-      {/* 리팩터링이 하고 싶은데... 아이디어가 없다... */}
       <ModalItem isOpen={modal} onClose={closeModal} className="mb:p-4">
-        {mode === "serviceRule" && <ServiceContent closeModal={closeModal} />}
-        {mode === "deleteAccount" && <AccountDeleteContent closeModal={closeModal} />}
-        {mode === "agreement" && <AgreementContent closeModal={closeModal} />}
-        {mode === "logout" && <LogOutContent closeModal={closeModal} />}
+        <SelectedContent closeModal={closeModal} />
       </ModalItem>
     </>
   );

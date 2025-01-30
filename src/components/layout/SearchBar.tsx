@@ -2,14 +2,12 @@
 
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useSearchBar } from "@/lib/hooks/search/useSearchBar";
+import { extractChosungJungSung } from "@/lib/utils/common/extractUnicode";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
+import { usePathname } from "next/navigation";
 import { useEffect, type FocusEvent, type FormEvent } from "react";
 
-type Props = {
-  pathname: string;
-};
-
-const SearchBar = ({ pathname }: Props) => {
+const SearchBar = () => {
   const {
     inputValue,
     showDropdown,
@@ -25,7 +23,7 @@ const SearchBar = ({ pathname }: Props) => {
     clearSearchHistory,
     setSearchHistory
   } = useSearchBar();
-
+  const pathname = usePathname();
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
@@ -51,8 +49,19 @@ const SearchBar = ({ pathname }: Props) => {
 
   const highlightMatch = (text: string, query: string) => {
     if (!query) return text;
-    const regex = new RegExp(`(${query})`, "gi");
-    return text.replace(regex, `<span class="text-primary-default">$1</span>`);
+
+    const queryChosungJungSung = extractChosungJungSung(query);
+    const textChosungJungSung = extractChosungJungSung(text);
+
+    // 입력값과 초성+중성까지 일치하는 경우 찾기
+    const matchIndex = textChosungJungSung.indexOf(queryChosungJungSung);
+    if (matchIndex === -1) return text; // 일치하는 부분이 없으면 원본 반환
+
+    // 원래 문자열에서 해당 부분을 찾아 강조
+    const originalMatch = text.substring(matchIndex, matchIndex + query.length);
+    const highlighted = text.replace(originalMatch, `<span class="text-primary-default">${originalMatch}</span>`);
+
+    return highlighted;
   };
 
   // 검색 기록 삭제
@@ -81,7 +90,7 @@ const SearchBar = ({ pathname }: Props) => {
           className="h-12 w-full bg-transparent px-2 text-title2 font-medium outline-none placeholder:text-text-03 tb:h-[44px] tb:text-body tb:text-text-03"
         />
         {showDropdown && (filteredTags.length > 0 || searchHistory.length > 0) && (
-          <ul className="dropdown shadow-emphasize absolute left-0 top-[calc(100%+0.75rem)] z-50 min-h-[360px] w-full rounded-2xl bg-white p-6 tb:left-[-4.55%] tb:top-[calc(100%+17px)] tb:w-screen tb:rounded-none tb:p-0 tb:shadow-none">
+          <ul className="dropdown shadow-emphasize absolute left-0 top-[calc(100%+0.75rem)] z-50 w-full rounded-2xl bg-white p-6 tb:left-[-4.55%] tb:top-[calc(100%+17px)] tb:w-screen tb:rounded-none tb:p-0 tb:shadow-none">
             {/* 검색 기록 */}
             {searchHistory.length > 0 && inputValue.length === 0 && (
               <>
@@ -137,7 +146,7 @@ const SearchBar = ({ pathname }: Props) => {
                         setShowDropdown(false);
                       }}
                       dangerouslySetInnerHTML={{
-                        __html: highlightMatch(tag, inputValue) // ✅ 일치하는 부분 강조
+                        __html: highlightMatch(tag, inputValue) // 일치하는 부분 강조
                       }}
                     />
                   </li>

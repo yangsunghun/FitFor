@@ -5,7 +5,7 @@ import { useWritePageHandlers } from "@/lib/hooks/write/useWritePageHandlers";
 import { useWritePageState } from "@/lib/hooks/write/useWritePageState";
 import ExitTempSaveModal from "./_components/ExitTempSaveModal";
 import SubmitButton from "./_components/SubmitButton";
-import WriteForm from "./_components/WriteForm";
+import PostForm from "./_components/PostForm";
 import WriteHeader from "./_components/WriteHeader";
 
 const WritePage = () => {
@@ -20,7 +20,7 @@ const WritePage = () => {
   return (
     <div className="mx-auto max-w-[700px] pb-20 pt-20">
       <WriteHeader />
-      <WriteForm {...pageState} />
+      <PostForm {...pageState} mode="post" />
       <SubmitButton onSubmit={handleSubmit} />
       <ScrollTopButton />
       <ExitTempSaveModal

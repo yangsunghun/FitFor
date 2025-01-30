@@ -8,9 +8,11 @@ import LocationSection from "./LocationSection";
 import ProductSection from "./ProductSection";
 import PurchaseModal from "./PurchaseModal";
 
-type WriteFormProps = ReturnType<typeof useFormHandlers>;
+type PostFormProps = ReturnType<typeof useFormHandlers> & {
+  mode?: "post" | "edit";
+};
 
-const WriteForm = ({
+const PostForm = ({
   formState,
   handleChange,
   handleFieldChange,
@@ -22,8 +24,9 @@ const WriteForm = ({
   selectedCategory,
   handleChangeCategory,
   toggleTagSelector,
-  missingFields
-}: WriteFormProps) => (
+  missingFields,
+  mode = "post",
+}: PostFormProps) => (
   <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
     <ContentSection
       content={formState.content}
@@ -104,4 +107,4 @@ const WriteForm = ({
   </div>
 );
 
-export default WriteForm;
+export default PostForm;

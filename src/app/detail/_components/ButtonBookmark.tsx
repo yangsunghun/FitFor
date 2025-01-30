@@ -19,19 +19,20 @@ const BookmarkButton = ({
   postId,
   styleType = "masonry",
   iconSize,
-  iconWeight = "regular",
+  iconWeight = "fill",
   showText
 }: BookmarkButtonProps) => {
-  const buttonClass = cn("flex justify-center items-center ", {
-    "w-7 h-7 rounded-lg bg-bg-01 text-text-03": styleType === "masonry",
-    "gap-1 tb:text-text-02": styleType === "list",
-    "flex-col gap-2 text-text-03": styleType === "detail",
-    "text-text-02": styleType === "detailMob"
-  });
   const { user } = useAuthStore();
   const userId = user?.id;
 
   const { isBookmarked, isPending, toggleBookmark } = useBookmarks(postId, userId ?? "");
+
+  const buttonClass = cn("flex justify-center items-center text-text-02 transition-color duration-300", {
+    "text-status-info": isBookmarked,
+    "w-7 h-7 rounded-lg bg-bg-01 ": styleType === "masonry",
+    "gap-1": styleType === "list" || styleType === "detailMob",
+    "flex-col gap-2": styleType === "detail"
+  });
 
   if (!userId) {
     return (
@@ -39,7 +40,7 @@ const BookmarkButton = ({
         btnStyle={buttonClass}
         isActive={false}
         onClick={() => toast("로그인이 필요합니다", "warning")}
-        inactiveIcon={<BookmarkSimple className="transition-color duration-300" size={iconSize} weight={iconWeight} />}
+        inactiveIcon={<BookmarkSimple size={iconSize} weight={iconWeight} />}
         text={showText || false}
       />
     );
@@ -54,10 +55,8 @@ const BookmarkButton = ({
       btnStyle={buttonClass}
       isActive={isBookmarked}
       onClick={toggleBookmark}
-      activeIcon={
-        <BookmarkSimple className="transition-color text-status-info duration-300" size={iconSize} weight="fill" />
-      }
-      inactiveIcon={<BookmarkSimple className="transition-color duration-300" size={iconSize} weight={iconWeight} />}
+      activeIcon={<BookmarkSimple size={iconSize} weight="fill" />}
+      inactiveIcon={<BookmarkSimple size={iconSize} weight={iconWeight} />}
       text={showText || false}
     />
   );

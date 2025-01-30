@@ -1,9 +1,11 @@
 "use client";
 
+import clsx from "clsx";
 import type { ReactNode } from "react";
 
 type ToggleButtonProps = {
   isActive: boolean;
+
   count?: number | null;
   onClick?: () => void;
   activeIcon?: ReactNode;
@@ -15,6 +17,7 @@ type ToggleButtonProps = {
 
 const ToggleButton = ({
   isActive,
+
   count,
   onClick,
   activeIcon,
@@ -27,7 +30,7 @@ const ToggleButton = ({
     <span>
       <button onClick={onClick} className={btnStyle}>
         {isActive ? activeIcon : inactiveIcon}
-        <span className="tb:text-text-03">
+        <span className={clsx({ "text-text-03": !isActive, "text-inherit": isActive })}>
           {showNumber && typeof count === "number" && count}
           {text && "북마크"}
         </span>

@@ -40,7 +40,7 @@ const MainContent = () => {
 
   return (
     <>
-      <section>
+      <section className="pb-10">
         <LayoutToggle isMasonry={isMasonry} onToggle={toggleLayout} />
 
         {isMasonry ? (
@@ -49,10 +49,12 @@ const MainContent = () => {
           <MasonryLayout isPending={isPending} posts={posts} />
         )}
 
-        {hasNextPage && (
+        {hasNextPage ? (
           <div ref={observerRef}>
             {isFetchingNextPage ? <LoadingSpinner /> : <p className="text-center">스크롤하여 더보기</p>}
           </div>
+        ) : (
+          <p className="mt-20 text-center text-subtitle font-medium text-text-02">마지막 게시물 입니다</p>
         )}
 
         <OnboardingModal />

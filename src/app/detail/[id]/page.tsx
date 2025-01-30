@@ -56,7 +56,7 @@ const DetailPage = async ({ params }: DetailPageProps) => {
         <PurchaseList postId={postId} />
       </section>
       <hr className="my-[3.75rem] border-line-02 tb:hidden" />
-      <section className="tb:hidden">
+      <section id="comment" className="tb:hidden">
         <CommentSection postId={postId} />
       </section>
     </div>

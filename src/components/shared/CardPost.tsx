@@ -8,6 +8,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import ProfileImageCircle from "./ProfileImageCircle";
 
 type Props = {
   post: PostType;
@@ -45,12 +46,11 @@ const Cardpost = ({ post, isMasonry }: Props) => {
         </div>
         <div className="absolute bottom-4 left-4 flex items-center gap-2">
           <figure className="relative">
-            <Image
-              src={post.users.profile_image || sampleImage}
-              alt={`${post.users.nickname}의 프로필 이미지`}
-              width={28}
-              height={28}
-              className="h-7 w-7 overflow-hidden rounded-full bg-bg-02 object-cover"
+            <ProfileImageCircle
+              profileImage={post.users.profile_image}
+              nickname={post.users.nickname}
+              size={28}
+              className="h-7 w-7"
             />
             <VerifiedBadge isVerified={post.users.is_verified || false} />
           </figure>

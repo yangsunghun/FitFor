@@ -80,7 +80,7 @@ const HeaderContent = () => {
             </button>
           </nav>
           {/* 검색창 */}
-          <SearchBar />
+          <SearchBar pathname={pathname} />
 
           <div className="absolute right-0">
             <Button

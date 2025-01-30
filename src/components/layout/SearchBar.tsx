@@ -3,14 +3,20 @@
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useSearchBar } from "@/lib/hooks/search/useSearchBar";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
-import type { FocusEvent, FormEvent } from "react";
+import { useEffect, type FocusEvent, type FormEvent } from "react";
 
-const SearchBar = () => {
+type Props = {
+  pathname: string;
+};
+
+const SearchBar = ({ pathname }: Props) => {
   const {
     inputValue,
     showDropdown,
     filteredTags,
     searchHistory,
+    setInputValue,
+    setFilteredTags,
     setShowDropdown,
     handleInputChange,
     handleSelectTag,
@@ -21,6 +27,13 @@ const SearchBar = () => {
   } = useSearchBar();
 
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
+  useEffect(() => {
+    if (!pathname.includes("/search")) {
+      setInputValue("");
+      setFilteredTags([]);
+    }
+  }, [pathname]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     handleSearchWithHistory(e);

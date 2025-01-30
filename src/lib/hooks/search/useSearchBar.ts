@@ -86,6 +86,8 @@ export const useSearchBar = () => {
     showDropdown,
     filteredTags,
     searchHistory,
+    setInputValue,
+    setFilteredTags,
     setShowDropdown,
     handleInputChange,
     handleSelectTag,

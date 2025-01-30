@@ -1,15 +1,23 @@
 import { useWritePageState } from "@/lib/hooks/write/useWritePageState";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export const useWritePageHandlers = (pageState: ReturnType<typeof useWritePageState>) => {
   const router = useRouter();
   const { state, setState, handleTemporarySave, isWritingRef, popStateTriggered, navigationBlocked } = pageState;
 
+    // 제출 중 상태 관리
+    const isSubmitInProgress = useRef(false);
+
   // 페이지 이동 처리 (Next.js의 router.push 포함)
   useEffect(() => {
     const originalPush = router.push; // 원래 push 함수 저장
     router.push = (url: string) => {
+      if (isSubmitInProgress.current) {
+        // 제출 중에는 바로 이동
+        originalPush(url);
+        return;
+      }
       if (isWritingRef.current && !navigationBlocked.current) {
         setState((prevState) => ({
           ...prevState,
@@ -25,7 +33,7 @@ export const useWritePageHandlers = (pageState: ReturnType<typeof useWritePageSt
     return () => {
       router.push = originalPush; // 원래 push 함수로 복원
     };
-  }, [isWritingRef, router, setState]);
+  }, [isWritingRef, navigationBlocked, router, setState]);
 
   // 뒤로가기 및 페이지 이탈 감지
   useEffect(() => {
@@ -46,7 +54,7 @@ export const useWritePageHandlers = (pageState: ReturnType<typeof useWritePageSt
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
-  }, [isWritingRef, router, setState]);
+  }, [isWritingRef, popStateTriggered, router, setState]);
 
   // 모달 확인 클릭 시 (임시 저장 후 이동)
   const handleConfirmExit = async () => {
@@ -72,6 +80,15 @@ export const useWritePageHandlers = (pageState: ReturnType<typeof useWritePageSt
       router.push(state.pendingNavigation); // 저장된 경로로 이동
     }
   };
+    // 제출 중 상태 관리 추가
+    const handleStartSubmit = () => {
+      isSubmitInProgress.current = true;
+    };
+  
+    const handleEndSubmit = () => {
+      isSubmitInProgress.current = false;
+    };
+  
 
-  return { handleConfirmExit, handleCancelExit };
+  return { handleConfirmExit, handleCancelExit, handleStartSubmit, handleEndSubmit};
 };

@@ -26,7 +26,7 @@ const ImageGallery = ({ images, writerSpec, blur }: Props) => {
       <div className="w-[48%]">
         <figure className="thumbnail mb-4 aspect-square w-full rounded-2xl">
           <Image
-            src={isImgError ? sampleImage : selectedImage}
+            src={isImgError || !images ? sampleImage : selectedImage}
             alt="Selected"
             fill={true}
             placeholder="blur"
@@ -51,7 +51,7 @@ const ImageGallery = ({ images, writerSpec, blur }: Props) => {
                   })}
                 ></div>
                 <Image
-                  src={isImgError ? sampleImage : image}
+                  src={isImgError || !image ? sampleImage : image}
                   alt={`이미지 ${index + 1}`}
                   fill={true}
                   onError={() => setIsImgError(true)}

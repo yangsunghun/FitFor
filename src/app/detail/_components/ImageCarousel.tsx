@@ -32,7 +32,7 @@ const ImageCarousel = ({ images, writerSpec, blur }: Props) => {
           {images.map((image, index) => (
             <SwiperSlide key={index} className="thumbnail relative aspect-square w-full">
               <Image
-                src={isImgError ? sampleImage : image}
+                src={isImgError || !images ? sampleImage : image}
                 alt={`이미지 ${index + 1}`}
                 fill={true}
                 placeholder="blur"

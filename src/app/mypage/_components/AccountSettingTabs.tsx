@@ -1,6 +1,6 @@
 import ModalItem from "@/components/ui/Modal";
 import { CaretRight } from "@phosphor-icons/react";
-import { useState } from "react";
+import { ComponentType, useState } from "react";
 import AccountDeleteContent from "./AccountDeleteContent";
 import AgreementContent from "./AgreementContent";
 import LogOutContent from "./LogOutContent";
@@ -8,7 +8,7 @@ import ServiceContent from "./ServiceContent";
 
 type AccountModalMode = "agreement" | "serviceRule" | "deleteAccount" | "logout";
 
-const contentComponents: Record<AccountModalMode, React.ComponentType<{ closeModal: () => void }>> = {
+const contentComponents: Record<AccountModalMode, ComponentType<{ closeModal: () => void }>> = {
   serviceRule: ServiceContent,
   agreement: AgreementContent,
   deleteAccount: AccountDeleteContent,

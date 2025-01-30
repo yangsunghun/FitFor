@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Tags } from "../ui/Tags";
+import ProfileImageCircle from "./ProfileImageCircle";
 
 type Props = {
   post: PostType;
@@ -35,12 +36,11 @@ const Listpost = ({ post }: Props) => {
       <div className="relative w-[calc(100%-12.75rem)] mb:w-[calc(100%-110px)]">
         <div className="flex items-center gap-4 tb:hidden">
           <figure className="relative">
-            <Image
-              src={post.users.profile_image || sampleImage}
-              alt={`${post.users.nickname || "익명"}의 프로필 이미지`}
-              width={40}
-              height={40}
-              className="h-10 w-10 overflow-hidden rounded-full border border-line-02 bg-bg-02 object-cover"
+            <ProfileImageCircle
+              profileImage={post.users.profile_image}
+              nickname={post.users.nickname}
+              size={40}
+              className="h-10 w-10"
             />
             <VerifiedBadge isVerified={post.users.is_verified || false} />
           </figure>

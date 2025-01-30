@@ -1,10 +1,10 @@
 import { type SVGProps } from "react";
 
-type VerifiedBadgeMarkProps = SVGProps<SVGSVGElement> & {
+type Props = SVGProps<SVGSVGElement> & {
   size?: number | string;
 };
 
-const VerifiedBadgeMark = ({ size = 48, className, ...props }: VerifiedBadgeMarkProps) => {
+const VerifiedBadgeMark = ({ size = 48, className, ...props }: Props) => {
   return (
     <svg
       width={size}

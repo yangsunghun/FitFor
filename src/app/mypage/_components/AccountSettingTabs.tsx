@@ -39,12 +39,12 @@ const AccountSettingTabs = () => {
 
   return (
     <>
-      <div className="mt-10 flex w-full flex-col space-y-6 tb:mt-6">
+      <div className="mt-10 flex w-full flex-col gap-8 tb:gap-6 tb:mt-6 tb:px-4">
         {menuItems.map((item) => (
           <button
             onClick={() => openModal(item.mode)}
             key={item.title}
-            className="flex items-center justify-between px-6 py-4 text-title2 font-medium text-text-04 hover:bg-gray-50 tb:text-body"
+            className="flex items-center justify-between p-4 max-h-[3.25rem] text-title2 font-medium text-text-04 hover:bg-gray-50 tb:text-body tb:h-auto tb:p-0"
           >
             <span>{item.title}</span>
             <CaretRight className="text-title1 tb:text-body" />

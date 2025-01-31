@@ -42,4 +42,6 @@ const TagFilters = memo(({ selectedGroup, tags, handleToggleTag }: TagFiltersPro
   );
 });
 
+TagFilters.displayName = "TagFilters";
+
 export default TagFilters;

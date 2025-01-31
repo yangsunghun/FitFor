@@ -1,14 +1,16 @@
 import { useAuthStore } from "@/lib/store/authStore";
 import { toast } from "@/lib/utils/common/toast";
 
+type ToggleActionResult = {
+  isActive: boolean;
+  isPending: boolean;
+  toggleAction: () => void;
+  count?: number;
+};
+
 type UseToggleActionProps = {
   postId: string;
-  actionHook: (postId: string, userId: string) => {
-    isActive: boolean;
-    isPending: boolean;
-    toggleAction: () => void;
-    count?: number;
-  };
+  actionHook: (postId: string, userId: string) => ToggleActionResult; // ✅ 타입을 일반 객체로 정의
   requireLoginMessage?: string;
 };
 

@@ -47,4 +47,6 @@ const SortPosts = memo(({ sort, handleSort }: Props) => {
   );
 });
 
+SortPosts.displayName = "SortPosts";
+
 export default SortPosts;

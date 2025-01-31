@@ -2,11 +2,12 @@
 
 import useCategoryStore from "@/lib/store/useCategoryStore";
 import { toast } from "@/lib/utils/common/toast";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 
 export const useSearchQuery = () => {
   const router = useRouter();
+  const pathname = usePathname(); // 현재 경로 가져오기
   const searchParams = useSearchParams();
   const queryFromUrl = searchParams.get("query") || "";
   const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
@@ -27,6 +28,10 @@ export const useSearchQuery = () => {
 
   const memoizedTags = useMemo(() => tags, [tags]);
 
+  // `useRef`를 사용해 첫 실행 여부 체크 (최초 `updateUrl` 실행 방지)
+  const isFirstRender = useRef(true);
+  const isNavigatedFromHeader = useRef(false); // 헤더에서 검색 페이지로 이동했는지 체크
+
   // URL 변경 시 기존 상태와 다를 때만 업데이트하여 리렌더링 방지
   useEffect(() => {
     if (query !== queryFromUrl) setQuery(queryFromUrl);
@@ -35,37 +40,54 @@ export const useSearchQuery = () => {
     if (JSON.stringify(tags) !== JSON.stringify(tagsFromUrl)) setTags(tagsFromUrl);
   }, [queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
 
-  // router.replace 실행 전에 현재 URL과 비교하여 변경된 경우에만 실행
+  // `router.replace()` 실행 전에 현재 URL과 비교하여 필요할 때만 실행
   const updateUrl = useCallback(
     (newQuery: string, newTags: typeof tags, newSort: string) => {
       const newUrl = `/search?query=${encodeURIComponent(newQuery)}&page=1&category=${encodeTagsForUrl(
         newTags
       )}&sort=${encodeURIComponent(newSort)}`;
 
-      if (newUrl !== window.location.href) {
+      if (newUrl !== window.location.pathname + window.location.search) {
         setTimeout(() => {
           router.replace(newUrl);
         }, 0);
       }
     },
     [router]
-  ); // 의존성에 router 추가
+  );
 
-  // URL 변경은 별도의 `useEffect`에서 처리
+  // `/search` 페이지 진입 시, 헤더에서 클릭한 경우에만 `updateUrl` 실행
   useEffect(() => {
-    updateUrl(query, tags, sort); // 상태가 모두 업데이트된 후에만 실행됨
-  }, [query, tags, sort, updateUrl]);
+    if (pathname !== "/search") return;
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return; // 최초 마운트 시 실행 방지
+    }
+
+    if (isNavigatedFromHeader.current) {
+      updateUrl(query, tags, sort); // 헤더에서 클릭한 경우에만 실행
+      isNavigatedFromHeader.current = false; // 초기화
+    }
+  }, [pathname, query, tags, sort, updateUrl]);
 
   const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => JSON.stringify(tags);
 
-  // 검색 실행
+  // 검색 실행 (헤더에서 이동 시, `isNavigatedFromHeader`를 `true`로 설정)
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    isNavigatedFromHeader.current = true;
     updateUrl(inputValue, tags, sort);
     setSelectedCategory(null);
   };
 
-  // 태그 토글 - 기존 태그와 비교하여 변경된 경우에만 `setTags()` 실행
+  // 헤더에서 태그 클릭 시 호출하는 함수 (검색 페이지로 이동 전 `isNavigatedFromHeader` 설정)
+  const handleHeaderTagClick = (tag: string) => {
+    isNavigatedFromHeader.current = true;
+    router.push(`/search?query=${encodeURIComponent(tag)}&page=1&category=${encodeTagsForUrl(tags)}&sort=${sort}`);
+  };
+
+  // 태그 토글
   const handleToggleTag = useCallback(
     (key: string, tag: string) => {
       setTags((prevTags) => {
@@ -96,7 +118,7 @@ export const useSearchQuery = () => {
     updateUrl(query, emptyTags, sort);
   }, [query, sort, updateUrl]);
 
-  // 정렬 변경 - 기존 값과 다를 때만 실행
+  // 정렬 변경
   const handleSort = useCallback(
     (newSort: string) => {
       if (newSort !== sort) {
@@ -117,6 +139,7 @@ export const useSearchQuery = () => {
     setTags,
     setQuery,
     handleSearch,
+    handleHeaderTagClick,
     handleToggleTag,
     resetTags,
     handleSort,

@@ -1,5 +1,4 @@
 "use client";
-
 import ToggleButton from "@/components/shared/ToggleButton";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useLike, useLikeCount } from "@/lib/hooks/detail/useLike";
@@ -15,17 +14,19 @@ type Props = {
   showNumber?: boolean;
 };
 
+const useLikeAction = (postId: string, userId: string) => {
+  const { isLiked, isPending, toggleLike } = useLike(postId, userId);
+  const { likeCount } = useLikeCount(postId);
+  return { isActive: isLiked, isPending, toggleAction: toggleLike, count: likeCount };
+};
+
 const LikeButton = ({ postId, styleType = "masonry", iconSize, iconWeight = "fill", showNumber = false }: Props) => {
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const responsiveIconSize = isTabletOrSmaller && styleType === "list" ? 16 : iconSize;
 
   const { isActive, isPending, count, handleClick } = useToggleAction({
     postId,
-    actionHook: (postId, userId) => {
-      const { isLiked, isPending, toggleLike } = useLike(postId, userId);
-      const { likeCount } = useLikeCount(postId);
-      return { isActive: isLiked, isPending, toggleAction: toggleLike, count: likeCount };
-    },
+    actionHook: useLikeAction,
     requireLoginMessage: "로그인 후 좋아요를 누를 수 있습니다."
   });
 

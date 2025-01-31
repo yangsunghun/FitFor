@@ -23,7 +23,7 @@ const AccountSettingTabs = () => {
     { title: "서비스 약관", mode: "serviceRule" },
     { title: "개인정보 수집 처리방침", mode: "agreement" },
     { title: "로그아웃", mode: "logout" },
-    { title: "탈퇴하기", mode: "deleteAccount" }
+    { title: "회원탈퇴", mode: "deleteAccount" }
   ];
 
   const openModal = (mode: AccountModalMode) => {
@@ -39,12 +39,12 @@ const AccountSettingTabs = () => {
 
   return (
     <>
-      <div className="mt-10 flex w-full flex-col gap-8 tb:gap-6 tb:mt-6 tb:px-4">
+      <div className="mt-10 flex w-full flex-col gap-8 tb:mt-6 tb:gap-6 tb:px-4">
         {menuItems.map((item) => (
           <button
             onClick={() => openModal(item.mode)}
             key={item.title}
-            className="flex items-center justify-between p-4 max-h-[3.25rem] text-title2 font-medium text-text-04 hover:bg-gray-50 tb:text-body tb:h-auto tb:p-0"
+            className="flex max-h-[3.25rem] items-center justify-between p-4 text-title2 font-medium text-text-04 hover:bg-gray-50 tb:h-auto tb:p-0 tb:text-body"
           >
             <span>{item.title}</span>
             <CaretRight className="text-title1 tb:text-body" />

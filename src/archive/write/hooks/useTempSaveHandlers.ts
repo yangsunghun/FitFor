@@ -1,18 +1,12 @@
 "use client";
 
+import type { PostWithPurchases, UseFormStateHandlersReturn } from "@/lib/hooks/write/useFormStateHandlers";
 import { useAuthStore } from "@/lib/store/authStore";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useState } from "react";
-import { PostWithPurchases, UseFormStateHandlersReturn } from "./useFormStateHandlers";
 
 const supabase = createClient();
 type UseTempSaveHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "handleChange" | "setInitialFormState">;
-
-export type TempSaveState = {
-  unsavedPosts: PostWithPurchases[];
-  activePostId: string | null;
-  isWriting: boolean; // 작성 여부 추가
-};
 
 // 임시 저장 게시글 가져오기 함수 (개별 내보내기)
 export const fetchUnsavedPosts = async (userId: string): Promise<PostWithPurchases[]> => {
@@ -52,10 +46,9 @@ export const fetchUnsavedPosts = async (userId: string): Promise<PostWithPurchas
 // useTempSaveHandlers
 export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormState }: UseTempSaveHandlersProps) => {
   const currentUser = useAuthStore((state) => state.user);
-  const [tempSaveState, setTempSaveState] = useState<TempSaveState>({
-    unsavedPosts: [],
-    activePostId: null,
-    isWriting: false
+  const [tempSaveState, setTempSaveState] = useState({
+    unsavedPosts: [] as PostWithPurchases[],
+    activePostId: null as string | null
   });
 
   // 이어서 작성 핸들러
@@ -67,11 +60,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
       }
 
       await setInitialFormState(post);
-      setTempSaveState((prevState) => ({
-        ...prevState,
-        isWriting: true, // 이어서 작성 중 상태 활성화
-        activePostId: post.id
-      }));
+      setTempSaveState((prevState) => ({ ...prevState, activePostId: post.id }));
     } catch (error) {
       console.error("게시물 불러오기 실패:", error);
       alert("게시물 불러오기 중 오류가 발생했습니다.");
@@ -105,21 +94,12 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
 
   // 임시 저장 핸들러 (기존 게시물 업데이트 및 새로운 게시물 생성)
   const handleTemporarySave = async () => {
-    const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
+    const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, isContinued, postId } = formState;
 
-   // 작성 여부 판단: 하나라도 입력된 값이 있으면 저장 가능
-   const isFormFilled =
-   content.trim().length > 0 ||
-   address.trim().length > 0 ||
-   images.length > 0 ||
-   tags.length > 0 ||
-   Object.values(body_size || {}).some((value) => value) || // body_size 필드 값 체크
-   purchases.length > 0;
-
- if (!isFormFilled) {
-   alert("작성된 항목이 없습니다. 내용을 입력해주세요.");
-   return;
- }
+    if (!content) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
 
     if (!currentUser?.id) {
       alert("로그인이 필요합니다.");
@@ -171,7 +151,6 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
         // `unsavedPosts` 상태 업데이트
         setTempSaveState((prevState) => ({
           ...prevState,
-          isWriting: false, // 작성 중 상태 초기화
           unsavedPosts: prevState.unsavedPosts.map((post) => (post.id === postId ? { ...post, ...updatedPost } : post))
         }));
 
@@ -201,7 +180,6 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
         // `unsavedPosts` 상태 업데이트
         setTempSaveState((prevState) => ({
           ...prevState,
-          isWriting: false, // 작성 중 상태 초기화
           unsavedPosts: [{ ...newPost, id: newPostId, purchases: [] }, ...prevState.unsavedPosts]
         }));
 
@@ -227,36 +205,12 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
     }
   };
 
-  // 작성 여부 판단 핸들러
-  const checkIsWriting = () => {
-    const { content, images, address, body_size, purchases } = formState;
-    return (
-      content.length > 0 ||
-      images.length > 0 ||
-      address.length > 0 ||
-      Object.values(body_size || {}).some((val) => val) || // body_size 필드 값 체크
-      purchases.length > 0
-    );
-  };
-
-  // 폼 상태 변경 핸들러
-  const handleFieldChange = <T extends keyof typeof formState>(key: T, value: (typeof formState)[T]) => {
-    handleChange(key, value);
-    const isWriting = checkIsWriting();
-    setTempSaveState((prevState) => ({
-      ...prevState,
-      isWriting // 항상 업데이트
-    }));
-  };
-
   return {
     tempSaveState,
     setTempSaveState,
     fetchUnsavedPosts,
     handleContinuePost,
     handleDiscardPost,
-    handleTemporarySave,
-    checkIsWriting,
-    handleFieldChange
+    handleTemporarySave
   };
 };

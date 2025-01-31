@@ -106,7 +106,7 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete, isMissing }: Produ
         ))}
       </div>
       {/* 필수 입력 경고 메시지 */}
-      {isMissing && <p className="pl-2 text-body text-status-danger">상품 정보를 추가해주세요.</p>}
+      {isMissing && <p className=" text-body text-status-danger">상품 정보를 추가해주세요.</p>}
     </div>
   );
 };

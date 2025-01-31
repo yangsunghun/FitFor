@@ -1,30 +1,21 @@
-"use client";
-
-import sampleImage from "@/assets/images/image_sample.png";
+import { useAuthStore } from "@/lib/store/authStore";
 import { ChatMessage } from "@/lib/types/chat";
 import { fetchMessages } from "@/lib/utils/chat/fetchMessages";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 const supabase = createClient();
 
-type ChatMessagesProps = {
+type ChatMessageProps = {
   roomId: string;
-  currentUserId: string; // 현재 로그인한 사용자의 ID
 };
 
-const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
+const ChatMessages = ({ roomId }: ChatMessageProps) => {
+  const currentUser = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // 스크롤을 맨 아래로 이동시키는 함수
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
-  };
-
-  // 메시지 쿼리
   const {
     data: messages = [],
     isLoading,
@@ -34,13 +25,6 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
     queryFn: () => fetchMessages(roomId),
     staleTime: 1000 * 60
   });
-
-  // 메시지가 변경될 때마다 스크롤을 맨 아래로 이동
-  useEffect(() => {
-    if (messages.length > 0) {
-      scrollToBottom();
-    }
-  }, [messages]);
 
   // 실시간 구독
   useEffect(() => {
@@ -64,54 +48,45 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
   if (isError) return <div>메시지를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <div className="scrollbar-hide absolute bottom-0 h-full w-full flex-col overflow-y-scroll bg-white pb-[9.375rem] pt-[15rem]">
-      <div className="flex flex-col gap-6">
-        {messages.map((message: ChatMessage) => {
-          const isSender = message.member_id === currentUserId;
+    <div className="scrollbar-hide h-[calc(100vh-146px-139px)] flex-1 items-center justify-between overflow-y-auto bg-pink-100 px-4 pb-10 pt-6 tb:h-[calc(100vh-222px)]">
+      <div className="flex w-full flex-col gap-4 tb:gap-1">
+        {messages.map((messages: ChatMessage) => {
+          const isSender = messages.member_id === currentUser?.id;
 
           return (
-            <div
-              key={message.message_id}
-              className={`flex ${isSender ? "justify-end" : "justify-start"} items-start gap-4`}
-            >
-              {/* 프로필 이미지 (수신자만 표시) */}
+            <div key={messages.message_id} className={`mb-4 flex ${isSender ? "justify-end" : "justify-start"}`}>
+              {/* 프로필 이미지 */}
               {!isSender && (
-                <figure className="relative h-10 w-10 items-center justify-center overflow-hidden rounded-full">
-                  <Image
-                    className="object-cover"
-                    src={message.chat_members?.users?.profile_image || sampleImage}
-                    alt={`${message.chat_members?.users?.nickname || "익명"}의 프로필 이미지`}
-                    fill
-                  />
+                <figure className="relative mr-2 h-10 w-10 items-center justify-center overflow-hidden rounded-full tb:h-6 tb:w-6">
+                  <Image src={messages.chat_members?.users?.profile_image || ""} alt="" fill />
                 </figure>
               )}
-
               {/* 메시지와 이미지 박스 */}
-              <div className={`flex flex-col ${isSender ? "items-end" : "items-start"} max-w-[60%] gap-2`}>
-                {/* 닉네임 (수신자만 표시) */}
+              <div className={`flex flex-col ${isSender ? "items-end" : "items-start"} max-w-[80%] gap-2`}>
+                {/* 닉네임 */}
                 <span className="text-caption font-medium leading-3 text-text-03">
-                  {message.chat_members?.users?.nickname}
+                  {messages.chat_members?.users?.nickname}
                 </span>
 
                 {/* 메시지와 작성 시간 */}
                 <div className={`flex ${isSender ? "flex-row-reverse" : "flex-row"} items-end gap-3`}>
                   {/* 메시지 박스 */}
-                  {message.content && (
-                    <div className="max-w-[800px] break-words break-all rounded-lg bg-bg-02 px-4 py-3">
-                      <p className="m-0 whitespace-pre-wrap text-title2 font-medium leading-6 text-text-04">
-                        {message.content}
+                  {messages.content && (
+                    <div className="max-w-[800px] break-words break-all rounded-lg bg-bg-01 px-4 py-3 tb:px-3 tb:py-2">
+                      <p className="m-0 whitespace-pre-wrap text-title2 font-medium leading-6 text-text-04 tb:text-body">
+                        {messages.content}
                       </p>
                     </div>
                   )}
 
                   {/* 이미지 박스 */}
-                  {message.image_url && (
+                  {messages.image_url && (
                     <div
                       className={`overflow-hidden rounded-lg ${isSender ? "self-end" : "self-start"}`}
                       style={{ maxWidth: "100%" }}
                     >
                       <Image
-                        src={`${supabase.storage.from("chat-images").getPublicUrl(message.image_url).data.publicUrl}`}
+                        src={`${supabase.storage.from("chat-images").getPublicUrl(messages.image_url).data.publicUrl}`}
                         alt="첨부 이미지"
                         width={300}
                         height={300}
@@ -127,7 +102,7 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
                       isSender ? "ml-3 self-end" : "mr-3 self-end"
                     }`}
                   >
-                    {new Date(message.created_at).toLocaleTimeString("ko-KR", {
+                    {new Date(messages.created_at).toLocaleTimeString("ko-KR", {
                       hour: "2-digit",
                       minute: "2-digit"
                     })}
@@ -137,8 +112,6 @@ const ChatMessages = ({ roomId, currentUserId }: ChatMessagesProps) => {
             </div>
           );
         })}
-        {/* 스크롤 맨 아래로 이동하기 위한 참조 요소 */}
-        <div ref={messagesEndRef} />
       </div>
     </div>
   );

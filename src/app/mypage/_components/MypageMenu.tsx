@@ -20,7 +20,7 @@ const MypageMenu = () => {
             <TabsTrigger
               key={`tab-${index}`}
               value={`tab-${index}`}
-              className="h-full w-1/4 rounded-none border-t-2 border-transparent px-2 py-2 text-title2 data-[state=active]:border-black data-[state=active]:shadow-none tb:text-body tb:data-[state=active]:border-primary-default tb:data-[state=active]:text-primary-default"
+              className="h-full w-1/4 rounded-none border-t-2 border-transparent px-2 py-2 text-title2 data-[state=active]:border-primary-default data-[state=active]:text-primary-default data-[state=active]:shadow-none tb:text-body"
             >
               {tab}
             </TabsTrigger>

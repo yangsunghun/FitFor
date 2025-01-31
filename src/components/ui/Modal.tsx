@@ -32,13 +32,13 @@ const ModalItem = ({ isOpen, onClose, children, mode = "default", className }: P
         },
         isOpen ? "animate-fadeIn" : "animate-fadeOut"
       )}
-      onClick={handleOverlayClick}
+      onMouseDown={handleOverlayClick}
     >
       <div
         className={clsx(
           "relative rounded-lg shadow-lg",
           {
-            "inline-block h-fit w-auto max-w-lg bg-bg-01 p-6": mode === "default",
+            "inline-block h-fit w-auto bg-bg-01 p-6": mode === "default",
             "h-full w-full max-w-none bg-transparent": mode === "imageView"
           },
           isOpen ? "animate-fadeIn animate-scaleUp" : "animate-fadeOut animate-scaleDown",

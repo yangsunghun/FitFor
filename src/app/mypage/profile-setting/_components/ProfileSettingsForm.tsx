@@ -113,7 +113,7 @@ const ProfileSettingsForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-auto mt-10 flex w-2/4 flex-col items-center tb:mx-4 tb:w-[21.375rem] tb:gap-6 mn:w-[95%]"
+      className="mx-auto mt-12 flex w-2/4 flex-col items-center tb:mx-4 tb:w-[21.375rem] tb:gap-6 mn:w-[95%]"
     >
       {/* 프로필 이미지 업로드 부분*/}
       <ProfileImageUploadSection
@@ -123,7 +123,7 @@ const ProfileSettingsForm = () => {
       />
 
       {/* 텍스트 입력 부분 */}
-      <div className="mt-[3.875rem] flex w-[30rem] flex-col gap-10 tb:w-full">
+      <div className="mt-12 flex w-[30rem] flex-col gap-10 tb:w-full">
         {PROFILE_EDIT_FIELD.map((field) => (
           <ProfileEditTextField key={field.id} {...field} register={register} error={errors[field.id]?.message} />
         ))}

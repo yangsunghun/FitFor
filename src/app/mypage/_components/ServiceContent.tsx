@@ -9,9 +9,9 @@ const ServiceContent = ({ closeModal }: ServiceContentProps) => {
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   return (
-    <div className="flex w-[25.125rem] flex-col gap-4 mb:max-w-[15rem]">
+    <div className="flex w-[25.125rem] flex-col gap-4 tb:max-w-[19.375rem]">
       <p className="text-title1 font-bold tb:text-title2">서비스 이용 약관</p>
-      <ol className="space-y-4 break-keep text-subtitle font-medium text-text-03 tb:text-body">
+      <ol className="space-y-4 break-keep text-subtitle font-medium text-text-03 tb:text-body tb:h-[40vh] tb:overflow-auto">
         <li>
           <strong className="text-black">목적</strong>
           <p>

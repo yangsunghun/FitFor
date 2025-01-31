@@ -27,7 +27,7 @@ export const TAG_GROUPS = [
       "리조트",
       "드뮤어"
     ],
-    max: 2
+    max: 7
   },
   {
     key: "tpo",
@@ -53,7 +53,7 @@ export const TAG_GROUPS = [
       "상견례",
       "등교"
     ],
-    max: 2
+    max: 7
   }
 ];
 

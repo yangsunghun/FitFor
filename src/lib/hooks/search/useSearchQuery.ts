@@ -30,10 +30,14 @@ export const useSearchQuery = () => {
 
   // URL 변경 시 상태 동기화
   useEffect(() => {
-    setQuery(queryFromUrl);
-    setPage(pageFromUrl);
-    setSort(sortFromUrl);
-    setTags(tagsFromUrl);
+    if (query !== queryFromUrl) setQuery(queryFromUrl);
+    if (page !== pageFromUrl) setPage(pageFromUrl);
+    if (sort !== sortFromUrl) setSort(sortFromUrl);
+
+    // 기존 태그와 다를 때만 업데이트
+    if (JSON.stringify(tags) !== JSON.stringify(tagsFromUrl)) {
+      setTags(tagsFromUrl);
+    }
   }, [queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
 
   // JSON을 URL-safe한 배열 표현으로 변환하는 헬퍼 함수
@@ -57,31 +61,33 @@ export const useSearchQuery = () => {
   };
 
   // 태그 토글
-  const handleToggleTag = useCallback((key: string, tag: string) => {
-    setTags((prevTags) => {
-      const currentTags = prevTags[key] || [];
+  const handleToggleTag = useCallback(
+    (key: string, tag: string) => {
+      setTags((prevTags) => {
+        const currentTags = prevTags[key] || [];
 
-      let updatedTags;
-      if (currentTags.includes(tag)) {
-        updatedTags = { ...prevTags, [key]: currentTags.filter((t) => t !== tag) };
-      } else {
-        if (currentTags.length >= 4) {
-          toast("태그는 최대 4개까지만 선택할 수 있습니다.", "warning");
-          return prevTags;
+        let updatedTags;
+        if (currentTags.includes(tag)) {
+          updatedTags = { ...prevTags, [key]: currentTags.filter((t) => t !== tag) };
+        } else {
+          if (currentTags.length >= 4) {
+            toast("태그는 최대 4개까지만 선택할 수 있습니다.", "warning");
+            return prevTags;
+          }
+          updatedTags = { ...prevTags, [key]: [...currentTags, tag] };
         }
-        updatedTags = { ...prevTags, [key]: [...currentTags, tag] };
-      }
 
-      // ✅ URL 동기화 (페이지 리렌더링 없음)
-      router.replace(
-        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
-          updatedTags
-        )}&sort=${encodeURIComponent(sort)}`
-      );
+        router.replace(
+          `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
+            updatedTags
+          )}&sort=${encodeURIComponent(sort)}`
+        );
 
-      return updatedTags;
-    });
-  }, []);
+        return updatedTags;
+      });
+    },
+    [query, sort, router]
+  );
 
   // 태그 초기화
   const resetTags = () => {
@@ -110,12 +116,13 @@ export const useSearchQuery = () => {
 
   return {
     inputValue,
-    setInputValue,
-    setQuery,
     query,
     page,
     tags: memoizedTags,
     sort,
+    setInputValue,
+    setTags,
+    setQuery,
     handleSearch,
     handleToggleTag,
     resetTags,

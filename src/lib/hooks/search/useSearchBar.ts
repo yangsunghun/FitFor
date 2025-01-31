@@ -7,7 +7,7 @@ import { useEffect, useState, type FormEvent } from "react";
 
 export const useSearchBar = () => {
   const router = useRouter();
-  const { inputValue, setInputValue, setQuery, handleSearch } = useSearchQuery();
+  const { inputValue, setInputValue, handleSearch } = useSearchQuery();
   const setSelectedCategory = useCategoryStore((state) => state.setSelectedCategory);
   const [showDropdown, setShowDropdown] = useState(false);
   const [filteredTags, setFilteredTags] = useState<string[]>([]);
@@ -97,7 +97,6 @@ export const useSearchBar = () => {
     filteredTags,
     searchHistory,
     setInputValue,
-    setQuery,
     setFilteredTags,
     setShowDropdown,
     handleInputChange,

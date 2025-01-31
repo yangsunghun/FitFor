@@ -4,8 +4,6 @@ import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import useCategoryStore from "@/lib/store/useCategoryStore";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
 import { Tags } from "../ui/Tags";
 
@@ -15,21 +13,17 @@ type Props = {
 };
 
 const HeaderCategorys = ({ handleClose }: Props) => {
-  const [tags, setTags] = useState<Tags>({});
-  const router = useRouter();
   const setSelectedCategory = useCategoryStore((state) => state.setSelectedCategory);
-  const { handleToggleTag, encodeTagsForUrl } = useSearchQuery();
+  const { handleToggleTag, setTags, setQuery, encodeTagsForUrl } = useSearchQuery();
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const { activeTab, handleTabChange } = useActiveTabs();
 
   const handleCategoryClick = (key: string, tag: string) => {
+    setQuery("");
+    setTags({ gender: [], season: [], style: [], tpo: [] });
+
     handleToggleTag(key, tag);
-
-    const updatedTags = { ...tags, [key]: [...(tags[key] || []), tag] };
-
     setSelectedCategory(key);
-
-    router.push(`/search?query=&page=1&category=${encodeTagsForUrl(updatedTags)}`);
   };
 
   const mobileUI = (

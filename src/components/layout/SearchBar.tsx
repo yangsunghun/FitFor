@@ -14,7 +14,6 @@ const SearchBar = () => {
     filteredTags,
     searchHistory,
     setInputValue,
-    setQuery,
     setFilteredTags,
     setShowDropdown,
     handleInputChange,
@@ -30,7 +29,6 @@ const SearchBar = () => {
   useEffect(() => {
     if (!pathname.includes("/search")) {
       setInputValue("");
-      setQuery("");
       setFilteredTags([]);
     }
   }, [pathname]);

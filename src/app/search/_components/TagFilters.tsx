@@ -9,9 +9,7 @@ type TagFiltersProps = {
   handleToggleTag: (groupKey: string, tag: string) => void;
 };
 
-const TagFilters = ({ selectedGroup, tags, handleToggleTag }: TagFiltersProps) => {
-  console.log("리렌더링 테스트");
-
+const TagFilters = memo(({ selectedGroup, tags, handleToggleTag }: TagFiltersProps) => {
   return (
     <>
       {selectedGroup
@@ -42,6 +40,6 @@ const TagFilters = ({ selectedGroup, tags, handleToggleTag }: TagFiltersProps) =
           ))}
     </>
   );
-};
+});
 
-export default memo(TagFilters);
+export default TagFilters;

@@ -1,38 +1,44 @@
-import { useState } from "react";
+"use client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
+import ChatGallery from "./ChatGallery";
+import { DesktopInput, MobileInput } from "./ChatInput";
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
+import ChatMessages from "./ChatMessages";
 
-interface TabProps {
-  labels: string[];
-  children: React.ReactNode[];
-}
-
-const ChatTabs = ({ labels, children }: TabProps) => {
-  const [activeTab, setActiveTab] = useState(0);
-
+const ChatTabs = ({ roomId }: { roomId: string }) => {
+  const { activeTab, handleTabChange } = useActiveTabs();
   return (
-    <>
-      {/* Tab Navigation */}
-      <nav className="absolute top-14 z-20 flex h-14 w-full border-b border-x-text-02 bg-white">
-        {labels.map((label, index) => (
-          <div
-            key={index}
-            className={`flex flex-1 cursor-pointer items-center justify-center ${
-              activeTab === index ? "border-b-2 border-text-04" : ""
-            }`}
-            onClick={() => setActiveTab(index)}
-          >
-            <div
-              className={`text-center text-title2 font-medium leading-[27px] ${
-                activeTab === index ? "text-text-04" : "text-text-02"
-              }`}
-            >
-              {label}
-            </div>
-          </div>
-        ))}
-      </nav>
-      {/* Tab Content */}
-      <div>{children[activeTab]}</div>
-    </>
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="absolute left-0 top-[96px] h-[50px] w-full">
+      <TabsList className="h-full w-full justify-start rounded-none bg-transparent p-0">
+        <TabsTrigger
+          value="tab-0"
+          className="h-full w-1/2 rounded-none border-b-2 border-transparent px-2 py-2 text-title2 data-[state=active]:border-primary-default data-[state=active]:text-primary-default data-[state=active]:shadow-none tb:text-body"
+        >
+          채팅
+        </TabsTrigger>
+        <TabsTrigger
+          value="tab-1"
+          className="h-full w-1/2 rounded-none border-b-2 border-transparent px-2 py-2 text-title2 data-[state=active]:border-primary-default data-[state=active]:text-primary-default data-[state=active]:shadow-none tb:text-body"
+        >
+          갤러리
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="tab-0">
+        <ChatMessages roomId={roomId} />
+        <MinTablet>
+          <DesktopInput roomId={roomId} />
+        </MinTablet>
+        <Tablet>
+          <MobileInput roomId={roomId} />
+        </Tablet>
+      </TabsContent>
+
+      <TabsContent value="tab-1">
+        <ChatGallery roomId={roomId} />
+      </TabsContent>
+    </Tabs>
   );
 };
 

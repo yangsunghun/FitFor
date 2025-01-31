@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
 import { getAddressFromCoordinates, getCurrentPosition } from "@/lib/utils/write/location";
 import { CircleNotch, MagnifyingGlass, MapPin } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 
 type AddressModalProps = {
   isOpen: boolean;
@@ -25,7 +25,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
   const apiKey = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY;
 
   // 입력 필드 변경 핸들러: 입력된 값을 상태에 업데이트
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setState((prevState) => ({
       ...prevState,

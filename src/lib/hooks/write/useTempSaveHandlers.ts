@@ -229,13 +229,14 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
 
   // 작성 여부 판단 핸들러
   const checkIsWriting = () => {
-    const { content, images, address, body_size, purchases } = formState;
+    const { content, images, address, body_size, purchases, tags } = formState;
     return (
       content.length > 0 ||
       images.length > 0 ||
       address.length > 0 ||
       Object.values(body_size || {}).some((val) => val) || // body_size 필드 값 체크
-      purchases.length > 0
+      purchases.length > 0 || 
+      tags.length > 0
     );
   };
 

@@ -1,27 +1,30 @@
-"use client";
-
-import sampleImage from "@/assets/images/image_sample.png";
+import { useAuthStore } from "@/lib/store/authStore";
 import { deleteChatRoom } from "@/lib/utils/chat/chat";
 import { createClient } from "@/lib/utils/supabase/client";
-import { List } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import sampleImage from "@/assets/images/image_sample.png";
+import Link from "next/link";
+import { CaretLeft, List } from "@phosphor-icons/react";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 
 const supabase = createClient();
 
 type ChatHeaderProps = {
   roomId: string;
-  currentUserId: string | undefined;
 };
 
-const ChatHeader = ({ roomId, currentUserId }: ChatHeaderProps) => {
+const ChatHeader = ({ roomId }: ChatHeaderProps) => {
   const [roomData, setRoomData] = useState<{
     room_title: string;
     room_thumbnail_url: string;
     participant_count: number;
     isAdmin: boolean;
   } | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const currentUser = useAuthStore((state) => state.user);
+
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const fetchRoomData = async () => {
@@ -45,7 +48,7 @@ const ChatHeader = ({ roomId, currentUserId }: ChatHeaderProps) => {
           room_title: room.room_title,
           room_thumbnail_url: room.room_thumbnail_url || "",
           participant_count: participants?.length || 0,
-          isAdmin: room.user_id === currentUserId
+          isAdmin: room.user_id === currentUser?.id
         });
       } catch (error) {
         console.error("Error fetching room data:", error);
@@ -53,7 +56,7 @@ const ChatHeader = ({ roomId, currentUserId }: ChatHeaderProps) => {
     };
 
     fetchRoomData();
-  }, [roomId, currentUserId]);
+  }, [roomId, currentUser?.id]);
 
   const handleDeleteRoom = async () => {
     if (!roomData?.isAdmin) {
@@ -62,7 +65,7 @@ const ChatHeader = ({ roomId, currentUserId }: ChatHeaderProps) => {
     }
 
     if (confirm("정말로 채팅방을 삭제하시겠습니까?")) {
-      const result = await deleteChatRoom(currentUserId, roomId);
+      const result = await deleteChatRoom(currentUser?.id, roomId);
       if (result.success) {
         alert("채팅방이 삭제되었습니다.");
         window.location.href = "/chat";
@@ -75,45 +78,31 @@ const ChatHeader = ({ roomId, currentUserId }: ChatHeaderProps) => {
   if (!roomData) {
     return <div>Loading...</div>;
   }
-
   return (
-    <section className="absolute top-0 z-20 flex w-full items-center justify-between bg-white pb-4">
-      <div className="flex items-center gap-3">
-        {/* 채팅방 썸네일 이미지 */}
-        <figure className="relative h-10 w-10 overflow-hidden rounded-full">
-          <Image src={roomData.room_thumbnail_url || sampleImage} alt="Thumbnail" className="object-cover" fill />
+    <div className="absolute left-1/2 top-0 flex h-[96px] w-full -translate-x-1/2 items-center justify-between bg-white px-4">
+      <div className="flex items-center gap-2">
+        <Link href="/chat">
+          <CaretLeft size={24} weight="bold" />
+        </Link>
+        <figure className="relative h-10 w-10 overflow-hidden rounded-full mb:h-6 mb:w-6">
+          <Image src={roomData.room_thumbnail_url || sampleImage} alt="Thumbnail" fill />
         </figure>
-
-        {/* 채팅방 정보 */}
         <div className="flex flex-col">
-          <div className="text-title2 font-bold leading-[27px] text-black">{roomData.room_title}</div>
-          <div className="text-caption font-medium leading-tight text-black">
+          <p className="text-title2 font-bold tb:text-body tb:font-medium">{roomData.room_title}</p>
+          <p className="text-caption font-medium tb:text-small tb:font-medium tb:text-text-03">
             {roomData.participant_count}명이 채팅에 참여 중
-          </div>
+          </p>
         </div>
       </div>
 
-      <div className="relative">
-        <button className="flex items-center justify-center" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-          <List size={32} />
-        </button>
-
-        {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 w-56 rounded-md border border-gray-200 bg-white shadow-lg">
-            <button
-              onClick={handleDeleteRoom}
-              className={`text-sm block w-full px-4 py-2 text-left ${
-                roomData.isAdmin ? "text-red-600 hover:bg-red-50" : "cursor-not-allowed text-gray-400"
-              }`}
-              disabled={!roomData.isAdmin}
-            >
-              채팅방 삭제하기
-            </button>
-          </div>
-        )}
-      </div>
-    </section>
+      {/* 버튼: 채팅방 삭제 기능? 방장 전용? */}
+      <button>
+        <List size={isTabletOrSmaller ? 24 : 32} />
+      </button>
+    </div>
   );
 };
 
 export default ChatHeader;
+
+// div flex h-[96px] items-center justify-between bg-white px-4

@@ -10,13 +10,12 @@ export const useSearchQuery = () => {
   const searchParams = useSearchParams();
   const queryFromUrl = searchParams.get("query") || "";
   const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
+  const sortFromUrl = searchParams.get("sort") || "created_at";
 
   const tagsFromUrl = useMemo(() => {
     const category = searchParams.get("category");
-    return category ? JSON.parse(decodeURIComponent(category || "[]")) : { gender: [], season: [], style: [], tpo: [] };
+    return category ? JSON.parse(decodeURIComponent(category)) : { gender: [], season: [], style: [], tpo: [] };
   }, [searchParams]);
-
-  const sortFromUrl = searchParams.get("sort") || "created_at";
 
   const setSelectedCategory = useCategoryStore((state) => state.setSelectedCategory);
 
@@ -28,45 +27,41 @@ export const useSearchQuery = () => {
 
   const memoizedTags = useMemo(() => tags, [tags]);
 
-  // URL 변경 시 상태 동기화
+  // URL 변경 시 기존 상태와 다를 때만 업데이트하여 리렌더링 방지
   useEffect(() => {
     if (query !== queryFromUrl) setQuery(queryFromUrl);
     if (page !== pageFromUrl) setPage(pageFromUrl);
     if (sort !== sortFromUrl) setSort(sortFromUrl);
-
-    // 기존 태그와 다를 때만 업데이트
-    if (JSON.stringify(tags) !== JSON.stringify(tagsFromUrl)) {
-      setTags(tagsFromUrl);
-    }
+    if (JSON.stringify(tags) !== JSON.stringify(tagsFromUrl)) setTags(tagsFromUrl);
   }, [queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
 
-  // JSON을 URL-safe한 배열 표현으로 변환하는 헬퍼 함수
-  const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => {
-    // JSON.stringify로 직렬화된 값을 반환 (추가 인코딩 제거)
-    return JSON.stringify(tags);
-  };
+  const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => JSON.stringify(tags);
+
+  // router.replace 실행 전에 현재 URL과 비교하여 변경된 경우에만 실행
+  const updateUrl = useCallback((newQuery: string, newTags: typeof tags, newSort: string) => {
+    const newUrl = `/search?query=${encodeURIComponent(newQuery)}&page=1&category=${encodeTagsForUrl(
+      newTags
+    )}&sort=${encodeURIComponent(newSort)}`;
+
+    if (newUrl !== window.location.href) {
+      router.replace(newUrl);
+    }
+  }, []);
 
   // 검색 실행
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (inputValue !== query || page !== 1 || Object.values(tags).flat().length > 0 || sort !== sortFromUrl) {
-      router.replace(
-        `/search?query=${encodeURIComponent(inputValue)}&page=1&category=${encodeTagsForUrl(
-          tags
-        )}&sort=${encodeURIComponent(sort)}`
-      );
-    }
-
+    updateUrl(inputValue, tags, sort);
     setSelectedCategory(null);
   };
 
-  // 태그 토글
+  // 태그 토글 - 기존 태그와 비교하여 변경된 경우에만 `setTags()` 실행
   const handleToggleTag = useCallback(
     (key: string, tag: string) => {
       setTags((prevTags) => {
         const currentTags = prevTags[key] || [];
-
         let updatedTags;
+
         if (currentTags.includes(tag)) {
           updatedTags = { ...prevTags, [key]: currentTags.filter((t) => t !== tag) };
         } else {
@@ -77,42 +72,30 @@ export const useSearchQuery = () => {
           updatedTags = { ...prevTags, [key]: [...currentTags, tag] };
         }
 
-        router.replace(
-          `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
-            updatedTags
-          )}&sort=${encodeURIComponent(sort)}`
-        );
-
+        updateUrl(query, updatedTags, sort);
         return updatedTags;
       });
     },
-    [query, sort, router]
+    [query, sort, updateUrl]
   );
 
   // 태그 초기화
-  const resetTags = () => {
+  const resetTags = useCallback(() => {
     const emptyTags = { gender: [], season: [], style: [], tpo: [] };
     setTags(emptyTags);
+    updateUrl(query, emptyTags, sort);
+  }, [query, sort, updateUrl]);
 
-    // URL 동기화
-    router.replace(
-      `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
-        emptyTags
-      )}&sort=${encodeURIComponent(sort)}`
-    );
-  };
-
-  // 정렬 변경
-  const handleSort = (newSort: string) => {
-    if (newSort !== sort) {
-      setSort(newSort);
-      router.replace(
-        `/search?query=${encodeURIComponent(query)}&page=1&category=${encodeTagsForUrl(
-          tags
-        )}&sort=${encodeURIComponent(newSort)}`
-      );
-    }
-  };
+  // 정렬 변경 - 기존 값과 다를 때만 실행
+  const handleSort = useCallback(
+    (newSort: string) => {
+      if (newSort !== sort) {
+        setSort(newSort);
+        updateUrl(query, tags, newSort);
+      }
+    },
+    [query, tags, sort, updateUrl]
+  );
 
   return {
     inputValue,

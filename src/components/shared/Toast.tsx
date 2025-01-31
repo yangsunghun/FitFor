@@ -9,7 +9,7 @@ const Toast = () => {
 
   return (
     <div className="fixed bottom-[5vh] left-1/2 z-50 -translate-x-1/2 transform space-y-2">
-      {toasts.map((toast) => (
+      {toasts.slice(0, 5).map((toast) => (
         <div
           key={toast.id}
           className="relative flex min-w-[330px] animate-fadeIn items-center justify-between gap-2 overflow-hidden px-4 py-3 text-body text-white"

@@ -40,12 +40,14 @@ export default function RootLayout({
     <html lang="ko" className="min-h-full">
       <AuthProvider>
         <TQProviders>
-          <body className={`${pretendard.className} text-body text-text-04`}>
+          <body className={`${pretendard.className} relative text-body text-text-04`}>
             <MinTablet>
               <Header />
             </MinTablet>
-            <main className="relative mx-auto w-full max-w-[1200px] pt-20 tb:pb-[77px] tb:pt-0">{children}</main>
-            {modal}
+            <main className="relative mx-auto w-full max-w-[1200px] pt-20 tb:pb-[77px] tb:pt-0">
+              {children}
+              {modal}
+            </main>
             <Tablet>
               <NavBar />
             </Tablet>

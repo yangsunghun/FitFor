@@ -14,7 +14,7 @@ export const PROFILE_EDIT_FIELD: FormField<ProfileEditForm>[] = [
 ];
 
 export const onboardSchema = z.object({
-  nickname: z.string().min(2, "닉네임은 최소 2글자 이상이어야 합니다.").max(5, "닉네임은 최대 5글자까지 가능합니다.")
+  nickname: z.string().min(2, "닉네임은 최소 2글자 이상이어야 합니다.").max(10, "닉네임은 최대 10글자까지 가능합니다.")
 });
 
 export const ONBOARD_FIELD: FormField<Pick<ProfileEditForm, "nickname">>[] = [

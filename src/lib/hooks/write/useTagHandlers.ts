@@ -10,8 +10,9 @@ export const useTagHandlers = ({ formState, handleChange }: UsePurchaseHandlersP
 
   // 카테고리 변경 핸들러
   const handleChangeCategory = (category: string) => {
-    setSelectedCategory(category);
-    handleChange("tags", []); // 카테고리 변경 시 태그 초기화
+    if (selectedCategory !== category) {
+      setSelectedCategory(category);
+    }
   };
 
   // 토글선택 핸들러

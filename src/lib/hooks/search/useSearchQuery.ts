@@ -35,18 +35,28 @@ export const useSearchQuery = () => {
     if (JSON.stringify(tags) !== JSON.stringify(tagsFromUrl)) setTags(tagsFromUrl);
   }, [queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
 
-  const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => JSON.stringify(tags);
-
   // router.replace 실행 전에 현재 URL과 비교하여 변경된 경우에만 실행
-  const updateUrl = useCallback((newQuery: string, newTags: typeof tags, newSort: string) => {
-    const newUrl = `/search?query=${encodeURIComponent(newQuery)}&page=1&category=${encodeTagsForUrl(
-      newTags
-    )}&sort=${encodeURIComponent(newSort)}`;
+  const updateUrl = useCallback(
+    (newQuery: string, newTags: typeof tags, newSort: string) => {
+      const newUrl = `/search?query=${encodeURIComponent(newQuery)}&page=1&category=${encodeTagsForUrl(
+        newTags
+      )}&sort=${encodeURIComponent(newSort)}`;
 
-    if (newUrl !== window.location.href) {
-      router.replace(newUrl);
-    }
-  }, []);
+      if (newUrl !== window.location.href) {
+        setTimeout(() => {
+          router.replace(newUrl);
+        }, 0);
+      }
+    },
+    [router]
+  ); // 의존성에 router 추가
+
+  // URL 변경은 별도의 `useEffect`에서 처리
+  useEffect(() => {
+    updateUrl(query, tags, sort); // 상태가 모두 업데이트된 후에만 실행됨
+  }, [query, tags, sort, updateUrl]);
+
+  const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => JSON.stringify(tags);
 
   // 검색 실행
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {

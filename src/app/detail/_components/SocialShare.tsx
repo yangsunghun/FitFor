@@ -1,9 +1,8 @@
 "use client";
-import kakaoLogo from "@/assets/images/kakao-logo.svg";
+import KakaoIcon from "@/assets/images/KakaoIcon";
 import Dropdown from "@/components/ui/Dropdown";
 import { toast } from "@/lib/utils/common/toast";
 import { FacebookLogo, LinkSimple, XLogo } from "@phosphor-icons/react";
-import Image from "next/image";
 import { type ReactNode } from "react";
 
 type SocialShareProps = {
@@ -92,7 +91,7 @@ const SocialShare = ({ postUrl, postTitle, thumbnail, writer, showText, icon }: 
           onClick={handleKakaoShare}
           className="flex h-8 w-8 items-center justify-center rounded-md bg-[#FEE500] text-black"
         >
-          <Image src={kakaoLogo} alt="" width={20} height={20} />
+          <KakaoIcon size={20} />
         </button>
 
         <button

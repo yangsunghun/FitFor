@@ -27,6 +27,7 @@ import ImageGallery from "./ImageGallery";
 import PurchaseMobile from "./PurchaseMobile";
 import SocialShare from "./SocialShare";
 import UserProfile from "./UserProfile";
+import MobileHeader from "@/components/layout/MoblieHeader";
 
 type Props = {
   postId: string;
@@ -73,7 +74,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
   return (
     <>
       <Tablet>
-        <MoblieHeader pageName="게시물" action="back" />
+        <MobileHeader pageName="게시물" action="back" />
         <div className="inner relative mb-[8px]">
           <UserProfile
             profileImage={users.profile_image}

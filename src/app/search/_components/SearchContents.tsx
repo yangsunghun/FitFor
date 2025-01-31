@@ -67,16 +67,18 @@ const SearchContents = () => {
       </section>
       <Pagination Results={Results} />
 
-      {isOpen && (
-        <SlideOver title="필터" onClose={() => setIsOpen(false)}>
-          <TagCheckFilters
-            selectedGroup={selectedCategory}
-            tags={tags}
-            handleToggleTag={handleToggleTag}
-            resetTags={resetTags}
-          />
-        </SlideOver>
-      )}
+      <Tablet>
+        {isOpen && (
+          <SlideOver title="필터" onClose={() => setIsOpen(false)}>
+            <TagCheckFilters
+              selectedGroup={selectedCategory}
+              tags={tags}
+              handleToggleTag={handleToggleTag}
+              resetTags={resetTags}
+            />
+          </SlideOver>
+        )}
+      </Tablet>
     </>
   );
 };

@@ -7,7 +7,7 @@ type Props = {
   path?: string;
 };
 
-const MoblieHeader = ({ pageName, action, path }: Props) => {
+const MobileHeader = ({ pageName, action, path }: Props) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -30,4 +30,4 @@ const MoblieHeader = ({ pageName, action, path }: Props) => {
   );
 };
 
-export default MoblieHeader;
+export default MobileHeader;

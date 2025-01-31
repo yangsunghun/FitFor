@@ -41,7 +41,13 @@ const PurchaseMobile = ({ postId }: PurchaseListProps) => {
             )}
             {purchase.image_url && (
               <figure className="thumbnail aspect-square w-[48px] rounded-lg border bg-bg-02">
-                <Image src={purchase.image_url} alt={purchase.title} fill={true} className="object-cover" />
+                <Image
+                  src={purchase.image_url}
+                  alt={purchase.title}
+                  fill={true}
+                  sizes="(max-width: 768px) 108px, 108px"
+                  className="object-cover"
+                />
               </figure>
             )}
             <div className="w-[calc(100%-60px)]">

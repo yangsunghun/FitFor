@@ -82,6 +82,10 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
           "opacity-0": !isOpen
         }
       )}
+      onClick={() => {
+        setIsOpen(false);
+        if (onClose) onClose();
+      }}
     >
       {children}
     </div>

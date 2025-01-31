@@ -39,7 +39,13 @@ const PurchaseList = ({ postId }: PurchaseListProps) => {
             )}
             {purchase.image_url && (
               <figure className="thumbnail aspect-square w-full rounded-lg border border-line-02">
-                <Image src={purchase.image_url} alt={purchase.title} fill={true} className="object-cover" />
+                <Image
+                  src={purchase.image_url}
+                  alt={purchase.title}
+                  fill={true}
+                  sizes="(max-width: 768px) 250px, 250px"
+                  className="object-cover"
+                />
               </figure>
             )}
             <div className="mt-4">

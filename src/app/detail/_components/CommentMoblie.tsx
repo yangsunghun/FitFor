@@ -1,6 +1,6 @@
 "use client";
 
-import sampleImage from "@/assets/images/image_sample.png";
+import ProfileImageCircle from "@/components/shared/ProfileImageCircle";
 import { TextField } from "@/components/ui/TextField";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
@@ -8,7 +8,6 @@ import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { toast } from "@/lib/utils/common/toast";
 import { PaperPlaneTilt } from "@phosphor-icons/react";
 import clsx from "clsx";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 type CommentSectionProps = {
@@ -56,8 +55,13 @@ const CommentMobile = ({ postId }: CommentSectionProps) => {
           .reverse()
           .map((comment) => (
             <li key={comment.id} className="mb-[24px] flex w-full items-start justify-between">
-              <figure className="relative h-[36px] w-[36px] overflow-hidden rounded-full">
-                <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
+              <figure className="relative overflow-hidden rounded-full">
+                <ProfileImageCircle
+                  profileImage={comment.users.profile_image}
+                  nickname={comment.users.nickname}
+                  size={36}
+                  className="h-[36px] w-[36px]"
+                />
               </figure>
               <div className="w-[calc(100%-48px)]">
                 <div className="flex justify-between">

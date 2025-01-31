@@ -341,7 +341,7 @@ function ImageUploadSection({ images, setImages, blur, setBlur, isMissing }: Ima
         </div>
       </div>
       {/* 필수 입력 경고 메시지 */}
-      {isMissing && <p className="pl-2 text-body text-status-danger">이미지를 업로드해주세요.</p>}
+      {isMissing && <p className="text-body text-status-danger">이미지를 업로드해주세요.</p>}
     </div>
   );
 }

@@ -1,8 +1,7 @@
 "use client";
 
 import VerifiedBadge from "@/app/mypage/_components/VerifiedBadge";
-import sampleImage from "@/assets/images/image_sample.png";
-import Image from "next/image";
+import ProfileImageCircle from "@/components/shared/ProfileImageCircle";
 
 type UserProfileProps = {
   profileImage?: string | null;
@@ -14,13 +13,12 @@ type UserProfileProps = {
 const UserProfile = ({ profileImage, nickname = "익명", isVerified, uploadPlace }: UserProfileProps) => {
   return (
     <div className="flex items-center gap-4">
-      <figure className="relative h-12 w-12 overflow-hidden tb:h-[40px] tb:w-[40px]">
-        <Image
-          src={profileImage || sampleImage} // 프로필 이미지 또는 기본 이미지 사용
-          alt={`${nickname}의 프로필 이미지`}
-          width={48}
-          height={48}
-          className="rounded-full border border-line-03 bg-bg-02 object-cover"
+      <figure className="relative">
+        <ProfileImageCircle
+          profileImage={profileImage}
+          nickname={nickname}
+          size={48}
+          className="h-12 w-12 tb:h-[40px] tb:w-[40px]"
         />
         <VerifiedBadge isVerified={isVerified || false} />
       </figure>

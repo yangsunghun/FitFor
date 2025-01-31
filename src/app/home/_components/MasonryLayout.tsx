@@ -16,20 +16,17 @@ const MasonryLayout = ({ posts, isPending }: MasonryLayoutProps) => {
     768: 3
   };
 
+  const aspectRatios = ["aspect-[6/9]", "aspect-square"];
+
   return isPending ? (
     <Masonry
       breakpointCols={breakpointColumnsObj}
       className="flex w-full gap-6 tb:gap-4 mb:gap-2"
       columnClassName="flex flex-col gap-6 tb:gap-4 mb:gap-2"
     >
-      <div className="skeleton-effect aspect-[6/9] rounded-2xl"></div>
-      <div className="skeleton-effect aspect-square rounded-2xl"></div>
-      <div className="skeleton-effect aspect-[6/9] rounded-2xl"></div>
-      <div className="skeleton-effect aspect-square rounded-2xl"></div>
-      <div className="skeleton-effect aspect-square rounded-2xl"></div>
-      <div className="skeleton-effect aspect-[6/9] rounded-2xl"></div>
-      <div className="skeleton-effect aspect-square rounded-2xl"></div>
-      <div className="skeleton-effect aspect-[6/9] rounded-2xl"></div>
+      {[...Array(16)].map((_, index) => (
+        <div key={index} className={`skeleton-effect rounded-2xl ${aspectRatios[index % aspectRatios.length]}`}></div>
+      ))}
     </Masonry>
   ) : (
     <Masonry

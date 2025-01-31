@@ -127,6 +127,10 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
           <MinTablet>
             <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
               <LikeButton postId={postId} styleType="detail" iconSize={28} showNumber />
+              <span className="flex flex-col gap-2 text-center text-text-03">
+                <ChatCircleDots size={28} />
+                {comments.length}
+              </span>
               <BookmarkButton postId={postId} styleType="detail" iconSize={28} showText />
               <KakaoScript />
               <SocialShare

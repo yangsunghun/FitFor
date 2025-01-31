@@ -5,13 +5,13 @@ import { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import { PostWithPurchases, UseFormStateHandlersReturn } from "./useFormStateHandlers"; // formState 타입 가져오기
-import { fetchUnsavedPosts } from "./useTempSaveHandlers";
+import { UseFormStateHandlersReturn } from "./useFormStateHandlers"; // formState 타입 가져오기
+import { fetchUnsavedPosts, TempSaveState } from "./useTempSaveHandlers";
 
 const supabase = createClient();
 
 type UsePostHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "handleChange"> & {
-  setTempSaveState: Dispatch<SetStateAction<{ unsavedPosts: PostWithPurchases[]; activePostId: string | null }>>;
+  setTempSaveState: Dispatch<SetStateAction<TempSaveState>>;
 };
 
 export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlersProps) => {
@@ -48,7 +48,7 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
   };
 
   // 폼 제출 핸들러
-  const handleSubmit = async () => {
+  const handleSubmit = async (handleStartSubmit: () => void, handleEndSubmit: () => void) => {
     if (!validateFields()) {
       // 유효하지 않은 경우 메시지 표시
       alert("필수 입력 항목을 모두 입력해주세요!");
@@ -62,6 +62,7 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
       return;
     }
 
+    handleStartSubmit(); // 제출 시작 플래그 설정
     try {
       let savedPostId = postId;
 
@@ -125,7 +126,8 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
       const updatedUnsavedPosts = await fetchUnsavedPosts(currentUser.id);
       setTempSaveState((prevState) => ({
         ...prevState,
-        unsavedPosts: updatedUnsavedPosts.filter((post) => post.is_saved)
+        unsavedPosts: updatedUnsavedPosts.filter((post) => post.is_saved),
+        isWriting: prevState.isWriting // 누락 방지
       }));
 
       alert("저장 성공!");
@@ -135,6 +137,8 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
     } catch (error) {
       console.error("게시글 저장 실패:", error);
       alert("저장 실패");
+    } finally {
+      handleEndSubmit(); // 제출 종료 플래그 해제
     }
   };
 

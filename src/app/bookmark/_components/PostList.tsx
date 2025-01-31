@@ -4,10 +4,11 @@ import ErrorScreen from "@/components/common/ErrorScreen";
 import Cardpost from "@/components/shared/CardPost";
 import CardSkeleton from "@/components/shared/CardSkeleton";
 import DeleteConfirm from "@/components/shared/DeleteConfirm";
+import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
 import useModal from "@/lib/hooks/common/useModal";
 import { toast } from "@/lib/utils/common/toast";
-import { Check, Trash } from "@phosphor-icons/react";
+import { Check } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { useState } from "react";
 
@@ -85,11 +86,13 @@ const PostList = ({ title, posts, isPending, isError, onDelete, invalidateMessag
       </div>
 
       {isEditing && selectedPosts.length > 0 && (
-        <div className="mb-4 flex justify-end">
-          <button onClick={openModal} className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-white">
-            <Trash size={16} weight="bold" />
-            삭제하기 ({selectedPosts.length}개)
-          </button>
+        <div className="mb-4 tb:fixed tb:bottom-0 tb:left-0 tb:z-50 tb:mb-0 tb:w-screen tb:bg-bg-01 tb:py-[12px]">
+          <div className="tb:inner flex items-center justify-end gap-3 tb:flex-col tb:gap-2">
+            <p className="text-title2 font-medium tb:text-body">{selectedPosts.length}개의 게시물이 선택되었어요</p>
+            <Button onClick={openModal} variant="primary" size="sm" className="tb:w-full">
+              삭제하기
+            </Button>
+          </div>
         </div>
       )}
 

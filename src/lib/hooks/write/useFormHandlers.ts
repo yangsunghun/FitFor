@@ -20,7 +20,10 @@ export const useFormHandlers = () => {
     ...formStateHandlers,
     setTempSaveState: tempSaveHandlers.setTempSaveState, // TempSaveState로 맞춰 전달
   });
-  const categoryTagHandlers = useTagHandlers(formStateHandlers);
+  const categoryTagHandlers = useTagHandlers({
+    formState: formStateHandlers.formState,
+    handleFieldChange: tempSaveHandlers.handleFieldChange, // 추가
+  });
 
   return {
     // FormState 관련 핸들러

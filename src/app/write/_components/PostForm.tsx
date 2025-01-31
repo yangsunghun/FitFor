@@ -25,7 +25,6 @@ const PostForm = ({
   handleChangeCategory,
   toggleTagSelector,
   missingFields,
-  mode = "post",
 }: PostFormProps) => (
   <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
     <ContentSection

@@ -10,7 +10,6 @@ type TagFiltersProps = {
 };
 
 const TagFilters = memo(({ selectedGroup, tags, handleToggleTag }: TagFiltersProps) => {
-  console.log("리렌더링 테스트");
   return (
     <>
       {selectedGroup

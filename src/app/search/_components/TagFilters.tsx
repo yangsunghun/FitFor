@@ -1,6 +1,7 @@
 "use client";
 import { Tags } from "@/components/ui/Tags";
 import { TAG_GROUPS } from "@/lib/constants/constants";
+import { memo } from "react";
 
 type TagFiltersProps = {
   selectedGroup: string | null;
@@ -9,6 +10,8 @@ type TagFiltersProps = {
 };
 
 const TagFilters = ({ selectedGroup, tags, handleToggleTag }: TagFiltersProps) => {
+  console.log("리렌더링 테스트");
+
   return (
     <>
       {selectedGroup
@@ -19,7 +22,7 @@ const TagFilters = ({ selectedGroup, tags, handleToggleTag }: TagFiltersProps) =
               <div className="mb-6 flex flex-wrap gap-2 mb:hidden">
                 {group.tags.map((tag) => (
                   <button key={tag} onClick={() => handleToggleTag(group.key, tag)}>
-                    <Tags label={tag} variant={`${tags[group.key]?.includes(tag) ? "black" : "gray"}`} />
+                    <Tags label={tag} variant={tags[group.key]?.includes(tag) ? "black" : "gray"} />
                   </button>
                 ))}
               </div>
@@ -31,7 +34,7 @@ const TagFilters = ({ selectedGroup, tags, handleToggleTag }: TagFiltersProps) =
               <div className="flex flex-wrap gap-2">
                 {group.tags.map((tag) => (
                   <button key={tag} onClick={() => handleToggleTag(group.key, tag)}>
-                    <Tags label={tag} variant={`${tags[group.key]?.includes(tag) ? "black" : "gray"}`} />
+                    <Tags label={tag} variant={tags[group.key]?.includes(tag) ? "black" : "gray"} />
                   </button>
                 ))}
               </div>
@@ -41,4 +44,4 @@ const TagFilters = ({ selectedGroup, tags, handleToggleTag }: TagFiltersProps) =
   );
 };
 
-export default TagFilters;
+export default memo(TagFilters);

@@ -75,6 +75,7 @@ const SearchContents = () => {
             handleToggleTag={handleToggleTag}
             resetTags={resetTags}
           />
+          
         </SlideOver>
       )}
     </>

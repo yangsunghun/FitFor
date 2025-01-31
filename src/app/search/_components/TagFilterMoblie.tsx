@@ -1,7 +1,8 @@
-import MoblieHeader from "@/components/layout/MoblieHeader";
+import MobileHeader from "@/components/layout/MoblieHeader";
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { SlidersHorizontal, X } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { memo } from "react";
 
 type TagFiltersProps = {
   selectedGroup: string | null;
@@ -11,20 +12,21 @@ type TagFiltersProps = {
   query: string;
 };
 
-const TagFilterMoblie = ({ selectedGroup, selectedTags, handleToggleTag, setIsOpen, query }: TagFiltersProps) => {
+const TagFilterMoblie = memo(({ selectedGroup, selectedTags, handleToggleTag, setIsOpen, query }: TagFiltersProps) => {
+  console.log("시발");
   return (
     <>
       {selectedGroup ? (
         TAG_GROUPS.filter((group) => !selectedGroup || group.key === selectedGroup).map((group) => (
-          <MoblieHeader key={group.key} pageName={group.title} action="back" />
+          <MobileHeader key={group.key} pageName={group.title} action="navigate" path="/home" />
         ))
       ) : (
-        <MoblieHeader pageName={`"${query}" 검색결과`} action="back" />
+        <MobileHeader pageName={`"${query}" 검색결과`} action="navigate" path="/home" />
       )}
-      <div className="flex h-[48px] w-full items-start justify-between">
-        {selectedTags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {selectedTags.map(({ groupKey, tag }) => (
+      <div className="flex min-h-[48px] w-full items-start justify-between">
+        <div className="flex flex-wrap gap-2">
+          {selectedTags.length > 0 &&
+            selectedTags.map(({ groupKey, tag }) => (
               <div
                 key={tag}
                 className="flex items-center gap-1 rounded-[4px] border border-line-02 px-[8px] py-[4px] text-caption text-text-03"
@@ -35,8 +37,7 @@ const TagFilterMoblie = ({ selectedGroup, selectedTags, handleToggleTag, setIsOp
                 </button>
               </div>
             ))}
-          </div>
-        )}
+        </div>
         <button
           onClick={() => setIsOpen(true)}
           className={clsx("flex h-[28px] w-[28px] items-center justify-center rounded-[6px]", {
@@ -49,6 +50,8 @@ const TagFilterMoblie = ({ selectedGroup, selectedTags, handleToggleTag, setIsOp
       </div>
     </>
   );
-};
+});
+
+TagFilterMoblie.displayName = "TagFilterMoblie";
 
 export default TagFilterMoblie;

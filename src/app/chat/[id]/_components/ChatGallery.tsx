@@ -1,6 +1,7 @@
 "use client";
 
 import ImageModal from "@/components/shared/ImageModal";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { createClient } from "@/lib/utils/supabase/client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -65,13 +66,13 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
     setIsModalOpen(false);
   };
 
-  if (loading) return <p>Loading gallery...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (loading) return <LoadingSpinner />;
+  if (error) return <p></p>;
 
   return (
-    <div className="scrollbar-hide absolute bottom-0 h-full w-full flex-col overflow-y-scroll bg-white pt-32">
+    <div className="scrollbar-hide h-[calc(100vh-226px)] overflow-y-auto bg-white p-4">
       {/* 이미지 갤러리 */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+      <div className="grid grid-cols-3 gap-3">
         {images.map((url, index) => (
           <div key={index} className="w-full cursor-pointer overflow-hidden rounded-2xl" onClick={() => openModal(url)}>
             <Image

@@ -6,6 +6,7 @@ import { usePurchaseHandlers } from "./usePurchaseHandlers";
 import { useTagHandlers } from "./useTagHandlers";
 import { useTempSaveHandlers } from "./useTempSaveHandlers";
 
+
 export const useFormHandlers = () => {
   // `useFormStateHandlers`에서 상태와 상태 변경 함수 가져오기
   const formStateHandlers = useFormStateHandlers();
@@ -17,7 +18,7 @@ export const useFormHandlers = () => {
   const purchaseHandlers = usePurchaseHandlers(formStateHandlers);
   const postHandlers = usePostHandlers({
     ...formStateHandlers,
-    setTempSaveState: tempSaveHandlers.setTempSaveState // 추가
+    setTempSaveState: tempSaveHandlers.setTempSaveState, // TempSaveState로 맞춰 전달
   });
   const categoryTagHandlers = useTagHandlers(formStateHandlers);
 
@@ -45,9 +46,13 @@ export const useFormHandlers = () => {
     selectedCategory: categoryTagHandlers.selectedCategory,
 
     // 임시저장 관련 핸들러
+    tempSaveState: tempSaveHandlers.tempSaveState,
+    setTempSaveState: tempSaveHandlers.setTempSaveState,
+    fetchUnsavedPosts: tempSaveHandlers.fetchUnsavedPosts,
     handleContinuePost: tempSaveHandlers.handleContinuePost,
     handleDiscardPost: tempSaveHandlers.handleDiscardPost,
     handleTemporarySave: tempSaveHandlers.handleTemporarySave,
-    fetchUnsavedPosts: tempSaveHandlers.fetchUnsavedPosts
+    checkIsWriting: tempSaveHandlers.checkIsWriting,
+    handleFieldChange: tempSaveHandlers.handleFieldChange
   };
 };

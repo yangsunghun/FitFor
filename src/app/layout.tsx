@@ -2,6 +2,7 @@ import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import Header from "@/components/layout/Header";
 import NavBar from "@/components/layout/NavBar";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import ModalProvider from "@/components/providers/ModalProvider";
 import TQProviders from "@/components/providers/TQProvider";
 import Toast from "@/components/shared/Toast";
 import "@/lib/styles/globals.css";
@@ -31,10 +32,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal
+  modal,
+  detailModal
 }: Readonly<{
   children: ReactNode;
   modal: ReactNode;
+  detailModal: ReactNode;
 }>) {
   return (
     <html lang="ko" className="min-h-full">
@@ -47,6 +50,7 @@ export default function RootLayout({
             <main className="relative mx-auto w-full max-w-[1200px] pt-20 tb:pb-[77px] tb:pt-0">
               {children}
               {modal}
+              <ModalProvider>{detailModal}</ModalProvider>
             </main>
             <Tablet>
               <NavBar />

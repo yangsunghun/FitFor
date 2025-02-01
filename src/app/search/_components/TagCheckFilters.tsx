@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/Button";
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { X } from "@phosphor-icons/react";
 
@@ -7,9 +8,10 @@ type TagCheckFiltersProps = {
   tags: { [key: string]: string[] };
   handleToggleTag: (groupKey: string, tag: string) => void;
   resetTags: () => void;
+  onClose: () => void;
 };
 
-const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: TagCheckFiltersProps) => {
+const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags, onClose }: TagCheckFiltersProps) => {
   // 선택된 태그
   const selectedTags = Object.entries(tags).flatMap(([groupKey, groupTags]) =>
     groupTags.map((tag) => ({ groupKey, tag }))
@@ -55,6 +57,16 @@ const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: Ta
           ))}
         </div>
       ))}
+
+      <div className="inner">
+        <Button
+          onClick={onClose}
+          className="text-text-body w-full"
+          variant={selectedTags.length > 0 ? "primary" : "disabled"}
+        >
+          저장하기
+        </Button>
+      </div>
     </>
   );
 };

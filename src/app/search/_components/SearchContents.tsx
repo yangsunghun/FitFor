@@ -75,6 +75,7 @@ const SearchContents = () => {
               tags={tags}
               handleToggleTag={handleToggleTag}
               resetTags={resetTags}
+              onClose={() => setIsOpen(false)}
             />
           </SlideOver>
         )}

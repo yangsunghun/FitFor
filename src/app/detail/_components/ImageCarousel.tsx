@@ -35,6 +35,7 @@ const ImageCarousel = ({ images, writerSpec, blur }: Props) => {
                 src={isImgError || !images ? sampleImage : image}
                 alt={`이미지 ${index + 1}`}
                 fill={true}
+                sizes="(max-width: 768px) 100vw, 500px"
                 placeholder="blur"
                 blurDataURL={blur}
                 onError={() => setIsImgError(true)}

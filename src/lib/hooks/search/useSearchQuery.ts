@@ -1,14 +1,13 @@
-"use client";
-
 import useCategoryStore from "@/lib/store/useCategoryStore";
 import { toast } from "@/lib/utils/common/toast";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 
 export const useSearchQuery = () => {
   const router = useRouter();
-  const pathname = usePathname(); // 현재 경로 가져오기
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+
   const queryFromUrl = searchParams.get("query") || "";
   const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
   const sortFromUrl = searchParams.get("sort") || "created_at";
@@ -28,19 +27,40 @@ export const useSearchQuery = () => {
 
   const memoizedTags = useMemo(() => tags, [tags]);
 
-  // `useRef`를 사용해 첫 실행 여부 체크 (최초 `updateUrl` 실행 방지)
   const isFirstRender = useRef(true);
-  const isNavigatedFromHeader = useRef(false); // 헤더에서 검색 페이지로 이동했는지 체크
+  const isNavigatedFromHeader = useRef(false);
 
-  // URL 변경 시 기존 상태와 다를 때만 업데이트하여 리렌더링 방지
+  const queryRef = useRef(query);
+  const pageRef = useRef(page);
+  const sortRef = useRef(sort);
+  const tagsRef = useRef(tags);
+
   useEffect(() => {
-    if (query !== queryFromUrl) setQuery(queryFromUrl);
-    if (page !== pageFromUrl) setPage(pageFromUrl);
-    if (sort !== sortFromUrl) setSort(sortFromUrl);
-    if (JSON.stringify(tags) !== JSON.stringify(tagsFromUrl)) setTags(tagsFromUrl);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    startTransition(() => {
+      if (queryRef.current !== queryFromUrl) {
+        setQuery(queryFromUrl);
+        queryRef.current = queryFromUrl;
+      }
+      if (pageRef.current !== pageFromUrl) {
+        setPage(pageFromUrl);
+        pageRef.current = pageFromUrl;
+      }
+      if (sortRef.current !== sortFromUrl) {
+        setSort(sortFromUrl);
+        sortRef.current = sortFromUrl;
+      }
+      if (JSON.stringify(tagsRef.current) !== JSON.stringify(tagsFromUrl)) {
+        setTags(tagsFromUrl);
+        tagsRef.current = tagsFromUrl;
+      }
+    });
   }, [queryFromUrl, pageFromUrl, tagsFromUrl, sortFromUrl]);
 
-  // `router.replace()` 실행 전에 현재 URL과 비교하여 필요할 때만 실행
   const updateUrl = useCallback(
     (newQuery: string, newTags: typeof tags, newSort: string) => {
       const newUrl = `/search?query=${encodeURIComponent(newQuery)}&page=1&category=${encodeTagsForUrl(
@@ -49,31 +69,24 @@ export const useSearchQuery = () => {
 
       if (newUrl !== window.location.pathname + window.location.search) {
         setTimeout(() => {
-          router.replace(newUrl);
+          router.replace(newUrl, { scroll: false });
         }, 0);
       }
     },
     [router]
   );
 
-  // `/search` 페이지 진입 시, 헤더에서 클릭한 경우에만 `updateUrl` 실행
   useEffect(() => {
     if (pathname !== "/search") return;
 
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return; // 최초 마운트 시 실행 방지
-    }
-
     if (isNavigatedFromHeader.current) {
-      updateUrl(query, tags, sort); // 헤더에서 클릭한 경우에만 실행
-      isNavigatedFromHeader.current = false; // 초기화
+      updateUrl(query, tags, sort);
+      isNavigatedFromHeader.current = false;
     }
   }, [pathname, query, tags, sort, updateUrl]);
 
   const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => JSON.stringify(tags);
 
-  // 검색 실행 (헤더에서 이동 시, `isNavigatedFromHeader`를 `true`로 설정)
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     isNavigatedFromHeader.current = true;
@@ -81,13 +94,11 @@ export const useSearchQuery = () => {
     setSelectedCategory(null);
   };
 
-  // 헤더에서 태그 클릭 시 호출하는 함수 (검색 페이지로 이동 전 `isNavigatedFromHeader` 설정)
   const handleHeaderTagClick = (tag: string) => {
     isNavigatedFromHeader.current = true;
     router.push(`/search?query=${encodeURIComponent(tag)}&page=1&category=${encodeTagsForUrl(tags)}&sort=${sort}`);
   };
 
-  // 태그 토글
   const handleToggleTag = useCallback(
     (key: string, tag: string) => {
       setTags((prevTags) => {
@@ -111,14 +122,24 @@ export const useSearchQuery = () => {
     [query, sort, updateUrl]
   );
 
-  // 태그 초기화
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      startTransition(() => {
+        const params = new URLSearchParams(window.location.search);
+        params.set("page", String(newPage));
+
+        router.replace(`/search?${params.toString()}`, { scroll: false });
+      });
+    },
+    [router]
+  );
+
   const resetTags = useCallback(() => {
     const emptyTags = { gender: [], season: [], style: [], tpo: [] };
     setTags(emptyTags);
     updateUrl(query, emptyTags, sort);
   }, [query, sort, updateUrl]);
 
-  // 정렬 변경
   const handleSort = useCallback(
     (newSort: string) => {
       if (newSort !== sort) {
@@ -143,6 +164,7 @@ export const useSearchQuery = () => {
     handleToggleTag,
     resetTags,
     handleSort,
-    encodeTagsForUrl
+    encodeTagsForUrl,
+    handlePageChange
   };
 };

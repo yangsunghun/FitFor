@@ -21,7 +21,7 @@ const ModalBg = ({ children }: ModalBgProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+      className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
       onMouseDown={handleClose}
     >
       {children}

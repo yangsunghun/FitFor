@@ -31,7 +31,7 @@ const SearchBar = () => {
       setInputValue("");
       setFilteredTags([]);
     }
-  }, [pathname]);
+  }, [pathname, setFilteredTags, setInputValue]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     handleSearchWithHistory(e);

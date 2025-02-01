@@ -4,7 +4,7 @@ import iconExport from "@/assets/images/export.svg";
 import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import KakaoScript from "@/components/common/KakaoScript";
-import MoblieHeader from "@/components/layout/MoblieHeader";
+import MobileHeader from "@/components/layout/MoblieHeader";
 import SlideOver from "@/components/ui/SlideOver";
 import { Tags } from "@/components/ui/Tags";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
@@ -27,7 +27,6 @@ import ImageGallery from "./ImageGallery";
 import PurchaseMobile from "./PurchaseMobile";
 import SocialShare from "./SocialShare";
 import UserProfile from "./UserProfile";
-import MobileHeader from "@/components/layout/MoblieHeader";
 
 type Props = {
   postId: string;
@@ -105,7 +104,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
           </MinTablet>
 
-          <p className="mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium tb:mt-[8px] tb:text-body">
+          <p className="scroll-custom mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap pr-2 text-title2 font-medium tb:mt-[8px] tb:text-body">
             {content}
           </p>
 

@@ -3,8 +3,7 @@ import errorImage from "@/assets/images/error.png";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { startTransition, useEffect } from "react";
+import { useEffect } from "react";
 
 type Props = {
   error: Error & { digest?: string };
@@ -13,9 +12,10 @@ type Props = {
 
 const ErrorScreen = ({ error, reset }: Props) => {
   useEffect(() => {
-    console.error(error);
+    if (process.env.NODE_ENV === "development") {
+      console.error(error);
+    }
   }, [error]);
-  const router = useRouter();
   return (
     <section className="fixed inset-0 m-auto flex items-center justify-center">
       <article className="text-center">
@@ -31,12 +31,11 @@ const ErrorScreen = ({ error, reset }: Props) => {
           <Button
             variant="secondary"
             size="lg"
-            onClick={() =>
-              startTransition(() => {
-                router.refresh();
-                reset && reset();
-              })
-            }
+            onClick={() => {
+              setTimeout(() => {
+                reset?.();
+              }, 0);
+            }}
             className="min-w-40"
           >
             다시 시도

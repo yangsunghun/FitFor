@@ -1,8 +1,8 @@
 "use client";
 
 import useLockScroll from "@/lib/hooks/common/useLockScroll";
-import { useRouter } from "next/navigation";
-import { type MouseEvent, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, type MouseEvent, type ReactNode } from "react";
 
 type ModalBgProps = {
   children: ReactNode;
@@ -10,8 +10,15 @@ type ModalBgProps = {
 
 const ModalBg = ({ children }: ModalBgProps) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   useLockScroll();
+
+  // pathname이 변경되면 스크롤을 다시 활성화
+  useEffect(() => {
+    document.documentElement.style.overflow = "";
+    document.documentElement.style.paddingRight = "";
+  }, [pathname]);
 
   const handleClose = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {

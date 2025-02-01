@@ -12,12 +12,14 @@ const ModalBg = ({ children }: ModalBgProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  useLockScroll();
+  useLockScroll(true);
 
   // pathname이 변경되면 스크롤을 다시 활성화
   useEffect(() => {
-    document.documentElement.style.overflow = "";
-    document.documentElement.style.paddingRight = "";
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.documentElement.style.paddingRight = "";
+    };
   }, [pathname]);
 
   const handleClose = (e: MouseEvent) => {

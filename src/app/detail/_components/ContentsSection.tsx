@@ -120,7 +120,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
           )}
 
           <Tablet>
-            <CommentListMobile postId={postId} />
+            <CommentListMobile postId={postId} onOpen={() => setIsCommentOpen(true)} />
           </Tablet>
 
           <p className="mt-4 font-medium text-text-03 tb:mt-2 tb:text-caption mb:text-small">

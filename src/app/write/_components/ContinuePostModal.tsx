@@ -27,7 +27,7 @@ const ContinuePostModal = ({ isOpen, onConfirm, onCancel }: ContinuePostModalPro
           onClick={onCancel}
           className="flex w-full items-center justify-center px-6 py-4 lg:w-[195px]"
         >
-          <span className="text-subtitle font-normal text-text-04">새 게시물 작성하기</span>
+          <span className="text-subtitle font-medium text-text-04">새 게시물 작성하기</span>
         </Button>
         <Button
           variant="primary"
@@ -35,7 +35,7 @@ const ContinuePostModal = ({ isOpen, onConfirm, onCancel }: ContinuePostModalPro
           onClick={onConfirm}
           className="flex w-full items-center justify-center px-6 py-4 lg:w-[195px]"
         >
-          <span className="text-subtitle font-normal text-white">이어쓰기</span>
+          <span className="text-subtitle font-medium text-text-01">이어쓰기</span>
         </Button>
       </div>
     </ModalItem>

@@ -41,11 +41,8 @@ const ScrollTopButton = ({ useFlexLayout = false, extraBottomOffset = 0 }: Scrol
         className={clsx(
           "hover:bg-primary-dark flex items-center justify-center rounded-full bg-primary-default text-bg-01 shadow-lg transition-all duration-300 ease-in-out focus:outline-none",
           {
-            // 나타날 때: 위로 올라오며 나타남
             "pointer-events-auto h-[4.5rem] w-[4.5rem] translate-y-0 opacity-100 tb:h-[40px] tb:w-[40px]": isVisible,
-
-            // 사라질 때: 아래로 내려가며 사라짐
-            "pointer-events-none translate-y-4 opacity-0": !isVisible,
+            "pointer-events-none translate-y-4 opacity-0": !isVisible
           }
         )}
         aria-label="최상단으로 이동"

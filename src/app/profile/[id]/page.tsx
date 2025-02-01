@@ -27,13 +27,13 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
   const maxDescriptionLength = 160;
 
   return {
-    title: `Fit4 - ${otherUser.nickname}님의 룩북`,
+    title: `Fit4 - ${otherUser.nickname}님의 프로필`,
     description:
       otherUser.introduction.length > maxDescriptionLength
         ? `${otherUser.introduction.slice(0, maxDescriptionLength)}...`
         : otherUser.introduction,
     openGraph: {
-      title: `Fit4 - ${otherUser.nickname}님의 룩북`,
+      title: `Fit4 - ${otherUser.nickname}님의 프로필`,
       description:
         otherUser.introduction.length > maxDescriptionLength
           ? `${otherUser.introduction.slice(0, maxDescriptionLength)}...`

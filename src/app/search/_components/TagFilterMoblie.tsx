@@ -13,7 +13,6 @@ type TagFiltersProps = {
 };
 
 const TagFilterMoblie = memo(({ selectedGroup, selectedTags, handleToggleTag, setIsOpen, query }: TagFiltersProps) => {
-  console.log("시발");
   return (
     <>
       {selectedGroup ? (

@@ -9,13 +9,21 @@ type UserProfileProps = {
   nickname: string;
   uploadPlace?: string | null;
   isVerified?: boolean;
+  currentUser?: string | undefined;
   userId: string;
 };
 
-const UserProfile = ({ profileImage, nickname = "익명", isVerified, uploadPlace, userId }: UserProfileProps) => {
+const UserProfile = ({
+  profileImage,
+  nickname = "익명",
+  isVerified,
+  uploadPlace,
+  userId,
+  currentUser
+}: UserProfileProps) => {
   return (
     <div className="relative flex w-fit items-center gap-4">
-      <Link href={`/profile/${userId}`} className="click-box z-10"></Link>
+      <Link href={currentUser === userId ? `/mypage` : `/profile/${userId}`} className="click-box z-10"></Link>
       <figure className="relative">
         <ProfileImageCircle
           profileImage={profileImage}

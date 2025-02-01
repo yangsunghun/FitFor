@@ -19,8 +19,8 @@ const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags, onCl
 
   return (
     <>
-      <div className="relative flex flex-wrap justify-between bg-bg-02 text-caption font-medium text-text-03">
-        {selectedTags.length > 0 && (
+      <div className="relative flex min-h-[44px] flex-wrap justify-between bg-bg-02 text-caption font-medium text-text-03">
+        {
           <div className="inner flex flex-wrap gap-2 py-[12px] pr-[33px]">
             {selectedTags.map(({ groupKey, tag }) => (
               <div
@@ -34,12 +34,12 @@ const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags, onCl
               </div>
             ))}
           </div>
-        )}
-        {selectedTags.length !== 0 && (
+        }
+        {
           <button onClick={resetTags} className="absolute right-[4.275%] top-[12px] underline underline-offset-2">
             초기화
           </button>
-        )}
+        }
       </div>
 
       {TAG_GROUPS.filter((group) => !selectedGroup || group.key === selectedGroup).map((group) => (

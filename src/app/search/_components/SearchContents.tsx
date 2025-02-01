@@ -69,7 +69,7 @@ const SearchContents = () => {
 
       <Tablet>
         {isOpen && (
-          <SlideOver title="필터" onClose={() => setIsOpen(false)}>
+          <SlideOver title="필터" article="최대 4개까지 선택 가능해요" onClose={() => setIsOpen(false)}>
             <TagCheckFilters
               selectedGroup={selectedCategory}
               tags={tags}

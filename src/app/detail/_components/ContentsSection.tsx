@@ -80,6 +80,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             nickname={users.nickname}
             isVerified={users.is_verified}
             uploadPlace={upload_place}
+            userId={user_id}
           />
           {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
         </div>
@@ -100,6 +101,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
               nickname={users.nickname}
               isVerified={users.is_verified}
               uploadPlace={upload_place}
+              userId={user_id}
             />
             {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
           </MinTablet>

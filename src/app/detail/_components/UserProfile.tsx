@@ -2,17 +2,20 @@
 
 import VerifiedBadge from "@/app/mypage/_components/VerifiedBadge";
 import ProfileImageCircle from "@/components/shared/ProfileImageCircle";
+import Link from "next/link";
 
 type UserProfileProps = {
   profileImage?: string | null;
   nickname: string;
   uploadPlace?: string | null;
   isVerified?: boolean;
+  userId: string;
 };
 
-const UserProfile = ({ profileImage, nickname = "익명", isVerified, uploadPlace }: UserProfileProps) => {
+const UserProfile = ({ profileImage, nickname = "익명", isVerified, uploadPlace, userId }: UserProfileProps) => {
   return (
-    <div className="flex items-center gap-4">
+    <div className="relative flex w-fit items-center gap-4">
+      <Link href={`/profile/${userId}`} className="click-box z-10"></Link>
       <figure className="relative">
         <ProfileImageCircle
           profileImage={profileImage}

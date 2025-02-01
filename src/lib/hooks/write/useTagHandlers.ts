@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/lib/utils/common/toast";
 import { useState } from "react";
 import { UseFormStateHandlersReturn } from "./useFormStateHandlers";
 
@@ -26,7 +27,7 @@ export const useTagHandlers = ({ formState, handleFieldChange }: UseTagHandlersP
 
     // 전체 태그 수 제한 (최대 7개)
     if (!selectedGroupTags.includes(tag) && formState.tags.length >= 7) {
-      alert("최대 7개의 태그만 선택 가능합니다.");
+      toast("최대 7개의 태그만 선택 가능합니다.", "warning");
       return;
     }
 
@@ -39,7 +40,7 @@ export const useTagHandlers = ({ formState, handleFieldChange }: UseTagHandlersP
     } else if (selectedGroupTags.length < max) {
       updatedTags = [...formState.tags, tag]; // 태그 추가
     } else {
-      alert(`해당 주제는 최대 ${max}개의 태그만 선택 가능합니다.`);
+      toast(`해당 주제는 최대 ${max}개의 태그만 선택 가능합니다.`, "warning");
       return;
     }
 

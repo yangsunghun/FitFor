@@ -3,7 +3,7 @@ import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { Plus, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 
 type Props = {
   href: string;
@@ -14,16 +14,16 @@ type Props = {
 
 const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+  
+  useEffect(() => {
+    onToggle?.(isOpen);
+  }, [isOpen, onToggle]);
 
   const toggleOpen = () => {
-    setIsOpen((prev) => {
-      const newState = !prev;
-      onToggle?.(newState); // 부모로 상태 전달
-      return newState;
-    });
+    setIsOpen((prev) => !prev);
   };
 
-  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const Icon = isOpen ? X : Plus; // isOpen 상태에 따라 사용할 컴포넌트 선택
   const size = isTabletOrSmaller ? 24 : 48; // 디바이스 크기에 따라 아이콘 크기 설정
 

@@ -14,7 +14,7 @@ const LocationTags = memo(({}: Props) => {
   return (
     <>
       <h2 className="mb-6 text-title1 font-bold mb:mb-0 mb:text-title2">지역별 옷차림</h2>
-      <div className="flex flex-wrap gap-3">
+      <div className="mb-6 flex flex-wrap gap-3">
         <button className="focus:outline-none" onClick={() => setActiveLocation(CURRENT_LOCATION_TAG)}>
           <Tags
             size="lg"

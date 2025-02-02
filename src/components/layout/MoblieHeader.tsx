@@ -3,14 +3,15 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   pageName: string;
-  action: "navigate" | "back";
+  action: "navigate" | "back" | "button";
   path?: string;
+  buttonClick?: () => void;
 };
 
-const MobileHeader = ({ pageName, action, path }: Props) => {
+const MobileHeader = ({ pageName, action, path, buttonClick }: Props) => {
   const router = useRouter();
 
-  const handleClick = () => {
+  const handlePathChange = () => {
     if (action === "navigate" && path) {
       router.push(path);
     } else if (action === "back") {
@@ -19,9 +20,9 @@ const MobileHeader = ({ pageName, action, path }: Props) => {
   };
 
   return (
-    <div className="fixed left-0 top-0 z-30 w-full bg-bg-01">
+    <div className="fixed left-0 top-0 z-40 w-full bg-bg-01">
       <div className="inner flex h-[60px] items-center gap-2">
-        <button onClick={handleClick}>
+        <button onClick={action === "button" ? buttonClick : handlePathChange}>
           <CaretLeft className="" size={24} weight="bold" />
         </button>
         <h2 className="text-title2 font-medium">{pageName}</h2>

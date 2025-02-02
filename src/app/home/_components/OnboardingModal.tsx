@@ -7,15 +7,14 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { ONBOARD_FIELD, onboardSchema } from "@/lib/validations/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 
 const OnboardingModal = () => {
   const { user, setUser } = useAuthStore();
   const [onboardModal, setOnboardModal] = useState(false);
-
-  // router.push활용해서 온보딩 모달로
-  // 모바일 -> 그대로 페이지로 활용
+  const router = useRouter();
 
   const {
     register,
@@ -56,6 +55,8 @@ const OnboardingModal = () => {
     if (user?.onboard) {
       setOnboardModal(false);
     }
+
+    router.back();
   };
 
   return (

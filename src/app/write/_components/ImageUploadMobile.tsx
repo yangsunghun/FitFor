@@ -82,44 +82,43 @@ export const ImageUploadMobile = ({
                     <span>이미지 업로드 중...</span>
                   </div>
                 )}
-
                 {/* 업로드된 이미지 */}
                 {url && (
                   <>
                     <Image src={url} alt={`Uploaded Image ${index + 1}`} layout="fill" className="object-cover" />
-                    <div className="absolute top-2 right-2 flex gap-1">
-                      {/* 썸네일 등록 버튼 */}
-                      {index !== 0 && (
-                        <Button
-                          variant="whiteLine"
-                          size="sm"
-                          className="p-1 h-5 w-5 !p-0 flex items-center justify-center border-none !text-primary-default rounded-full"
-                          onClick={() => {
-                            const updatedImages = [url, ...images.filter((img, i) => i !== index)];
-                            setImages(updatedImages);
-                          }}
-                        >
-                          <PushPin size={12} weight="fill" />
-                        </Button>
-                      )}
 
-                      {/* 삭제 버튼 */}
+                    {/* 썸네일 등록 버튼 */}
+                    {index !== 0 && (
                       <Button
-                        variant="whiteLine"
+                        variant="disabled"
                         size="sm"
-                          className="p-1 h-5 w-5 !p-0 flex items-center justify-center border-none rounded-full !text-text-03"
-                        onClick={() => handleDelete(index)}
+                        className="absolute bottom-2 left-2 flex items-center gap-1 rounded h-6 px-1"
+                        onClick={() => {
+                          const updatedImages = [url, ...images.filter((img, i) => i !== index)];
+                          setImages(updatedImages);
+                        }}
                       >
-                        <Trash size={12} />
+                        <Check size={12} />
+                        <span className="text-small font-medium">썸네일</span>
                       </Button>
-                    </div>
+                    )}
+
+                    {/* 삭제 버튼 */}
+                    <Button
+                      variant="whiteLine"
+                      size="sm"
+                      className="p-1 h-5 w-5 absolute top-2 right-2 !p-0 flex items-center justify-center border-none rounded-full !text-text-03"
+                      onClick={() => handleDelete(index)}
+                    >
+                      <Trash size={12} />
+                    </Button>
                   </>
                 )}
 
                 {/* 첫 번째 이미지에 썸네일 표시 */}
                 {index === 0 && url && (
-                  <div className="text-small absolute bottom-1 left-1 flex items-center gap-1 rounded bg-primary-default h-6 px-1 text-white">
-                    <Check size={8} weight="bold" />
+                  <div className="text-small absolute bottom-2 left-2 flex items-center gap-1 rounded bg-primary-default h-6 px-1 text-white">
+                    <Check size={12} />
                     <span className="font-medium">썸네일</span>
                   </div>
                 )}
@@ -127,6 +126,7 @@ export const ImageUploadMobile = ({
             );
           })}
       </div>
+
 
       {/* 필수 입력 경고 메시지 */}
       {isMissing && <p className="text-sm text-status-danger">이미지를 업로드해주세요.</p>}

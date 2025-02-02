@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
 import { getAddressFromCoordinates, getCurrentPosition } from "@/lib/utils/write/location";
-import { CircleNotch, MagnifyingGlass, MapPin } from "@phosphor-icons/react";
+import { CircleNotch, MagnifyingGlass, MapPinArea } from "@phosphor-icons/react";
 import { useEffect, useState, ChangeEvent } from "react";
 
 type AddressModalProps = {
@@ -127,10 +127,10 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
         <div className="absolute inset-y-0 right-3 flex items-center">
           <button
             onClick={handleGetCurrentLocation}
-            className="flex items-center justify-center text-text-03"
+            className="flex items-center justify-center text-primary-default"
             disabled={state.geoLoading}
           >
-            {state.geoLoading ? <CircleNotch className="text-primary h-6 w-6 animate-spin tb:h-6 tb:w-6" /> : <MapPin size={24} />}
+            {state.geoLoading ? <CircleNotch className="h-6 w-6 animate-spin tb:h-6 tb:w-6" /> : <MapPinArea size={24} weight="fill" />}
           </button>
         </div>
       </div>

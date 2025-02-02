@@ -15,7 +15,7 @@ const ExitTempSaveModal = ({ isOpen, onConfirm, onCancel }: ExitTempSaveModalPro
   return (
     <ModalItem
       isOpen={isOpen}
-      onClose={onCancel}
+      onClose={() => {}} // 모달 외부 클릭 시 아무런 동작도 하지 않도록 빈 함수 전달
       className="flex max-w-[450px] flex-col items-start justify-start gap-4 p-6"
     >
       <span className="self-stretch text-title1 font-bold text-text-04">저장하지 않고 나가시겠어요?</span>

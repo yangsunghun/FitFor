@@ -17,11 +17,9 @@ const LoginContentWrapper = () => {
   }, [isTabletOrSmaller, router]);
 
   return (
-    <div>
-      <MinTablet>
-        <LoginContent />
-      </MinTablet>
-    </div>
+    <MinTablet>
+      <LoginContent />
+    </MinTablet>
   );
 };
 

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const LoginPage = () => {
   return (
-    <div className="h-screen w-full justify-items-center p-20 tb:p-0 tb:h-auto">
+    <div className="h-screen w-full justify-items-center p-20 tb:h-auto tb:p-0">
       <LoginContent />
     </div>
   );

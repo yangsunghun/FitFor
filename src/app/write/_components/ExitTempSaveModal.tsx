@@ -13,20 +13,31 @@ const ExitTempSaveModal = ({ isOpen, onConfirm, onCancel }: ExitTempSaveModalPro
   if (!isOpen) return null; // 모달이 열려 있지 않으면 렌더링하지 않음
 
   return (
-    <ModalItem isOpen={isOpen} onClose={onCancel}>
-
-        <span className="text-title1 text-text-04 font-bold">저장하지 않고 나가시겠어요?</span>
-        <p className="mt-2 text-subtitle text-text-03">
-          페이지를 떠나게 되면 입력하신 정보가 모두 사라져요.
-        </p>
-        <div className="mt-6 flex justify-center gap-4">
-          <Button variant="disabled" size="lg" onClick={onCancel} className="w-full !text-text-04">
-            나가기
-          </Button>
-          <Button variant="primary" size="lg" onClick={onConfirm} className="w-full">
-            저장하기
-          </Button>
-        </div>
+    <ModalItem
+      isOpen={isOpen}
+      onClose={onCancel}
+      className="flex max-w-[450px] flex-col items-start justify-start gap-4 p-6"
+    >
+      <span className="self-stretch text-title1 font-bold text-text-04">저장하지 않고 나가시겠어요?</span>
+      <p className="self-stretch text-subtitle text-text-03">페이지를 떠날 경우 입력하신 정보가 모두 사라져요.</p>
+      <div className="flex items-center justify-start gap-3 self-stretch">
+        <Button
+          variant="disabled"
+          size="lg"
+          onClick={onCancel}
+          className="flex w-full items-center justify-center px-6 py-4 lg:w-[195px]"
+        >
+          <span className="text-subtitle font-medium text-text-04">나가기</span>
+        </Button>
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={onConfirm}
+          className="flex w-full items-center justify-center px-6 py-4 lg:w-[195px]"
+        >
+          <span className="text-subtitle font-medium text-text-01">저장하기</span>
+        </Button>
+      </div>
     </ModalItem>
   );
 };

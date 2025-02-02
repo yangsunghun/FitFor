@@ -2,6 +2,7 @@
 
 import { useAuthStore } from "@/lib/store/authStore";
 import { Database } from "@/lib/types/supabase";
+import { toast } from "@/lib/utils/common/toast";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -51,7 +52,7 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
   const handleSubmit = async (handleStartSubmit: () => void, handleEndSubmit: () => void) => {
     if (!validateFields()) {
       // 유효하지 않은 경우 메시지 표시
-      alert("필수 입력 항목을 모두 입력해주세요!");
+      toast("필수 입력 항목을 모두 입력해주세요!", "warning");
       window.scrollTo(0, 0); // 즉시 최상단으로 이동
       return;
     }
@@ -130,13 +131,13 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
         isWriting: prevState.isWriting // 누락 방지
       }));
 
-      alert("저장 성공!");
+      toast("게시글이 등록되었습니다.", "success");
 
       // 상세 페이지로 리디렉션
       router.push(`/detail/${savedPostId}`);
     } catch (error) {
       console.error("게시글 저장 실패:", error);
-      alert("저장 실패");
+      alert("게시글 등록에 실패했습니다.");
     } finally {
       handleEndSubmit(); // 제출 종료 플래그 해제
     }
@@ -146,7 +147,7 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
   const handleUpdate = async (id: string) => {
     if (!validateFields()) {
       // 유효하지 않은 경우 메시지 표시
-      alert("필수 입력 항목을 모두 입력해주세요!");
+      toast("필수 입력 항목을 모두 입력해주세요!", "warning");
       window.scrollTo(0, 0); // 즉시 최상단으로 이동
       return;
     }
@@ -179,11 +180,11 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
         if (purchaseError) throw purchaseError;
       }
 
-      alert("수정 성공!");
+      toast("게시글이 수정되었습니다.", "success");
       router.push(`/detail/${id}`);
     } catch (error) {
       console.error("게시물 수정 실패:", error);
-      alert("수정 실패");
+      alert("게시글 수정에 실패했습니다.");
     }
   };
 

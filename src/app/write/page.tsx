@@ -3,9 +3,10 @@
 import ScrollTopButton from "@/components/shared/ScrollTopButton";
 import { useWritePageHandlers } from "@/lib/hooks/write/useWritePageHandlers";
 import { useWritePageState } from "@/lib/hooks/write/useWritePageState";
+import ContinuePostModal from "./_components/ContinuePostModal";
 import ExitTempSaveModal from "./_components/ExitTempSaveModal";
-import SubmitButton from "./_components/SubmitButton";
 import PostForm from "./_components/PostForm";
+import SubmitButton from "./_components/SubmitButton";
 import WriteHeader from "./_components/WriteHeader";
 
 const WritePage = () => {
@@ -27,6 +28,11 @@ const WritePage = () => {
         isOpen={pageState.state.isExitModalOpen}
         onConfirm={handlers.handleConfirmExit}
         onCancel={handlers.handleCancelExit}
+      />
+      <ContinuePostModal
+        isOpen={pageState.state.isContinueModalOpen}
+        onConfirm={pageState.onContinueModalConfirm}
+        onCancel={pageState.onContinueModalCancel}
       />
     </div>
   );

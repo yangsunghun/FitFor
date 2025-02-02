@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuthStore } from "@/lib/store/authStore";
+import { toast } from "@/lib/utils/common/toast";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useState } from "react";
 import { PostWithPurchases, UseFormStateHandlersReturn } from "./useFormStateHandlers";
@@ -62,7 +63,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
   const handleContinuePost = async (post: PostWithPurchases) => {
     try {
       if (post.id === tempSaveState.activePostId) {
-        alert("현재 작성 중인 글입니다.");
+        toast("현재 작성 중인 글입니다.", "warning");
         return;
       }
 
@@ -72,9 +73,9 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
         isWriting: true, // 이어서 작성 중 상태 활성화
         activePostId: post.id
       }));
+      toast("임시 저장된 게시물을 불러왔습니다.", "success");
     } catch (error) {
       console.error("게시물 불러오기 실패:", error);
-      alert("게시물 불러오기 중 오류가 발생했습니다.");
     }
   };
 
@@ -83,7 +84,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
     try {
       // 활성화된 게시글은 삭제 불가능
       if (postId === tempSaveState.activePostId) {
-        alert("이미 작성 중인 게시글은 삭제가 불가능합니다.");
+        toast("작성 중인 게시글은 삭제가 불가능합니다.", "warning");
         return;
       }
 
@@ -91,7 +92,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
       const { error } = await supabase.from("posts").delete().eq("id", postId);
       if (error) throw error;
 
-      alert("임시 저장 게시물이 삭제되었습니다.");
+      toast("임시 저장된 게시물이 삭제되었습니다.", "success");
 
       // 삭제 후 리스트 갱신
       const updatedPosts = await fetchUnsavedPosts(currentUser?.id || "");
@@ -99,7 +100,6 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
       return; // 삭제 완료 후 로직 종료
     } catch (error) {
       console.error("게시물 삭제 실패:", error);
-      alert("게시물 삭제 중 오류가 발생했습니다.");
     }
   };
 
@@ -107,19 +107,19 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
   const handleTemporarySave = async () => {
     const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
 
-   // 작성 여부 판단: 하나라도 입력된 값이 있으면 저장 가능
-   const isFormFilled =
-   content.trim().length > 0 ||
-   address.trim().length > 0 ||
-   images.length > 0 ||
-   tags.length > 0 ||
-   Object.values(body_size || {}).some((value) => value) || // body_size 필드 값 체크
-   purchases.length > 0;
+    // 작성 여부 판단: 하나라도 입력된 값이 있으면 저장 가능
+    const isFormFilled =
+      content.trim().length > 0 ||
+      address.trim().length > 0 ||
+      images.length > 0 ||
+      tags.length > 0 ||
+      Object.values(body_size || {}).some((value) => value) || // body_size 필드 값 체크
+      purchases.length > 0;
 
- if (!isFormFilled) {
-   alert("작성된 항목이 없습니다. 내용을 입력해주세요.");
-   return;
- }
+    if (!isFormFilled) {
+      toast("내용을 입력해주세요.", "warning");
+      return;
+    }
 
     if (!currentUser?.id) {
       alert("로그인이 필요합니다.");
@@ -149,7 +149,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
           existingPost?.thumbnail_blur_url === thumbnail_blur_url;
 
         if (isIdentical) {
-          alert("업데이트할 내용이 없습니다.");
+          toast("업데이트할 내용이 없습니다.", "warning");
           return; // 변경 사항이 없으면 저장 중단
         }
 
@@ -175,7 +175,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
           unsavedPosts: prevState.unsavedPosts.map((post) => (post.id === postId ? { ...post, ...updatedPost } : post))
         }));
 
-        alert("업데이트 완료!");
+        toast("내용이 업데이트되었습니다.", "success");
       } else {
         // 새로운 게시글 생성 로직
         const newPost = {
@@ -208,7 +208,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
         handleChange("postId", newPostId);
         handleChange("isContinued", true);
 
-        alert("임시 저장 완료!");
+        toast("임시 저장이 완료되었습니다.", "success");
       }
 
       // 상품 데이터 저장 (공통)
@@ -223,7 +223,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
       setTempSaveState((prevState) => ({ ...prevState, activePostId: newPostId })); // 활성화된 Post ID 업데이트
     } catch (error) {
       console.error("임시 저장 실패:", error);
-      alert("임시 저장 실패");
+      toast("임시 저장에 실패했습니다.", "warning");
     }
   };
 
@@ -235,7 +235,7 @@ export const useTempSaveHandlers = ({ formState, handleChange, setInitialFormSta
       images.length > 0 ||
       address.length > 0 ||
       Object.values(body_size || {}).some((val) => val) || // body_size 필드 값 체크
-      purchases.length > 0 || 
+      purchases.length > 0 ||
       tags.length > 0
     );
   };

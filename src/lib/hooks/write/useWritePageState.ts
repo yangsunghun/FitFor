@@ -1,6 +1,5 @@
 import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import { useAuthStore } from "@/lib/store/authStore";
-import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { useEffect, useRef, useState } from "react";
 
 export type UseWritePageStateReturn = ReturnType<typeof useWritePageState>;
@@ -9,6 +8,7 @@ export const useWritePageState = () => {
   const currentUser = useAuthStore((state) => state.user);
   const [state, setState] = useState({
     isExitModalOpen: false,
+    isContinueModalOpen: false, // 모달 오픈 상태 추가
     isWriting: false,
     pendingNavigation: null as string | null,
     unsavedPosts: [] as any[],
@@ -66,35 +66,45 @@ export const useWritePageState = () => {
         const posts = await fetchUnsavedPosts(currentUser.id);
         if (!posts.length) return;
 
-        setState((prev) => ({ ...prev, unsavedPosts: posts }));
-        const latestPost = posts[0];
-
-        const shouldContinue = confirm(
-          `${relativeTimeDay(latestPost.created_at)}에 작성한 글이 있습니다. 이어서 작성하시겠습니까?`
-        );
-
-        if (shouldContinue) {
-          await handleContinuePost(latestPost);
-          setState((prev) => ({
-            ...prev,
-            activePostId: latestPost.id,
-            isWriting: true
-          }));
-        } else {
-          await handleDiscardPost(latestPost.id);
-          setState((prev) => ({
-            ...prev,
-            isWriting: false,
-            unsavedPosts: prev.unsavedPosts.filter((p) => p.id !== latestPost.id)
-          }));
-        }
+        // unsavedPosts와 모달 오픈 상태를 업데이트
+        setState((prev) => ({
+          ...prev,
+          unsavedPosts: posts,
+          isContinueModalOpen: true
+        }));
       } finally {
         hasAlertShown.current = true;
       }
     };
 
     checkUnsavedPosts();
-  }, [currentUser?.id, fetchUnsavedPosts, handleContinuePost, handleDiscardPost]);
+  }, [currentUser?.id, fetchUnsavedPosts]);
+
+  // 모달 "이어쓰기" 버튼 클릭 시 실행될 핸들러
+  const onContinueModalConfirm = async () => {
+    const latestPost = state.unsavedPosts[0];
+    if (!latestPost) return;
+    await handleContinuePost(latestPost);
+    setState((prev) => ({
+      ...prev,
+      activePostId: latestPost.id,
+      isWriting: true,
+      isContinueModalOpen: false
+    }));
+  };
+
+  // 모달 "새 게시물 작성하기" 버튼 클릭 시 실행될 핸들러
+  const onContinueModalCancel = async () => {
+    const latestPost = state.unsavedPosts[0];
+    if (!latestPost) return;
+    await handleDiscardPost(latestPost.id);
+    setState((prev) => ({
+      ...prev,
+      isWriting: false,
+      unsavedPosts: prev.unsavedPosts.filter((p) => p.id !== latestPost.id),
+      isContinueModalOpen: false
+    }));
+  };
 
   return {
     state,
@@ -123,6 +133,8 @@ export const useWritePageState = () => {
     setTempSaveState,
     isWritingRef,
     navigationBlocked,
-    popStateTriggered
+    popStateTriggered,
+    onContinueModalConfirm, // 모달 "이어쓰기" 핸들러 추가
+    onContinueModalCancel // 모달 "새 게시물 작성하기" 핸들러 추가
   };
 };

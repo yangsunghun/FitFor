@@ -39,7 +39,7 @@ const MainContent = () => {
     );
     if (observerRef.current) observer.observe(observerRef.current);
     return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, router]);
+  }, [fetchNextPage, hasNextPage, router, user]);
 
   if (isError) return <ErrorScreen error={new Error("데이터를 불러오는 중 에러가 발생했습니다.")} />;
 

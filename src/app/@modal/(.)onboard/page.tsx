@@ -1,11 +1,11 @@
-import ModalBg from "../(.)detail/[id]/view/ModalBg";
-import OnboardContentWrapper from "./OnboardContentWrapper";
+import OnboardContentWrapper from "./_components/OnboardContentWrapper";
+import OnboardModalBg from "./_components/OnboardModalBg";
 
 const OnboardModal = () => {
   return (
-    <ModalBg>
+    <OnboardModalBg>
       <OnboardContentWrapper />
-    </ModalBg>
+    </OnboardModalBg>
   );
 };
 

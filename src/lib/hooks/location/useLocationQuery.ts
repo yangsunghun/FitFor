@@ -25,7 +25,7 @@ export const useLocationQuery = () => {
 
   const updateUrl = useCallback(
     (newQuery: string, newPage: number = 1, newSort: string = sort) => {
-      const newUrl = `/location?query=${encodeURIComponent(newQuery)}&page=${newPage}&sort=${encodeURIComponent(newSort)}`;
+      const newUrl = `/search-location?query=${encodeURIComponent(newQuery)}&page=${newPage}&sort=${encodeURIComponent(newSort)}`;
 
       if (newUrl !== window.location.pathname + window.location.search) {
         router.replace(newUrl, { scroll: false });

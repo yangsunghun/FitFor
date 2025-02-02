@@ -4,20 +4,22 @@ import { SlidersHorizontal } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { memo } from "react";
 
-type TagFiltersProps = {
+type Props = {
   setIsOpen: (isOpen: boolean) => void;
 };
 
-const LocationFilterMoblie = memo(({ setIsOpen }: TagFiltersProps) => {
+const LocationFilterMoblie = memo(({ setIsOpen }: Props) => {
   const { activeLocation, setActiveLocation } = useLocationQuery();
   return (
     <>
       <MobileHeader pageName="지역" action="navigate" path="/home" />
       <div className="flex min-h-[48px] w-full items-start justify-between">
         <div className="flex flex-wrap gap-2">
-          <div className="flex items-center gap-1 rounded-[4px] border border-line-02 px-[8px] py-[4px] text-caption text-text-03">
-            <span>{activeLocation}</span>
-          </div>
+          {activeLocation && (
+            <div className="flex items-center gap-1 rounded-[4px] border border-line-02 px-[8px] py-[4px] text-caption text-text-03">
+              <span>{activeLocation}</span>
+            </div>
+          )}
         </div>
         <button
           onClick={() => setIsOpen(true)}

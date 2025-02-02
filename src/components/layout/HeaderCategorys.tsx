@@ -47,6 +47,12 @@ const HeaderCategorys = ({ setIsOpen }: Props) => {
               {group.title}
             </TabsTrigger>
           ))}
+          <TabsTrigger
+            value="tab-4"
+            className="h-full rounded-none border-b-2 border-transparent px-[15px] py-[12px] text-body font-medium !shadow-none data-[state=active]:border-primary-default data-[state=active]:text-primary-default"
+          >
+            지역
+          </TabsTrigger>
         </TabsList>
         <div className="inner py-[16px]">
           <p className="text-title2 font-bold">카테고리별 키워드</p>
@@ -56,14 +62,7 @@ const HeaderCategorys = ({ setIsOpen }: Props) => {
           <TabsContent key={group.key} value={`tab-${index}`}>
             <ul className="inner mr-6 flex flex-wrap gap-[8px]">
               {group.tags.map((tag) => (
-                <li
-                  key={tag}
-                  onClick={() => {
-                    handleCategoryClick(group.key, tag);
-                    setIsOpen(false);
-                  }}
-                  className="font-medium text-text-03 transition-colors duration-200"
-                >
+                <li key={tag} className="font-medium text-text-03 transition-colors duration-200">
                   <button onClick={() => handleCategoryClick(group.key, tag)}>
                     <Tags label={tag} variant="grayLine" size="lg" />
                   </button>
@@ -72,6 +71,18 @@ const HeaderCategorys = ({ setIsOpen }: Props) => {
             </ul>
           </TabsContent>
         ))}
+
+        <TabsContent value="tab-4">
+          <ul className="inner mr-6 flex flex-wrap gap-[8px]">
+            {REGIONS_WITH_QUERY.map((tag) => (
+              <li key={tag.title} className="font-medium text-text-03 transition-colors duration-200">
+                <button onClick={() => setActiveLocation(tag.query)}>
+                  <Tags label={tag.title} variant="grayLine" size="lg" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </TabsContent>
       </Tabs>
     </>
   );

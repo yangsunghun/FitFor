@@ -3,25 +3,39 @@ import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { Plus, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 
 type Props = {
   href: string;
   icon: ReactNode;
+  useFlexLayout?: boolean;
+  onToggle?: (isOpen: boolean) => void; // 상태 전달 콜백
 };
 
-const FloatingButton = ({ href, icon }: Props) => {
+const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+  
+  useEffect(() => {
+    onToggle?.(isOpen);
+  }, [isOpen, onToggle]);
 
   const toggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const Icon = isOpen ? X : Plus; // isOpen 상태에 따라 사용할 컴포넌트 선택
   const size = isTabletOrSmaller ? 24 : 48; // 디바이스 크기에 따라 아이콘 크기 설정
+
   return (
-    <div className="fixed bottom-12 right-[6.875rem] z-50 h-fit w-fit transition duration-300 tb:bottom-[80px] tb:right-[24px]">
+    <div
+      className={clsx(
+        !useFlexLayout
+          ? "fixed bottom-12 right-[6.875rem] tb:bottom-[80px] tb:right-[24px]"
+          : "relative",
+        "h-fit w-fit z-50 transition duration-300"
+      )}
+    >
       <button
         onClick={toggleOpen}
         className={clsx(

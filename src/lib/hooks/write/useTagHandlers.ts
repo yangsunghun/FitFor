@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/lib/utils/common/toast";
 import { useState } from "react";
 import { UseFormStateHandlersReturn } from "./useFormStateHandlers";
 
@@ -12,7 +13,7 @@ type UseTagHandlersProps = Pick<UseFormStateHandlersReturn, "formState"> & {
 
 export const useTagHandlers = ({ formState, handleFieldChange }: UseTagHandlersProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
+  const Max = 4;
   // 카테고리 변경 핸들러
   const handleChangeCategory = (category: string) => {
     if (selectedCategory !== category) {
@@ -24,9 +25,9 @@ export const useTagHandlers = ({ formState, handleFieldChange }: UseTagHandlersP
   const toggleTagSelector = (tag: string, groupTags: string[], max: number) => {
     const selectedGroupTags = formState.tags.filter((t) => groupTags.includes(t));
 
-    // 전체 태그 수 제한 (최대 7개)
-    if (!selectedGroupTags.includes(tag) && formState.tags.length >= 7) {
-      alert("최대 7개의 태그만 선택 가능합니다.");
+    // 전체 태그 수 제한 (최대 4개)
+    if (!selectedGroupTags.includes(tag) && formState.tags.length >= Max) {
+      toast(`최대 ${Max}개의 태그만 선택 가능합니다.`, "warning");
       return;
     }
 
@@ -39,7 +40,7 @@ export const useTagHandlers = ({ formState, handleFieldChange }: UseTagHandlersP
     } else if (selectedGroupTags.length < max) {
       updatedTags = [...formState.tags, tag]; // 태그 추가
     } else {
-      alert(`해당 주제는 최대 ${max}개의 태그만 선택 가능합니다.`);
+      toast(`해당 주제는 최대 ${max}개의 태그만 선택 가능합니다.`, "warning");
       return;
     }
 

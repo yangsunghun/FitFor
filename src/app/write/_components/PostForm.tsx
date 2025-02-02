@@ -1,10 +1,10 @@
-import TagSection from "@/components/shared/TagSection";
-import type { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
+import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import AddressModal from "./AddressModal";
 import BodySizeSection from "./BodySizeSection";
 import ContentSection from "./ContentSection";
 import ImageUploadSection from "./ImageUploadSection";
 import LocationSection from "./LocationSection";
+import PostTagSection from "./PostTagSection";
 import ProductSection from "./ProductSection";
 import PurchaseModal from "./PurchaseModal";
 
@@ -24,7 +24,7 @@ const PostForm = ({
   selectedCategory,
   handleChangeCategory,
   toggleTagSelector,
-  missingFields,
+  missingFields
 }: PostFormProps) => (
   <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
     <ContentSection
@@ -78,13 +78,11 @@ const PostForm = ({
       isMissing={missingFields.includes("purchases")} // 필수 입력 경고 전달
     />
 
-    <TagSection
-      title="게시물 주제를 선택해주세요."
+    <PostTagSection
       tags={formState.tags}
       selectedCategory={selectedCategory}
       onChangeCategory={handleChangeCategory}
       toggleTagSelector={toggleTagSelector}
-      isRequired={false}
     />
     <AddressModal
       isOpen={formState.isModalOpen}

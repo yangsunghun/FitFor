@@ -20,7 +20,7 @@ const MobileHeader = ({ pageName, action, path, buttonClick }: Props) => {
   };
 
   return (
-    <div className="fixed left-0 top-0 z-40 w-full bg-bg-01">
+    <div className="fixed left-0 top-0 z-[35] w-full bg-bg-01">
       <div className="inner flex h-[60px] items-center gap-2">
         <button onClick={action === "button" ? buttonClick : handlePathChange}>
           <CaretLeft className="" size={24} weight="bold" />

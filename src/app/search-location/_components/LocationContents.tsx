@@ -9,6 +9,7 @@ import SlideOver from "@/components/ui/SlideOver";
 import { useLocationQuery } from "@/lib/hooks/location/useLocationQuery";
 import { useLocationPosts } from "@/lib/hooks/location/useSearchPosts";
 import { useState } from "react";
+import KakaoMap from "./KakaoMap";
 import LocationCheck from "./LocationCheck";
 import LocationFilterMoblie from "./LocationFilterMoblie";
 import LocationTags from "./LocationTags";
@@ -30,6 +31,10 @@ const LocationContents = () => {
         <Tablet>
           <LocationFilterMoblie setIsOpen={setIsOpen} />
         </Tablet>
+      </section>
+
+      <section className="relative my-6 h-[400px] w-full">
+        <KakaoMap />
       </section>
       <div className="relative mb-10 flex items-center justify-between tb:mb-0 tb:h-[48px]">
         <p>

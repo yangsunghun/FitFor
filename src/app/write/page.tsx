@@ -7,7 +7,7 @@ import ContinuePostModal from "./_components/ContinuePostModal";
 import ExitTempSaveModal from "./_components/ExitTempSaveModal";
 import PostForm from "./_components/PostForm";
 import SubmitButton from "./_components/SubmitButton";
-import WriteHeader from "./_components/WriteHeader";
+import PostHeader from "./_components/PostHeader";
 
 const WritePage = () => {
   const pageState = useWritePageState();
@@ -19,8 +19,8 @@ const WritePage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-[700px] pb-20 pt-20">
-      <WriteHeader />
+    <div className="mx-auto max-w-[700px] pb-20 pt-20 tb:pt-10 mb:pt-4">
+      <PostHeader mode="post" />
       <PostForm {...pageState} mode="post" />
       <SubmitButton onSubmit={handleSubmit} />
       <ScrollTopButton />

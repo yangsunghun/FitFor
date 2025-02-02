@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/Button";
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { X } from "@phosphor-icons/react";
 
@@ -7,9 +8,10 @@ type TagCheckFiltersProps = {
   tags: { [key: string]: string[] };
   handleToggleTag: (groupKey: string, tag: string) => void;
   resetTags: () => void;
+  onClose: () => void;
 };
 
-const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: TagCheckFiltersProps) => {
+const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags, onClose }: TagCheckFiltersProps) => {
   // 선택된 태그
   const selectedTags = Object.entries(tags).flatMap(([groupKey, groupTags]) =>
     groupTags.map((tag) => ({ groupKey, tag }))
@@ -17,8 +19,8 @@ const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: Ta
 
   return (
     <>
-      <div className="relative flex flex-wrap justify-between bg-bg-02 text-caption font-medium text-text-03">
-        {selectedTags.length > 0 && (
+      <div className="relative flex min-h-[44px] flex-wrap justify-between bg-bg-02 text-caption font-medium text-text-03">
+        {
           <div className="inner flex flex-wrap gap-2 py-[12px] pr-[33px]">
             {selectedTags.map(({ groupKey, tag }) => (
               <div
@@ -32,12 +34,12 @@ const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: Ta
               </div>
             ))}
           </div>
-        )}
-        {selectedTags.length !== 0 && (
+        }
+        {
           <button onClick={resetTags} className="absolute right-[4.275%] top-[12px] underline underline-offset-2">
             초기화
           </button>
-        )}
+        }
       </div>
 
       {TAG_GROUPS.filter((group) => !selectedGroup || group.key === selectedGroup).map((group) => (
@@ -55,6 +57,16 @@ const TagCheckFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: Ta
           ))}
         </div>
       ))}
+
+      <div className="inner">
+        <Button
+          onClick={onClose}
+          className="text-text-body w-full"
+          variant={selectedTags.length > 0 ? "primary" : "disabled"}
+        >
+          저장하기
+        </Button>
+      </div>
     </>
   );
 };

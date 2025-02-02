@@ -5,9 +5,10 @@ import { useComment } from "@/lib/hooks/detail/useComment";
 
 type CommentSectionProps = {
   postId: string;
+  onOpen: () => void;
 };
 
-const CommentListMobile = ({ postId }: CommentSectionProps) => {
+const CommentListMobile = ({ postId, onOpen }: CommentSectionProps) => {
   const { comments, isPending } = useComment(postId);
 
   if (isPending) {
@@ -16,7 +17,7 @@ const CommentListMobile = ({ postId }: CommentSectionProps) => {
 
   return (
     <>
-      <ul className="mt-2">
+      <ul className="mt-2" onClick={onOpen}>
         {comments?.slice(0, 1).map((comment) => (
           <li key={comment.id} className="flex h-[40px] w-full items-center justify-between">
             <div className="flex w-[94px] items-center justify-between">

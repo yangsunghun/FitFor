@@ -114,3 +114,31 @@ input[type=file]::-webkit-file-upload-button {
     --radius: 0.5rem;
   }
 }
+
+/* 스크롤바 너비 및 높이 */
+html::-webkit-scrollbar,
+.scroll-custom::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* 스크롤바 트랙 (배경) */
+html::-webkit-scrollbar-track,
+.scroll-custom::-webkit-scrollbar-track {
+  background: theme("colors.gray.50");
+  border-radius: 8px;
+}
+
+/* 스크롤바 손잡이 */
+html::-webkit-scrollbar-thumb,
+.scroll-custom::-webkit-scrollbar-thumb {
+  background: theme("colors.primary.light");
+  border-radius: 10px;
+  border: 2px solid theme("colors.gray.50");
+}
+
+/* 스크롤바 손잡이 호버 시 */
+html::-webkit-scrollbar-thumb:active,
+.scroll-custom::-webkit-scrollbar-thumb:active {
+  background: theme("colors.primary.default");
+}

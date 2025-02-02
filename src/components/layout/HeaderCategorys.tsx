@@ -4,8 +4,6 @@ import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import useCategoryStore from "@/lib/store/useCategoryStore";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
 import { Tags } from "../ui/Tags";
 
@@ -15,21 +13,17 @@ type Props = {
 };
 
 const HeaderCategorys = ({ handleClose }: Props) => {
-  const [tags, setTags] = useState<Tags>({});
-  const router = useRouter();
   const setSelectedCategory = useCategoryStore((state) => state.setSelectedCategory);
-  const { handleToggleTag, encodeTagsForUrl } = useSearchQuery();
+  const { handleToggleTag, setTags, setQuery, encodeTagsForUrl } = useSearchQuery();
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const { activeTab, handleTabChange } = useActiveTabs();
 
   const handleCategoryClick = (key: string, tag: string) => {
+    setQuery("");
+    setTags({ gender: [], season: [], style: [], tpo: [] });
+
     handleToggleTag(key, tag);
-
-    const updatedTags = { ...tags, [key]: [...(tags[key] || []), tag] };
-
     setSelectedCategory(key);
-
-    router.push(`/search?query=&page=1&category=${encodeTagsForUrl(updatedTags)}`);
   };
 
   const mobileUI = (
@@ -80,12 +74,16 @@ const HeaderCategorys = ({ handleClose }: Props) => {
 
           <ul className="mr-6 flex h-[32rem] flex-col flex-wrap border-r border-line-02">
             {group.tags.map((tag) => (
-              <li
-                key={tag}
-                onClick={handleClose}
-                className="mb-6 w-[8.75rem] font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
-              >
-                <button onClick={() => handleCategoryClick(group.key, tag)}>{tag}</button>
+              <li key={tag} className="mb-6 w-[8.75rem]">
+                <button
+                  onClick={() => {
+                    handleCategoryClick(group.key, tag);
+                    handleClose;
+                  }}
+                  className="font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
+                >
+                  {tag}
+                </button>
               </li>
             ))}
           </ul>

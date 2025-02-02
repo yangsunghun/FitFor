@@ -121,6 +121,23 @@ export const updateUserVerification = async (userId: string) => {
 
   if (error) {
     console.error(error.message);
-    throw new Error (`[인증 유저 요청 실패] ${error.message}`)
+    throw new Error(`[인증 유저 요청 실패] ${error.message}`);
   }
+};
+
+// 다른 유저 프로필 정보 가져오기
+export const fetchOtherUserProfile = async (userId: string) => {
+  const supabase = await createClient();
+
+  const { data: userProfile, error } = await supabase
+    .from("users")
+    .select("nickname, profile_image, introduction, is_verified")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    throw new Error(`[프로필 조회 실패] ${error.message}`);
+  }
+
+  return userProfile;
 };

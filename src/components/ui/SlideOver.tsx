@@ -6,11 +6,12 @@ import { ReactNode, useState } from "react";
 
 type SlideOverProps = {
   title: string;
+  article?: string;
   children: ReactNode;
   onClose: () => void;
 };
 
-const SlideOver = ({ title, children, onClose }: SlideOverProps) => {
+const SlideOver = ({ title, article, children, onClose }: SlideOverProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useLockScroll(isVisible);
@@ -38,10 +39,11 @@ const SlideOver = ({ title, children, onClose }: SlideOverProps) => {
           isVisible ? "animate-slideIn" : "animate-slideOut"
         )}
       >
-        <div className="sticky top-0 z-10 w-full bg-white">
-          <div className="inner flex h-[75px] items-center justify-between">
+        <div className={clsx("sticky top-0 z-10 w-full bg-white", { "py-[16px]": article, "py-[20px]": !article })}>
+          <div className="inner relative">
             <p className="text-title2 font-medium">{title}</p>
-            <button className="text-text-03" onClick={handleClose}>
+            {article && <p className="mt-1 text-body text-text-03">{article}</p>}
+            <button className="absolute right-0 top-0 text-text-03" onClick={handleClose}>
               <X size={20} weight="bold" />
             </button>
           </div>

@@ -6,10 +6,10 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { useHeaderStore } from "@/lib/store/useHeaderStore";
 import { CaretDown } from "@phosphor-icons/react";
 import clsx from "clsx";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import ProfileImageCircle from "../shared/ProfileImageCircle";
 import { Button } from "../ui/Button";
 import HeaderCategorys from "./HeaderCategorys";
 import SearchBar from "./SearchBar";
@@ -94,14 +94,12 @@ const HeaderContent = () => {
                   <div className="h-full w-[96px] animate-pulse rounded bg-gray-200" />
                 </div>
               ) : user?.onboard ? (
-                <Link href="/mypage">
-                  <Image
-                    src={user.profile_image as string}
-                    alt={`${user.nickname}'s profile`}
-                    width={24}
-                    height={24}
-                    priority
-                    className="rounded-full object-cover"
+                <Link href="/mypage" className="relative">
+                  <ProfileImageCircle
+                    profileImage={user.profile_image}
+                    nickname={user.nickname}
+                    size={24}
+                    className="h-6 w-6"
                   />
                   <span>{user.nickname}</span>
                 </Link>

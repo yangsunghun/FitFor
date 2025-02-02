@@ -74,12 +74,16 @@ const HeaderCategorys = ({ handleClose }: Props) => {
 
           <ul className="mr-6 flex h-[32rem] flex-col flex-wrap border-r border-line-02">
             {group.tags.map((tag) => (
-              <li
-                key={tag}
-                onClick={handleClose}
-                className="mb-6 w-[8.75rem] font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
-              >
-                <button onClick={() => handleCategoryClick(group.key, tag)}>{tag}</button>
+              <li key={tag} className="mb-6 w-[8.75rem]">
+                <button
+                  onClick={() => {
+                    handleCategoryClick(group.key, tag);
+                    handleClose;
+                  }}
+                  className="font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
+                >
+                  {tag}
+                </button>
               </li>
             ))}
           </ul>

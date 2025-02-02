@@ -1,4 +1,4 @@
-import ModalBg from "../(.)detail/[id]/view/ModalBg";
+import ModalBg from "@/components/common/ModalBg";
 import LoginContentWrapper from "./_components/LoginContentWrapper";
 
 const LoginModal = () => {

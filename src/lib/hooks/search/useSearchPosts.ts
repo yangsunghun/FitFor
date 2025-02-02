@@ -9,6 +9,7 @@ export const useSearchPosts = (query: string, page: number, tags: string[], sort
   } = useQuery({
     queryKey: ["searchResults", query, page, tags, sort],
     queryFn: () => fetchSearchPosts({ query, page, tags, sort }),
+    placeholderData: (prevData) => prevData,
     staleTime: 5000
   });
 

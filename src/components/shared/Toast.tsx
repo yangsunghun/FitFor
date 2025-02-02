@@ -9,10 +9,10 @@ const Toast = () => {
 
   return (
     <div className="fixed bottom-[5vh] left-1/2 z-50 -translate-x-1/2 transform space-y-2">
-      {toasts.map((toast) => (
+      {toasts.slice(0, 5).map((toast) => (
         <div
           key={toast.id}
-          className="relative flex min-w-[320px] animate-fadeIn items-center justify-between overflow-hidden px-4 py-3 text-body text-white"
+          className="relative flex min-w-[330px] animate-fadeIn items-center justify-between gap-2 overflow-hidden px-4 py-3 text-body text-white"
         >
           <div className="click-box -z-10 rounded-full bg-black bg-opacity-50"></div>
           <div className="flex items-center gap-2">
@@ -25,10 +25,10 @@ const Toast = () => {
               {toast.type === "warning" && <ExclamationMark size={14} weight="bold" />}
               {toast.type === "success" && <Check size={14} weight="bold" />}
             </i>
-            <span>{toast.message}</span>
+            <span className="mb:text-caption">{toast.message}</span>
           </div>
           <button
-            className="rounded-full bg-secondary-light px-2 py-1 text-caption"
+            className="whitespace-nowrap rounded-full bg-secondary-light px-2 py-1 text-caption"
             onClick={() => removeToast(toast.id)}
           >
             닫기

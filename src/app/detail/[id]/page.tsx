@@ -17,10 +17,10 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
 
   if (!post) {
     return {
-      title: "fit4",
+      title: "Fit4",
       description: "삭제된 게시글",
       openGraph: {
-        title: "fit4",
+        title: "Fit4",
         description: "삭제된 게시글",
         url: `https://fit4.vercel.app/detail/${params.id}`
       }

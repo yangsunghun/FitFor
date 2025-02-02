@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { Check, Plus, Trash } from "@phosphor-icons/react";
+import { Check, Plus, PushPin, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
@@ -87,34 +87,38 @@ export const ImageUploadMobile = ({
                 {url && (
                   <>
                     <Image src={url} alt={`Uploaded Image ${index + 1}`} layout="fill" className="object-cover" />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center space-y-1 bg-black bg-opacity-50 opacity-0 transition-opacity hover:opacity-100">
-                      {/* 삭제 버튼 */}
-                      <button
-                        onClick={() => handleDelete(index)}
-                        className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-bg-01 text-text-03"
-                      >
-                        <Trash size={12} />
-                      </button>
+                    <div className="absolute top-2 right-2 flex gap-1">
+                      {/* 썸네일 등록 버튼 */}
                       {index !== 0 && (
                         <Button
                           variant="whiteLine"
                           size="sm"
-                          className="text-sm h-5 w-20 border-none bg-transparent leading-none !text-text-01"
+                          className="p-1 h-5 w-5 !p-0 flex items-center justify-center border-none !text-primary-default rounded-full"
                           onClick={() => {
                             const updatedImages = [url, ...images.filter((img, i) => i !== index)];
                             setImages(updatedImages);
                           }}
                         >
-                          썸네일 등록
+                          <PushPin size={12} weight="fill" />
                         </Button>
                       )}
+
+                      {/* 삭제 버튼 */}
+                      <Button
+                        variant="whiteLine"
+                        size="sm"
+                          className="p-1 h-5 w-5 !p-0 flex items-center justify-center border-none rounded-full !text-text-03"
+                        onClick={() => handleDelete(index)}
+                      >
+                        <Trash size={12} />
+                      </Button>
                     </div>
                   </>
                 )}
 
                 {/* 첫 번째 이미지에 썸네일 표시 */}
                 {index === 0 && url && (
-                  <div className="text-xs absolute bottom-1 left-1 flex items-center gap-1 rounded bg-primary-default px-2 py-1 text-white">
+                  <div className="text-small absolute bottom-1 left-1 flex items-center gap-1 rounded bg-primary-default h-6 px-1 text-white">
                     <Check size={8} weight="bold" />
                     <span className="font-medium">썸네일</span>
                   </div>

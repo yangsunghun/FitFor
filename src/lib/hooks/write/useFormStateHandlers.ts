@@ -67,7 +67,7 @@ export const useFormStateHandlers = () => {
         postId: data.id || "" // 이어작성 게시글 ID 설정
       });
     } catch (error) {
-      console.error("Error initializing form state:", error);
+      console.error("FormState Error:", error);
     }
   };
 

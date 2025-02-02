@@ -26,10 +26,10 @@ const TagSection = ({
     <div className="space-y-2 pt-10">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <p className="text-title2 font-bold text-text-04">{title}</p>
-          {isRequired && <p className="text-title2 font-bold text-primary-default">*</p>}
+          <p className="text-title2 font-bold text-text-04 mb:text-body mb:font-medium">{title}</p>
+          <p className="text-title2 font-bold text-primary-default mb:text-body mb:font-medium">*</p>
         </div>
-        <p className="text-sm text-body text-text-04">
+        <p className="text-sm text-body text-text-03 mb:text-caption mb:font-medium">
           {tags.length} / {maxTags}
         </p>
       </div>

@@ -88,9 +88,9 @@ const ChatHeader = ({ roomId }: ChatHeaderProps) => {
           <Image src={roomData.room_thumbnail_url || sampleImage} alt="Thumbnail" fill />
         </figure>
         <div className="flex flex-col">
-          <p className="text-title2 font-bold tb:text-body tb:font-medium">{roomData.room_title}</p>
-          <p className="text-caption font-medium tb:text-small tb:font-medium tb:text-text-03">
-            {roomData.participant_count}명이 채팅에 참여 중
+          <p className="text-title2 font-bold text-text-04 tb:text-body tb:font-medium">{roomData.room_title}</p>
+          <p className="text-caption font-medium text-text-03 tb:text-small tb:font-medium">
+            {roomData.participant_count}명
           </p>
         </div>
       </div>

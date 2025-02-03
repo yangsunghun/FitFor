@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/Button";
 
-interface SubmitButtonProps {
+type SubmitButtonProps = {
   onSubmit: () => void;
 }
 

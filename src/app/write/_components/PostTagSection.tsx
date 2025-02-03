@@ -15,7 +15,7 @@ const PostTagSection = ({
   selectedCategory,
   onChangeCategory,
   toggleTagSelector,
-  maxTags = 4
+  maxTags = 7
 }: PostTagSectionProps) => {
   const handleCategoryToggle = (category: string) => {
     if (selectedCategory === category) {

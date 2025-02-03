@@ -15,7 +15,7 @@ const SocialLoginButton = ({ provider }: SocialLoginButtonProps) => {
   return (
     <button
       onClick={handleSocialLogin}
-      className={`flex w-full flex-row h-[56px] items-center justify-center gap-4 rounded-lg px-4 text-subtitle font-medium tb:px-[0.781rem] tb:text-body tb:font-medium ${PROVIDER_CONFIG[provider].bgColor} ${PROVIDER_CONFIG[provider].textColor} ${PROVIDER_CONFIG[provider].borderColor} ${PROVIDER_CONFIG[provider].border && "border"}`}
+      className={`flex w-full flex-row h-[3.5rem] items-center justify-center gap-4 rounded-lg px-4 text-subtitle font-medium tb:px-[0.781rem] tb:text-body tb:font-medium ${PROVIDER_CONFIG[provider].bgColor} ${PROVIDER_CONFIG[provider].textColor} ${PROVIDER_CONFIG[provider].borderColor} ${PROVIDER_CONFIG[provider].border && "border"}`}
     >
       <div className="h-5 w-5 relative tb:h-4 tb:w-4">
         <Image src={PROVIDER_CONFIG[provider].logo} fill alt={`${provider}Logo`} />

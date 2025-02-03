@@ -25,7 +25,7 @@ const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) 
   };
 
   const Icon = isOpen ? X : Plus; // isOpen 상태에 따라 사용할 컴포넌트 선택
-  const size = isTabletOrSmaller ? 24 : 48; // 디바이스 크기에 따라 아이콘 크기 설정
+  const size = isTabletOrSmaller ? 24 : 40; // 디바이스 크기에 따라 아이콘 크기 설정
 
   return (
     <div
@@ -39,7 +39,7 @@ const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) 
       <button
         onClick={toggleOpen}
         className={clsx(
-          "flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full !text-text-01 transition duration-300 tb:h-[40px] tb:w-[40px]",
+          "flex h-[4rem] w-[4rem] items-center justify-center rounded-full !text-text-01 transition duration-300 tb:h-[2.5rem] tb:w-[2.5rem] shadow-strong",
           { "bg-primary-default": !isOpen, "bg-secondary-light": isOpen }
         )}
       >

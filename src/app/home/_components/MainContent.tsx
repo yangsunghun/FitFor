@@ -8,17 +8,19 @@ import { usePosts } from "@/lib/hooks/home/usePosts";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useLayoutStore } from "@/lib/store/useLayoutStore";
 import { PencilSimple } from "@phosphor-icons/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import LayoutToggle from "./LayoutToggle";
 import ListLayout from "./ListLayout";
 import MasonryLayout from "./MasonryLayout";
 import OnboardingModal from "./OnboardingModal";
+import ScrollTopButton from "@/components/shared/ScrollTopButton";
 
 const MainContent = () => {
   const { user } = useAuthStore((state) => state);
   const { isMasonry, toggleLayout } = useLayoutStore();
   const { posts, fetchNextPage, hasNextPage, isPending, isFetchingNextPage, isError } = usePosts();
   const observerRef = useRef(null);
+    const [isFloatingOpen, setIsFloatingOpen] = useState(false); // FloatingButton 상태 관리
 
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
@@ -66,14 +68,20 @@ const MainContent = () => {
 
       <OnboardingModal />
 
+      <div className="fixed z-50 flex flex-col items-center gap-2 tb:gap-0 bottom-12 right-[6.875rem] tb:bottom-[80px] tb:right-[24px]">
+      {/* ScrollTopButton이 FloatingButton 상태에 따라 위치 조정 */}
+      <ScrollTopButton useFlexLayout extraBottomOffset={isFloatingOpen ? 38 : 0} />
       {user && (
         <FloatingButton
           href="/write"
           icon={
             <PencilSimple className="mr-2 inline-block text-text-03" size={isTabletOrSmaller ? 16 : 20} weight="fill" />
           }
+          useFlexLayout
+          onToggle={setIsFloatingOpen}
         />
       )}
+      </div>
     </>
   );
 };

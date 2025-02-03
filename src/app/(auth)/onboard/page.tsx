@@ -2,7 +2,7 @@ import OnboardContent from "./_components/OnboardContent";
 
 const OnBoardPage = () => {
   return (
-    <div className="h-screen w-full justify-items-center tb:h-auto tb:px-4 pt-20">
+    <div className="flex-1 h-screen w-full justify-items-center tb:max-h-[calc(100vh-160px)] tb:px-4">
       <OnboardContent />
     </div>
   );

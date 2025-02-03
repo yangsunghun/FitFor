@@ -6,6 +6,8 @@ import { fetchUser } from "../auth/auth";
 const restrictedPaths = ["/login"];
 // 인증이 필요한 경로
 const protectedPaths = ["/bookmark", "/write", "/mypage", "/chat/new"];
+// 온보딩 경로 비활성화
+const onboardRestrictedPaths = ["/onboard"];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -41,14 +43,7 @@ export async function updateSession(request: NextRequest) {
   if (user && restrictedPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL("/mypage", request.url));
   }
-
-  // 온보딩이 끝난 상태라면 /onboard 경로 비활성화 아니라면 /home
-  if (publicUserData && publicUserData?.onboard && request.nextUrl.pathname.startsWith("/onboard")) {
-    return NextResponse.redirect(new URL("/home", request.url));
-  } else if (publicUserData && !publicUserData?.onboard && !request.nextUrl.pathname.startsWith("/onboard")) {
-    return NextResponse.redirect(new URL("/onboard", request.url));
-  }
-
+  
   // 로그인을 하지 않았는데 마이페이지에 접근하면 로그인 페이지로 리다이렉트
   if (!user && protectedPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL("/login", request.url));

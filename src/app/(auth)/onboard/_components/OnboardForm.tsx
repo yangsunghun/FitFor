@@ -5,11 +5,13 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { ONBOARD_FIELD, onboardSchema } from "@/lib/validations/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm, type FieldValues } from "react-hook-form";
 
 const OnboardForm = () => {
   const { user, setUser } = useAuthStore();
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -38,11 +40,13 @@ const OnboardForm = () => {
       user.onboard = true;
       setUser(user);
     }
+
+    router.push("/welcome");
   };
 
   return (
     <form
-      className="flex w-[31.375rem] flex-col justify-between gap-6 tb:mt-20 tb:w-full"
+      className="flex w-[31.375rem] flex-col justify-between gap-6 tb:mt-20 tb:h-full tb:w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* 설명 부분 */}
@@ -68,7 +72,7 @@ const OnboardForm = () => {
         disabled={!isValid}
         variant={!isValid ? "disabled" : "primary"}
         size={isTabletOrSmaller ? "sm" : "lg"}
-        className="mt-8 py-4 text-title2 leading-[1.725rem] tb:text-body tb:leading-[0.86rem]"
+        className="mt-8 py-4 text-title2 leading-[1.725rem] tb:mt-auto tb:text-body tb:leading-[0.86rem]"
         type="submit"
       >
         {isTabletOrSmaller ? "완료하기" : "프로필 저장하기"}

@@ -31,7 +31,7 @@ const AccountDeleteContent = ({ closeModal }: AccountDeleteContentProps) => {
         <TextField
           type="text"
           value={inputValue}
-          variant={inputValue !== user?.nickname ? "error" : "default"}
+          variant={inputValue !== user?.nickname && inputValue.length !== 0 ? "error" : "default"}
           onChange={(e) => setInputValue(e.target.value)}
           className="w-full rounded-md border border-gray-300 p-2 text-text-04"
           placeholder="사용자명을 입력하세요"

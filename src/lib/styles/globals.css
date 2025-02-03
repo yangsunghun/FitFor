@@ -142,3 +142,4 @@ html::-webkit-scrollbar-thumb:active,
 .scroll-custom::-webkit-scrollbar-thumb:active {
   background: theme("colors.primary.default");
 }
+

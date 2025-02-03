@@ -5,7 +5,7 @@ import { Database } from "@/lib/types/supabase";
 import { toast } from "@/lib/utils/common/toast";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import useMediaQuery from "../common/useMediaQuery";
 import { UseFormStateHandlersReturn } from "./useFormStateHandlers"; // formState 타입 가져오기
 import { fetchUnsavedPosts, TempSaveState } from "./useTempSaveHandlers";
@@ -24,8 +24,8 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
   const [missingFields, setMissingFields] = useState<string[]>([]); // 누락된 필드를 상태로 관리
   const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
 
-  const validateFields = () => {
-    const newMissingFields = [];
+  const validateFields = useCallback(() => {
+    const newMissingFields: string[] = [];
     if (!content) newMissingFields.push("content");
     if (!images || images.length === 0) newMissingFields.push("images");
     if (!purchases || purchases.length === 0) newMissingFields.push("purchases");
@@ -33,13 +33,13 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
 
     setMissingFields(newMissingFields); // 누락된 필드 상태 업데이트
     return newMissingFields.length === 0; // 모든 필드가 채워졌는지 여부 반환
-  };
+  }, [content, images, purchases, tags]); // 의존성 배열에 해당 상태들을 추가
 
   useEffect(() => {
     if (isTabletOrSmaller) {
       validateFields();
     }
-  }, [content, images, purchases, tags, isTabletOrSmaller]);
+  }, [isTabletOrSmaller, validateFields]);
 
   // 값 변경 시 누락된 필드 실시간 업데이트
   const updateMissingFields = (field: string, value: any) => {

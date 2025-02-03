@@ -128,7 +128,7 @@ export const useSearchQuery = () => {
         const params = new URLSearchParams(window.location.search);
         params.set("page", String(newPage));
 
-        router.replace(`/search?${params.toString()}`, { scroll: false });
+        router.push(`/search?${params.toString()}`, { scroll: false });
       });
     },
     [router]

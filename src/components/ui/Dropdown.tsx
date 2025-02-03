@@ -93,7 +93,9 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
 
   return (
     <div className={className} ref={dropdownRef}>
-      <div onClick={toggleDropdown}>{trigger}</div>
+      <div className="cursor-pointer" onClick={toggleDropdown}>
+        {trigger}
+      </div>
       {isOpen && (isTabletOrSmaller ? mobileUI : desktopUI)}
     </div>
   );

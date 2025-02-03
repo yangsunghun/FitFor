@@ -3,12 +3,22 @@
 import { CaretLeft } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 
-interface PostHeaderProps {
+type PostHeaderProps = {
   mode?: "post" | "edit";
-}
+  postId?: string;
+};
 
-const PostHeader = ({ mode = "post" }: PostHeaderProps) => {
+const PostHeader = ({ mode = "post", postId }: PostHeaderProps) => {
   const router = useRouter();
+
+  // 뒤로가기 핸들러
+  const handleBack = () => {
+    if (mode === "edit" && postId) {
+      router.push(`/detail/${postId}`);
+    } else {
+      router.push("/");
+    }
+  };
 
   // 제목 및 설명을 조건부로 설정
   const headerTitle = mode === "edit" ? "게시물 수정하기" : "게시물 작성하기";
@@ -18,7 +28,7 @@ const PostHeader = ({ mode = "post" }: PostHeaderProps) => {
     <header className="flex flex-col space-y-2 pb-10 tb:gap-4 tb:px-8 tb:pb-10 mb:gap-4 mb:px-4 mb:pb-5">
       {/* 뒤로가기 버튼 */}
       <div className="flex items-center tb:h-10">
-        <button className="hidden items-center justify-center tb:inline-flex" onClick={() => router.back()}>
+        <button className="hidden items-center justify-center tb:inline-flex" onClick={handleBack}>
           <CaretLeft size={24} className="text-text-04" />
         </button>
       </div>

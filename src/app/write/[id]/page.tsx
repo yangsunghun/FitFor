@@ -22,7 +22,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
 
   return (
     <div className="mx-auto max-w-[700px] pb-20 pt-20">
-      <PostHeader mode="edit" />
+      <PostHeader mode="edit" postId={id}  />
       <PostForm {...pageState} mode="edit" />
       <UpdateButton postId={id} onSubmit={() => pageState.handleUpdate(id)} />
       <ScrollTopButton />

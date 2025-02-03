@@ -13,7 +13,7 @@ type ScrollTopButtonProps = {
 const ScrollTopButton = ({ useFlexLayout = false, extraBottomOffset = 0 }: ScrollTopButtonProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)"); // 반응형 여부 확인
-  const size = isTabletOrSmaller ? 24 : 48; // 디바이스 크기에 따라 아이콘 크기 설정
+  const size = isTabletOrSmaller ? 24 : 40; // 디바이스 크기에 따라 아이콘 크기 설정
 
   // 스크롤 상태를 확인하여 버튼 표시 여부 결정
   useEffect(() => {
@@ -41,7 +41,8 @@ const ScrollTopButton = ({ useFlexLayout = false, extraBottomOffset = 0 }: Scrol
         className={clsx(
           "hover:bg-primary-dark flex items-center justify-center rounded-full bg-primary-default text-bg-01 shadow-lg transition-all duration-300 ease-in-out focus:outline-none",
           {
-            "pointer-events-auto h-[4.5rem] w-[4.5rem] translate-y-0 opacity-100 tb:h-[40px] tb:w-[40px]": isVisible,
+            "flex h-[4rem] w-[4rem] items-center justify-center rounded-full !text-text-01 shadow-strong transition duration-300 tb:h-[2.5rem] tb:w-[2.5rem]":
+              isVisible,
             "pointer-events-none translate-y-4 opacity-0": !isVisible
           }
         )}

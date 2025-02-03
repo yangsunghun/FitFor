@@ -3,7 +3,7 @@ import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { Plus, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState, useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type Props = {
   href: string;
@@ -15,7 +15,7 @@ type Props = {
 const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
-  
+
   useEffect(() => {
     onToggle?.(isOpen);
   }, [isOpen, onToggle]);
@@ -25,21 +25,19 @@ const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) 
   };
 
   const Icon = isOpen ? X : Plus; // isOpen 상태에 따라 사용할 컴포넌트 선택
-  const size = isTabletOrSmaller ? 24 : 48; // 디바이스 크기에 따라 아이콘 크기 설정
+  const size = isTabletOrSmaller ? 24 : 40; // 디바이스 크기에 따라 아이콘 크기 설정
 
   return (
     <div
       className={clsx(
-        !useFlexLayout
-          ? "fixed bottom-12 right-[6.875rem] tb:bottom-[80px] tb:right-[24px]"
-          : "relative",
-        "h-fit w-fit z-50 transition duration-300"
+        !useFlexLayout ? "fixed bottom-12 right-[6.875rem] tb:bottom-[80px] tb:right-[24px]" : "relative",
+        "z-50 h-fit w-fit transition duration-300"
       )}
     >
       <button
         onClick={toggleOpen}
         className={clsx(
-          "flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full !text-text-01 transition duration-300 tb:h-[40px] tb:w-[40px]",
+          "flex h-[4rem] w-[4rem] items-center justify-center rounded-full !text-text-01 shadow-strong transition duration-300 tb:h-[2.5rem] tb:w-[2.5rem]",
           { "bg-primary-default": !isOpen, "bg-secondary-light": isOpen }
         )}
       >

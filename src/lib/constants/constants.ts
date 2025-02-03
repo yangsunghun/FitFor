@@ -73,4 +73,29 @@ export const REGIONS = [
   "강원도"
 ];
 
-export const MYPAGE_MENU = ["내 게시물", "히스토리", "인증", "계정 관리"]
+export const REGIONS_WITH_QUERY = REGIONS.map((region) => {
+  const regionCoordinates: Record<string, { lat: number; lng: number }> = {
+    서울특별시: { lat: 37.5665, lng: 126.978 },
+    부산광역시: { lat: 35.1796, lng: 129.0756 },
+    대구광역시: { lat: 35.8714, lng: 128.6014 },
+    인천광역시: { lat: 37.4563, lng: 126.7052 },
+    광주광역시: { lat: 35.1595, lng: 126.8526 },
+    대전광역시: { lat: 36.3504, lng: 127.3845 },
+    울산광역시: { lat: 35.5384, lng: 129.3114 },
+    경기도: { lat: 37.4138, lng: 127.5183 },
+    충청도: { lat: 36.6359, lng: 127.4913 },
+    전라도: { lat: 35.7175, lng: 127.153 },
+    경상도: { lat: 36.4919, lng: 128.8889 },
+    제주특별자치도: { lat: 33.4996, lng: 126.5312 },
+    강원도: { lat: 37.8228, lng: 128.1555 }
+  };
+
+  return {
+    title: region,
+    query: region.slice(0, 2), // 지역명 앞 두 글자
+    lat: regionCoordinates[region]?.lat || 0, // 지역 중심 좌표 (없으면 0)
+    lng: regionCoordinates[region]?.lng || 0
+  };
+});
+
+export const MYPAGE_MENU = ["내 게시물", "히스토리", "인증", "계정 관리"];

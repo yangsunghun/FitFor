@@ -13,7 +13,7 @@ const tagVariants = cva(
         grayLine: "bg-bg-01 border border-line-02 !text-text-03"
       },
       size: {
-        lg: "h-9 !px-3 leading-9 text-body",
+        lg: "h-10 !px-4 leading-10 text-title2 tb:h-[36px] tb:leading-[36px] tb:!px-3 tb:text-body",
         md: "h-9 leading-9 text-body tb:h-[25px] tb:leading-[25px] tb:text-caption mb:text-small mb:leading-[25px]",
         sm: "h-7 leading-7 text-caption tb:text-caption"
       }

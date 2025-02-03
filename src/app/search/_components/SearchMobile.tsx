@@ -31,7 +31,7 @@ const SearchMobile = () => {
       {isOpen && isTabletOrSmaller && (
         <div className="fixed inset-0 z-40 h-screen w-screen bg-bg-01">
           <SearchBar />
-          <HeaderCategorys />
+          <HeaderCategorys setIsOpen={setIsOpen} />
         </div>
       )}
     </>

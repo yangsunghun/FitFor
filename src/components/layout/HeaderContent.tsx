@@ -29,10 +29,6 @@ const HeaderContent = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
   useEffect(() => {
     setIsOpen(false);
     setIsLoading(false);
@@ -119,7 +115,7 @@ const HeaderContent = () => {
         style={{ maxHeight: isOpen ? `${contentRef.current?.scrollHeight}px` : 0 }}
       >
         <div ref={contentRef} className="mx-auto flex max-w-[1200px] pb-8 pt-4">
-          <HeaderCategorys handleClose={handleClose} />
+          <HeaderCategorys setIsOpen={setIsOpen} />
         </div>
       </div>
       {isOpen && (

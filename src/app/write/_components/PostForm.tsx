@@ -26,7 +26,7 @@ const PostForm = ({
   toggleTagSelector,
   missingFields
 }: PostFormProps) => (
-  <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9">
+  <div className="rounded-2xl border border-line-02 bg-bg-01 px-8 py-9 tb:mx-6 tb:px-6 tb:py-7 mb:mx-4 mb:px-4 mb:py-5">
     <ContentSection
       content={formState.content}
       onChange={(value) => {

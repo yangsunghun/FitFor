@@ -72,6 +72,7 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
 
   return (
     <>
+      <KakaoScript />
       <Tablet>
         <MobileHeader pageName="게시물" action="back" />
         <div className="inner relative mb-[8px]">
@@ -135,7 +136,6 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
                 <span className="text-text-03">{comments.length}</span>
               </span>
               <BookmarkButton postId={postId} styleType="detail" iconSize={28} showText />
-              <KakaoScript />
               <SocialShare
                 postUrl={`https://fit4.vercel.app/detail/${postId}`}
                 postTitle={content}
@@ -164,7 +164,6 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
                 <BookmarkButton postId={postId} styleType="detailMob" iconSize={24} iconWeight="fill" />
               </span>
               <span className="flex flex-1 justify-center">
-                <KakaoScript />
                 <SocialShare
                   postUrl={`https://fit4.vercel.app/detail/${postId}`}
                   postTitle={content}

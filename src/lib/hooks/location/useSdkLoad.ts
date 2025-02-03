@@ -15,7 +15,7 @@ const useSdkLoad = (setIsSdkLoaded: (loaded: boolean) => void) => {
 
     // 스크립트 태그 생성 (여기서 &libraries=services 를 추가합니다)
     const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SHARE_API_KEY}&autoload=false&libraries=services`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_SHARE_API_KEY}&autoload=false&libraries=services,clusterer`;
     script.async = true;
     script.onload = () => {
       if (window.kakao && window.kakao.maps) {

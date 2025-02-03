@@ -14,6 +14,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { useNavBarStore } from "@/lib/store/useNavBarStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots, Export } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import BookmarkButton from "./ButtonBookmark";
@@ -125,11 +126,15 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
           </Tablet>
 
           <p className="mt-4 font-medium text-text-03 tb:mt-2 tb:text-caption mb:text-small">
-            View {view} · {relativeTimeDay(created_at)}
+            조회수 {view} · {relativeTimeDay(created_at)}
           </p>
 
           <MinTablet>
-            <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
+            <div
+              className={clsx("absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium", {
+                "bottom-auto top-[54%]": mode === "page"
+              })}
+            >
               <LikeButton postId={postId} styleType="detail" iconSize={28} showNumber />
               <span className="flex flex-col gap-2 text-center text-text-02">
                 <ChatCircleDots size={28} weight="fill" />

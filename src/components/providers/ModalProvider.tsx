@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { MinTablet } from "../common/BreakPoints";
 
 export default function ModalProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,5 +16,9 @@ export default function ModalProvider({ children }: { children: React.ReactNode 
     }
   }, [pathname]);
 
-  return <div className={!isVisible ? "hidden" : ""}>{children}</div>;
+  return (
+    <div className={!isVisible ? "hidden" : ""}>
+      <MinTablet>{children}</MinTablet>
+    </div>
+  );
 }

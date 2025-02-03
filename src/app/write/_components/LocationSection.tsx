@@ -1,12 +1,35 @@
 import { Button } from "@/components/ui/Button";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import { CaretRight, MagnifyingGlass } from "@phosphor-icons/react";
 
 type LocationSectionProps = {
   address: string;
   onOpenModal: () => void;
 };
 
-const LocationSection = ({ address, onOpenModal }: LocationSectionProps) => (
+const LocationSection = ({ address, onOpenModal }: LocationSectionProps) => {
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
+  return(
+    <>
+    {isTabletOrSmaller ? (
+      <div
+        className="flex cursor-pointer items-center justify-between py-4"
+        onClick={onOpenModal}
+      >
+        <div className="flex flex-col gap-1">
+          <span className="font-medium text-text-04">위치 찾기</span>
+          <span
+            className={`text-caption font-medium ${
+              address ? "text-primary-default" : "text-text-03"
+            }`}
+          >
+            {address ? address : "현재 위치를 입력해 주세요."}
+          </span>
+        </div>
+        <CaretRight size={20} className="text-text-03" />
+      </div>
+    ) : (
   <div className="space-y-4 pt-10">
     <div className="space-y-2">
       <div className="flex items-center gap-1">
@@ -30,6 +53,9 @@ const LocationSection = ({ address, onOpenModal }: LocationSectionProps) => (
       검색
     </Button>
   </div>
-);
+  )}
+  </>
+  );
+};
 
 export default LocationSection;

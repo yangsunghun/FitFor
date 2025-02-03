@@ -3,10 +3,10 @@
 import ScrollTopButton from "@/components/shared/ScrollTopButton";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import ErrorScreen from "@/components/common/ErrorScreen";
-import EditHeader from "./_components/EditHeader";
 import UpdateButton from "./_components/UpdateButton";
 import PostForm from "../_components/PostForm";
 import { useEditPageState } from "@/lib/hooks/write/useEditPageState";
+import PostHeader from "../_components/PostHeader";
 
 type EditPageProps = {
   params: { id: string };
@@ -22,7 +22,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
 
   return (
     <div className="mx-auto max-w-[700px] pb-20 pt-20">
-      <EditHeader />
+      <PostHeader mode="edit" />
       <PostForm {...pageState} mode="edit" />
       <UpdateButton postId={id} onSubmit={() => pageState.handleUpdate(id)} />
       <ScrollTopButton />

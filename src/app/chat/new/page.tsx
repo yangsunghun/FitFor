@@ -1,11 +1,7 @@
 import React from "react";
-import { z } from "zod";
-// import type { chatRoomSchema } from "@/lib/validations/chatRoomSchema";
 import ChatRoomForm from "./_components/ChatRoomForm";
 import Link from "next/link";
 import { CaretLeft } from "@phosphor-icons/react/dist/ssr";
-
-// export type ChatRoomFormInputs = z.infer<typeof chatRoomSchema>;
 
 const CreateRoomPage = () => {
   return (

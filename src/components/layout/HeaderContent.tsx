@@ -62,7 +62,7 @@ const HeaderContent = () => {
               </Link>
             )}
             <Link href="/chat" className="text-center">
-              라이브
+              코칭
             </Link>
             <button className="flex items-center gap-2" onClick={toggleOpen}>
               카테고리

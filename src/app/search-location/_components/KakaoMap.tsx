@@ -41,9 +41,7 @@ const KakaoMap = ({ posts, isPending }: KakaoMapProps) => {
     // 주소를 좌표로 변환하는 함수
     const geocodeAddress = (address: string): Promise<{ lat: number; lng: number }> => {
       return new Promise((resolve, reject) => {
-        console.log("[geocodeAddress] 요청 시작:", address);
         geocoder.addressSearch(address, (result: any, status: any) => {
-          console.log("[geocodeAddress] 콜백 호출:", address, "status:", status, "result:", result);
           if (status === "OK" && result && result[0]) {
             resolve({ lat: parseFloat(result[0].y), lng: parseFloat(result[0].x) });
           } else {
@@ -64,11 +62,9 @@ const KakaoMap = ({ posts, isPending }: KakaoMapProps) => {
               title: post.upload_place!,
               id: String(post.id)
             };
-            console.log("[Promise.all] geocoded marker:", marker);
             return marker;
           })
           .catch((error) => {
-            console.error("[Promise.all] geocoding error for", post.upload_place, error);
             return null;
           });
       })
@@ -76,17 +72,13 @@ const KakaoMap = ({ posts, isPending }: KakaoMapProps) => {
       const validMarkers = results.filter(
         (marker): marker is { id: string; lat: number; lng: number; title: string } => marker !== null
       );
-      console.log("[Promise.all] Valid markers:", validMarkers);
       setMarkers(validMarkers);
     });
   }, [isSdkLoaded, posts]);
 
   useEffect(() => {
     if (!isSdkLoaded) return;
-    console.log("window.kakao.maps.services:", window.kakao.maps.services);
   }, [isSdkLoaded]);
-
-  console.log("markers", markers);
 
   return (
     <>

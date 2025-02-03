@@ -15,7 +15,7 @@ import LocationFilterMoblie from "./LocationFilterMoblie";
 import LocationTags from "./LocationTags";
 
 const LocationContents = () => {
-  const { query, page, sort, handleSort } = useLocationQuery();
+  const { query, page, sort, handleSort, handlePageChange } = useLocationQuery();
   const { Results, isPending, isError } = useLocationPosts(query, page, sort);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +46,7 @@ const LocationContents = () => {
       <section>
         <SearchResults Results={Results} isPending={isPending} />
       </section>
-      <Pagination Results={Results} />
+      <Pagination Results={Results} page={page} handlePageChange={handlePageChange} />
 
       <Tablet>
         {isOpen && (

@@ -1,17 +1,16 @@
 "use client";
 
 import { POSTS_PER_PAGE } from "@/lib/constants/constants";
-import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight } from "@phosphor-icons/react";
 import clsx from "clsx";
 
 type PaginationProps = {
   Results?: { total: number };
+  page: number;
+  handlePageChange: (newPage: number) => void;
 };
 
-const Pagination = ({ Results }: PaginationProps) => {
-  const { page, handlePageChange } = useSearchQuery();
-
+const Pagination = ({ Results, page, handlePageChange }: PaginationProps) => {
   if (!Results || Results.total === 0) return null;
 
   const totalPages = Math.ceil(Results.total / POSTS_PER_PAGE);

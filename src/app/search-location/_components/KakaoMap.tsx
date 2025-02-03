@@ -29,7 +29,6 @@ const KakaoMap = ({ posts, isPending }: KakaoMapProps) => {
   const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
 
   const handleToggleOverlay = (markerId: string) => {
-    console.log(1);
     setActiveMarkerId(markerId);
   };
 
@@ -68,7 +67,7 @@ const KakaoMap = ({ posts, isPending }: KakaoMapProps) => {
     ).then((results) => {
       setMarkers(results.filter((marker): marker is (typeof markers)[number] => marker !== null));
     });
-  }, [isSdkLoaded, posts]);
+  }, [isSdkLoaded, posts, activeMarkerId]);
 
   return (
     <>

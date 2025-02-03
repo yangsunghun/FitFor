@@ -46,7 +46,7 @@ export const useLocationQuery = () => {
         const params = new URLSearchParams(window.location.search);
         params.set("page", String(newPage));
 
-        router.push(`/search?${params.toString()}`, { scroll: false });
+        router.push(`/search-location?${params.toString()}`, { scroll: false });
       });
     },
     [router]

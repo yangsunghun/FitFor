@@ -17,7 +17,7 @@ import TagFilters from "./TagFilters";
 const SearchContents = () => {
   const { selectedCategory, isHydrated } = useCategoryStore();
   const [readyToRender, setReadyToRender] = useState(false);
-  const { query, page, tags, sort, handleSort, handleToggleTag, resetTags } = useSearchQuery();
+  const { query, page, tags, sort, handleSort, handleToggleTag, resetTags, handlePageChange } = useSearchQuery();
 
   const { Results, isPending, isError } = useSearchPosts(query, page, Object.values(tags).flat(), sort);
   const [isOpen, setIsOpen] = useState(false);
@@ -65,7 +65,7 @@ const SearchContents = () => {
       <section>
         <SearchResults Results={Results} isPending={isPending} />
       </section>
-      <Pagination Results={Results} />
+      <Pagination Results={Results} page={page} handlePageChange={handlePageChange} />
 
       <Tablet>
         {isOpen && (

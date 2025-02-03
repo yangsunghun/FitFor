@@ -4,7 +4,6 @@ import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { CaretRight, X } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
 import { CustomOverlayMap, MapMarker } from "react-kakao-maps-sdk";
 
 type MarkerProps = {
@@ -15,20 +14,22 @@ type MarkerProps = {
 };
 
 const MapMarkerWithOverlay = ({ marker, isActive, onClick, onClose }: MarkerProps) => {
-  console.log(marker.id, isActive);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      document
-        .querySelectorAll('div[style*="border: 1px solid rgb(118, 129, 168)"]')
-        .forEach((element) => element.remove());
-    });
+  const markerUrl = "/images/map-marker.png";
 
-    observer.observe(document.body, { childList: true, subtree: true });
+  // 기본 오버레이 없애기
+  // useEffect(() => {
+  //   const observer = new MutationObserver(() => {
+  //     document
+  //       .querySelectorAll('div[style*="border: 1px solid rgb(118, 129, 168)"]')
+  //       .forEach((element) => element.remove());
+  //   });
 
-    return () => observer.disconnect();
-  }, []);
+  //   observer.observe(document.body, { childList: true, subtree: true });
+
+  //   return () => observer.disconnect();
+  // }, []);
 
   return (
     <MapMarker
@@ -39,6 +40,13 @@ const MapMarkerWithOverlay = ({ marker, isActive, onClick, onClose }: MarkerProp
         removable: true, // 사용자가 직접 닫을 수 있도록 설정
         zIndex: -1 // 다른 요소보다 앞에 배치
       }}
+      image={{
+        src: markerUrl,
+        size: {
+          width: 29,
+          height: 42
+        }
+      }}
     >
       {isActive && (
         <CustomOverlayMap position={{ lat: marker.lat, lng: marker.lng }} yAnchor={1.5} zIndex={1}>
@@ -46,10 +54,10 @@ const MapMarkerWithOverlay = ({ marker, isActive, onClick, onClose }: MarkerProp
             <button onClick={onClose} className="absolute right-2 top-2 text-gray-500 hover:text-gray-700">
               <X />
             </button>
-            <figure className="thumbnail aspect-square w-[70px] rounded-lg bg-bg-02">
+            <figure className="thumbnail aspect-square w-[75px] rounded-lg bg-bg-02">
               <Image src={marker.thumb} alt={marker.title} fill sizes="70px" className="object-cover" />
             </figure>
-            <div className="w-[calc(100%-85px)]">
+            <div className="w-[calc(100%-90px)]">
               <p className="ellip1 text-caption text-text-03">{marker.place}</p>
               <p className="ellip2 text-caption font-medium">{marker.title}</p>
             </div>

@@ -17,7 +17,7 @@ type Props = {
 
 const Cardpost = ({ post, isMasonry }: Props) => {
   const [isImgError, setIsImgError] = useState<boolean>(false);
-  const imageProps = isMasonry ? { width: 500, height: 700 } : { fill: true, sizes: "(max-width: 768px) 250px, 250px" };
+  const imageProps = isMasonry ? { width: 300, height: 500 } : { fill: true, sizes: "(max-width: 768px) 250px, 250px" };
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   return (

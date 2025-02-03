@@ -34,7 +34,7 @@ const LocationContents = () => {
       </section>
 
       <section className="relative my-6 h-[400px] w-full">
-        <KakaoMap />
+        <KakaoMap posts={Results} isPending={isPending} />
       </section>
       <div className="relative mb-10 flex items-center justify-between tb:mb-0 tb:h-[48px]">
         <p>

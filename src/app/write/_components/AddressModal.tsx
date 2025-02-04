@@ -1,5 +1,6 @@
 "use client";
 
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
@@ -104,8 +105,8 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
 
   return (
     <>
-      {isTabletOrSmaller ? (
-        // 태블릿 이하 (모바일 전용) ModalItem
+      <Tablet>
+        {/* 태블릿 이하 (모바일 전용) ModalItem */}
         <ModalItem isOpen={isOpen} onClose={onClose} className="flex h-full w-full flex-col !rounded-none !p-4">
           <div className="flex-start flex items-center gap-2">
             {/* 뒤로가기 버튼 */}
@@ -198,8 +199,9 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
             </div>
           )}
         </ModalItem>
-      ) : (
-        // 데스크탑 전용 ModalItem
+      </Tablet>
+      <MinTablet>
+        {/* 데스크탑 전용 ModalItem */}
         <ModalItem
           isOpen={isOpen}
           onClose={onClose}
@@ -265,7 +267,7 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
             {state.loading ? "검색 중..." : "검색"}
           </Button>
         </ModalItem>
-      )}
+      </MinTablet>
     </>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import useImageUploadHandlers from "@/lib/hooks/write/useImageUploadHandlers";
 import { Dispatch, SetStateAction } from "react";
 import ImageUploadDesktop from "./ImageUploadDesktop";
@@ -15,9 +15,6 @@ export type ImageUploadSectionProps = {
 };
 
 const ImageUploadSection = ({ images, setImages, blur, setBlur, isMissing }: ImageUploadSectionProps) => {
-  // 768px 이하일 경우 모바일로 간주
-  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
-
   // 핸들러들을 커스텀 훅에서 받아옴
   const { handleFileInput, handleDrop, handleDelete, loadingStatus, blurDataCache } = useImageUploadHandlers({
     images,
@@ -38,7 +35,17 @@ const ImageUploadSection = ({ images, setImages, blur, setBlur, isMissing }: Ima
     blurDataCache
   };
 
-  return isTabletOrSmaller ? <ImageUploadMobile {...uiProps} /> : <ImageUploadDesktop {...uiProps} />;
+  return (
+    <>
+      <Tablet>
+        <ImageUploadMobile {...uiProps} />
+      </Tablet>
+
+      <MinTablet>
+        <ImageUploadDesktop {...uiProps} />
+      </MinTablet>
+    </>
+  );
 };
 
 export default ImageUploadSection;

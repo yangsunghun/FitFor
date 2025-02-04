@@ -29,8 +29,11 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
       <ScrollTopButton />
       <ExitOrContinueModal
         isOpen={pageState.isExitModalOpen}
-        onClose={() => pageState.setIsExitModalOpen(false)}
-        postId={pageState.formState.postId}
+        onClose={() => {
+          pageState.setIsExitModalOpen(false);
+          pageState.setPendingNavigation(null);
+        }}
+        onExit={pageState.handleExit}
       />
     </div>
   );

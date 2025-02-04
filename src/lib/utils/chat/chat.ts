@@ -65,7 +65,7 @@ export const enterAsMember = async (userId: string, roomId: string) => {
       .select("member_id, room_id, isActive")
       .eq("member_id", userId)
       .eq("room_id", roomId)
-      .single();
+      .maybeSingle();
 
     if (checkError && checkError.code !== "PGRST116") {
       throw checkError;
@@ -197,7 +197,8 @@ export const sendMessage = async ({
   file: File | null;
   roomId: string;
   memberId: string;
-}) => {
+  }) => {
+  console.log("💡 sendMessage 호출됨:", { memberId, message, roomId, file });
   let fileUrl = null;
 
   // 파일 용량 제한 (예: 5MB)
@@ -243,54 +244,3 @@ export const sendMessage = async ({
     throw new Error(error.message);
   }
 };
-
-// 채팅방 일반 멤버로 등록하기(기존)
-// export const enterAsMember = async (userId: string, roomId: string) => {
-//   try {
-//     // Step 1: 중복 확인
-//     const { data: existingMember, error: checkError } = await supabase
-//       .from("chat_members")
-//       .select("member_id, room_id")
-//       .eq("member_id", userId)
-//       .eq("room_id", roomId)
-//       .single();
-
-//     if (checkError && checkError.code !== "PGRST116") {
-//       throw checkError; // PGRST116: 데이터가 없음을 나타냄
-//     }
-
-//     if (existingMember) {
-//       return { success: false, error: "이미 이 채팅방에 등록된 멤버입니다." };
-//     }
-
-//     // Step 2: 멤버 추가
-//     const { error: memberError } = await supabase.from("chat_members").insert({
-//       member_id: userId,
-//       room_id: roomId,
-//       isAdmin: false,
-//       isActive: true,
-//     });
-
-//     if (memberError) throw memberError;
-
-//     return { success: true };
-//   } catch (error) {
-//     return { success: false, error: String(error) };
-//   }
-// };
-
-// 일반 멤버의 채팅방 퇴장하기(데이터 테이블에서 삭제)
-// export const exitChatRoom = async (userId: string, roomId: string) => {
-//   try {
-//     const { error } = await supabase
-//       .from("chat_members")
-//       .delete()
-//       .match({ member_id: userId, room_id: roomId });
-
-//     if (error) throw error;
-
-//     return { success: true };
-//   } catch (error) {
-//     return { success: false, error: String(error) };
-//   }
-// };

@@ -11,40 +11,52 @@ import { TAG_GROUPS } from "@/lib/constants/constants";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { VideoCamera } from "@phosphor-icons/react";
 import Image from "next/image";
-import Link from "next/link";
 import RoomFilterMobile from "./RoomFilterMobile";
 import RoomFilters from "./RoomFilters";
 import TagFilters from "./TagFilters";
 import { useAuthStore } from "@/lib/store/authStore";
 import useCategoryStore from "@/lib/store/useCategoryStore";
 import { useEffect, useRef, useState } from "react";
-import { useChatRoomsInfiniteQuery } from "@/lib/hooks/chat/useChatRooms";
+import { useChatRooms } from "@/lib/hooks/chat/useChatRooms";
 import { useChatRoomQuery } from "@/lib/hooks/chat/useChatRoomQuery";
+import SortChatRooms from "./SortChatRooms";
+import { useRouter } from "next/navigation";
+import { enterAsMember } from "@/lib/utils/chat/chat";
 
 const ChatRoomList = () => {
-  // 클라이언트 전용 스토어와 관련된 값
   const currentUser = useAuthStore((state) => state.user);
   const { selectedCategory, setSelectedCategory, isHydrated } = useCategoryStore();
-
-  // 클라이언트가 수화된 후에만 UI를 렌더링하기 위한 상태
+  const { tags, sort, handleSort, handleToggleTag, resetTags } = useChatRoomQuery();
   const [readyToRender, setReadyToRender] = useState(false);
+  const router = useRouter();
 
-  // 이후 클라이언트가 준비된 상태에서만 아래 로직들이 실행됩니다.
-  const { tags, sort, handleToggleTag, resetTags } = useChatRoomQuery();
-  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatRoomsInfiniteQuery(
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatRooms(
     Object.values(tags).flat(),
     sort
   );
   const observerRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
+
   const selectedTags = Object.entries(tags).flatMap(([groupKey, groupTags]) =>
     groupTags.map((tag) => ({ groupKey, tag }))
   );
 
-  // 무한 스크롤을 위한 IntersectionObserver 설정
+  const handleEnterRoom = async (roomId: string) => {
+    if (!currentUser?.id) {
+      console.error("로그인된 사용자 정보가 없습니다.");
+      return;
+    }
+
+    try {
+      await enterAsMember(currentUser.id, roomId);
+      router.push(`/chat/${roomId}`);
+    } catch (error) {
+      console.error("채팅방 입장 중 오류 발생:", error);
+    }
+  };
+
   useEffect(() => {
     if (!observerRef.current || !hasNextPage) return;
 
@@ -62,14 +74,12 @@ const ChatRoomList = () => {
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
-  // 수화 여부가 true가 되면 readyToRender를 true로 설정
   useEffect(() => {
     if (isHydrated) {
       setReadyToRender(true);
     }
   }, [isHydrated]);
 
-  // 클라이언트가 완전히 준비되지 않았다면 로딩 스피너를 표시
   if (!readyToRender) {
     return <LoadingSpinner />;
   }
@@ -89,14 +99,18 @@ const ChatRoomList = () => {
         />
       </Tablet>
 
-      <div className="mt-[119px]">
+      <div className="relative mb-5 mt-10 flex justify-end tb:mb-0 tb:mt-2">
+        <SortChatRooms sort={sort} handleSort={handleSort} />
+      </div>
+
+      <div className="mt-10 tb:mt-0">
         <ul className="grid grid-cols-5 gap-3 tb:grid-cols-3 mb:grid-cols-2">
           {data?.pages.map((page) =>
             page.chatRooms.map((room) => (
               <li key={room.room_id} className="relative mb-4">
-                <Link href={`/chat/${room.room_id}`} className="click-box z-10" />
+                <button onClick={() => handleEnterRoom(room.room_id)} className="click-box z-10" />
                 <figure className="thumbnail h-[252px] rounded-2xl mb:h-[200px] mb:w-[166px]">
-                  <Image src={room.room_thumbnail_url || sampleImage} alt={room.room_title} fill={true} />
+                  <Image src={room.room_thumbnail_url || sampleImage} alt={room.room_title} fill={true} sizes="252px" />
                   <figcaption className="absolute left-4 top-4 flex flex-row items-center justify-center gap-[6px] rounded-[4px] bg-text-04 px-1">
                     <div className="h-2 w-2 rounded-full bg-status-danger"></div>
                     <p className="text-caption font-medium text-text-01">{room.participantCount}명</p>
@@ -106,8 +120,8 @@ const ChatRoomList = () => {
                 <div className="mt-4 flex gap-[7px]">
                   <figure className="relative flex-shrink-0">
                     <ProfileImageCircle
-                      profileImage={room.users.profile_image}
-                      nickname={room.users.nickname}
+                      profileImage={room.user.profile_image}
+                      nickname={room.user.nickname}
                       size={32}
                       className="h-10 w-10"
                     />
@@ -139,12 +153,13 @@ const ChatRoomList = () => {
       </div>
 
       {isOpen && (
-        <SlideOver title="필터" onClose={() => setIsOpen(false)}>
+        <SlideOver title="필터" article="최대 1개까지 선택 가능해요" onClose={() => setIsOpen(false)}>
           <TagFilters
             selectedGroup={selectedCategory}
             tags={tags}
             handleToggleTag={handleToggleTag}
             resetTags={resetTags}
+            onClose={() => setIsOpen(false)}
           />
         </SlideOver>
       )}

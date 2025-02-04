@@ -30,8 +30,8 @@ const GridPostForLocation = ({ post }: Props) => {
       </figure>
 
       <p className="ellip2 mt-4 text-title2 font-medium tb:mt-2 tb:text-body">{post.content}</p>
-      <p className="ellip1 mt-1 text-body text-text-03 tb:text-body">
-        <MapPinArea weight="fill" className="mr-1 inline-block text-primary-default" />
+      <p className="ellip1 mt-1 text-text-03 tb:mt-0 tb:text-caption">
+        <MapPinArea weight="fill" className="mr-1 inline-block text-primary-default mb:hidden" />
         {post.upload_place}
       </p>
     </li>

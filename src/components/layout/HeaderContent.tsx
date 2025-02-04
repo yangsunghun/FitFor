@@ -46,7 +46,7 @@ const HeaderContent = () => {
             </h1>
           </Link>
 
-          <nav className="flex w-[22%] min-w-[190px] max-w-[16.5rem] justify-between text-title2 font-medium text-text-03">
+          <nav className="flex w-[22%] min-w-[190px] max-w-[16.5rem] justify-between text-title2 font-medium text-text-04">
             {!user ? (
               <button
                 onClick={() => {
@@ -68,7 +68,6 @@ const HeaderContent = () => {
               카테고리
               <CaretDown
                 size={20}
-                weight={isOpen ? "bold" : "regular"}
                 className={clsx({
                   "rotate-180": isOpen,
                   "rotate-0": !isOpen
@@ -84,7 +83,7 @@ const HeaderContent = () => {
               asChild
               variant="whiteLine"
               size="md"
-              className="infline-flex flex flex-row gap-2 py-3 text-body font-medium leading-[1.5rem]"
+              className="infline-flex flex flex-row gap-2 px-4 py-3 text-body font-medium leading-[1.5rem]"
             >
               {isLoading ? (
                 <div>

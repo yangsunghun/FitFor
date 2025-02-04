@@ -18,11 +18,11 @@ const TitleSection = ({ title, onChange, error }: TitleSectionProps) => (
         e.target.style.height = `${e.target.scrollHeight}px`;
       }}
       rows={1}
-      className="h-38 w-full resize-none rounded-lg bg-bg-02 p-4 mb:p-3 text-body font-medium placeholder-text-02 focus:outline-none"
+      className="h-38 w-full resize-none rounded-lg bg-bg-02 p-4 text-body font-medium placeholder-text-02 focus:outline-none mb:p-3"
       placeholder="예시 - 소개팅 가야하는데 도와주세요"
     />
     {/* 에러 메시지 */}
-    {error && <p className="text-sm mt-2 text-red-600">{error}</p>}
+    {error && <p className="text-sm mt-2 text-status-danger">{error}</p>}
   </div>
 );
 

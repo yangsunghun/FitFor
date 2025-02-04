@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Image as IconImage } from "@phosphor-icons/react";
 import React, { useRef } from "react";
-import { Desktop, Mobile } from "@/components/common/BreakPoints";
 
 type ThumbnailUploadSectionProps = {
   thumbnail: File | null; // null일 경우 미리보기 없음
@@ -50,13 +49,13 @@ const ThumbnailUploadSection = ({ thumbnail, onChange, error }: ThumbnailUploadS
         {/* 업로드 정보와 버튼 */}
         <div className="flex flex-col gap-4">
           {/* 추천 사이즈 및 포맷 */}
-          <div className="relative rounded-md bg-black px-3 py-2 text-small font-medium text-text-01 hidden mb:block">
+          <div className="relative hidden rounded-md bg-black px-3 py-2 text-small font-medium text-text-01 mb:block">
             이미지 박스를 눌러주세요.
             <div className="absolute -left-1.5 top-1/2 h-3 w-3 -translate-y-1/2 rotate-45 transform bg-black"></div>
           </div>
 
           <div className="space-y-1">
-            <p className="text-body font-medium text-text-03 mb:text-caption ">추천 사이즈: 190x250</p>
+            <p className="text-body font-medium text-text-03 mb:text-caption">추천 사이즈: 190x250</p>
             <p className="text-body font-medium text-text-03 mb:text-caption">JPG, PNG, 최대 5MB</p>
           </div>
 
@@ -81,7 +80,7 @@ const ThumbnailUploadSection = ({ thumbnail, onChange, error }: ThumbnailUploadS
       </div>
 
       {/* 에러 메시지 */}
-      {error && <p className="text-sm mt-2 text-red-600">{error}</p>}
+      {error && <p className="text-sm mt-2 text-status-danger">{error}</p>}
     </div>
   );
 };

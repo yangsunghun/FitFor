@@ -8,11 +8,12 @@ import { useEffect, useState, type ReactNode } from "react";
 type Props = {
   href: string;
   icon: ReactNode;
+  text?: string;
   useFlexLayout?: boolean;
   onToggle?: (isOpen: boolean) => void; // 상태 전달 콜백
 };
 
-const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) => {
+const FloatingButton = ({ href, icon, text = "새 글 작성하기", useFlexLayout = false, onToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
@@ -37,7 +38,7 @@ const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) 
       <button
         onClick={toggleOpen}
         className={clsx(
-          "flex h-[4rem] w-[4rem] items-center justify-center rounded-full !text-text-01 shadow-strong transition duration-300 tb:h-[2.5rem] tb:w-[2.5rem]",
+          "shadow-strong flex h-[4rem] w-[4rem] items-center justify-center rounded-full !text-text-01 transition duration-300 tb:h-[2.5rem] tb:w-[2.5rem]",
           { "bg-primary-default": !isOpen, "bg-secondary-light": isOpen }
         )}
       >
@@ -53,7 +54,10 @@ const FloatingButton = ({ href, icon, useFlexLayout = false, onToggle }: Props) 
         )}
       >
         <li className="w-full whitespace-nowrap py-2 text-left font-medium tb:font-normal">
-          <Link href={href || "#"}>{icon}새 글 작성하기</Link>
+          <Link href={href || "#"}>
+            {icon}
+            {text}
+          </Link>
         </li>
       </ul>
     </div>

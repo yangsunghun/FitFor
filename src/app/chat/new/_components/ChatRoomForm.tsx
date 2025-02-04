@@ -84,7 +84,7 @@ const ChatRoomForm = () => {
           tags={watch("tags")}
           selectedCategory={watch("category")}
           onChangeCategory={(category) => setValue("category", category)}
-          toggleTagSelector={(tag, allTags, max) => {
+          toggleTagSelector={(tag) => {
             const currentTags = watch("tags");
             if (currentTags.includes(tag)) {
               setValue(
@@ -92,16 +92,15 @@ const ChatRoomForm = () => {
                 currentTags.filter((t) => t !== tag)
               );
             } else if (currentTags.length >= 1) {
-              // 여기에서도 동일한 maxTags와 제한을 적용 가능
               alert("하나의 태그만 선택해주세요.");
             } else {
               setValue("tags", [...currentTags, tag]);
             }
           }}
-          maxTags={1} // 이 값을 5로 설정하여 최대 5개로 표시
+          maxTags={1}
         />
 
-        {errors.tags && <p className="text-sm mt-2 text-red-600">{errors.tags.message}</p>}
+        {errors.tags && <p className="text-sm mt-2 text-status-danger">{errors.tags.message}</p>}
 
         {/* 썸네일 업로드 */}
         <ThumbnailUploadSection

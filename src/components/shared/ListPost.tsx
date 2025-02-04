@@ -69,7 +69,7 @@ const Listpost = ({ post }: Props) => {
         <div className="absolute bottom-0 left-0 flex gap-2 tb:relative tb:mt-1 tb:gap-1">
           {isTabletOrSmaller
             ? post.tags.slice(0, 3).map((tag) => <Tags key={tag} variant="gray" size="md" label={tag} />)
-            : post.tags.map((tag) => <Tags key={tag} variant="gray" size="md" label={tag} />)}
+            : post.tags.slice(0, 4).map((tag) => <Tags key={tag} variant="gray" size="md" label={tag} />)}
         </div>
       </div>
     </li>

@@ -91,7 +91,7 @@ export const MobileInput = ({ roomId }: InputProps) => {
           )
         ) : (
           <div className="p-2">
-            <Lock size={24} className="text-gray-500" />
+            <Lock size={24} className="text-gray-500" weight="fill" />
           </div>
         )}
       </div>

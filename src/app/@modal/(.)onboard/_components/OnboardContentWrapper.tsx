@@ -1,26 +1,26 @@
 "use client";
 
-import LoginContent from "@/app/(auth)/login/_components/LoginContent";
+import OnboardForm from "@/app/(auth)/onboard/_components/OnboardForm";
 import { MinTablet } from "@/components/common/BreakPoints";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const LoginContentWrapper = () => {
-  const router = useRouter();
+const OnboardContentWrapper = () => {
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     if (isTabletOrSmaller) {
       window.location.reload();
     }
-  }, [isTabletOrSmaller, router]);
+  }, [isTabletOrSmaller]);
 
   return (
     <MinTablet>
-      <LoginContent />
+      <div className="relative inline-block h-fit w-auto rounded-lg bg-bg-01 p-6 shadow-lg">
+        <OnboardForm />
+      </div>
     </MinTablet>
   );
 };
 
-export default LoginContentWrapper;
+export default OnboardContentWrapper;

@@ -27,17 +27,21 @@ const AccountDeleteContent = ({ closeModal }: AccountDeleteContentProps) => {
       </p>
 
       {/* 탈퇴 컨펌창 */}
-      <p className="text-body font-medium text-text-03">
-        탈퇴를 원하시면 아래 입력란에 <strong>{user?.nickname}</strong>을(를) 입력하세요.
-      </p>
-      <TextField
-        type="text"
-        value={inputValue}
-        variant={inputValue !== user?.nickname ? "error" : "default"}
-        onChange={(e) => setInputValue(e.target.value)}
-        className="w-full rounded-md border border-gray-300 p-2 text-text-04"
-        placeholder="사용자명을 입력하세요"
-      />
+      <div className="flex w-full flex-col gap-2">
+        <TextField
+          type="text"
+          value={inputValue}
+          variant={inputValue !== user?.nickname && inputValue.length !== 0 ? "error" : "default"}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="w-full rounded-md border border-gray-300 p-2 text-text-04"
+          placeholder="사용자명을 입력하세요"
+        />
+        <p
+          className={`text-body font-medium ${inputValue !== user?.nickname && inputValue.length !== 0 ? "text-status-danger" : "text-status-info"}`}
+        >
+          탈퇴를 원하시면 아래 입력란에 <strong>{user?.nickname}</strong>을(를) 입력하세요.
+        </p>
+      </div>
 
       <div className="flex w-full flex-row gap-3 tb:gap-2">
         <Button variant="whiteLine" size={isTabletOrSmaller ? "sm" : "lg"} className="w-full" onClick={closeModal}>
@@ -48,7 +52,7 @@ const AccountDeleteContent = ({ closeModal }: AccountDeleteContentProps) => {
           variant={inputValue !== user?.nickname ? "disabled" : "primary"}
           className="w-full"
           onClick={handleDeleteAccount}
-          disabled={inputValue !== user?.nickname} // Disable until username matches
+          disabled={inputValue !== user?.nickname}
         >
           탈퇴하기
         </Button>

@@ -33,7 +33,11 @@ const ProfileEditTextField = <T extends FieldValues>({
         {...register(id)}
         className="tb:font-regular h-14 border-none p-4 text-title2 font-medium tb:h-11 tb:p-3 tb:text-body"
       />
-      {error && <p className="absolute -bottom-[26px] left-0 mt-1 text-body font-normal text-status-danger">{error}</p>}
+      {error && (
+        <p className="absolute -bottom-[26px] left-0 mt-1 text-body font-normal text-status-danger tb:text-caption tb:font-medium">
+          {error}
+        </p>
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@
 
 import Carousel from "@/components/common/Carousel";
 import ModalItem from "@/components/ui/Modal";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { handleImageDownload } from "@/lib/utils/common/ImageDownload";
 import { DownloadSimple, X } from "@phosphor-icons/react";
 import { useRef, useState } from "react";
@@ -18,6 +19,7 @@ type ImageModalProps = {
 const ImageModal = ({ images, isOpen, onClose, selectedImage, isPagination = true }: ImageModalProps) => {
   const [currentImage, setCurrentImage] = useState(selectedImage);
   const swiperRef = useRef<SwiperClass | null>(null);
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   return (
     <ModalItem isOpen={isOpen} onClose={onClose} mode="imageView">
@@ -32,7 +34,7 @@ const ImageModal = ({ images, isOpen, onClose, selectedImage, isPagination = tru
             setCurrentImage(images[activeIndex]);
           }}
           initialSlide={images.indexOf(selectedImage)}
-          arrow={true}
+          arrow={isTabletOrSmaller ? false : true}
           pagination={isPagination}
         >
           {images.map((image, index) => (

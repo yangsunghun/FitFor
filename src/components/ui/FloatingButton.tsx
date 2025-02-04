@@ -9,9 +9,11 @@ type Props = {
   href: string;
   icon: ReactNode;
   text?: string;
+  useFlexLayout?: boolean;
+  onToggle?: (isOpen: boolean) => void; // 상태 전달 콜백
 };
 
-const FloatingButton = ({ href, icon, text = "새 글 작성하기" }: Props) => {
+const FloatingButton = ({ href, icon, text = "새 글 작성하기", useFlexLayout = false, onToggle }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
@@ -23,7 +25,6 @@ const FloatingButton = ({ href, icon, text = "새 글 작성하기" }: Props) =>
     setIsOpen((prev) => !prev);
   };
 
-  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const Icon = isOpen ? X : Plus; // isOpen 상태에 따라 사용할 컴포넌트 선택
   const size = isTabletOrSmaller ? 24 : 40; // 디바이스 크기에 따라 아이콘 크기 설정
 
@@ -37,7 +38,7 @@ const FloatingButton = ({ href, icon, text = "새 글 작성하기" }: Props) =>
       <button
         onClick={toggleOpen}
         className={clsx(
-          "flex h-[4rem] w-[4rem] items-center justify-center rounded-full !text-text-01 shadow-strong transition duration-300 tb:h-[2.5rem] tb:w-[2.5rem]",
+          "shadow-strong flex h-[4rem] w-[4rem] items-center justify-center rounded-full !text-text-01 transition duration-300 tb:h-[2.5rem] tb:w-[2.5rem]",
           { "bg-primary-default": !isOpen, "bg-secondary-light": isOpen }
         )}
       >

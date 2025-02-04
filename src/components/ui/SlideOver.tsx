@@ -1,35 +1,20 @@
 "use client";
+import useLockScroll from "@/lib/hooks/common/useLockScroll";
 import { X } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useState } from "react";
 
 type SlideOverProps = {
   title: string;
+  article?: string;
   children: ReactNode;
   onClose: () => void;
 };
 
-const SlideOver = ({ title, children, onClose }: SlideOverProps) => {
+const SlideOver = ({ title, article, children, onClose }: SlideOverProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
-  // Prevent body scrolling
-  const bodyRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    bodyRef.current = document.body;
-
-    if (isVisible && bodyRef.current) {
-      bodyRef.current.style.overflow = "hidden";
-    } else if (bodyRef.current) {
-      bodyRef.current.style.overflow = "";
-    }
-
-    return () => {
-      if (bodyRef.current) {
-        bodyRef.current.style.overflow = "";
-      }
-    };
-  }, [isVisible]);
+  useLockScroll(isVisible);
 
   if (!isVisible) return null;
 
@@ -54,10 +39,11 @@ const SlideOver = ({ title, children, onClose }: SlideOverProps) => {
           isVisible ? "animate-slideIn" : "animate-slideOut"
         )}
       >
-        <div className="sticky top-0 z-10 w-full bg-white">
-          <div className="inner flex h-[75px] items-center justify-between">
+        <div className={clsx("sticky top-0 z-10 w-full bg-white", { "py-[16px]": article, "py-[20px]": !article })}>
+          <div className="inner relative">
             <p className="text-title2 font-medium">{title}</p>
-            <button className="text-text-03" onClick={handleClose}>
+            {article && <p className="mt-1 text-body text-text-03">{article}</p>}
+            <button className="absolute right-0 top-0 text-text-03" onClick={handleClose}>
               <X size={20} weight="bold" />
             </button>
           </div>

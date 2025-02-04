@@ -1,4 +1,5 @@
 "use client";
+
 import LoginContent from "@/app/(auth)/login/_components/LoginContent";
 import { MinTablet } from "@/components/common/BreakPoints";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
@@ -16,11 +17,9 @@ const LoginContentWrapper = () => {
   }, [isTabletOrSmaller, router]);
 
   return (
-    <div>
-      <MinTablet>
-        <LoginContent />
-      </MinTablet>
-    </div>
+    <MinTablet>
+      <LoginContent />
+    </MinTablet>
   );
 };
 

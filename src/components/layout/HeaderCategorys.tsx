@@ -1,35 +1,32 @@
 "use client";
-import { REGIONS, TAG_GROUPS } from "@/lib/constants/constants";
+import { REGIONS_WITH_QUERY, TAG_GROUPS } from "@/lib/constants/constants";
 import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import { useLocationQuery } from "@/lib/hooks/location/useLocationQuery";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import useCategoryStore from "@/lib/store/useCategoryStore";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/Tabs";
 import { Tags } from "../ui/Tags";
 
 type Tags = { [key: string]: string[] };
 type Props = {
-  handleClose?: () => void;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const HeaderCategorys = ({ handleClose }: Props) => {
-  const [tags, setTags] = useState<Tags>({});
-  const router = useRouter();
+const HeaderCategorys = ({ setIsOpen }: Props) => {
   const setSelectedCategory = useCategoryStore((state) => state.setSelectedCategory);
-  const { handleToggleTag, encodeTagsForUrl } = useSearchQuery();
+  const { handleToggleTag, setTags, setQuery } = useSearchQuery();
+  const { setActiveLocation } = useLocationQuery();
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const { activeTab, handleTabChange } = useActiveTabs();
 
   const handleCategoryClick = (key: string, tag: string) => {
+    setQuery("");
+    setTags({ gender: [], season: [], style: [], tpo: [] });
+
     handleToggleTag(key, tag);
-
-    const updatedTags = { ...tags, [key]: [...(tags[key] || []), tag] };
-
     setSelectedCategory(key);
-
-    router.push(`/search?query=&page=1&category=${encodeTagsForUrl(updatedTags)}`);
   };
 
   const mobileUI = (
@@ -50,6 +47,12 @@ const HeaderCategorys = ({ handleClose }: Props) => {
               {group.title}
             </TabsTrigger>
           ))}
+          <TabsTrigger
+            value="tab-4"
+            className="h-full rounded-none border-b-2 border-transparent px-[15px] py-[12px] text-body font-medium !shadow-none data-[state=active]:border-primary-default data-[state=active]:text-primary-default"
+          >
+            지역
+          </TabsTrigger>
         </TabsList>
         <div className="inner py-[16px]">
           <p className="text-title2 font-bold">카테고리별 키워드</p>
@@ -59,7 +62,7 @@ const HeaderCategorys = ({ handleClose }: Props) => {
           <TabsContent key={group.key} value={`tab-${index}`}>
             <ul className="inner mr-6 flex flex-wrap gap-[8px]">
               {group.tags.map((tag) => (
-                <li key={tag} onClick={handleClose} className="font-medium text-text-03 transition-colors duration-200">
+                <li key={tag} className="font-medium text-text-03 transition-colors duration-200">
                   <button onClick={() => handleCategoryClick(group.key, tag)}>
                     <Tags label={tag} variant="grayLine" size="lg" />
                   </button>
@@ -68,6 +71,18 @@ const HeaderCategorys = ({ handleClose }: Props) => {
             </ul>
           </TabsContent>
         ))}
+
+        <TabsContent value="tab-4">
+          <ul className="inner mr-6 flex flex-wrap gap-[8px]">
+            {REGIONS_WITH_QUERY.map((tag) => (
+              <li key={tag.title} className="font-medium text-text-03 transition-colors duration-200">
+                <button onClick={() => setActiveLocation(tag.query)}>
+                  <Tags label={tag.title} variant="grayLine" size="lg" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </TabsContent>
       </Tabs>
     </>
   );
@@ -80,12 +95,16 @@ const HeaderCategorys = ({ handleClose }: Props) => {
 
           <ul className="mr-6 flex h-[32rem] flex-col flex-wrap border-r border-line-02">
             {group.tags.map((tag) => (
-              <li
-                key={tag}
-                onClick={handleClose}
-                className="mb-6 w-[8.75rem] font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
-              >
-                <button onClick={() => handleCategoryClick(group.key, tag)}>{tag}</button>
+              <li key={tag} className="mb-6 w-[8.75rem]">
+                <button
+                  onClick={() => {
+                    handleCategoryClick(group.key, tag);
+                    setIsOpen(false);
+                  }}
+                  className="font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
+                >
+                  {tag}
+                </button>
               </li>
             ))}
           </ul>
@@ -96,12 +115,19 @@ const HeaderCategorys = ({ handleClose }: Props) => {
         <p className="mb-8 font-bold">지역</p>
 
         <ul className="flex h-[32rem] flex-col flex-wrap">
-          {REGIONS.map((region, index) => (
+          {REGIONS_WITH_QUERY.map((tag) => (
             <li
-              key={index}
+              key={tag.title}
               className="mb-6 w-[6.875rem] font-medium text-text-03 transition-colors duration-200 hover:text-primary-default"
             >
-              <button className="">{region}</button>
+              <button
+                onClick={() => {
+                  setActiveLocation(tag.query);
+                  setIsOpen(false);
+                }}
+              >
+                {tag.title}
+              </button>
             </li>
           ))}
         </ul>

@@ -22,6 +22,7 @@ const GridPost = ({ post }: Props) => {
           src={isImgError ? sampleImage : post.images[0]}
           alt={post.content}
           fill={true}
+          sizes="(max-width: 768px) 250px, 250px"
           placeholder="blur"
           blurDataURL={post.thumbnail_blur_url}
           onError={() => setIsImgError(true)}

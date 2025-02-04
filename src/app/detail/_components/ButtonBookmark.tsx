@@ -1,13 +1,11 @@
 "use client";
-
 import ToggleButton from "@/components/shared/ToggleButton";
 import { useBookmarks } from "@/lib/hooks/detail/useBookmark";
 import { useAuthStore } from "@/lib/store/authStore";
 import { cn } from "@/lib/utils/common/className";
-import { toast } from "@/lib/utils/common/toast";
 import { BookmarkSimple } from "@phosphor-icons/react";
 
-type BookmarkButtonProps = {
+type Props = {
   postId: string;
   styleType?: "masonry" | "list" | "detail" | "detailMob";
   iconSize: number;
@@ -15,50 +13,29 @@ type BookmarkButtonProps = {
   showText?: boolean;
 };
 
-const BookmarkButton = ({
-  postId,
-  styleType = "masonry",
-  iconSize,
-  iconWeight = "regular",
-  showText
-}: BookmarkButtonProps) => {
-  const buttonClass = cn("flex justify-center items-center ", {
-    "w-7 h-7 rounded-lg bg-bg-01 text-text-03": styleType === "masonry",
-    "gap-1 tb:text-text-02": styleType === "list",
-    "flex-col gap-2 text-text-03": styleType === "detail",
-    "text-text-02": styleType === "detailMob"
-  });
+const BookmarkButton = ({ postId, styleType = "masonry", iconSize, iconWeight = "fill", showText = false }: Props) => {
   const { user } = useAuthStore();
-  const userId = user?.id;
+  const userId = user?.id || "guest";
 
-  const { isBookmarked, isPending, toggleBookmark } = useBookmarks(postId, userId ?? "");
+  const { isBookmarked, isPending, toggleBookmark } = useBookmarks(postId, userId);
 
-  if (!userId) {
-    return (
-      <ToggleButton
-        btnStyle={buttonClass}
-        isActive={false}
-        onClick={() => toast("로그인이 필요합니다", "warning")}
-        inactiveIcon={<BookmarkSimple className="transition-color duration-300" size={iconSize} weight={iconWeight} />}
-        text={showText || false}
-      />
-    );
-  }
+  const buttonClass = cn("flex justify-center items-center text-text-02 transition-color duration-300", {
+    "text-status-info": isBookmarked,
+    "w-7 h-7 rounded-lg bg-bg-01": styleType === "masonry",
+    "gap-1": styleType === "list" || styleType === "detailMob",
+    "flex-col gap-2": styleType === "detail"
+  });
 
-  if (isPending) {
-    return null; // 로딩 중 상태
-  }
+  if (isPending) return null;
 
   return (
     <ToggleButton
       btnStyle={buttonClass}
       isActive={isBookmarked}
       onClick={toggleBookmark}
-      activeIcon={
-        <BookmarkSimple className="transition-color text-status-info duration-300" size={iconSize} weight="fill" />
-      }
-      inactiveIcon={<BookmarkSimple className="transition-color duration-300" size={iconSize} weight={iconWeight} />}
-      text={showText || false}
+      activeIcon={<BookmarkSimple size={iconSize} weight="fill" />}
+      inactiveIcon={<BookmarkSimple size={iconSize} weight={iconWeight} />}
+      textLabel={showText ? "북마크" : undefined}
     />
   );
 };

@@ -1,8 +1,8 @@
 import ContentsSection from "@/app/detail/_components/ContentsSection";
 import ViewCounter from "@/app/detail/_components/ViewCounter";
+import ModalBg from "@/components/common/ModalBg";
+import ModalButton from "@/components/common/ModalButton";
 import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
-import ModalBg from "./ModalBg";
-import ModalButton from "./ModalButton";
 
 type Props = {
   params: {

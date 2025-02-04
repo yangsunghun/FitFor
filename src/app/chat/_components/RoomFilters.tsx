@@ -1,65 +1,43 @@
 "use client";
-
-import { useState } from "react";
-import { TAG_GROUPS } from "@/lib/constants/constants";
 import { Tags } from "@/components/ui/Tags";
+import { TAG_GROUPS } from "@/lib/constants/constants";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
 
-const Filter = ({ onFilterChange }: { onFilterChange: (tags: { [key: string]: string[] }) => void }) => {
-  const [activeTab, setActiveTab] = useState(TAG_GROUPS[0].key);
-  const [selectedTags, setSelectedTags] = useState<{ [key: string]: string[] }>({});
+type TagFiltersProps = {
+  tags: { [key: string]: string[] };
+  handleToggleTag: (groupKey: string, tag: string) => void;
+};
 
-  // 탭 전환
-  const handleTabChange = (key: string) => {
-    setActiveTab(key);
-  };
-
-  // 태그 선택/해제
-  const handleToggleTag = (key: string, tag: string) => {
-    const updatedTags = { ...selectedTags };
-
-    if (!updatedTags[key]) {
-      updatedTags[key] = [];
-    }
-
-    if (updatedTags[key].includes(tag)) {
-      updatedTags[key] = updatedTags[key].filter((t) => t !== tag);
-    } else {
-      if (updatedTags[key].length >= 2) {
-        alert("태그는 최대 2개까지만 선택할 수 있습니다.");
-        return;
-      }
-      updatedTags[key].push(tag);
-    }
-
-    setSelectedTags(updatedTags);
-    onFilterChange(updatedTags);
-  };
-
+const RoomFilters = ({ tags, handleToggleTag }: TagFiltersProps) => {
   return (
-    <div>
-      {/* 탭 그룹 */}
-      <div className="mb-10 flex gap-4 border-b text-title2 font-medium">
+    <Tabs defaultValue={TAG_GROUPS[0].key} className="space-y-10">
+      {/* Tabs List: 탭 메뉴 */}
+      <TabsList className="h-full w-full justify-start rounded-none border-b bg-transparent p-0">
         {TAG_GROUPS.map((group) => (
-          <button
+          <TabsTrigger
             key={group.key}
-            onClick={() => handleTabChange(group.key)}
-            className={`px-4 py-2 ${activeTab === group.key ? "border-b-2 border-black text-text-04" : "text-text-02"}`}
+            value={group.key}
+            className="inline-flex h-full items-center justify-center whitespace-nowrap rounded-none border-b-2 border-transparent px-[32px] py-[14.5px] text-title2 font-medium !shadow-none !outline-none transition-all disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary-default data-[state=active]:bg-white data-[state=active]:text-primary-default data-[state=active]:shadow"
           >
             {group.title}
-          </button>
+          </TabsTrigger>
         ))}
-      </div>
+      </TabsList>
 
-      {/* 현재 활성화된 탭의 태그 버튼 */}
-      <div className="flex flex-wrap gap-2">
-        {TAG_GROUPS.find((group) => group.key === activeTab)?.tags.map((tag) => (
-          <button key={tag} onClick={() => handleToggleTag(activeTab, tag)}>
-            <Tags label={tag} variant={`${selectedTags[activeTab]?.includes(tag) ? "black" : "gray"}`} size="md" />
-          </button>
-        ))}
-      </div>
-    </div>
+      {/* Tabs Content: 탭별 태그 */}
+      {TAG_GROUPS.map((group) => (
+        <TabsContent key={group.key} value={group.key}>
+          <div className="flex flex-wrap gap-2">
+            {group.tags.map((tag) => (
+              <button key={tag} onClick={() => handleToggleTag(group.key, tag)}>
+                <Tags label={tag} variant={tags[group.key]?.includes(tag) ? "black" : "gray"} />
+              </button>
+            ))}
+          </div>
+        </TabsContent>
+      ))}
+    </Tabs>
   );
 };
 
-export default Filter;
+export default RoomFilters;

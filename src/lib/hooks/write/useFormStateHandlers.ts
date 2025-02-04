@@ -1,7 +1,7 @@
 "use client";
 
 import { Database } from "@/lib/types/supabase";
-import { useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 
 // Form 상태 타입 정의
 type FormState = {
@@ -29,6 +29,7 @@ export type UseFormStateHandlersReturn = {
   setInitialFormState: (data: PostWithPurchases) => Promise<void>;
   handleChange: <T extends keyof FormState>(key: T, value: FormState[T]) => void;
   handleBodySizeChange: (index: number, value: string) => void;
+  originalDataRef: MutableRefObject<Partial<FormState>>;
 };
 
 export const useFormStateHandlers = () => {
@@ -49,9 +50,12 @@ export const useFormStateHandlers = () => {
     postId: "" // 이어작성 게시글 ID 초기값
   });
 
+  // 원본 데이터를 저장할 ref
+  const originalDataRef = useRef<Partial<FormState>>({});
   const setInitialFormState = async (data: PostWithPurchases) => {
     try {
-      setFormState({
+      // 기존 데이터를 객체로 생성
+      const initialData = {
         address: data.upload_place || "",
         content: data.content || "",
         body_size: data.body_size || [],
@@ -65,9 +69,15 @@ export const useFormStateHandlers = () => {
         productToEdit: null,
         thumbnail_blur_url: data.thumbnail_blur_url || "",
         postId: data.id || "" // 이어작성 게시글 ID 설정
-      });
+      };
+
+      // 원본 데이터를 ref에 저장 (여기서는 추가적인 필드 없이 initialData 자체를 저장)
+      originalDataRef.current = { ...initialData };
+
+      // 폼 상태 업데이트
+      setFormState(initialData);
     } catch (error) {
-      console.error("Error initializing form state:", error);
+      console.error("FormState Error:", error);
     }
   };
 
@@ -88,5 +98,5 @@ export const useFormStateHandlers = () => {
     });
   };
 
-  return { formState, setInitialFormState, handleChange, handleBodySizeChange };
+  return { formState, setInitialFormState, handleChange, handleBodySizeChange, originalDataRef };
 };

@@ -1,7 +1,7 @@
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import useCategoryStore from "@/lib/store/useCategoryStore";
-import { extractUnicode } from "@/lib/utils/common/extractUnicode";
+import { extractChosungJungSung, extractUnicode } from "@/lib/utils/common/extractUnicode";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 
@@ -29,15 +29,25 @@ export const useSearchBar = () => {
     setInputValue(value);
 
     if (value.trim() !== "") {
-      const chosungInput = extractUnicode(value); // 입력값의 초성 추출
-      const filtered = allTags.filter((tag) => {
-        const tagChosung = extractUnicode(tag); // 태그의 초성 추출
-        return (
-          tag.toLowerCase().includes(value.toLowerCase()) || // 일반 검색
-          tagChosung.includes(chosungInput) // 초성 검색
-        );
+      const chosungInput = extractUnicode(value); // 입력값 초성 변환
+      const jungSungInput = extractChosungJungSung(value);
+
+      // 음절 일치 태그
+      const directMatchTags = allTags.filter((tag) => tag.toLowerCase().includes(value.toLowerCase()));
+
+      // 초성,중성 일치 태그
+      const similarMatchTags = allTags.filter((tag) => {
+        const tagJungSung = extractChosungJungSung(tag);
+        return !directMatchTags.includes(tag) && tagJungSung.includes(jungSungInput);
       });
-      setFilteredTags(filtered);
+
+      // 초성 일치 태그
+      const chosungMatchTags = allTags.filter((tag) => {
+        const tagChosung = extractUnicode(tag);
+        return !directMatchTags.includes(tag) && !similarMatchTags.includes(tag) && tagChosung.includes(chosungInput);
+      });
+
+      setFilteredTags([...directMatchTags, ...similarMatchTags, ...chosungMatchTags]);
     } else {
       setFilteredTags([]);
     }
@@ -86,6 +96,8 @@ export const useSearchBar = () => {
     showDropdown,
     filteredTags,
     searchHistory,
+    setInputValue,
+    setFilteredTags,
     setShowDropdown,
     handleInputChange,
     handleSelectTag,

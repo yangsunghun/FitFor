@@ -1,29 +1,16 @@
 "use client";
 
 import { POSTS_PER_PAGE } from "@/lib/constants/constants";
-import { useSearchQuery } from "@/lib/hooks/search/useSearchQuery";
 import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
 
 type PaginationProps = {
   Results?: { total: number };
+  page: number;
+  handlePageChange: (newPage: number) => void;
 };
 
-const Pagination = ({ Results }: PaginationProps) => {
-  const router = useRouter();
-  const { query, page, tags, sort, encodeTagsForUrl } = useSearchQuery();
-
-  const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams();
-    params.set("query", query);
-    params.set("page", String(newPage));
-    params.set("category", encodeTagsForUrl(tags));
-    params.set("sort", sort);
-
-    router.push(`/search?${params.toString()}`);
-  };
-
+const Pagination = ({ Results, page, handlePageChange }: PaginationProps) => {
   if (!Results || Results.total === 0) return null;
 
   const totalPages = Math.ceil(Results.total / POSTS_PER_PAGE);

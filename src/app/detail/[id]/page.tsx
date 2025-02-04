@@ -17,10 +17,10 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
 
   if (!post) {
     return {
-      title: "fit4",
+      title: "Fit4",
       description: "삭제된 게시글",
       openGraph: {
-        title: "fit4",
+        title: "Fit4",
         description: "삭제된 게시글",
         url: `https://fit4.vercel.app/detail/${params.id}`
       }
@@ -56,7 +56,7 @@ const DetailPage = async ({ params }: DetailPageProps) => {
         <PurchaseList postId={postId} />
       </section>
       <hr className="my-[3.75rem] border-line-02 tb:hidden" />
-      <section className="tb:hidden">
+      <section id="comment" className="tb:hidden">
         <CommentSection postId={postId} />
       </section>
     </div>

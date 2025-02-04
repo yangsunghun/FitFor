@@ -4,7 +4,7 @@ import iconExport from "@/assets/images/export.svg";
 import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import KakaoScript from "@/components/common/KakaoScript";
-import MoblieHeader from "@/components/layout/MoblieHeader";
+import MobileHeader from "@/components/layout/MoblieHeader";
 import SlideOver from "@/components/ui/SlideOver";
 import { Tags } from "@/components/ui/Tags";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
@@ -14,6 +14,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { useNavBarStore } from "@/lib/store/useNavBarStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { ChatCircleDots, Export } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import BookmarkButton from "./ButtonBookmark";
@@ -72,14 +73,16 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
 
   return (
     <>
+      <KakaoScript />
       <Tablet>
-        <MoblieHeader pageName="게시물" action="back" />
+        <MobileHeader pageName="게시물" action="back" />
         <div className="inner relative mb-[8px]">
           <UserProfile
             profileImage={users.profile_image}
             nickname={users.nickname}
             isVerified={users.is_verified}
             uploadPlace={upload_place}
+            userId={user_id}
           />
           {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
         </div>
@@ -100,11 +103,13 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
               nickname={users.nickname}
               isVerified={users.is_verified}
               uploadPlace={upload_place}
+              currentUser={userId}
+              userId={user_id}
             />
             {mode === "page" && userId === user_id && <EditDelete postId={postId} />}
           </MinTablet>
 
-          <p className="mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap text-title2 font-medium tb:mt-[8px] tb:text-body">
+          <p className="scroll-custom mt-6 max-h-[8.5rem] overflow-auto whitespace-pre-wrap pr-2 text-title2 font-medium tb:mt-[8px] tb:text-body">
             {content}
           </p>
 
@@ -117,18 +122,25 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
           )}
 
           <Tablet>
-            <CommentListMobile postId={postId} />
+            <CommentListMobile postId={postId} onOpen={() => setIsCommentOpen(true)} />
           </Tablet>
 
           <p className="mt-4 font-medium text-text-03 tb:mt-2 tb:text-caption mb:text-small">
-            View {view} · {relativeTimeDay(created_at)}
+            조회수 {view} · {relativeTimeDay(created_at)}
           </p>
 
           <MinTablet>
-            <div className="absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium">
+            <div
+              className={clsx("absolute bottom-0 left-0 mt-[6.35rem] flex gap-10 font-medium", {
+                "bottom-auto top-[54%]": mode === "page"
+              })}
+            >
               <LikeButton postId={postId} styleType="detail" iconSize={28} showNumber />
+              <span className="flex flex-col gap-2 text-center text-text-02">
+                <ChatCircleDots size={28} weight="fill" />
+                <span className="text-text-03">{comments.length}</span>
+              </span>
               <BookmarkButton postId={postId} styleType="detail" iconSize={28} showText />
-              <KakaoScript />
               <SocialShare
                 postUrl={`https://fit4.vercel.app/detail/${postId}`}
                 postTitle={content}
@@ -157,7 +169,6 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
                 <BookmarkButton postId={postId} styleType="detailMob" iconSize={24} iconWeight="fill" />
               </span>
               <span className="flex flex-1 justify-center">
-                <KakaoScript />
                 <SocialShare
                   postUrl={`https://fit4.vercel.app/detail/${postId}`}
                   postTitle={content}

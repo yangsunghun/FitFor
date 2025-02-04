@@ -6,7 +6,7 @@ import type { Database } from "@/lib/types/supabase";
 import { createClient } from "@/lib/utils/supabase/client";
 import { Image as ImageIcon, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useEffect, useState, ChangeEvent } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const supabase = createClient();
 const genUniqueId = () => {
@@ -95,13 +95,13 @@ const PurchaseModal = ({
     }));
   };
 
-    // 고유 파일 이름 생성
-    const genFilePath = (file: File): string => {
-      const timestamp = Date.now();
-      const extension = file.name.split(".").pop() || "unknown";
-      const folder = "purchase";
-      return `${folder}/${timestamp}.${extension}`;
-    };
+  // 고유 파일 이름 생성
+  const genFilePath = (file: File): string => {
+    const timestamp = Date.now();
+    const extension = file.name.split(".").pop() || "unknown";
+    const folder = "purchase";
+    return `${folder}/${timestamp}.${extension}`;
+  };
 
   // 이미지 업로드 함수
   const uploadImage = async (file: File): Promise<string> => {
@@ -203,12 +203,6 @@ const PurchaseModal = ({
       return;
     }
 
-    // 필수 입력 항목 확인
-    if (!title || !image_url) {
-      alert("모든 필드를 입력해주세요.");
-      return;
-    }
-
     const product = { title, description, buy_link, image_url, post_id };
     if (mode === "add") {
       // 추가 모드
@@ -235,7 +229,7 @@ const PurchaseModal = ({
     <ModalItem isOpen={isOpen} onClose={handleClose}>
       <div className="space-y-2">
         <div className="flex items-center gap-1">
-          <span className="text-title2 font-bold text-text-04">게시물 이미지</span>
+          <span className="text-title2 font-bold leading-[27px] text-text-04">상품 이미지</span>
           <span className="text-title2 font-bold text-primary-default">*</span>
         </div>
 
@@ -243,7 +237,7 @@ const PurchaseModal = ({
         <div className="flex items-start gap-6">
           {/* 이미지 영역 */}
           <div className="relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-lg border border-bg-02 bg-bg-02">
-          {loading && blurData ? (
+            {loading && blurData ? (
               <>
                 <Image src={blurData} alt="Uploading" layout="fill" objectFit="cover" className="rounded-lg" />
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -252,13 +246,7 @@ const PurchaseModal = ({
               </>
             ) : image_url ? (
               <>
-                <Image
-                  src={image_url}
-                  alt="Uploaded"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-lg"
-                />
+                <Image src={image_url} alt="Uploaded" layout="fill" objectFit="cover" className="rounded-lg" />
                 <button
                   onClick={handleDeleteImage}
                   className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-bg-01 text-text-03"
@@ -279,20 +267,25 @@ const PurchaseModal = ({
               <p className="text-body text-text-03">추천 사이즈 : OOO x OOO</p>
               <p className="text-body text-text-03">JPG, PNG. 최대 5MB</p>
             </div>
-            <button
-              className="mt-4 h-9 rounded-lg bg-bg-03 px-3 py-1 text-text-01 hover:bg-gray-800"
+            <Button
+              variant={loading ? "disabled" : "secondary"}
+              size="sm"
+              className="mt-4 flex h-9 items-center justify-center px-4 leading-snug"
               onClick={handleImageUpload}
               disabled={loading} // 로딩 중일 때 버튼 비활성화
             >
               {loading ? "업로드 중..." : "이미지 업로드"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
       {/* 상품명 */}
       <div className="w-[30vw] max-w-full space-y-2 pt-6">
-        <label className="block text-title2 font-bold">상품명</label>
+        <div className="flex items-center gap-1">
+          <label className="block text-title2 font-bold">상품명</label>
+          <span className="text-title2 font-bold text-primary-default">*</span>
+        </div>
         <input
           type="text"
           name="title"
@@ -332,7 +325,7 @@ const PurchaseModal = ({
       <div className="pt-10">
         {/* 완료 버튼 */}
         <Button
-          variant={title && image_url ? "secondary" : "disabled"} // 입력값에 따라 variant 변경
+          variant={title && image_url ? "primary" : "disabled"} // 입력값에 따라 variant 변경
           size="lg"
           className="w-full"
           onClick={handleSubmit}

@@ -17,7 +17,7 @@ import TagFilters from "./TagFilters";
 const SearchContents = () => {
   const { selectedCategory, isHydrated } = useCategoryStore();
   const [readyToRender, setReadyToRender] = useState(false);
-  const { query, page, tags, sort, handleSort, handleToggleTag, resetTags } = useSearchQuery();
+  const { query, page, tags, sort, handleSort, handleToggleTag, resetTags, handlePageChange } = useSearchQuery();
 
   const { Results, isPending, isError } = useSearchPosts(query, page, Object.values(tags).flat(), sort);
   const [isOpen, setIsOpen] = useState(false);
@@ -65,18 +65,21 @@ const SearchContents = () => {
       <section>
         <SearchResults Results={Results} isPending={isPending} />
       </section>
-      <Pagination Results={Results} />
+      <Pagination Results={Results} page={page} handlePageChange={handlePageChange} />
 
-      {isOpen && (
-        <SlideOver title="필터" onClose={() => setIsOpen(false)}>
-          <TagCheckFilters
-            selectedGroup={selectedCategory}
-            tags={tags}
-            handleToggleTag={handleToggleTag}
-            resetTags={resetTags}
-          />
-        </SlideOver>
-      )}
+      <Tablet>
+        {isOpen && (
+          <SlideOver title="필터" article="최대 4개까지 선택 가능해요" onClose={() => setIsOpen(false)}>
+            <TagCheckFilters
+              selectedGroup={selectedCategory}
+              tags={tags}
+              handleToggleTag={handleToggleTag}
+              resetTags={resetTags}
+              onClose={() => setIsOpen(false)}
+            />
+          </SlideOver>
+        )}
+      </Tablet>
     </>
   );
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import sampleImage from "@/assets/images/image_sample.png";
 import { Tablet } from "@/components/common/BreakPoints";
 import Carousel from "@/components/common/Carousel";
 import ImageModal from "@/components/shared/ImageModal";
@@ -17,6 +18,7 @@ type Props = {
 const ImageCarousel = ({ images, writerSpec, blur }: Props) => {
   const { isOpen, openModal, closeModal } = useModal();
   const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [isImgError, setIsImgError] = useState<boolean>(false);
   return (
     <>
       <ImageModal isOpen={isOpen} images={images} selectedImage={selectedImage} onClose={closeModal} />
@@ -29,7 +31,15 @@ const ImageCarousel = ({ images, writerSpec, blur }: Props) => {
         <Carousel slidesPerView={1} spaceBetween={0} arrow={false} pagination={true}>
           {images.map((image, index) => (
             <SwiperSlide key={index} className="thumbnail relative aspect-square w-full">
-              <Image src={image} alt={`이미지 ${index + 1}`} fill={true} placeholder="blur" blurDataURL={blur} />
+              <Image
+                src={isImgError || !images ? sampleImage : image}
+                alt={`이미지 ${index + 1}`}
+                fill={true}
+                sizes="(max-width: 768px) 100vw, 500px"
+                placeholder="blur"
+                blurDataURL={blur}
+                onError={() => setIsImgError(true)}
+              />
               <Tablet>
                 <button className="click-box outline-none" onClick={openModal}></button>
               </Tablet>

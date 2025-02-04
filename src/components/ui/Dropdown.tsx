@@ -1,5 +1,6 @@
 "use client";
 
+import useLockScroll from "@/lib/hooks/common/useLockScroll";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { X } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -33,28 +34,7 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
-  // Prevent body scrolling
-  const bodyRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (isTabletOrSmaller) {
-      if (!bodyRef.current) {
-        bodyRef.current = document.body;
-      }
-
-      if (isOpen && bodyRef.current) {
-        bodyRef.current.style.overflow = "hidden";
-      } else if (bodyRef.current) {
-        bodyRef.current.style.overflow = "";
-      }
-
-      return () => {
-        if (bodyRef.current) {
-          bodyRef.current.style.overflow = "";
-        }
-      };
-    }
-  }, [isOpen, isTabletOrSmaller]);
+  useLockScroll(isTabletOrSmaller && isOpen);
 
   const mobileUI = (
     <>
@@ -102,6 +82,10 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
           "opacity-0": !isOpen
         }
       )}
+      onClick={() => {
+        setIsOpen(false);
+        if (onClose) onClose();
+      }}
     >
       {children}
     </div>
@@ -109,7 +93,9 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
 
   return (
     <div className={className} ref={dropdownRef}>
-      <div onClick={toggleDropdown}>{trigger}</div>
+      <div className="cursor-pointer" onClick={toggleDropdown}>
+        {trigger}
+      </div>
       {isOpen && (isTabletOrSmaller ? mobileUI : desktopUI)}
     </div>
   );

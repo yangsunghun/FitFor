@@ -1,12 +1,11 @@
 "use client";
 
-import sampleImage from "@/assets/images/image_sample.png";
+import ProfileImageCircle from "@/components/shared/ProfileImageCircle";
 import { Button } from "@/components/ui/Button";
 import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { toast } from "@/lib/utils/common/toast";
-import Image from "next/image";
 import { useState } from "react";
 
 type CommentSectionProps = {
@@ -34,8 +33,13 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
     <>
       <p className="mb-4 text-title1 font-bold">댓글 ({comments.length})</p>
       <div className="mb-4 flex items-center justify-between">
-        <figure className="relative h-12 w-12 overflow-hidden rounded-full">
-          <Image src={(user && user.profile_image) || sampleImage} alt={user ? user.nickname : "비회원"} fill={true} />
+        <figure className="relative">
+          <ProfileImageCircle
+            profileImage={user && user.profile_image}
+            nickname={user ? user.nickname : "비회원"}
+            size={48}
+            className="h-12 w-12"
+          />
         </figure>
         <div className="relative flex h-16 w-[calc(100%-4rem)] gap-4 overflow-hidden rounded-2xl border border-line-02">
           <textarea
@@ -64,8 +68,13 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
       <ul className="mt-10">
         {comments?.map((comment) => (
           <li key={comment.id} className="mb-4 flex w-full items-start justify-between pb-4">
-            <figure className="relative h-12 w-12 overflow-hidden rounded-full">
-              <Image src={comment.users.profile_image || sampleImage} alt={comment.users.nickname} fill={true} />
+            <figure className="relative">
+              <ProfileImageCircle
+                profileImage={comment.users.profile_image}
+                nickname={comment.users.nickname}
+                size={48}
+                className="h-12 w-12"
+              />
             </figure>
             <div className="w-[calc(100%-4.25rem)]">
               <div className="flex justify-between">

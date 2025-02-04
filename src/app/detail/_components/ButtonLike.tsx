@@ -1,14 +1,12 @@
 "use client";
-
 import ToggleButton from "@/components/shared/ToggleButton";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useLike, useLikeCount } from "@/lib/hooks/detail/useLike";
 import { useAuthStore } from "@/lib/store/authStore";
 import { cn } from "@/lib/utils/common/className";
-import { toast } from "@/lib/utils/common/toast";
 import { Heart } from "@phosphor-icons/react";
 
-type LikeButtonProps = {
+type Props = {
   postId: string;
   styleType?: "masonry" | "list" | "detail" | "detailMob";
   iconSize: number;
@@ -16,46 +14,24 @@ type LikeButtonProps = {
   showNumber?: boolean;
 };
 
-const LikeButton = ({
-  postId,
-  styleType = "masonry",
-  iconSize,
-  iconWeight = "regular",
-  showNumber = false
-}: LikeButtonProps) => {
-  const buttonClass = cn("flex justify-center items-center ", {
-    "w-7 h-7 rounded-lg bg-bg-01 text-text-03": styleType === "masonry",
-    "gap-1 tb:text-text-02": styleType === "list",
-    "flex-col gap-2 text-text-03": styleType === "detail",
-    "gap-1 text-text-02": styleType === "detailMob"
-  });
-
+const LikeButton = ({ postId, styleType = "masonry", iconSize, iconWeight = "fill", showNumber = false }: Props) => {
   const { user } = useAuthStore();
-  const userId = user?.id;
+  const userId = user?.id || "guest";
 
+  const { isLiked, isPending, toggleLike } = useLike(postId, userId);
   const { likeCount } = useLikeCount(postId);
-  const { isLiked, isPending, toggleLike } = useLike(postId, userId ?? "");
-  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
   const responsiveIconSize = isTabletOrSmaller && styleType === "list" ? 16 : iconSize;
 
-  if (!userId) {
-    return (
-      <ToggleButton
-        btnStyle={buttonClass}
-        isActive={false}
-        count={styleType !== "masonry" ? likeCount : null}
-        onClick={() => toast("로그인이 필요합니다", 'warning')}
-        inactiveIcon={<Heart className="transition-color duration-300" size={responsiveIconSize} weight={iconWeight} />}
-        text={false}
-        showNumber={showNumber}
-      />
-    );
-  }
+  const buttonClass = cn("flex justify-center items-center text-text-02 transition-color duration-300", {
+    "text-primary-default": isLiked,
+    "w-7 h-7 rounded-lg bg-bg-01": styleType === "masonry",
+    "gap-1": styleType === "list" || styleType === "detailMob",
+    "flex-col gap-2": styleType === "detail"
+  });
 
-  if (isPending) {
-    return null;
-  }
+  if (isPending) return null;
 
   return (
     <ToggleButton
@@ -63,11 +39,8 @@ const LikeButton = ({
       isActive={isLiked}
       count={styleType !== "masonry" ? likeCount : null}
       onClick={toggleLike}
-      activeIcon={
-        <Heart className="transition-color text-primary-default duration-300" size={responsiveIconSize} weight="fill" />
-      }
-      inactiveIcon={<Heart className="transition-color duration-300" size={responsiveIconSize} weight={iconWeight} />}
-      text={false}
+      activeIcon={<Heart size={responsiveIconSize} weight="fill" />}
+      inactiveIcon={<Heart size={responsiveIconSize} weight={iconWeight} />}
       showNumber={showNumber}
     />
   );

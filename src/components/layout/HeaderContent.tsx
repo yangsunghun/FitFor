@@ -64,10 +64,11 @@ const HeaderContent = () => {
             <Link href="/chat" className="text-center">
               라이브
             </Link>
-            <button className="flex items-center gap-2" onClick={toggleOpen}>
+            <button className={clsx("flex items-center gap-2", { "text-text-04": isOpen })} onClick={toggleOpen}>
               카테고리
               <CaretDown
                 size={20}
+                weight={isOpen ? "bold" : "regular"}
                 className={clsx({
                   "rotate-180": isOpen,
                   "rotate-0": !isOpen

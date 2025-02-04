@@ -15,7 +15,7 @@ import LocationFilterMoblie from "./LocationFilterMoblie";
 import LocationTags from "./LocationTags";
 
 const LocationContents = () => {
-  const { query, page, sort, handleSort } = useLocationQuery();
+  const { query, page, sort, handleSort, handlePageChange } = useLocationQuery();
   const { Results, isPending, isError } = useLocationPosts(query, page, sort);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -33,9 +33,10 @@ const LocationContents = () => {
         </Tablet>
       </section>
 
-      <section className="relative my-6 h-[400px] w-full">
-        <KakaoMap />
+      <section className="relative mt-10 h-[400px] w-full overflow-hidden rounded-2xl tb:mb-[20px] tb:mt-0 tb:rounded-lg mb:h-[260px]">
+        <KakaoMap posts={Results} isPending={isPending} />
       </section>
+      <hr className="my-10 border-line-02 tb:hidden" />
       <div className="relative mb-10 flex items-center justify-between tb:mb-0 tb:h-[48px]">
         <p>
           총 <b>{Results?.total}</b>개
@@ -46,7 +47,7 @@ const LocationContents = () => {
       <section>
         <SearchResults Results={Results} isPending={isPending} />
       </section>
-      <Pagination Results={Results} />
+      <Pagination Results={Results} page={page} handlePageChange={handlePageChange} />
 
       <Tablet>
         {isOpen && (

@@ -49,7 +49,7 @@ const PostTagSection = ({
       <Tablet>
         <div className="cursor-pointer py-4" onClick={() => setIsTagModalOpen(true)}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center">
               <p className="text-title2 mb:text-body font-medium text-text-04">태그</p>
               <p className="text-title2 mb:text-body font-medium text-primary-default">*</p>
             </div>

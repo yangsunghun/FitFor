@@ -62,7 +62,7 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete, isMissing }: Produ
             >
               {purchases.length > 0
                 ? `${purchases.length}개의 상품이 추가되었습니다.`
-                : "착용한 상품을 최소 한 가지 입력해 주세요."}
+                : "착용한 상품을 최소 한 가지 이상 입력해 주세요."}
             </span>
           </div>
           <CaretRight size={20} className="text-text-03" />

@@ -44,9 +44,9 @@ const BodySizeSection = ({ bodySize, onChange }: BodySizeSectionProps) => {
       <Tablet>
         <div className="flex cursor-pointer items-center justify-between py-4" onClick={() => setIsModalOpen(true)}>
           <div className="flex flex-col gap-1">
-            <span className="font-medium text-text-04">신체 정보</span>
+            <span className="font-medium text-text-04 text-title2 mb:text-body">신체 정보</span>
             <span
-              className={`text-caption font-medium ${
+              className={`mb:text-caption font-medium ${
                 bodySize[0] && bodySize[1] ? "text-primary-default" : "text-text-03"
               }`}
             >

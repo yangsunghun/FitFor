@@ -16,8 +16,8 @@ const LocationSection = ({ address, onOpenModal }: LocationSectionProps) => {
       <Tablet>
         <div className="flex cursor-pointer items-center justify-between py-4" onClick={onOpenModal}>
           <div className="flex flex-col gap-1">
-            <span className="font-medium text-text-04">위치 찾기</span>
-            <span className={`text-caption font-medium ${address ? "text-primary-default" : "text-text-03"}`}>
+            <span className="font-medium text-text-04 text-title2 mb:text-body">위치 찾기</span>
+            <span className={`mb:text-caption font-medium ${address ? "text-primary-default" : "text-text-03"}`}>
               {address ? address : "현재 위치를 입력해 주세요."}
             </span>
           </div>

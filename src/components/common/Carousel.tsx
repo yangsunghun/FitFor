@@ -44,7 +44,10 @@ const Carousel = ({
         initialSlide={initialSlide}
         loop={loop}
         autoplay={autoplay}
-        navigation={navigation}
+        navigation={{
+          prevEl: ".prev",
+          nextEl: ".next"
+        }}
         pagination={pagination ? { clickable: true } : undefined}
         onSwiper={(swiperInstance) => {
           setSwiper(swiperInstance);
@@ -60,16 +63,18 @@ const Carousel = ({
       {arrow && (
         <>
           <button
-            className="slide-arrow prev absolute left-0 top-1/2 -translate-y-1/2 transform"
+            className="prev absolute left-10 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 transform items-center justify-center text-text-01 disabled:opacity-50"
             onClick={() => swiper?.slidePrev()}
+            disabled={swiper?.isBeginning}
           >
-            <CaretLeft />
+            <CaretLeft size={32} weight="bold" />
           </button>
           <button
-            className="slide-arrow next absolute right-0 top-1/2 -translate-y-1/2 transform"
+            className="next absolute right-10 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 transform items-center justify-center text-text-01 disabled:opacity-50"
             onClick={() => swiper?.slideNext()}
+            disabled={swiper?.isEnd}
           >
-            <CaretRight />
+            <CaretRight size={32} weight="bold" />
           </button>
         </>
       )}

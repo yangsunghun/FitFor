@@ -17,10 +17,10 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
 
   if (!post) {
     return {
-      title: "Fit4",
+      title: "FitFor",
       description: "삭제된 게시글",
       openGraph: {
-        title: "Fit4",
+        title: "FitFor",
         description: "삭제된 게시글",
         url: `https://fit4.vercel.app/detail/${params.id}`
       }
@@ -29,11 +29,11 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
   const maxDescriptionLength = 160;
 
   return {
-    title: `Fit4 - ${post.users.nickname}님의 룩북`,
+    title: `FitFor - ${post.users.nickname}님의 룩북`,
     description:
       post.content.length > maxDescriptionLength ? `${post.content.slice(0, maxDescriptionLength)}...` : post.content,
     openGraph: {
-      title: `Fit4 - ${post.users.nickname}님의 룩북`,
+      title: `FitFor - ${post.users.nickname}님의 룩북`,
       description:
         post.content.length > maxDescriptionLength ? `${post.content.slice(0, maxDescriptionLength)}...` : post.content,
       url: `https://fit4.vercel.app/detail/${params.id}`

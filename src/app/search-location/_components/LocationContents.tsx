@@ -45,7 +45,7 @@ const LocationContents = () => {
       </div>
 
       <section>
-        <SearchResults Results={Results} isPending={isPending} />
+        <SearchResults Results={Results} isPending={isPending} isLocation={true} />
       </section>
       <Pagination Results={Results} page={page} handlePageChange={handlePageChange} />
 

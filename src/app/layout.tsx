@@ -18,10 +18,10 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Fit4",
+  title: "FitFor",
   description: "나만의 스타일, 모두의 코디! 어떻게 입을지 고민될 땐 핏포에서 답을 찾아보세요",
   openGraph: {
-    title: `Fit4`,
+    title: `FitFor`,
     description: `나만의 스타일, 모두의 코디! 어떻게 입을지 고민될 땐 핏포에서 답을 찾아보세요`,
     url: `https://fit4.vercel.app`,
     images: {

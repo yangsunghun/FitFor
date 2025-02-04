@@ -27,7 +27,7 @@ const LikeButton = ({ postId, styleType = "masonry", iconSize, iconWeight = "fil
   const buttonClass = cn("flex justify-center items-center text-text-02 transition-color duration-300", {
     "text-primary-default": isLiked,
     "w-7 h-7 rounded-lg bg-bg-01": styleType === "masonry",
-    "gap-1": styleType === "list" || styleType === "detailMob",
+    "gap-2": styleType === "list" || styleType === "detailMob",
     "flex-col gap-2": styleType === "detail"
   });
 

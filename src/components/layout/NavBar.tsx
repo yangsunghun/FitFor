@@ -16,7 +16,7 @@ const NavBar = () => {
         <Suspense fallback={<p></p>}>
           <NavItem href="/home" location="/home" icon={<House weight="fill" size={24} />} label="홈" />
           <NavItem href="/search?popup=true" location="/search" icon={<MagnifyingGlass size={24} />} label="검색" />
-          <NavItem href="/chat" location="/chat" icon={<VideoCamera weight="fill" size={24} />} label="Live" />
+          <NavItem href="/chat" location="/chat" icon={<VideoCamera weight="fill" size={24} />} label="코칭" />
           <NavItem
             href="/bookmark"
             location="/bookmark"

@@ -26,7 +26,7 @@ export const useActiveTabs = (numberOfTabs: number = 5) => {
       // tab이 없는 경우 첫번째 탭 활성화
       setActiveTab("tab-0");
     }
-  });
+  }, [numberOfTabs]);
 
   // 활성화 된 탭을 변경할때마다 URL 변경하는 함수
   const handleTabChange = (value: string) => {

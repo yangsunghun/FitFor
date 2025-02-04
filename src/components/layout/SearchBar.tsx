@@ -87,7 +87,7 @@ const SearchBar = () => {
           placeholder="어떤 룩을 찾으시나요?"
           value={inputValue}
           onChange={(e) => handleInputChange(e.target.value)}
-          className="h-12 w-full rounded-lg bg-transparent pl-14 pr-2 text-title2 font-medium outline-black placeholder:text-text-03 tb:h-[44px] tb:text-body tb:text-text-03"
+          className="h-12 w-full rounded-lg bg-transparent pl-14 pr-2 font-medium outline-black placeholder:text-text-03 tb:h-[44px] tb:text-body tb:text-text-03"
         />
         {showDropdown && (filteredTags.length > 0 || searchHistory.length > 0) && (
           <ul className="dropdown shadow-emphasize absolute left-0 top-[calc(100%+0.75rem)] z-50 w-full rounded-2xl bg-white p-6 tb:left-[-4.55%] tb:top-[calc(100%+17px)] tb:w-screen tb:rounded-none tb:p-0 tb:shadow-none">
@@ -110,7 +110,7 @@ const SearchBar = () => {
                 {searchHistory.map((query, index) => (
                   <li
                     key={index}
-                    className="tb:inner flex cursor-pointer justify-between py-2 text-title2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
+                    className="tb:inner flex cursor-pointer justify-between py-2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
                   >
                     <button onClick={() => handleSelectHistory(query)} className="ellip1 flex-1 text-left">
                       {query}
@@ -138,7 +138,7 @@ const SearchBar = () => {
                 {filteredTags.slice(0, 5).map((tag) => (
                   <li
                     key={tag}
-                    className="tb:inner flex cursor-pointer justify-between py-2 text-title2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
+                    className="tb:inner mt-2 flex cursor-pointer justify-between py-2 text-text-03 tb:h-[55px] tb:p-0 tb:text-body tb:font-medium"
                   >
                     <button
                       onClick={() => {

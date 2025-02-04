@@ -11,11 +11,11 @@ import { fetchUnsavedPosts, TempSaveState } from "./useTempSaveHandlers";
 
 const supabase = createClient();
 
-type UsePostHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "handleChange"> & {
+type UsePostHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "originalDataRef"> & {
   setTempSaveState: Dispatch<SetStateAction<TempSaveState>>;
 };
 
-export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlersProps) => {
+export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }: UsePostHandlersProps) => {
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
   const router = useRouter();
 
@@ -152,16 +152,33 @@ export const usePostHandlers = ({ formState, setTempSaveState }: UsePostHandlers
       return;
     }
 
-    try {
-      const updatedPost = {
-        content,
-        upload_place: address,
-        body_size,
-        images,
-        tags
-      };
+    const updatedPost = {
+      content,
+      upload_place: address,
+      body_size,
+      images,
+      tags,
+      thumbnail_blur_url
+    };
 
-      // 게시물 업데이트
+    // 원본 데이터 비교:
+    if (
+      originalDataRef.current &&
+      JSON.stringify(updatedPost) ===
+        JSON.stringify({
+          content: originalDataRef.current.content,
+          upload_place: originalDataRef.current.address, // 주의: originalDataRef에 address로 저장되었는지 확인하세요.
+          body_size: originalDataRef.current.body_size,
+          images: originalDataRef.current.images,
+          tags: originalDataRef.current.tags,
+          thumbnail_blur_url: originalDataRef.current.thumbnail_blur_url
+        })
+    ) {
+      toast("업데이트할 내용이 없습니다.", "warning");
+      return;
+    }
+
+    try {
       const { error: postError } = await supabase.from("posts").update(updatedPost).eq("id", id);
       if (postError) throw postError;
 

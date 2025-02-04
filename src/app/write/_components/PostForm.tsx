@@ -77,13 +77,14 @@ const PostForm = ({
       }}
       isMissing={missingFields.includes("purchases")} // 필수 입력 경고 전달
     />
-
+    
     <PostTagSection
       tags={formState.tags}
       selectedCategory={selectedCategory}
       onChangeCategory={handleChangeCategory}
       toggleTagSelector={toggleTagSelector}
     />
+
     <AddressModal
       isOpen={formState.isModalOpen}
       onClose={() => handleFieldChange("isModalOpen", false)}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { Check, Plus, PushPin, Trash } from "@phosphor-icons/react";
+import { Check, Plus, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
@@ -92,7 +92,7 @@ export const ImageUploadMobile = ({
                       <Button
                         variant="disabled"
                         size="sm"
-                        className="absolute bottom-2 left-2 flex items-center gap-1 rounded h-6 px-1"
+                        className="absolute bottom-2 left-2 flex h-6 items-center gap-1 rounded px-1"
                         onClick={() => {
                           const updatedImages = [url, ...images.filter((img, i) => i !== index)];
                           setImages(updatedImages);
@@ -107,7 +107,7 @@ export const ImageUploadMobile = ({
                     <Button
                       variant="whiteLine"
                       size="sm"
-                      className="p-1 h-5 w-5 absolute top-2 right-2 !p-0 flex items-center justify-center border-none rounded-full !text-text-03"
+                      className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full border-none !p-0 p-1 !text-text-03"
                       onClick={() => handleDelete(index)}
                     >
                       <Trash size={12} />
@@ -117,7 +117,7 @@ export const ImageUploadMobile = ({
 
                 {/* 첫 번째 이미지에 썸네일 표시 */}
                 {index === 0 && url && (
-                  <div className="text-small absolute bottom-2 left-2 flex items-center gap-1 rounded bg-primary-default h-6 px-1 text-white">
+                  <div className="absolute bottom-2 left-2 flex h-6 items-center gap-1 rounded bg-primary-default px-1 text-small text-white">
                     <Check size={12} />
                     <span className="font-medium">썸네일</span>
                   </div>
@@ -126,7 +126,6 @@ export const ImageUploadMobile = ({
             );
           })}
       </div>
-
 
       {/* 필수 입력 경고 메시지 */}
       {isMissing && <p className="text-sm text-status-danger">이미지를 업로드해주세요.</p>}

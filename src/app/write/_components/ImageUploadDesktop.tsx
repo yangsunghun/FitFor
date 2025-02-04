@@ -12,8 +12,8 @@ type ImageUploadProps = {
   handleDrop: (event: DragEvent<HTMLDivElement>) => void;
   handleDelete: (index: number) => void;
   setImages: Dispatch<SetStateAction<string[]>>;
-  loadingStatus: boolean[];          // 추가
-  blurDataCache: (string | null)[];  // 추가
+  loadingStatus: boolean[]; // 추가
+  blurDataCache: (string | null)[]; // 추가
 };
 
 const MAX_IMAGES = 4; // 최대 이미지 개수
@@ -56,9 +56,7 @@ const ImageUploadDesktop = ({
           <div className="h-6 w-6 text-text-03">
             <ImageIcon size={24} />
           </div>
-          <div className="mt-1 text-caption font-medium leading-[1.5] text-text-03">
-            이미지 업로드하기
-          </div>
+          <div className="mt-1 text-caption font-medium leading-[1.5] text-text-03">이미지 업로드하기</div>
         </div>
       </div>
 
@@ -79,7 +77,9 @@ const ImageUploadDesktop = ({
                 }`}
               >
                 {/* 블러 이미지 or 업로드 중 메시지 */}
-                {currentBlur && <Image src={currentBlur} alt="Uploading or Uploaded" layout="fill" className="object-cover" />}
+                {currentBlur && (
+                  <Image src={currentBlur} alt="Uploading or Uploaded" layout="fill" className="object-cover" />
+                )}
                 {isUploading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white">
                     <span>이미지 업로드 중...</span>

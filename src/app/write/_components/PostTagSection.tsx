@@ -1,28 +1,29 @@
 import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import { Tags } from "@/components/ui/Tags";
 import { TAG_GROUPS } from "@/lib/constants/constants";
+import { getUpdatedTags } from "@/lib/utils/write/tag";
 import { CaretDown, CaretRight, CaretUp } from "@phosphor-icons/react";
 import { useState } from "react";
 import TagModal from "./TagModal";
-import { getUpdatedTags } from "@/lib/utils/write/tag";
 
 type PostTagSectionProps = {
   tags: string[];
   selectedCategory: string | null;
   onChangeCategory: (category: string) => void;
-  toggleTagSelector: (tag: string, allTags: string[], max: number, updateTagsState?: (tags: string[]) => void) => void;
+  onChangeTags: (tags: string[]) => void;
+  toggleTagSelector: (groupKey: string, tag: string, max: number) => void;
   maxTags?: number;
 };
 
 const PostTagSection = ({
-  tags: initialTags,
+  tags,
   selectedCategory,
   onChangeCategory,
+  onChangeTags,
   toggleTagSelector,
   maxTags = 7
 }: PostTagSectionProps) => {
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
-  const [tags, setTags] = useState(initialTags); // 태그 상태 관리
 
   const handleCategoryToggle = (category: string) => {
     if (selectedCategory === category) {
@@ -32,36 +33,72 @@ const PostTagSection = ({
     }
   };
 
-    // TagModal에 전달할 태그 토글 핸들러 (부모 state 직접 업데이트)
-    const handleToggleTag = (
-      groupKey: string,
-      tag: string,
-      updateTagsState?: (updatedTags: string[]) => void
-    ) => {
-      const { updatedTags, error } = getUpdatedTags(tags, groupKey, tag, maxTags);
-      if (error) return;
-      // 부모 state 업데이트
-      setTags(updatedTags);
-      // 모달 내부 로컬 상태 동기화를 위한 콜백 호출 (존재할 경우)
-      updateTagsState?.(updatedTags);
-    };
+  // TagModal에 전달할 태그 토글 핸들러 (부모 state 직접 업데이트)
+  const handleToggleTag = (groupKey: string, tag: string, updateTagsState?: (updatedTags: string[]) => void) => {
+    const { updatedTags, error } = getUpdatedTags(tags, groupKey, tag, maxTags);
+    if (error) return;
+    // 부모 state 업데이트
+    onChangeTags(updatedTags);
+    // 모달 내부 로컬 상태 동기화를 위한 콜백 호출 (존재할 경우)
+    updateTagsState?.(updatedTags);
+  };
 
   return (
     <>
       {/* Tablet(모바일) 레이아웃 */}
       <Tablet>
-        <div className="flex cursor-pointer items-center justify-between py-4" onClick={() => setIsTagModalOpen(true)}>
-          <div className="flex flex-col gap-1">
-            <div className="flex">
-              <p className="font-medium text-text-04">태그</p>
-              <p className="font-medium text-primary-default">*</p>
+        <div className="cursor-pointer py-4" onClick={() => setIsTagModalOpen(true)}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <p className="text-title2 mb:text-body font-medium text-text-04">태그</p>
+              <p className="text-title2 mb:text-body font-medium text-primary-default">*</p>
             </div>
-            <span className="text-caption font-medium text-text-03">
-              {tags.length === 0 ? "게시물과 관련된 태그를 달아주세요." : tags.join(", ")}
-            </span>
+            <div className="flex items-center gap-2">
+            {tags.length > 0 && (
+              <p className="text-text-03">
+                <span className="text-primary-default">{tags.length}</span> / {maxTags}
+              </p>
+            )}
+              <CaretRight size={20} className="text-text-03" />
+            </div>
           </div>
-          <CaretRight size={20} className="text-text-03" />
+          {/* 태그 리스트는 한 줄 아래로 */}
+          {tags.length === 0 ? (
+            <p className="mt-[2px] mb:text-caption text-text-03">게시물과 관련된 태그를 달아주세요.</p>
+          ) : (
+            <div className="mt-3 mb:mt-1 flex flex-row flex-wrap items-center gap-2">
+              {tags.map((tag) => (
+                <Tags key={tag} label={tag} variant="grayLine" size="sm" className="flex items-center justify-center" />
+              ))}
+            </div>
+          )}
         </div>
+        {isTagModalOpen && (
+          <TagModal
+            selectedGroup={null}
+            tags={TAG_GROUPS.reduce(
+              (acc, group) => {
+                // 부모 상태의 tags 배열에서 각 그룹에 해당하는 태그만 필터링합니다
+                acc[group.key] = group.tags.filter((tag) => tags.includes(tag));
+                return acc;
+              },
+              {} as { [key: string]: string[] }
+            )}
+            handleToggleTag={(groupKey, tag, updateTagsState) => {
+              // 여기서도 위의 handleToggleTag 함수를 그대로 사용하여 부모 state를 업데이트합니다
+              handleToggleTag(groupKey, tag, updateTagsState);
+            }}
+            resetTags={() => {
+              onChangeTags([]);
+            }}
+            onClose={() => setIsTagModalOpen(false)}
+            onSaveTags={(updatedTags) => {
+              // 모든 그룹의 태그를 flat하게 합쳐서 부모 state 업데이트합니다
+              onChangeTags(Object.values(updatedTags).flat());
+              setIsTagModalOpen(false);
+            }}
+          />
+        )}
       </Tablet>
 
       {/* MinTablet(태블릿 이상, 데스크탑) 레이아웃 */}
@@ -114,7 +151,7 @@ const PostTagSection = ({
                           <button
                             type="button"
                             key={tag}
-                            onClick={() => toggleTagSelector(tag, group.tags, group.max)}
+                            onClick={() => toggleTagSelector(group.key, tag, group.max)}
                             className="focus:outline-none"
                           >
                             <Tags
@@ -135,30 +172,6 @@ const PostTagSection = ({
           </div>
         </div>
       </MinTablet>
-
-      {isTagModalOpen && (
-        <TagModal
-        selectedGroup={null}
-        tags={TAG_GROUPS.reduce((acc, group) => {
-          // 부모 상태의 tags 배열에서 각 그룹에 해당하는 태그만 필터링합니다
-          acc[group.key] = group.tags.filter((tag) => tags.includes(tag));
-          return acc;
-        }, {} as { [key: string]: string[] })}
-        handleToggleTag={(groupKey, tag, updateTagsState) => {
-          // 여기서도 위의 handleToggleTag 함수를 그대로 사용하여 부모 state를 업데이트합니다
-          handleToggleTag(groupKey, tag, updateTagsState);
-        }}
-        resetTags={() => {
-          setTags([]);
-        }}
-        onClose={() => setIsTagModalOpen(false)}
-        onSaveTags={(updatedTags) => {
-          // 모든 그룹의 태그를 flat하게 합쳐서 부모 state 업데이트합니다
-          setTags(Object.values(updatedTags).flat());
-          setIsTagModalOpen(false);
-        }}
-      />
-      )}
     </>
   );
 };

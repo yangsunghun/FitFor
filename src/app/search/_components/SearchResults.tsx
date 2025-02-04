@@ -6,10 +6,10 @@ import type { PostType } from "@/lib/types/post";
 type SearchResultsProps = {
   Results: { items: PostType[]; total: number } | undefined;
   isPending: boolean;
-  isLocation: boolean;
+  isLocation?: boolean;
 };
 
-const SearchResults = ({ Results, isPending, isLocation }: SearchResultsProps) => {
+const SearchResults = ({ Results, isPending, isLocation = false }: SearchResultsProps) => {
   if (!Results || Results.items.length === 0)
     return <p className="mt-32 text-center text-subtitle font-medium text-text-02">검색 결과가 없습니다.</p>;
 

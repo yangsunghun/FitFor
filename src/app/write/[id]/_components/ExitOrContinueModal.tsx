@@ -6,17 +6,11 @@ import { useRouter } from "next/navigation";
 
 type ExitOrContinueModalProps = {
   isOpen: boolean;
-  postId: string; // 게시글 ID (나가기 시 상세페이지로 이동)
   onClose: () => void; // 모달 닫기 핸들러 (이어 작성하기 용)
+  onExit: () => void;  // "나가기" 버튼 클릭 시 호출될 콜백
 };
 
-const ExitOrContinueModal = ({ isOpen, postId, onClose }: ExitOrContinueModalProps) => {
-  const router = useRouter();
-
-  // "나가기" 버튼 클릭 시 상세 페이지로 이동
-  const handleExit = () => {
-    router.push(`/detail/${postId}`);
-  };
+const ExitOrContinueModal = ({ isOpen, onClose, onExit }: ExitOrContinueModalProps) => {
 
   if (!isOpen) return null; // 모달이 열려있지 않으면 렌더링하지 않음
 
@@ -36,7 +30,7 @@ const ExitOrContinueModal = ({ isOpen, postId, onClose }: ExitOrContinueModalPro
         <Button
           variant="disabled"
           size="lg"
-          onClick={handleExit}
+          onClick={onExit}
           className="flex w-full items-center justify-center px-6 py-4 tb:w-[195px] mb:w-[151px] mb:px-4 mb:py-3"
         >
           <span className="text-subtitle font-medium leading-[30px] text-text-04 tb:text-title2 mb:text-body">

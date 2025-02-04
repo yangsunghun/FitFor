@@ -82,7 +82,11 @@ const PostForm = ({
       tags={formState.tags}
       selectedCategory={selectedCategory}
       onChangeCategory={handleChangeCategory}
-      toggleTagSelector={toggleTagSelector}
+      toggleTagSelector={toggleTagSelector}  
+      onChangeTags={(updatedTags) => {
+        // formState의 태그 상태를 업데이트하는 함수 호출
+        handleFieldChange("tags", updatedTags);
+      }}
     />
 
     <AddressModal

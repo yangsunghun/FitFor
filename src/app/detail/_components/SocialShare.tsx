@@ -42,7 +42,7 @@ const SocialShare = ({ postUrl, postTitle, thumbnail, writer, showText, icon }: 
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: `${writer} 님의 룩북입니다. - Fit4`,
+        title: `${writer} 님의 룩북입니다. - FitFor`,
         description: postTitle,
         imageUrl: thumbnail, // 게시물 썸네일 이미지 URL
         link: {

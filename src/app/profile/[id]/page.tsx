@@ -15,10 +15,10 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
 
   if (!otherUser) {
     return {
-      title: "Fit4",
+      title: "FitFor",
       description: "삭제된 게시글",
       openGraph: {
-        title: "Fit4",
+        title: "FitFor",
         description: "삭제된 게시글",
         url: `https://fit4.vercel.app/profile/${params.id}`
       }
@@ -27,13 +27,13 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
   const maxDescriptionLength = 160;
 
   return {
-    title: `Fit4 - ${otherUser.nickname}님의 프로필`,
+    title: `FitFor - ${otherUser.nickname}님의 프로필`,
     description:
       otherUser.introduction.length > maxDescriptionLength
         ? `${otherUser.introduction.slice(0, maxDescriptionLength)}...`
         : otherUser.introduction,
     openGraph: {
-      title: `Fit4 - ${otherUser.nickname}님의 프로필`,
+      title: `FitFor - ${otherUser.nickname}님의 프로필`,
       description:
         otherUser.introduction.length > maxDescriptionLength
           ? `${otherUser.introduction.slice(0, maxDescriptionLength)}...`

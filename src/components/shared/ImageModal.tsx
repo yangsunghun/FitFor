@@ -32,6 +32,7 @@ const ImageModal = ({ images, isOpen, onClose, selectedImage, isPagination = tru
             setCurrentImage(images[activeIndex]);
           }}
           initialSlide={images.indexOf(selectedImage)}
+          arrow={true}
           pagination={isPagination}
         >
           {images.map((image, index) => (

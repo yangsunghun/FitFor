@@ -12,9 +12,10 @@ type ImageModalProps = {
   onClose: () => void;
   images: string[];
   selectedImage: string;
+  isPagination?: boolean;
 };
 
-const ImageModal = ({ images, isOpen, onClose, selectedImage }: ImageModalProps) => {
+const ImageModal = ({ images, isOpen, onClose, selectedImage, isPagination = true }: ImageModalProps) => {
   const [currentImage, setCurrentImage] = useState(selectedImage);
   const swiperRef = useRef<SwiperClass | null>(null);
 
@@ -31,7 +32,7 @@ const ImageModal = ({ images, isOpen, onClose, selectedImage }: ImageModalProps)
             setCurrentImage(images[activeIndex]);
           }}
           initialSlide={images.indexOf(selectedImage)}
-          pagination={true}
+          pagination={isPagination}
         >
           {images.map((image, index) => (
             <SwiperSlide key={index} className="relative h-screen w-fit self-center text-center">

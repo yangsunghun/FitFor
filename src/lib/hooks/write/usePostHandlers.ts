@@ -5,7 +5,8 @@ import { Database } from "@/lib/types/supabase";
 import { toast } from "@/lib/utils/common/toast";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import useMediaQuery from "../common/useMediaQuery";
 import { UseFormStateHandlersReturn } from "./useFormStateHandlers"; // formState 타입 가져오기
 import { fetchUnsavedPosts, TempSaveState } from "./useTempSaveHandlers";
 
@@ -18,6 +19,7 @@ type UsePostHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "orig
 export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }: UsePostHandlersProps) => {
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
   const router = useRouter();
+  const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   const [missingFields, setMissingFields] = useState<string[]>([]); // 누락된 필드를 상태로 관리
   const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
@@ -32,6 +34,12 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
     setMissingFields(newMissingFields); // 누락된 필드 상태 업데이트
     return newMissingFields.length === 0; // 모든 필드가 채워졌는지 여부 반환
   };
+
+  useEffect(() => {
+    if (isTabletOrSmaller) {
+      validateFields();
+    }
+  }, [content, images, purchases, tags]);
 
   // 값 변경 시 누락된 필드 실시간 업데이트
   const updateMissingFields = (field: string, value: any) => {
@@ -53,7 +61,9 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
   const handleSubmit = async (handleStartSubmit: () => void, handleEndSubmit: () => void) => {
     if (!validateFields()) {
       // 유효하지 않은 경우 메시지 표시
-      toast("필수 항목을 모두 입력해주세요!", "warning");
+      if (!isTabletOrSmaller) {
+        toast("필수 항목을 모두 입력해주세요!", "warning");
+      }
       window.scrollTo(0, 0); // 즉시 최상단으로 이동
       return;
     }

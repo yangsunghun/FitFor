@@ -2,16 +2,14 @@
 
 import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
-import { useRouter } from "next/navigation";
 
 type ExitOrContinueModalProps = {
   isOpen: boolean;
   onClose: () => void; // 모달 닫기 핸들러 (이어 작성하기 용)
-  onExit: () => void;  // "나가기" 버튼 클릭 시 호출될 콜백
+  onExit: () => void; // "나가기" 버튼 클릭 시 호출될 콜백
 };
 
 const ExitOrContinueModal = ({ isOpen, onClose, onExit }: ExitOrContinueModalProps) => {
-
   if (!isOpen) return null; // 모달이 열려있지 않으면 렌더링하지 않음
 
   return (

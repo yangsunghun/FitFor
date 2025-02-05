@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/Button";
 
 type SubmitButtonProps = {
   onSubmit: () => void;
-}
+};
 
 const SubmitButton = ({ onSubmit }: SubmitButtonProps) => {
   return (

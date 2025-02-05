@@ -126,9 +126,6 @@ export const ImageUploadMobile = ({
             );
           })}
       </div>
-
-      {/* 필수 입력 경고 메시지 */}
-      {isMissing && <p className="text-status-danger mb:text-caption">이미지를 업로드해주세요.</p>}
     </div>
   );
 };

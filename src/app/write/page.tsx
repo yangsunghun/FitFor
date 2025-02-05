@@ -22,7 +22,7 @@ const WritePage = () => {
     <div className="mx-auto max-w-[700px] pb-20 pt-20 tb:pt-10 mb:pt-4">
       <PostHeader mode="post" />
       <PostForm {...pageState} mode="post" />
-      <SubmitButton onSubmit={handleSubmit} />
+      <SubmitButton onSubmit={handleSubmit} missingFields={pageState.missingFields} />
       <ScrollTopButton />
       <ExitTempSaveModal
         isOpen={pageState.state.isExitModalOpen}

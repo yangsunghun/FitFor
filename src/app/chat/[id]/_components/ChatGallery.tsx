@@ -86,7 +86,13 @@ const ChatGallery = ({ roomId }: ChatGalleryProps) => {
         ))}
       </div>
 
-      <ImageModal isOpen={isModalOpen} images={images} selectedImage={selectedImage} onClose={closeModal} />
+      <ImageModal
+        isOpen={isModalOpen}
+        images={images}
+        selectedImage={selectedImage}
+        onClose={closeModal}
+        isPagination={false}
+      />
     </div>
   );
 };

@@ -13,6 +13,7 @@ type PostTagSectionProps = {
   onChangeTags: (tags: string[]) => void;
   toggleTagSelector: (groupKey: string, tag: string, max: number) => void;
   maxTags?: number;
+  isMissing?: boolean; // 필수 입력 경고 표시 여부
 };
 
 const PostTagSection = ({
@@ -21,7 +22,8 @@ const PostTagSection = ({
   onChangeCategory,
   onChangeTags,
   toggleTagSelector,
-  maxTags = 7
+  maxTags = 7,
+  isMissing
 }: PostTagSectionProps) => {
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
 
@@ -33,13 +35,11 @@ const PostTagSection = ({
     }
   };
 
-  // TagModal에 전달할 태그 토글 핸들러 (부모 state 직접 업데이트)
+  // TagModal에 전달할 태그 토글 핸들러
   const handleToggleTag = (groupKey: string, tag: string, updateTagsState?: (updatedTags: string[]) => void) => {
     const { updatedTags, error } = getUpdatedTags(tags, groupKey, tag, maxTags);
     if (error) return;
-    // 부모 state 업데이트
     onChangeTags(updatedTags);
-    // 모달 내부 로컬 상태 동기화를 위한 콜백 호출 (존재할 경우)
     updateTagsState?.(updatedTags);
   };
 
@@ -49,24 +49,23 @@ const PostTagSection = ({
       <Tablet>
         <div className="cursor-pointer py-4" onClick={() => setIsTagModalOpen(true)}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
-              <p className="text-title2 mb:text-body font-medium text-text-04">태그</p>
-              <p className="text-title2 mb:text-body font-medium text-primary-default">*</p>
+            <div className="flex items-center">
+              <p className="text-title2 font-medium text-text-04 mb:text-body">태그</p>
+              <p className="text-title2 font-medium text-primary-default mb:text-body">*</p>
             </div>
             <div className="flex items-center gap-2">
-            {tags.length > 0 && (
-              <p className="text-text-03">
-                <span className="text-primary-default">{tags.length}</span> / {maxTags}
-              </p>
-            )}
+              {tags.length > 0 && (
+                <p className="text-text-03">
+                  <span className="text-primary-default">{tags.length}</span> / {maxTags}
+                </p>
+              )}
               <CaretRight size={20} className="text-text-03" />
             </div>
           </div>
-          {/* 태그 리스트는 한 줄 아래로 */}
           {tags.length === 0 ? (
-            <p className="mt-[2px] mb:text-caption text-text-03">게시물과 관련된 태그를 달아주세요.</p>
+            <p className="mt-[2px] text-text-03 mb:text-caption">게시물과 관련된 태그를 달아주세요.</p>
           ) : (
-            <div className="mt-3 mb:mt-1 flex flex-row flex-wrap items-center gap-2">
+            <div className="mt-3 flex flex-row flex-wrap items-center gap-2 mb:mt-1">
               {tags.map((tag) => (
                 <Tags key={tag} label={tag} variant="grayLine" size="sm" className="flex items-center justify-center" />
               ))}
@@ -78,14 +77,12 @@ const PostTagSection = ({
             selectedGroup={null}
             tags={TAG_GROUPS.reduce(
               (acc, group) => {
-                // 부모 상태의 tags 배열에서 각 그룹에 해당하는 태그만 필터링합니다
                 acc[group.key] = group.tags.filter((tag) => tags.includes(tag));
                 return acc;
               },
               {} as { [key: string]: string[] }
             )}
             handleToggleTag={(groupKey, tag, updateTagsState) => {
-              // 여기서도 위의 handleToggleTag 함수를 그대로 사용하여 부모 state를 업데이트합니다
               handleToggleTag(groupKey, tag, updateTagsState);
             }}
             resetTags={() => {
@@ -93,12 +90,12 @@ const PostTagSection = ({
             }}
             onClose={() => setIsTagModalOpen(false)}
             onSaveTags={(updatedTags) => {
-              // 모든 그룹의 태그를 flat하게 합쳐서 부모 state 업데이트합니다
               onChangeTags(Object.values(updatedTags).flat());
               setIsTagModalOpen(false);
             }}
           />
         )}
+        {isMissing && <p className="text-status-danger mb:text-caption">태그를 추가해주세요.</p>}
       </Tablet>
 
       {/* MinTablet(태블릿 이상, 데스크탑) 레이아웃 */}
@@ -135,9 +132,7 @@ const PostTagSection = ({
                         <CaretDown size={24} className="text-text-03" />
                       )}
                     </button>
-
                     {selectedTags.length > 0 && <p className="mt-1 text-text-03">{selectedTags.join(", ")}</p>}
-
                     {/* 토글이 열렸을 때만 태그 선택 UI 표시 */}
                     <div
                       className={`overflow-hidden ${
@@ -171,6 +166,7 @@ const PostTagSection = ({
             })}
           </div>
         </div>
+        {isMissing && <p className="pt-4 text-status-danger">주제와 관련된 태그를 추가해주세요.</p>}
       </MinTablet>
     </>
   );

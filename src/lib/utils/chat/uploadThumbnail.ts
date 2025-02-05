@@ -35,7 +35,7 @@ export const uploadThumbnail = async (file: File) => {
 
     return publicUrl; // 공개 URL 반환
   } catch (error) {
-    console.error("Error uploading thumbnail:", error);
+    console.error("썸네일 URL 업로드 실패", error);
     throw error;
   }
 };

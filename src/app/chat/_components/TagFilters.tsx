@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/Button";
 import { TAG_GROUPS } from "@/lib/constants/constants";
 import { X } from "@phosphor-icons/react";
 
@@ -7,9 +8,10 @@ type TagFiltersProps = {
   tags: { [key: string]: string[] };
   handleToggleTag: (groupKey: string, tag: string) => void;
   resetTags: () => void;
+  onClose: () => void;
 };
 
-const TagFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: TagFiltersProps) => {
+const TagFilters = ({ selectedGroup, tags, handleToggleTag, resetTags, onClose }: TagFiltersProps) => {
   // 선택된 태그
   const selectedTags = Object.entries(tags).flatMap(([groupKey, groupTags]) =>
     groupTags.map((tag) => ({ groupKey, tag }))
@@ -17,7 +19,7 @@ const TagFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: TagFilt
 
   return (
     <>
-      <div className="relative flex flex-wrap justify-between bg-bg-02 text-caption font-medium text-text-03">
+      <div className="relative flex min-h-[44px] flex-wrap justify-between bg-bg-02 text-caption font-medium text-text-03">
         {selectedTags.length > 0 && (
           <div className="inner flex flex-wrap gap-2 py-[12px] pr-[33px]">
             {selectedTags.map(({ groupKey, tag }) => (
@@ -55,6 +57,16 @@ const TagFilters = ({ selectedGroup, tags, handleToggleTag, resetTags }: TagFilt
           ))}
         </div>
       ))}
+
+      <div className="inner">
+        <Button
+          onClick={onClose}
+          className="text-text-body w-full"
+          variant={selectedTags.length > 0 ? "primary" : "disabled"}
+        >
+          적용하기
+        </Button>
+      </div>
     </>
   );
 };

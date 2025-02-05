@@ -6,8 +6,8 @@ import { useWritePageState } from "@/lib/hooks/write/useWritePageState";
 import ContinuePostModal from "./_components/ContinuePostModal";
 import ExitTempSaveModal from "./_components/ExitTempSaveModal";
 import PostForm from "./_components/PostForm";
-import SubmitButton from "./_components/SubmitButton";
 import PostHeader from "./_components/PostHeader";
+import SubmitButton from "./_components/SubmitButton";
 
 const WritePage = () => {
   const pageState = useWritePageState();

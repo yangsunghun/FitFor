@@ -12,9 +12,9 @@ const ContentSection = ({ content, onChange, isMissing }: ContentSectionProps) =
   const isMobileOrSmaller = useMediaQuery("(max-width: 480px)");
 
   return (
-    <div className="space-y-2">
+    <div>
       {/* 제목 영역 */}
-      <div className="flex items-center">
+      <div className="flex items-center pb-2">
         <span className="text-title2 font-bold text-text-04 tb:font-medium mb:text-body">본문</span>
         <span className="text-title2 font-bold text-primary-default mb:text-body mb:font-medium">*</span>
       </div>
@@ -33,9 +33,7 @@ const ContentSection = ({ content, onChange, isMissing }: ContentSectionProps) =
             : "예시 - 소개팅 가야하는데 도와주세요"
         }
       />
-      {isMissing && (
-        <p className="pt-2 text-title2 font-medium text-status-danger tb:text-body">본문을 입력해주세요.</p>
-      )}
+      {isMissing && <p className="pt-4 text-status-danger tb:pt-2 mb:text-caption">본문을 입력해주세요.</p>}
     </div>
   );
 };

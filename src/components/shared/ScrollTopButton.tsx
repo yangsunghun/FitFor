@@ -18,8 +18,6 @@ const ScrollTopButton = ({
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)"); // 반응형 여부 확인
   const size = isTabletOrSmaller ? 24 : 40; // 디바이스 크기에 따라 아이콘 크기 설정
   const [animateIn, setAnimateIn] = useState(false); // 애니메이션 효과를 위한 상태 (초기에는 true로 설정)
-  // isFloatingOpen이 true면 렌더링하지 않음
-  if (isFloatingOpen) return null;
 
   // 스크롤 상태를 확인하여 버튼 표시 여부 결정
   const handleScroll = useCallback(() => {
@@ -44,6 +42,9 @@ const ScrollTopButton = ({
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
+
+  // isFloatingOpen이 true면 렌더링하지 않음 (조건부 렌더링, 모든 hook 호출 이후에 하기)
+  if (isFloatingOpen) return null;
 
   // 최상단으로 이동
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });

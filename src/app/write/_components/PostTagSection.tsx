@@ -95,7 +95,6 @@ const PostTagSection = ({
             }}
           />
         )}
-        {isMissing && <p className="text-status-danger mb:text-caption">태그를 추가해주세요.</p>}
       </Tablet>
 
       {/* MinTablet(태블릿 이상, 데스크탑) 레이아웃 */}

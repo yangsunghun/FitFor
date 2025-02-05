@@ -125,163 +125,64 @@
 
 ## 🕹️ 주요기능
 
-### 메인(검색) 페이지
+### 메인 페이지
 
-- FitFor의 메인 페이지를 통해 찾고 싶은 다양한 룩북을 간단히 찾고 검색할 수 있습니다. Mansory layout을 활용한 다양한 룩북을 한눈에 확인할 수 있습니다.
+![Home](https://github.com/user-attachments/assets/aed4bc7d-28d0-4692-b9fd-e77b86cf8611)
 
-<table>
-  <tr>
-    <td>
-      <img src="https://github.com/user-attachments/assets/f3abeac9-2e84-4735-a1d1-38a49436ef63" height="300" alt="FitFor MainPage PC">
-    </td>
-    <td>
-      <img src="https://github.com/user-attachments/assets/1d719b0e-d9f2-44c7-8210-3adb9654a889" height="300" alt="FitFor MainPage Mobile">
-    </td>
-  </tr>
-</table>
+### 검색 페이지
 
-#### 세부 기능
-
-<details>
-<summary><strong>레이아웃 형태 변경 기능</strong></summary>
-
-- masonry 레이아웃과 일반 리스트 형태의 레이아웃을 선택하여 게시물을 확인할 수 있습니다.
-
-<table>
-  <tr>
-    <td>
-      <img src="https://github.com/user-attachments/assets/1d60801d-bea4-44a4-bd4d-b4f296575116" alt="MainPage Mansory">
-    </td>
-    <td>
-      <img src="https://github.com/user-attachments/assets/b93bd9da-d784-441a-afc2-8dabbc1c764e"  alt="MainPage List">
-    </td>
-  </tr>
-</table>
-
-</details>
-
-<details>
-<summary><strong>테마별 룩북 리스트 및 필터링 검색</strong></summary>
-
-- 검색 페이지에서 지금까지 작성된 룩북 리스트를 페이지네이션으로 모두 확인할 수 있고 필터링 검색을 통해 자신이 찾고자 하는 조건에 맞는 룩북을 찾을 수 있습니다.
-
-<img src="https://github.com/user-attachments/assets/67a599b3-9753-46c0-a557-8ad766b90aaa"  alt="MainPage TagFilter Search">
-
-</details>
-
-<details>
-<summary><strong>카테고리 선택 기능 및 검색</strong></summary>
-
-- 헤더에서 바로 카테고리를 선택하여 원하는 주제의 룩북을 탐색할 수 있습니다.
-- 키워드와 태그를 조합하여 원하는 룩북을 탐색할 수 있습니다.
-  그리고 나온 검색 결과를 최신 순, 좋아요 순, 조회수 순으로 정렬할 수 있습니다.
-
-<table>
-  <tr>
-    <td>
-      <img src="https://github.com/user-attachments/assets/33999b1f-1e36-4912-9a79-202ce22b54c7"  alt="MainPage Category">
-    </td>
-    <td>
-      <img src="https://github.com/user-attachments/assets/46d35971-5cae-4a79-b9a8-9e08ab0f1c10"  alt="MainPage Category Search">
-    </td>
-  </tr>
-</table>
-
-</details>
-
-<details>
-<summary><strong>룩북 좋아요, 북마크 기능 </strong></summary>
-
-- 관심이 있는 룩북을 북마크하고, 북마크 페이지에서 확인해볼 수 있습니다.
-- 북마크 목록을 손쉽게 삭제하여 관리 할 수 있습니다.
-
-<table>
-  <tr>
-    <td>
-      <img src="https://github.com/user-attachments/assets/5cadc9a8-f15b-45f6-8461-84cd5d879426" alt="Bookmark Page">
-    </td>
-    <td>
-      <img src="https://github.com/user-attachments/assets/ff1b0e42-0b99-4f66-89d4-f1f4a292b0c4"  alt="Bookmark Edit">
-    </td>
-  </tr>
-</table>
-
-</details>
+![Search](https://github.com/user-attachments/assets/b8a896bf-cfa3-499d-804e-9217b8875149)
 
 ### 상세 페이지
 
-- 게시물 상세 페이지에서는 상품정보, 다양한 각도의 룩북 사진을 확인할 수 있습니다. 또한 좋아요와 북마크를 통해 원하는 룩북을 저장하고 댓글도 달 수 있습니다.
-
-<table>
-  <tr>
-    <td>
-      <img src="https://github.com/user-attachments/assets/3cbde15a-c991-4f3a-965d-e2e377d3e440" height="300" alt="FitFor Details PC">
-    </td>
-    <td>
-      <img src="https://github.com/user-attachments/assets/e6cdf7bc-6d2d-4b4a-8f2c-f006b82ca4b7"  height="300" alt="FitFor Details Mobile">
-    </td>
-  </tr>
-</table>
-
-#### 세부 기능
-
-<details>
-<summary><strong>Intercepting Route를 이용한 게시물 미리보기</strong></summary>
-
-- 페이지를 이동하지 않고도 필요한 정보를 모달 형태로 제공할 수 있어,
-  사용자에게 끊김 없는 탐색 경험을 제공합니다.
-
-<img src="https://github.com/user-attachments/assets/9004059e-f0c5-4f21-b590-cf37d6e9b780"  alt="FitFor Details Intercepting Route">
-
-</details>
-
-<details>
-<summary><strong>이미지 전체화면 보기</strong></summary>
-
-- 이미지에 관련된 어플리케이션이기 때문에 이미지의 전체화면을 제공하고 있습니다. 해당 화면에서 슬라이드를 통해 다음 이미지로 넘어갈 수 있습니다.
-
-<img src="https://github.com/user-attachments/assets/38cc08b1-321a-49fc-bb57-becdaf706887"  alt="FitFor Full Image">
-
-</details>
-
-<details>
-<summary><strong>게시물 SNS 공유 기능</strong></summary>
-
-- 공유하고자 하는 게시물을, 페이스북, 트위터, 카카오톡으로 공유할 수 있습니다
-  또한 현재 페이지 링크를 복사하여 직접 공유할 수 있습니다.
-
-<img src="https://github.com/user-attachments/assets/170b1f4b-00dd-4f15-b3c9-327dba07c111" alt="FitFor SNS link share">
-
-</details>
-
-<details>
-<summary><strong>구매처 바로가기</strong></summary>
-
-- 글 작성자가 내용으로, 구매처 정보와 해당 의상의 바로가기 링크가 있다면
-  구매할 수 있는 페이지로 이동할 수 있습니다.
-
-<img src="https://github.com/user-attachments/assets/27a16eb3-b418-4e02-a08b-ba93b331c66d" alt="FitFor Product Link">
-
-</details>
-
-<details>
-<summary><strong>댓글 기능</strong></summary>
-
-- 게시글 댓글 기능으로 사용자들간의 소통이 가능합니다.
-
-<img src="https://github.com/user-attachments/assets/4a9fab4b-587a-47f3-a0da-5aaa9a95ae45" alt="FitFor Comment">
-
-</details>
+![Details](https://github.com/user-attachments/assets/20ded670-4ac7-4f83-a32e-f96bf250a0bd)
 
 ### 작성 페이지
 
+![Write](https://github.com/user-attachments/assets/40ec922c-91ac-4e5d-a97a-464824a8ae78)
+
 ### 코칭 페이지
+
+![Coaching](https://github.com/user-attachments/assets/e12354ca-df44-4214-bc6d-cc9011b98d67)
 
 ### 로그인/온보딩
 
+![Login/Onboard](https://github.com/user-attachments/assets/b6c429ea-0ae1-483f-b303-1fdb077d48a9)
+
 ### 마이 페이지
 
+![MyPage](https://github.com/user-attachments/assets/3300ca8c-ee47-49cd-ab4d-08376ddd57dc)
+
 ## ⚙️ 기술 스택
+
+#### ✔️ 프레임워크 및 라이브러리
+
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![Zustand](https://img.shields.io/badge/zustand-orange?style=for-the-badge&logo=zustand&logoColor=white)
+![Tanstack Query](https://img.shields.io/badge/Tanstack_Query-FF4154?style=for-the-badge&logo=ReactQuery&logoColor=white)
+![Zod](https://img.shields.io/badge/zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white)
+![TailwindCss](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![PhosphorIcons](https://img.shields.io/badge/Phosphor_Icons-A4B55B?style=for-the-badge&logo=phosphor-icons&logoColor=white)
+![PhosphorIcons](https://img.shields.io/badge/ShadCN-000000?style=for-the-badge&logo=shadcn&logoColor=white)
+![KakaoMap](https://img.shields.io/badge/Kakao_MAP-FFEB00?style=for-the-badge&logo=kakao&logoColor=1a1a1a)
+
+#### ✔️ 버전 컨트롤 및 배포
+
+![Git](https://img.shields.io/badge/GIT-000000?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
+#### ✔️ 데이터베이스
+
+![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=49EB7C)
+
+#### ✔️ 협업, 설계
+
+![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
+![Figma](https://img.shields.io/badge/Figma-EC5990?style=for-the-badge&logo=figma&logoColor=white)
+![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
 
 ## 🏗 아키텍처
 
@@ -569,6 +470,11 @@
 ## 💥 트러블슈팅
 
 ## ⏳ 향후 목표
+
+- 로그인/온보딩 라우팅의 방법의 개선
+- 날씨 기반의 데이터에 따른 룩북 추천
+- 더 다양한 인증/배지 시스템 구축
+- (더 추가 예정)
 
 ## 🌱 회고
 

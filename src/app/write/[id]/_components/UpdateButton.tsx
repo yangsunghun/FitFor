@@ -1,3 +1,5 @@
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
+import { Button } from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
 
 type UpdateButtonProps = {
@@ -9,20 +11,30 @@ const UpdateButton = ({ postId, onSubmit }: UpdateButtonProps) => {
   const router = useRouter();
 
   return (
-    <div className="flex justify-center gap-6 pt-20">
-      <button
-        onClick={() => router.push(`/detail/${postId}`)}
-        className="rounded-lg border border-primary-default bg-bg-01 px-8 py-4 text-body text-primary-default"
-      >
-        뒤로 가기
-      </button>
-      <button
-        onClick={onSubmit}
-        className="rounded-lg bg-primary-default px-8 py-4 text-body text-bg-01"
-      >
-        수정 완료
-      </button>
-    </div>
+    <>
+      <Tablet>
+        <div className="flex justify-center gap-6 pt-[110px] px-4">
+          <Button variant="primary" size="lg" onClick={onSubmit} className="w-full">
+            수정하기
+          </Button>
+        </div>
+      </Tablet>
+      <MinTablet>
+        <div className="flex justify-center gap-6 pt-20">
+          <Button
+            variant="primaryLine"
+            size="lg"
+            onClick={() => router.push(`/detail/${postId}`)}
+            className="w-[180px]"
+          >
+            뒤로가기
+          </Button>
+          <Button variant="primary" size="lg" onClick={onSubmit} className="w-[180px]">
+            수정하기
+          </Button>
+        </div>
+      </MinTablet>
+    </>
   );
 };
 

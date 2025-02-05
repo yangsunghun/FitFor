@@ -2,10 +2,12 @@
 
 import { Button } from "@/components/ui/Button";
 import SlideOver from "@/components/ui/SlideOver";
-import { CaretLeft, Plus, Trash } from "@phosphor-icons/react";
+import { CaretLeft, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useState } from "react";
 import PurchaseSlider from "./PurchaseSlider";
+import ProductCard from "./ProductCard";
+
 
 // Product 타입 정의 (상품 데이터 구조)
 type Product = {
@@ -97,81 +99,45 @@ const ProductListModal = ({
         {Array.from({ length: 4 }).map((_, index) => {
           const product = products[index];
 
+          // 상품 정보가 없거나 이미지가 없을 때 EmptyProductBox 표시
+          if (!product || !product.image_url) {
+            return <ProductCard key={index} index={index} onClick={openAddSlider} />;
+          }
+
+          // 상품 정보가 있을 때 표시
           return (
             <div
               key={index}
               className="shadow-normal relative flex h-[115px] w-full cursor-pointer items-center overflow-hidden rounded-lg p-4"
-              onClick={() => (product ? openEditSlider(product) : openAddSlider())}
+              onClick={() => openEditSlider(product)}
             >
               <div className="flex items-start">
-                {/* 이미지 섹션 */}
                 <div className="h-[83px] w-[83px] flex-shrink-0 overflow-hidden rounded-md border border-[#e8e8e8]">
-                  {product?.image_url ? (
-                    <Image src={product.image_url} alt={product.title} width={83} height={83} className="object-fill" />
-                  ) : (
-                    <div className="h-full w-full bg-neutral-100" />
-                  )}
+                  <Image src={product.image_url} alt={product.title} width={83} height={83} className="object-fill" />
                 </div>
 
-                {/* 정보 섹션 */}
                 <div className="ml-4 flex flex-col justify-start overflow-hidden">
-                  {product ? (
+                  <span className="truncate font-medium text-text-04">{product.title}</span>
+                  {product.description ? (
                     <>
-                      {/* 제목: 상단 여백 없이 배치 */}
-                      <span className="mt-0 truncate font-medium text-text-04">{product.title}</span>
-                      {product.description ? (
-                        <>
-                          {/* 제목과 설명 사이 4px */}
-                          <span className="truncate text-caption font-medium text-text-03" style={{ marginTop: "4px" }}>
-                            {product.description}
-                          </span>
-                          {/* 설명과 구매 링크 사이 16px */}
-                          <span
-                            className="truncate text-caption font-medium text-text-03"
-                            style={{ marginTop: "16px" }}
-                          >
-                            {product.buy_link}
-                          </span>
-                        </>
-                      ) : (
-                        // 설명이 없으면 제목과 구매 링크 사이 40px
-                        <span className="truncate text-caption font-medium text-text-03" style={{ marginTop: "40px" }}>
-                          {product.buy_link}
-                        </span>
-                      )}
+                      <span className="truncate text-caption text-text-03 mt-[4px]">{product.description}</span>
+                      <span className="truncate text-caption text-text-03 mt-[16px]">{product.buy_link}</span>
                     </>
                   ) : (
-                    // product가 없을 때는 placeholder 3개 표시 (gap 8px 적용)
-                    <div className="flex flex-col gap-2">
-                      <div className="h-[27px] w-full rounded-sm bg-neutral-100" />
-                      <div className="h-5 w-full rounded-sm bg-neutral-100" />
-                      <div className="h-5 w-full rounded-sm bg-neutral-100" />
-                    </div>
+                    <span className="truncate text-caption text-text-03 mt-[40px]">{product.buy_link}</span>
                   )}
                 </div>
               </div>
 
-              {product && (
-                <button
-                  className="absolute bottom-4 right-2 flex h-6 w-6 items-center justify-center text-text-03"
-                  onClick={(e) => {
-                    e.stopPropagation(); // 부모 이벤트 버블링 방지
-                    onDeleteProduct(product.id);
-                  }}
-                >
-                  <Trash size={16} />
-                </button>
-              )}
-
-              {/* 빈 박스일 경우 플러스 아이콘과 텍스트 표시 */}
-              {!product && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#464653]">
-                    <Plus size={18} className="text-white" />
-                  </div>
-                  <span className="mt-2 text-[13px] font-medium text-[#1a1a1a]">{`상품 ${index + 1}`}</span>
-                </div>
-              )}
+              <button
+                className="absolute bottom-4 right-2 flex h-6 w-6 items-center justify-center text-text-03"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteProduct(product.id);
+                }}
+              >
+                <Trash size={16} />
+              </button>
             </div>
           );
         })}

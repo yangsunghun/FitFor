@@ -89,6 +89,7 @@ const PostForm = ({
         // formState의 태그 상태를 업데이트하는 함수 호출
         handleFieldChange("tags", updatedTags);
       }}
+      isMissing={missingFields.includes("tags")} // 필수 입력 경고 전달
     />
 
     <AddressModal

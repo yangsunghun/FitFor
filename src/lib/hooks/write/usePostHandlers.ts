@@ -27,6 +27,7 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
     if (!content) newMissingFields.push("content");
     if (!images || images.length === 0) newMissingFields.push("images");
     if (!purchases || purchases.length === 0) newMissingFields.push("purchases");
+    if (!tags || tags.length === 0) newMissingFields.push("tags");
 
     setMissingFields(newMissingFields); // 누락된 필드 상태 업데이트
     return newMissingFields.length === 0; // 모든 필드가 채워졌는지 여부 반환
@@ -52,7 +53,7 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
   const handleSubmit = async (handleStartSubmit: () => void, handleEndSubmit: () => void) => {
     if (!validateFields()) {
       // 유효하지 않은 경우 메시지 표시
-      toast("필수 입력 항목을 모두 입력해주세요!", "warning");
+      toast("필수 항목을 모두 입력해주세요!", "warning");
       window.scrollTo(0, 0); // 즉시 최상단으로 이동
       return;
     }

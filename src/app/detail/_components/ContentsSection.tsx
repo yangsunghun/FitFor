@@ -125,9 +125,14 @@ const ContentsSection = ({ postId, mode = "page" }: Props) => {
             <CommentListMobile postId={postId} onOpen={() => setIsCommentOpen(true)} />
           </Tablet>
 
-          <p className="mt-4 font-medium text-text-03 tb:mt-2 tb:text-caption mb:text-small">
-            조회수 {view} · {relativeTimeDay(created_at)}
-          </p>
+          <div className="mt-4 flex gap-2 font-medium text-text-03 tb:mt-2 tb:gap-1 tb:text-caption mb:text-small">
+            <div className="flex gap-1">
+              <span>조회수</span>
+              <span>{view}</span>
+            </div>
+            <span>·</span>
+            <span>{relativeTimeDay(created_at)}</span>
+          </div>
 
           <MinTablet>
             <div

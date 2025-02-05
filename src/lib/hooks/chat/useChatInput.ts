@@ -25,7 +25,7 @@ export const useChatInput = (roomId: string) => {
         .maybeSingle();
 
       if (error) {
-        console.error("Error fetching member status:", error);
+        console.error("채팅방 멤버 조회 실패", error);
         return;
       }
 
@@ -54,7 +54,7 @@ export const useChatInput = (roomId: string) => {
       setMessage("");
     },
     onError: (error: Error) => {
-      console.error("메시지 전송 실패:", error.message);
+      console.error("메시지 전송 실패:", error);
     }
   });
 

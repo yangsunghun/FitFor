@@ -147,7 +147,7 @@ export const getAdminDetails = async (roomId: string) => {
       }
     };
   } catch (error) {
-    console.error("Error fetching admin details:", error);
+    console.error("방장 정보를 찾지 못했습니다.", error);
     return { success: false, error: String(error) };
   }
 };

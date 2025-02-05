@@ -75,7 +75,7 @@ const PostList = ({ title, posts, isPending, isError, onDelete, invalidateMessag
       <Tablet>
         {isEditing && <MobileHeader pageName="북마크 편집" action="button" buttonClick={() => setIsEditing(false)} />}
       </Tablet>
-      <div className="mb-10 flex items-center justify-between mb:mb-[40px]">
+      <div className="mb-10 flex h-[52px] items-center justify-between tb:h-auto mb:mb-[40px]">
         <h2 className="text-title1 font-bold text-text-04 mb:text-title2">
           {title}
           <span className="text-title2 font-medium mb:text-body">
@@ -95,7 +95,11 @@ const PostList = ({ title, posts, isPending, isError, onDelete, invalidateMessag
             </button>
           )}
           {isEditing && (
-            <div className="tb:fixed tb:bottom-0 tb:left-0 tb:z-50 tb:mb-0 tb:w-screen tb:bg-bg-01 tb:py-[12px]">
+            <div
+              className={clsx("tb:fixed tb:bottom-0 tb:left-0 tb:z-50 tb:mb-0 tb:w-screen tb:bg-bg-01", {
+                "tb:py-[12px]": selectedPosts.length > 0
+              })}
+            >
               <div className="tb:inner flex items-center justify-end gap-3 tb:flex-col tb:gap-2">
                 <Button
                   onClick={() => {
@@ -103,7 +107,7 @@ const PostList = ({ title, posts, isPending, isError, onDelete, invalidateMessag
                     setSelectedPosts([]);
                   }}
                   variant="primaryLine"
-                  size="sm"
+                  size="mn"
                   className="tb:hidden"
                 >
                   취소
@@ -111,7 +115,7 @@ const PostList = ({ title, posts, isPending, isError, onDelete, invalidateMessag
                 {selectedPosts.length > 0 && (
                   <>
                     <p className="hidden tb:block">{selectedPosts.length}개의 게시물이 선택되었어요.</p>
-                    <Button onClick={openModal} variant="primary" size="sm" className="tb:w-full">
+                    <Button onClick={openModal} variant="primary" size="mn" className="tb:w-full">
                       삭제하기<span className="tb:hidden">({selectedPosts.length})</span>
                     </Button>
                   </>

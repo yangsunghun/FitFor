@@ -32,7 +32,7 @@ export const ImageUploadMobile = ({
       <div className="space-y-1">
         <div className="flex items-center">
           <span className="text-title2 font-medium text-text-04 mb:text-body">게시물 이미지</span>
-          <span className="text-lg font-medium text-primary-default">*</span>
+          <span className="text-lg text-title2 font-medium text-primary-default mb:text-body">*</span>
         </div>
         <p className="text-body font-medium text-text-03 mb:text-caption">
           다양한 각도에서 찍은 이미지가 있다면 추가해주세요.
@@ -43,7 +43,7 @@ export const ImageUploadMobile = ({
 
       {/* 이미지 슬롯 섹션 */}
       <div
-        className="overscroll-x-hidden no-scrollbar flex space-x-4 overflow-x-auto pb-4"
+        className="overscroll-x-hidden no-scrollbar flex space-x-4 overflow-x-auto"
         style={{
           scrollbarWidth: "none", // Firefox용 인라인 스타일
           msOverflowStyle: "none" // IE/Edge용 인라인 스타일
@@ -128,7 +128,7 @@ export const ImageUploadMobile = ({
       </div>
 
       {/* 필수 입력 경고 메시지 */}
-      {isMissing && <p className="text-sm text-status-danger">이미지를 업로드해주세요.</p>}
+      {isMissing && <p className="text-status-danger mb:text-caption">이미지를 업로드해주세요.</p>}
     </div>
   );
 };

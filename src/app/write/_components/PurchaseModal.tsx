@@ -226,7 +226,7 @@ const PurchaseModal = ({
   if (!isOpen) return null;
 
   return (
-    <ModalItem isOpen={isOpen} onClose={handleClose}>
+    <ModalItem isOpen={isOpen} onClose={handleClose} className="w-full max-w-[450px]">
       <div className="space-y-2">
         <div className="flex items-center gap-1">
           <span className="text-title2 font-bold leading-[27px] text-text-04">상품 이미지</span>
@@ -281,7 +281,7 @@ const PurchaseModal = ({
       </div>
 
       {/* 상품명 */}
-      <div className="w-[30vw] max-w-full space-y-2 pt-6">
+      <div className="space-y-2 pt-6">
         <div className="flex items-center gap-1">
           <label className="block text-title2 font-bold">상품명</label>
           <span className="text-title2 font-bold text-primary-default">*</span>

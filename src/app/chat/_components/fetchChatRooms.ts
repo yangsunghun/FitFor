@@ -27,7 +27,7 @@ export const fetchChatRooms = async ({ pageParam = 1, queryKey }: { pageParam?: 
 
   const { data, error } = await supabaseQuery;
   if (error) {
-    console.error(error.message);
+    console.error;
     throw new Error("채팅방 데이터를 가져오지 못했습니다.");
   }
 

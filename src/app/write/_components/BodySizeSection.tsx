@@ -1,5 +1,6 @@
 "use client";
 
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { CaretRight } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
@@ -40,12 +41,12 @@ const BodySizeSection = ({ bodySize, onChange }: BodySizeSectionProps) => {
   return (
     <div>
       {/* 모바일 레이아웃 */}
-      {isTabletOrSmaller ? (
+      <Tablet>
         <div className="flex cursor-pointer items-center justify-between py-4" onClick={() => setIsModalOpen(true)}>
           <div className="flex flex-col gap-1">
-            <span className="font-medium text-text-04">신체 정보</span>
+            <span className="text-title2 font-medium text-text-04 mb:text-body">신체 정보</span>
             <span
-              className={`text-caption font-medium ${
+              className={`font-medium mb:text-caption ${
                 bodySize[0] && bodySize[1] ? "text-primary-default" : "text-text-03"
               }`}
             >
@@ -56,8 +57,10 @@ const BodySizeSection = ({ bodySize, onChange }: BodySizeSectionProps) => {
           </div>
           <CaretRight size={20} className="text-text-03" />
         </div>
-      ) : (
-        /* 데스크탑 레이아웃 */
+      </Tablet>
+
+      {/* 데스크탑 레이아웃 */}
+      <MinTablet>
         <div className="space-y-6 pt-10">
           {["키", "몸무게"].map((label, index) => (
             <div key={index} className="space-y-2">
@@ -75,7 +78,7 @@ const BodySizeSection = ({ bodySize, onChange }: BodySizeSectionProps) => {
             </div>
           ))}
         </div>
-      )}
+      </MinTablet>
 
       {/* 모달 */}
       <BodySizeModal

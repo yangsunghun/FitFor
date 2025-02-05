@@ -64,7 +64,7 @@ const ChatRoomForm = () => {
       router.push(`/chat/${result.data?.room_id}`);
     } catch (error) {
       console.error("에러 발생:", error);
-      alert(error instanceof Error ? error.message : "알 수 없는 에러가 발생했습니다.");
+      alert("채팅방 생성에 실패했습니다.");
     }
   };
 

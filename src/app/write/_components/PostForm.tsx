@@ -1,3 +1,4 @@
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import { useFormHandlers } from "@/lib/hooks/write/useFormHandlers";
 import AddressModal from "./AddressModal";
 import BodySizeSection from "./BodySizeSection";
@@ -5,6 +6,7 @@ import ContentSection from "./ContentSection";
 import ImageUploadSection from "./ImageUploadSection";
 import LocationSection from "./LocationSection";
 import PostTagSection from "./PostTagSection";
+import ProductListModal from "./ProductListModal";
 import ProductSection from "./ProductSection";
 import PurchaseModal from "./PurchaseModal";
 
@@ -77,12 +79,17 @@ const PostForm = ({
       }}
       isMissing={missingFields.includes("purchases")} // 필수 입력 경고 전달
     />
-    
+
     <PostTagSection
       tags={formState.tags}
       selectedCategory={selectedCategory}
       onChangeCategory={handleChangeCategory}
       toggleTagSelector={toggleTagSelector}
+      onChangeTags={(updatedTags) => {
+        // formState의 태그 상태를 업데이트하는 함수 호출
+        handleFieldChange("tags", updatedTags);
+      }}
+      isMissing={missingFields.includes("tags")} // 필수 입력 경고 전달
     />
 
     <AddressModal
@@ -90,18 +97,45 @@ const PostForm = ({
       onClose={() => handleFieldChange("isModalOpen", false)}
       onSelectAddress={(address) => handleFieldChange("address", address)}
     />
-    <PurchaseModal
-      isOpen={formState.isPurchaseModalOpen}
-      onClose={() => {
-        handleChange("productToEdit", null);
-        handleChange("isPurchaseModalOpen", false);
-      }}
-      onAddProduct={handleAddPurchase}
-      onEditProduct={handleEditPurchase}
-      productToEdit={formState.productToEdit}
-      mode={formState.productToEdit ? "edit" : "add"}
-      purchasesLength={formState.purchases.length}
-    />
+    <Tablet>
+      <ProductListModal
+        isOpen={formState.isPurchaseModalOpen}
+        onClose={() => {
+          handleChange("productToEdit", null);
+          handleChange("isPurchaseModalOpen", false);
+        }}
+        products={formState.purchases.map((purchase, index) => ({
+          id: purchase.id || "",
+          title: purchase.title || `상품 ${index + 1}`,
+          image_url: purchase.image_url || "",
+          post_id: purchase.post_id || "",
+          description: purchase.description || "",
+          buy_link: purchase.buy_link || ""
+        }))}
+        onAddProduct={handleAddPurchase}
+        onEditProduct={handleEditPurchase}
+        onDeleteProduct={(productId) => {
+          handleChange(
+            "purchases",
+            formState.purchases.filter((purchase) => purchase.id !== productId)
+          );
+        }}
+      />
+    </Tablet>
+    <MinTablet>
+      <PurchaseModal
+        isOpen={formState.isPurchaseModalOpen}
+        onClose={() => {
+          handleChange("productToEdit", null);
+          handleChange("isPurchaseModalOpen", false);
+        }}
+        onAddProduct={handleAddPurchase}
+        onEditProduct={handleEditPurchase}
+        productToEdit={formState.productToEdit}
+        mode={formState.productToEdit ? "edit" : "add"}
+        purchasesLength={formState.purchases.length}
+      />
+    </MinTablet>
   </div>
 );
 

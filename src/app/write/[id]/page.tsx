@@ -16,7 +16,12 @@ type EditPageProps = {
 const EditPage = ({ params: { id } }: EditPageProps) => {
   const pageState = useEditPageState(id);
 
-  if (pageState.isPending) return <LoadingSpinner />;
+  if (pageState.isPending)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   if (pageState.isError) {
     return <ErrorScreen error={new Error("게시물을 불러오는 데 문제가 발생했습니다.")} />;
   }
@@ -29,8 +34,11 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
       <ScrollTopButton />
       <ExitOrContinueModal
         isOpen={pageState.isExitModalOpen}
-        onClose={() => pageState.setIsExitModalOpen(false)}
-        postId={pageState.formState.postId}
+        onClose={() => {
+          pageState.setIsExitModalOpen(false);
+          pageState.setPendingNavigation(null);
+        }}
+        onExit={pageState.handleExit}
       />
     </div>
   );

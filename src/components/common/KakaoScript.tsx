@@ -11,7 +11,6 @@ function KakaoScript() {
 
     if (!window.Kakao.isInitialized()) {
       window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_SHARE_API_KEY);
-      console.log("Kakao SDK initialized");
     }
   };
 

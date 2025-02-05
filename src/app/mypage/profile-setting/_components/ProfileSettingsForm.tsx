@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useAuthStore } from "@/lib/store/authStore";
+import { toast } from "@/lib/utils/common/toast";
 import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { createClient } from "@/lib/utils/supabase/client";
 import { PROFILE_EDIT_FIELD, profileSettingSchema } from "@/lib/validations/profileSchema";
@@ -105,7 +106,8 @@ const ProfileSettingsForm = () => {
 
       setUser(user);
     }
-    alert("변경된 회원 정보가 저장되었습니다.");
+    toast("변경된 회원 정보가 저장되었습니다.", "success");
+
     setIsUploading(false);
     router.push("/mypage");
   };

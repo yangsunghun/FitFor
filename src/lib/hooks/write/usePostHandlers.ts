@@ -39,7 +39,7 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
     if (isTabletOrSmaller) {
       validateFields();
     }
-  }, [content, images, purchases, tags]);
+  }, [content, images, purchases, tags, isTabletOrSmaller]);
 
   // 값 변경 시 누락된 필드 실시간 업데이트
   const updateMissingFields = (field: string, value: any) => {

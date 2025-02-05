@@ -67,7 +67,7 @@ const ProductSection = ({ purchases, onAdd, onEdit, onDelete, isMissing }: Produ
           </div>
           <CaretRight size={20} className="text-text-03" />
         </div>
-        {isMissing && <p className="mb:text-caption text-status-danger">상품 정보를 추가해주세요.</p>}
+        {isMissing && <p className="text-status-danger mb:text-caption">상품 정보를 추가해주세요.</p>}
       </Tablet>
 
       <MinTablet>

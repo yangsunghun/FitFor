@@ -32,7 +32,7 @@ export const ImageUploadMobile = ({
       <div className="space-y-1">
         <div className="flex items-center">
           <span className="text-title2 font-medium text-text-04 mb:text-body">게시물 이미지</span>
-          <span className="text-title2 text-lg font-medium text-primary-default mb:text-body">*</span>
+          <span className="text-lg text-title2 font-medium text-primary-default mb:text-body">*</span>
         </div>
         <p className="text-body font-medium text-text-03 mb:text-caption">
           다양한 각도에서 찍은 이미지가 있다면 추가해주세요.

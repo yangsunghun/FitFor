@@ -33,9 +33,7 @@ const ContentSection = ({ content, onChange, isMissing }: ContentSectionProps) =
             : "예시 - 소개팅 가야하는데 도와주세요"
         }
       />
-      {isMissing && (
-        <p className="pt-4 text-status-danger tb:pt-2 mb:text-caption">본문을 입력해주세요.</p>
-      )}
+      {isMissing && <p className="pt-4 text-status-danger tb:pt-2 mb:text-caption">본문을 입력해주세요.</p>}
     </div>
   );
 };

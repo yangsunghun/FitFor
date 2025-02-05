@@ -159,7 +159,7 @@ const TagModal = ({
           disabled={selectedTags.length === 0}
           variant={selectedTags.length === 0 ? "disabled" : "primary"}
           size="md"
-          className="mb-3 w-full !py-3 flex items-center justify-center"
+          className="mb-3 flex w-full items-center justify-center !py-3"
         >
           적용하기
         </Button>

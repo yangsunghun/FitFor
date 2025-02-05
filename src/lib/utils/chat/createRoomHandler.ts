@@ -22,7 +22,7 @@ export const createRoomHandler = async (
 
     return response; // createChatRoom의 응답 반환
   } catch (error) {
-    console.error("Error in createChatRoomHandler:", error);
+    console.error("채팅방 생성 실패:", error);
     return { success: false, error: String(error) };
   }
 };

@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { sendMessage } from "@/lib/utils/chat/chat";
@@ -34,7 +36,7 @@ export const useChatInput = (roomId: string) => {
     };
 
     fetchMemberStatus();
-  }, [currentUser, roomId, supabase]);
+  }, [currentUser, roomId]);
 
   const mutation = useMutation({
     mutationFn: (newMessage: { message: string; file: File | null }) => {

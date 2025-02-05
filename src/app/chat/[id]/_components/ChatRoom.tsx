@@ -49,7 +49,7 @@ const ChatRoom = ({ roomId }: ChatRoomProps) => {
     };
 
     fetchMemberStatus();
-  }, [currentUser, roomId, openModal, supabase]);
+  }, [currentUser, roomId, openModal]);
 
   return (
     <div>

@@ -56,49 +56,61 @@ export const enterAsAdmin = async (userId: string, roomId: string) => {
   }
 };
 
-// 채팅방 일반 멤버로 등록하기(기존 멤버의 isActive 상태를 활용해서 입장 가능 여부 판단)
 export const enterAsMember = async (userId: string, roomId: string) => {
   try {
-    // 기존 멤버 상태 확인
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("is_verified")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (userError) throw userError;
+    const isVerified = user?.is_verified || false;
+
     const { data: existingMember, error: checkError } = await supabase
       .from("chat_members")
-      .select("member_id, room_id, isActive")
+      .select("isActive, isAdmin")
       .eq("member_id", userId)
       .eq("room_id", roomId)
       .maybeSingle();
 
-    if (checkError && checkError.code !== "PGRST116") {
-      throw checkError;
-    }
+    if (checkError) throw checkError;
 
     if (existingMember) {
-      // 기존 멤버가 비활성화 상태인 경우, 활성화 처리
-      if (!existingMember.isActive) {
+      if (existingMember.isActive !== isVerified) {
         const { error: updateError } = await supabase
           .from("chat_members")
-          .update({ isActive: true })
-          .match({ member_id: userId, room_id: roomId });
+          .update({ isActive: isVerified })
+          .eq("member_id", userId)
+          .eq("room_id", roomId);
 
         if (updateError) throw updateError;
-
-        return { success: true, message: "멤버가 다시 활성화되었습니다." };
       }
 
-      // 이미 활성화된 멤버인 경우
-      return { success: true };
+      return {
+        success: true,
+        message: existingMember.isAdmin ? "채팅방 관리자 - 채팅 가능" : isVerified ? "채팅 참여 가능" : "관전 모드"
+      };
     }
 
-    // Step 2: 멤버 새로 추가
-    const { error: memberError } = await supabase.from("chat_members").insert({
-      member_id: userId,
-      room_id: roomId,
-      isAdmin: false,
-      isActive: true
-    });
+    const { data: newMember, error: memberError } = await supabase
+      .from("chat_members")
+      .insert({
+        member_id: userId,
+        room_id: roomId,
+        isAdmin: false,
+        isActive: isVerified
+      })
+      .select()
+      .single();
 
     if (memberError) throw memberError;
 
-    return { success: true };
+    return {
+      success: true,
+      message: isVerified ? "채팅 참여 가능" : "관전 모드",
+      data: newMember
+    };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -198,7 +210,6 @@ export const sendMessage = async ({
   roomId: string;
   memberId: string;
   }) => {
-  console.log("💡 sendMessage 호출됨:", { memberId, message, roomId, file });
   let fileUrl = null;
 
   // 파일 용량 제한 (예: 5MB)

@@ -5,7 +5,7 @@ import { Database } from "@/lib/types/supabase";
 import { toast } from "@/lib/utils/common/toast";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import useMediaQuery from "../common/useMediaQuery";
 import { UseFormStateHandlersReturn } from "./useFormStateHandlers"; // formState 타입 가져오기
 import { fetchUnsavedPosts, TempSaveState } from "./useTempSaveHandlers";
@@ -19,8 +19,9 @@ type UsePostHandlersProps = Pick<UseFormStateHandlersReturn, "formState" | "orig
 export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }: UsePostHandlersProps) => {
   const currentUser = useAuthStore((state) => state.user); // 현재 사용자 정보 가져오기
   const router = useRouter();
+  // 원래의 router.push 기능을 보존하기 위한 ref 선언 (unsaved 변경사항 체크 로직을 우회할 때 사용)
+  const originalPushRef = useRef(router.push);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
-
   const [missingFields, setMissingFields] = useState<string[]>([]); // 누락된 필드를 상태로 관리
   const { content, address, body_size, images, tags, purchases, thumbnail_blur_url, postId } = formState;
 
@@ -144,8 +145,9 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
 
       toast("게시글이 등록되었습니다.", "success");
 
-      // 상세 페이지로 리디렉션
-      router.push(`/detail/${savedPostId}`);
+      // 업데이트 후 페이지 이동 시, 기존의 router.push는 unsaved 체크 로직에 의해 override될 수 있음
+      // 따라서 originalPushRef.current를 사용하여 unsaved 체크 우회시키는 과정 필요
+      originalPushRef.current(`/detail/${savedPostId}`);
     } catch (error) {
       console.error("게시글 저장 실패:", error);
       alert("게시글 등록에 실패했습니다.");
@@ -154,8 +156,9 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
     }
   };
 
-  //업데이트 핸들러
-  const handleUpdate = async (id: string) => {
+  // 업데이트 핸들러
+  // options.skipUnsavedCheck 옵션이 true? unsaved 체크를 우회한다!
+  const handleUpdate = async (id: string, options?: { skipUnsavedCheck?: boolean }) => {
     if (!validateFields()) {
       // 유효하지 않은 경우 메시지 표시
       toast("필수 입력 항목을 모두 입력해주세요!", "warning");
@@ -190,6 +193,7 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
     }
 
     try {
+      // 게시글 업데이트 처리
       const { error: postError } = await supabase.from("posts").update(updatedPost).eq("id", id);
       if (postError) throw postError;
 
@@ -209,7 +213,13 @@ export const usePostHandlers = ({ formState, setTempSaveState, originalDataRef }
       }
 
       toast("게시글이 수정되었습니다.", "success");
-      router.push(`/detail/${id}`);
+
+      // 만약 skipUnsavedCheck 옵션이 true라면, 원래의 router.push를 사용해 unsaved 체크를 우회합니다.
+      if (options?.skipUnsavedCheck) {
+        originalPushRef.current(`/detail/${id}`);
+      } else {
+        router.push(`/detail/${id}`);
+      }
     } catch (error) {
       console.error("게시물 수정 실패:", error);
       alert("게시글 수정에 실패했습니다.");

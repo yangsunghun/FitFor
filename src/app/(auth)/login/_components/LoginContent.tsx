@@ -32,7 +32,7 @@ const LoginContent = () => {
       </MinTablet>
       <Tablet>
         <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-          <div className="w-full bg-[url(/images/login-background.png)] bg-cover bg-center tb:h-[48rem] mb:h-[31.25rem]"></div>
+          <div className="w-full bg-[url(/images/login-background.svg)] bg-cover bg-center tb:h-[48rem] mb:h-[31.25rem]"></div>
           <div className="absolute -bottom-16 h-[7.5rem] w-[150%] bg-gradient-to-b from-white to-white blur-[1.25rem]"></div>
         </div>
       </Tablet>

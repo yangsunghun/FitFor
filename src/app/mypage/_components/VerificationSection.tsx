@@ -73,9 +73,9 @@ const VerificationSection = () => {
       <div className="mt-20 rounded-2xl bg-bg-02 p-6 lt:mx-4 tb:mt-[2.125rem] tb:p-4 mb:rounded-lg">
         <h3 className="mb-6 text-subtitle font-medium text-text-04 tb:mb-3 tb:text-caption">인증 유저 요건</h3>
         <ul className="list-disc space-y-3 pl-5 text-title2 text-text-03 tb:list-none tb:space-y-1 tb:pl-0 tb:text-small">
-          <li>위 기준을 충족해야만 인증 유저로 활동할 수 있어요.</li>
+          <li>신청 후 바로 인증 유저로 활동이 가능해요.</li>
           <li>인증 유저가 되면 Live 채팅방에 입장할 수 있어요.</li>
-          <li>신청 후 24시간 뒤, 관리자 확인 후 인증 유저로 활동 가능해요.</li>
+          <li>Live 채팅방에서 조언이 필요한 유저들의 코디를 도와줄 수 있어요.</li>
         </ul>
       </div>
     </>

@@ -75,11 +75,11 @@ const SearchBar = () => {
     <div className="w-[calc(100%-30rem)] max-w-[30rem] tb:w-full tb:max-w-full tb:bg-primary-default tb:px-[4.275%] tb:py-[16px]">
       <form
         onSubmit={handleSubmit}
-        className="relative w-full rounded-lg bg-bg-02 tb:bg-bg-01 tb:px-[12px]"
+        className="relative w-full rounded-lg bg-bg-02 tb:bg-bg-01"
         onBlur={handleInputBlur}
         onFocus={() => setShowDropdown(true)} // 클릭 시 드롭다운 열림
       >
-        <button type="submit" className="absolute left-6 top-1/2 -translate-y-1/2">
+        <button type="submit" className="absolute left-6 top-1/2 -translate-y-1/2 tb:left-[12px]">
           <MagnifyingGlass size={isTabletOrSmaller ? 20 : 24} className="text-text-03" />
         </button>
         <input
@@ -87,7 +87,7 @@ const SearchBar = () => {
           placeholder="어떤 룩을 찾으시나요?"
           value={inputValue}
           onChange={(e) => handleInputChange(e.target.value)}
-          className="h-12 w-full rounded-lg bg-transparent pl-14 pr-2 font-medium outline-black placeholder:text-text-03 tb:h-[44px] tb:text-body tb:text-text-03"
+          className="h-12 w-full rounded-lg bg-transparent pl-14 pr-2 font-medium outline-black placeholder:text-text-03 tb:h-[44px] tb:pl-[40px] tb:text-body tb:text-text-03"
         />
         {showDropdown && (filteredTags.length > 0 || searchHistory.length > 0) && (
           <ul className="dropdown shadow-emphasize absolute left-0 top-[calc(100%+0.75rem)] z-50 w-full rounded-2xl bg-white p-6 tb:left-[-4.55%] tb:top-[calc(100%+17px)] tb:w-screen tb:rounded-none tb:p-0 tb:shadow-none">

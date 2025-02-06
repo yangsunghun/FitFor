@@ -1,7 +1,7 @@
 "use client";
 
 import { POSTS_PER_PAGE } from "@/lib/constants/constants";
-import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight } from "@phosphor-icons/react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import clsx from "clsx";
 
 type PaginationProps = {
@@ -20,12 +20,20 @@ const Pagination = ({ Results, page, handlePageChange }: PaginationProps) => {
   const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
   return (
-    <div className="mt-16 flex justify-center gap-2 tb:mt-6">
-      <button disabled={page === 1} onClick={() => handlePageChange(1)} className="disabled:opacity-50">
+    <div className="mt-16 flex items-center justify-center gap-1 tb:mt-6">
+      {/* <button
+        disabled={page === 1}
+        onClick={() => handlePageChange(1)}
+        className="flex h-7 w-7 items-center justify-center disabled:text-text-02"
+      >
         <CaretDoubleLeft size={16} weight="bold" className="tb:w-[13px]" />
-      </button>
+      </button> */}
 
-      <button disabled={page === 1} onClick={() => handlePageChange(page - 1)} className="disabled:opacity-50">
+      <button
+        disabled={page === 1}
+        onClick={() => handlePageChange(page - 1)}
+        className="flex h-7 w-7 items-center justify-center disabled:text-text-02"
+      >
         <CaretLeft size={16} weight="bold" className="tb:w-[13px]" />
       </button>
 
@@ -33,26 +41,30 @@ const Pagination = ({ Results, page, handlePageChange }: PaginationProps) => {
         <button
           key={pageNumber}
           onClick={() => handlePageChange(pageNumber)}
-          className={clsx("text-title2 tb:text-body", {
-            "font-bold": page === pageNumber,
-            "text-text-03": page !== pageNumber
+          className={clsx("flex h-8 w-8 items-center justify-center rounded-full text-body font-medium", {
+            "bg-primary-default text-text-01": page === pageNumber,
+            "text-text-04": page !== pageNumber
           })}
         >
           {pageNumber}
         </button>
       ))}
 
-      <button disabled={page === totalPages} onClick={() => handlePageChange(page + 1)} className="disabled:opacity-50">
+      <button
+        disabled={page === totalPages}
+        onClick={() => handlePageChange(page + 1)}
+        className="flex h-7 w-7 items-center justify-center disabled:text-text-02"
+      >
         <CaretRight size={16} weight="bold" className="tb:w-[13px]" />
       </button>
 
-      <button
+      {/* <button
         disabled={page === totalPages}
         onClick={() => handlePageChange(totalPages)}
-        className="disabled:opacity-50"
+        className="flex h-7 w-7 items-center justify-center disabled:text-text-02"
       >
         <CaretDoubleRight size={16} weight="bold" className="tb:w-[13px]" />
-      </button>
+      </button> */}
     </div>
   );
 };

@@ -292,6 +292,7 @@ const PurchaseModal = ({
           value={title}
           onChange={handleInputChange}
           placeholder="상품명을 입력해주세요."
+          autoComplete="off"
           className="w-full rounded-md bg-bg-02 p-4 focus:outline-none"
         />
       </div>
@@ -304,7 +305,8 @@ const PurchaseModal = ({
           value={description}
           onChange={handleInputChange}
           placeholder="브랜드명을 작성해주세요."
-          className="w-full rounded-md bg-bg-02 p-4"
+          autoComplete="off"
+          className="w-full rounded-md bg-bg-02 p-4 focus:outline-none"
         />
       </div>
 
@@ -317,6 +319,7 @@ const PurchaseModal = ({
           value={formState.buy_link || ""}
           onChange={handleInputChange}
           placeholder="예시 - http://naver.com"
+          autoComplete="off"
           className="text-title-02 w-full rounded-md bg-bg-02 p-4 focus:outline-none"
         />
       </div>

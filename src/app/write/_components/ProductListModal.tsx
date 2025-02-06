@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/Button";
 import SlideOver from "@/components/ui/SlideOver";
+import useLockScroll from "@/lib/hooks/common/useLockScroll";
 import { CaretLeft, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useState } from "react";
-import PurchaseSlider from "./PurchaseSlider";
 import ProductCard from "./ProductCard";
-
+import PurchaseSlider from "./PurchaseSlider";
 
 // Product 타입 정의 (상품 데이터 구조)
 type Product = {
@@ -77,6 +77,8 @@ const ProductListModal = ({
     setIsSliderOpen(false);
   };
 
+  // 스크롤 생기는 현상 방지
+  useLockScroll(isOpen);
   if (!isOpen) return null;
 
   return (
@@ -120,11 +122,11 @@ const ProductListModal = ({
                   <span className="truncate font-medium text-text-04">{product.title}</span>
                   {product.description ? (
                     <>
-                      <span className="truncate text-caption text-text-03 mt-[4px]">{product.description}</span>
-                      <span className="truncate text-caption text-text-03 mt-[16px]">{product.buy_link}</span>
+                      <span className="mt-[4px] truncate text-caption text-text-03">{product.description}</span>
+                      <span className="mt-[16px] truncate text-caption text-text-03">{product.buy_link}</span>
                     </>
                   ) : (
-                    <span className="truncate text-caption text-text-03 mt-[40px]">{product.buy_link}</span>
+                    <span className="mt-[40px] truncate text-caption text-text-03">{product.buy_link}</span>
                   )}
                 </div>
               </div>

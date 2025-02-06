@@ -25,7 +25,7 @@ const ModalItem = ({ isOpen, onClose, children, mode = "default", className }: P
   return (
     <div
       className={clsx(
-        "fixed inset-0 z-50 flex items-center justify-center bg-black",
+        "fixed inset-0 z-[80] flex items-center justify-center bg-black",
         {
           "bg-opacity-50": mode === "default",
           "image-modal": mode === "imageView"

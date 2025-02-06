@@ -11,9 +11,10 @@ type DropdownProps = {
   children: ReactNode;
   className?: string;
   onClose?: () => void;
+  useMobileUI?: boolean;
 };
 
-const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
+const Dropdown = ({ trigger, children, className, onClose, useMobileUI = true }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -96,7 +97,7 @@ const Dropdown = ({ trigger, children, className, onClose }: DropdownProps) => {
       <div className="cursor-pointer" onClick={toggleDropdown}>
         {trigger}
       </div>
-      {isOpen && (isTabletOrSmaller ? mobileUI : desktopUI)}
+      {isOpen && (useMobileUI && isTabletOrSmaller ? mobileUI : desktopUI)}
     </div>
   );
 };

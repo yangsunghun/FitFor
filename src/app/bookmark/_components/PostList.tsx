@@ -83,51 +83,56 @@ const PostList = ({ title, posts, isPending, isError, onDelete, invalidateMessag
           </span>
         </h2>
         <div>
-          {!isEditing && (
-            <button
-              onClick={() => {
-                setIsEditing(true);
-                setSelectedPosts([]);
-              }}
-              className="text-title2 font-medium text-primary-default underline underline-offset-4 mb:text-caption"
-            >
-              편집
-            </button>
-          )}
-          {isEditing && (
-            <div
-              className={clsx("tb:fixed tb:bottom-0 tb:left-0 tb:z-50 tb:mb-0 tb:w-screen tb:bg-bg-01", {
-                "tb:py-[12px]": selectedPosts.length > 0
-              })}
-            >
-              <div className="tb:inner flex items-center justify-end gap-3 tb:flex-col tb:gap-2">
-                <Button
-                  onClick={() => {
-                    setIsEditing(false);
-                    setSelectedPosts([]);
-                  }}
-                  variant="primaryLine"
-                  size="mn"
-                  className="tb:hidden"
-                >
-                  취소
-                </Button>
-                {selectedPosts.length > 0 && (
-                  <>
-                    <p className="hidden tb:block">{selectedPosts.length}개의 게시물이 선택되었어요.</p>
-                    <Button onClick={openModal} variant="primary" size="mn" className="tb:w-full">
-                      삭제하기<span className="tb:hidden">({selectedPosts.length})</span>
-                    </Button>
-                  </>
-                )}
+          {!posts ||
+            (posts.length > 0 && !isEditing && (
+              <button
+                onClick={() => {
+                  setIsEditing(true);
+                  setSelectedPosts([]);
+                }}
+                className="text-title2 font-medium text-primary-default mb:text-caption"
+              >
+                편집
+              </button>
+            ))}
+          {!posts ||
+            (posts.length > 0 && isEditing && (
+              <div
+                className={clsx("tb:fixed tb:bottom-0 tb:left-0 tb:z-50 tb:mb-0 tb:w-screen tb:bg-bg-01", {
+                  "tb:py-[12px]": selectedPosts.length > 0
+                })}
+              >
+                <div className="tb:inner flex items-center justify-end gap-3 tb:flex-col tb:gap-2">
+                  <Button
+                    onClick={() => {
+                      setIsEditing(false);
+                      setSelectedPosts([]);
+                    }}
+                    variant="primaryLine"
+                    size="mn"
+                    className="tb:hidden"
+                  >
+                    취소
+                  </Button>
+                  {selectedPosts.length > 0 && (
+                    <>
+                      <p className="hidden tb:block">{selectedPosts.length}개의 게시물이 선택되었어요.</p>
+                      <Button onClick={openModal} variant="primary" size="mn" className="tb:w-full">
+                        삭제하기<span className="tb:hidden">({selectedPosts.length})</span>
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            ))}
         </div>
       </div>
 
       {!posts || posts.length === 0 ? (
-        <p className="mt-32 text-center text-subtitle font-medium text-text-02">아직 {kind}한 게시물이 없습니다.</p>
+        <div className="text-center">
+          <p className="mt-32 text-title2 font-bold">아직 {kind}한 게시물이 없어요.</p>
+          <p className="mt-1 font-medium text-primary-default">마음에 드는 게시물의 북마크를 눌러보세요!</p>
+        </div>
       ) : (
         <ul className="grid grid-cols-4 gap-6 pb-24 tb:grid-cols-3 tb:gap-4 mb:grid-cols-2 mb:gap-[11px]">
           {isPending

@@ -1,42 +1,50 @@
-"use client";
-
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { ArrowUp } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type ScrollTopButtonProps = {
   useFlexLayout?: boolean;
   extraBottomOffset?: number;
+  isFloatingOpen?: boolean;
 };
 
-const ScrollTopButton = ({ useFlexLayout = false, extraBottomOffset = 0 }: ScrollTopButtonProps) => {
+const ScrollTopButton = ({
+  useFlexLayout = false,
+  extraBottomOffset = 0,
+  isFloatingOpen = false
+}: ScrollTopButtonProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)"); // 반응형 여부 확인
   const size = isTabletOrSmaller ? 24 : 40; // 디바이스 크기에 따라 아이콘 크기 설정
   const [animateIn, setAnimateIn] = useState(false); // 애니메이션 효과를 위한 상태 (초기에는 true로 설정)
 
   // 스크롤 상태를 확인하여 버튼 표시 여부 결정
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 200) {
-        // 200px 이상 스크롤 시 버튼 표시
-        if (!isVisible) {
-          setIsVisible(true);
-          setAnimateIn(true);
-          setTimeout(() => {
-            setAnimateIn(false);
-          }, 50);
-        }
-      } else {
-        setIsVisible(false);
-        setAnimateIn(false);
+  const handleScroll = useCallback(() => {
+    if (window.scrollY > 200) {
+      // 200px 이상 스크롤 시 버튼 표시
+      if (!isVisible) {
+        setIsVisible(true);
+        setAnimateIn(true);
+        setTimeout(() => {
+          setAnimateIn(false);
+        }, 50);
       }
-    };
+    } else {
+      setIsVisible(false);
+      setAnimateIn(false);
+    }
+  }, [isVisible]);
 
+  // 컴포넌트 마운트될 때 스크롤 상태 바로 확인
+  useEffect(() => {
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isVisible]);
+  }, [handleScroll]);
+
+  // isFloatingOpen이 true면 렌더링하지 않음 (조건부 렌더링, 모든 hook 호출 이후에 하기)
+  if (isFloatingOpen) return null;
 
   // 최상단으로 이동
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });

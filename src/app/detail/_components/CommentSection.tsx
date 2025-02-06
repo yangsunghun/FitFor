@@ -6,6 +6,7 @@ import { useComment } from "@/lib/hooks/detail/useComment";
 import { useAuthStore } from "@/lib/store/authStore";
 import { relativeTimeDay } from "@/lib/utils/common/formatDateTime";
 import { toast } from "@/lib/utils/common/toast";
+import Link from "next/link";
 import { useState } from "react";
 
 type CommentSectionProps = {
@@ -69,12 +70,14 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
         {comments?.map((comment) => (
           <li key={comment.id} className="mb-4 flex w-full items-start justify-between pb-4">
             <figure className="relative">
-              <ProfileImageCircle
-                profileImage={comment.users.profile_image}
-                nickname={comment.users.nickname}
-                size={48}
-                className="h-12 w-12"
-              />
+              <Link href={userId === comment.user_id ? `/mypage` : `/profile/${comment.user_id}`}>
+                <ProfileImageCircle
+                  profileImage={comment.users.profile_image}
+                  nickname={comment.users.nickname}
+                  size={48}
+                  className="h-12 w-12"
+                />
+              </Link>
             </figure>
             <div className="w-[calc(100%-4.25rem)]">
               <div className="flex justify-between">

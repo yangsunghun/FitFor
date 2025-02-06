@@ -74,7 +74,7 @@ const MainContent = () => {
 
       <div className="fixed bottom-12 right-[6.875rem] z-50 flex flex-col items-center gap-2 tb:bottom-[80px] tb:right-[24px] tb:gap-0">
         {/* ScrollTopButton이 FloatingButton 상태에 따라 위치 조정 */}
-        <ScrollTopButton useFlexLayout extraBottomOffset={isFloatingOpen ? 38 : 0} />
+        {!isFloatingOpen && <ScrollTopButton useFlexLayout extraBottomOffset={0} />}
         {user && (
           <FloatingButton
             href="/write"

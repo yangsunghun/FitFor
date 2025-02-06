@@ -10,7 +10,7 @@ const Toast = () => {
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
 
   return (
-    <div className="fixed bottom-[5vh] left-1/2 z-50 -translate-x-1/2 transform space-y-2">
+    <div className="fixed bottom-[5vh] left-1/2 z-[100] -translate-x-1/2 transform space-y-2">
       {toasts.slice(0, 5).map((toast) => (
         <div
           key={toast.id}

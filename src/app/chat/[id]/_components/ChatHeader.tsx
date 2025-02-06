@@ -1,12 +1,12 @@
 import { useAuthStore } from "@/lib/store/authStore";
 import { deleteChatRoom } from "@/lib/utils/chat/chat";
 import { createClient } from "@/lib/utils/supabase/client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import sampleImage from "@/assets/images/image_sample.png";
 import Link from "next/link";
 import { CaretLeft, List } from "@phosphor-icons/react";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import ProfileImageCircle from "@/components/shared/ProfileImageCircle";
+import Dropdown from "@/components/ui/Dropdown";
 
 const supabase = createClient();
 
@@ -21,7 +21,6 @@ const ChatHeader = ({ roomId }: ChatHeaderProps) => {
     participant_count: number;
     isAdmin: boolean;
   } | null>(null);
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const currentUser = useAuthStore((state) => state.user);
 
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
@@ -76,33 +75,43 @@ const ChatHeader = ({ roomId }: ChatHeaderProps) => {
   };
 
   if (!roomData) {
-    return <div>Loading...</div>;
+    return <div></div>
   }
+
   return (
-    <div className="absolute left-1/2 top-0 flex h-[96px] w-full -translate-x-1/2 items-center justify-between bg-white px-4">
+    <div className="absolute left-1/2 top-0 z-20 flex h-[96px] w-full -translate-x-1/2 items-center justify-between bg-white px-4">
       <div className="flex items-center gap-2">
         <Link href="/chat">
           <CaretLeft size={24} weight="bold" />
         </Link>
-        <figure className="relative h-10 w-10 overflow-hidden rounded-full mb:h-6 mb:w-6">
-          <Image src={roomData.room_thumbnail_url || sampleImage} alt="Thumbnail" fill />
+        <figure className="relative flex-shrink-0">
+          <ProfileImageCircle
+            profileImage={roomData.room_thumbnail_url}
+            size={40}
+            className="h-10 w-10 mb:h-6 mb:w-6"
+          />
         </figure>
-        <div className="flex flex-col">
-          <p className="text-title2 font-bold text-text-04 tb:text-body tb:font-medium">{roomData.room_title}</p>
+        <div className="flex flex-col mb:w-[180px]">
+          <p className="text-title2 font-bold text-text-04 tb:text-body tb:font-medium mb:truncate">
+            {roomData.room_title}
+          </p>
           <p className="text-caption font-medium text-text-03 tb:text-small tb:font-medium">
             {roomData.participant_count}명
           </p>
         </div>
       </div>
 
-      {/* 버튼: 채팅방 삭제 기능? 방장 전용? */}
-      <button>
-        <List size={isTabletOrSmaller ? 24 : 32} />
-      </button>
+      {roomData.isAdmin && (
+        <Dropdown trigger={<List size={isTabletOrSmaller ? 24 : 32} />} useMobileUI={false}>
+          <ul>
+            <li className="w-full whitespace-nowrap text-left font-medium transition duration-300 hover:text-primary-default mb:text-caption">
+              <button onClick={handleDeleteRoom}>채팅방 삭제하기</button>
+            </li>
+          </ul>
+        </Dropdown>
+      )}
     </div>
   );
 };
 
 export default ChatHeader;
-
-// div flex h-[96px] items-center justify-between bg-white px-4

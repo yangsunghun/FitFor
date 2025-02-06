@@ -135,15 +135,16 @@
 
 ### 상세 페이지
 
-![Details](https://github.com/user-attachments/assets/20ded670-4ac7-4f83-a32e-f96bf250a0bd)
+![Details](https://github.com/user-attachments/assets/04207e15-b933-4d29-82ff-fc350a1adbba)
 
 ### 작성 페이지
 
-![Write](https://github.com/user-attachments/assets/40ec922c-91ac-4e5d-a97a-464824a8ae78)
+![Write](https://github.com/user-attachments/assets/d0091a21-c013-4a11-ae3c-f17e0158659d)
 
 ### 코칭 페이지
 
-![Coaching](https://github.com/user-attachments/assets/e12354ca-df44-4214-bc6d-cc9011b98d67)
+![Coaching](https://github.com/user-attachments/assets/80fa6e32-25c1-4b58-b5bd-30a6710357bd)
+![Chatting](https://github.com/user-attachments/assets/457f4e2e-8dc2-49ae-b042-98fa8f4c56fb)
 
 ### 로그인/온보딩
 

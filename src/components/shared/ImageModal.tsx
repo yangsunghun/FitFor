@@ -3,7 +3,9 @@
 import Carousel from "@/components/common/Carousel";
 import ModalItem from "@/components/ui/Modal";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
+import { useAuthStore } from "@/lib/store/authStore";
 import { handleImageDownload } from "@/lib/utils/common/ImageDownload";
+import { toast } from "@/lib/utils/common/toast";
 import { DownloadSimple, X } from "@phosphor-icons/react";
 import { useRef, useState } from "react";
 import { SwiperSlide, type SwiperClass } from "swiper/react";
@@ -17,6 +19,7 @@ type ImageModalProps = {
 };
 
 const ImageModal = ({ images, isOpen, onClose, selectedImage, isPagination = true }: ImageModalProps) => {
+  const { user } = useAuthStore();
   const [currentImage, setCurrentImage] = useState(selectedImage);
   const swiperRef = useRef<SwiperClass | null>(null);
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)");
@@ -55,7 +58,7 @@ const ImageModal = ({ images, isOpen, onClose, selectedImage, isPagination = tru
       {/* 하단 바 */}
       <div className="absolute bottom-0 left-0 z-20 flex h-16 w-full items-center bg-black/50 px-4">
         <button
-          onClick={() => handleImageDownload(currentImage)}
+          onClick={user ? () => handleImageDownload(currentImage) : () => toast("로그인이 필요합니다", "warning")}
           className="text-sm flex items-center space-x-2 text-white"
         >
           <DownloadSimple className="h-6 w-6" />

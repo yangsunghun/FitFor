@@ -132,7 +132,8 @@ html::-webkit-scrollbar-track,
 /* 스크롤바 손잡이 */
 html::-webkit-scrollbar-thumb,
 .scroll-custom::-webkit-scrollbar-thumb {
-  background: theme("colors.primary.light");
+  /* background: theme("colors.primary.light"); */
+  background: theme("colors.text.02");
   border-radius: 10px;
   border: 2px solid theme("colors.gray.50");
 }
@@ -140,7 +141,8 @@ html::-webkit-scrollbar-thumb,
 /* 스크롤바 손잡이 호버 시 */
 html::-webkit-scrollbar-thumb:active,
 .scroll-custom::-webkit-scrollbar-thumb:active {
-  background: theme("colors.primary.default");
+  /* background: theme("colors.primary.default"); */
+  background: theme("colors.primary.light");
 }
 
 div[style*="border: 1px solid rgb(118, 129, 168)"] {

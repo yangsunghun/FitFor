@@ -114,8 +114,8 @@
         <td><strong>"밥 먹고 오세요"</strong></td>
         <td><strong>"튜터 아닙니다"</strong></td>
         <td><strong>"감자, MashedPotato되다"</strong></td>
-        <td><strong>...</strong></td>
-        <td><strong>...</strong></td>
+        <td><strong>"기억하세요 개구리 자세"</strong></td>
+        <td><strong>"햄부기햄북햄북스딱스"</strong></td>
       </tr>
     </tbody>
   </table>
@@ -469,26 +469,217 @@
 
 ## 💥 트러블슈팅
 
+### 이미지 최적화
+
+#### ⚙️ 문제 상황 및 원인 분석
+
+저희 프로젝트에서는 초기 로딩 속도가 느리다는 피드백이 있었습니다.
+
+다량의 이미지가 렌더링되는 시작 페이지에서 고해상도 이미지를 처리하는 과정에서 로딩이 발생하였다는 것을 깨달았습니다. 이미지가 로딩 되기 전에는 해당 공간이 비어있어, UX를 해치는 부분이 아닐 수 없었습니다.
+
+#### 🚀 문제 해결
+
+이를 해결하기 위해, 이미지를 로딩하기 전에 저해상도 이미지를 먼저 표시하는 블러 처리된 프리뷰(Blur Placeholder)를 도입했습니다. 원본 이미지를 업로드할 때, 서버에서 고해상도 이미지와 함께 저해상도 블러 이미지를 생성하고, 이를 Base64 URL 형식으로 변환해 제공했습니다.
+
+이로써 사용자에게 시각적인 콘텐츠 로딩 힌트를 제공해 로딩 지연으로 인한 불편을 줄일 수 있었습니다.
+
+이 작업을 통해 이미지 최적화가 웹 성능과 사용자 경험에 얼마나 큰 영향을 미치는지 깨달았으며, 데이터 처리와 클라이언트-서버 협업의 중요성도 깊이 느꼈습니다. 또한, 이러한 경험은 최적화된 웹 애플리케이션을 설계하는 데 필요한 기술과 사고력을 키우는 계기가 되었습니다.
+
+```ts
+<Image
+  src={isImgError ? sampleImage : post.images[0]}
+  alt={post.content}
+  {...imageProps}
+  className="object-cover object-center"
+  placeholder="blur"
+  blurDataURL={post.thumbnail_blur_url}
+  onError={() => setIsImgError(true)}
+/>
+```
+
+### CRUD - 작성 페이지 작업 진행: 너무 많은 useState 사용
+
+#### ⚙️ 문제 상황 및 원인 분석
+
+작성페이지에 유저의 입력값이 여러개다 보니 이때 이를 모두 관리하는 상태인 useState가 많이 늘어나는 문제가 발생했습니다.
+
+1. **가독성 저하**: 상태가 많아지면 useState가 주르륵 늘어나게 되면서 코드가 복잡해지므로 코드 가독성을 떨어뜨립니다.
+
+2. **비효율적인 렌더링**: 각각의 상태가 독립적으로 관리되어 하나의 상태만 업데이트해도 전체 컴포넌트가 비효율적으로 렌더링이 됩니다.
+
+3. **어려운 유지보수**: 새로운 상태를 추가하거나 수정하려고 하면, useState를 개별적으로 또 추가하거나 수정해야 하므로 유지보수가 어렵습니다.
+
+#### 🚀 문제 해결
+
+이를 해결하기 위해 상태를 객체로 묶어서 관리하였습니다. useState를 여러 번 쓰는 대신에, 하나의 useState로 상태를 객체로 묶어서 관리하는 방법을 채택하였습니다.
+
+```ts
+const WritePage = () => {
+  const [formState, setFormState] = useState({
+    address: '',
+    title: '',
+    content: '',
+    bodySize: { height: '', weight: '' },
+    thumbnail: '',
+    tags: [],
+    isModalOpen: false,
+  });
+
+  const handleChange = (field, value) => {
+    setFormState((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  return (
+    <>
+      <input
+        value={formState.title}
+        onChange={(e) => handleChange('title', e.target.value)}
+      />
+      {/* 다른 input 요소 */}
+    </>
+  );
+};
+```
+
+### 저장된 유저 정보 불러오기 기능 개선
+
+#### ⚙️ 문제 상황 및 원인 분석
+
+저희 프로젝트에서 소셜 로그인된 유저의 정보를 파악할때, 불필요한 요청을 보내게 되는 상황을 파악했습니다. 또한 회원정보가 수정되어도, 새로고침을 해야지만 변경된 프로필이 반영되는 문제를 발견했습니다.
+
+Header에 useUser라는 커스텀 훅을 만들어 헤더가 리렌더링 될때마다 유저의 정보를 가져오는 로직을 초기에 구현하였으나 이로 인한 문제가 헤더가 리렌더링 되지 않으면 유저 정보가 업데이트 되지 않거나, 리렌더링 할때마다 불필요한 요청을 계속 보내고 있던 상황이었습니다.
+
+#### 🚀 문제 해결
+
+zustand 하나만 전역 상태 관리에 사용하는 것이 아닌 Context API를 활용하여 `<main>`을 Provider 하나로 감싸주어 관리하였습니다.
+
+```ts
+// useUser.ts [개선 전 코드]
+"use client";
+import { useAuthStore } from "@/lib/store/authStore";
+import { fetchUser } from "@/lib/utils/auth/auth";
+import { useEffect } from "react";
+export const useUser = () => {
+  // 로그인된 유저가 있다면
+  // 현재 유저를 store에 유저를 저장하는 로직
+  const { setUser } = useAuthStore();
+  useEffect(() => {
+    const fetchPublicUserData = async () => {
+      const user = await fetchUser();
+      // zustand에 저장
+      if (user) {
+        setUser(user);
+      }
+    };
+    fetchPublicUserData();
+  }, [setUser]);
+};
+
+// HeaderContent.tsx
+"use client";
+
+import { useUser } from "@/lib/hooks/auth/useUser";
+
+const HeaderContent = () => {
+  useUser();
+
+  return <p>HeaderContent</p>;
+};
+
+export default HeaderContent;
+```
+
+위의 코드를 개선한 것이 아래의 코드입니다.
+
+```ts
+// 개선된 코드
+"use client";
+
+import { useAuthStore } from "@/lib/store/authStore";
+import type { UserType } from "@/lib/types/auth";
+import { fetchUser } from "@/lib/utils/auth/auth";
+import { createContext, useEffect, useState, type PropsWithChildren } from "react";
+
+const AuthContext = createContext<{ user: UserType | null }>({ user: null });
+
+export const AuthProvider = ({ children }: PropsWithChildren) => {
+  const { user, setUser } = useAuthStore();
+  // 컨밴션 정해서 타입 지정
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // 유저의 로그인 여부 파악
+  useEffect(() => {
+    const fetchSignedUser = async () => {
+      try {
+        const user = await fetchUser();
+        if (user) {
+          setUser(user);
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    };
+
+    fetchSignedUser();
+  }, [isAuthenticated, setUser]);
+
+  return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+};
+
+// 루트 layout.tsx에서...
+    <html lang="ko" className="min-h-full">
+      <AuthProvider>
+        <TQProviders>
+          <body className={`${pretendard.className} text-body text-text-04`}>
+						// ... 나머지 코드
+          </body>
+        </TQProviders>
+      </AuthProvider>
+    </html>
+```
+
 ## ⏳ 향후 목표
 
+- 로딩 UI 개선
 - 로그인/온보딩 라우팅의 방법의 개선
 - 날씨 기반의 데이터에 따른 룩북 추천
 - 더 다양한 인증/배지 시스템 구축
-- (더 추가 예정)
+- 색상 관련 검색 기능
+- 수익화
 
 ## 🌱 회고
 
 ### 양성훈
 
+> 검색 기능 최적화 과정에서 성능과 UX의 균형을 고려하는 중요성을 배웠고
+> 상세 페이지를 개선하는 과정에서 UI를 세포화 하여 유지보수성을 고려한 설계를 체득했습니다.
+> 실시간 데이터 동기화와 캐싱 전략을 적절히 조합하는것을 경험할 수 있었습니다. 그리고
+> 아무리 베이직한 기능이라도, 눈만 돌리면 개선 점이 보인다는 것을 깨달았습니다.
+> 다음 프로젝트에서는 UX개선과 극한의 비용 최적화를 목표로 개발해보려고 합니다.
+
 ### 엄정은
+
+> PostgreSQL을 기반으로 하는 Supabase Realtime 기능을 활용하여 실시간 채팅 구현에 도전했습니다.
+> 관계형 테이블을 설계하면서 데이터 간의 연결성에 대해 고민해볼 수 있었고, 협업을 통해 개발자와 디자이너 간 의사소통의 중요성에 대해서도 배울 수 있었습니다.
+> 이러한 경험을 바탕으로 프로젝트가 진행되는 과정에서 변경사항이 생기거나, 예상치 못한 상황이 발생하더라도 개발 기간을 지키기 위한 우선순위 조정, 빠른 의사결정을 통해 적절하게 대처할 수 있을 것이라고 생각합니다.
 
 ### 임지영
 
-> 작성페이지와 수정페이지에 임시저장 기능 및 다중업로드 기능 등 다양한 기능을 도입하여 블로그와 유사한 사용자 경험을 구현하려는 노력을 기울였습니다. 각 기능 구현 과정에서 발생한 여러 문제들을 해결하며, 사용자 경험과 시스템 안정성을 동시에 고려하는 방법을 배울 수 있었던 시간이었습니다. 이 과정에서 팀원들과의 협업 및 소통의 중요성을 재확인하며 문제 해결 능력 또한 크게 향상시킬 수 있었으며 도전적인 경험은 앞으로의 프로젝트에서 보다 효과적으로 기술적 의사결정을 내릴 수 있을 것이라 생각됩니다.
+> 작성페이지와 수정페이지에 임시저장 기능 및 다중업로드 기능 등 다양한 기능을 도입하여 블로그와 유사한 사용자 경험을 구현하려는 노력을 기울였습니다.
+> 각 기능 구현 과정에서 발생한 여러 문제들을 해결하며, 사용자 경험과 시스템 안정성을 동시에 고려하는 방법을 배울 수 있었던 시간이었습니다.
+> 이 과정에서 팀원들과의 협업 및 소통의 중요성을 재확인하며 문제 해결 능력 또한 크게 향상시킬 수 있었으며 도전적인 경험은 앞으로의 프로젝트에서 보다 효과적으로 기술적 의사결정을 내릴 수 있을 것이라 생각됩니다.
 
 ### 박채현
 
-> 로그인의 유저 상태 관리는 예상보다 복잡했지만, 직접 시도해 보길 잘했다는 생각이 들었습니다. 앞으로 유저 관련 로직을 다루는 데 많은 공부가 된 시간이었습니다. 마이페이지 또한 이전에 구현해 본 경험이 있지만, 이번에는 규모가 커지면서 유저 정보를 불러오는 과정에서 TanStack Query을 통해 서버 상태 관리에 대한 이해도를 확실히 높일 수 있었습니다. 또한 이번 프로젝트에서 디자이너분들과 협업하며 의사소통과 문제 해결 능력이 향상되었음을 앞으로의 프로젝트에서 보여줄 수 있을 것이라 생각합니다.
+> 로그인의 유저 상태 관리는 예상보다 복잡했지만, 직접 시도해 보길 잘했다는 생각이 들었습니다.
+> 앞으로 유저 관련 로직을 다루는 데 많은 공부가 된 시간이었습니다.
+> 마이페이지 또한 이전에 구현해 본 경험이 있지만, 이번에는 규모가 커지면서 유저 정보를 불러오는 과정에서 TanStack Query을 통해 서버 상태 관리에 대한 이해도를 확실히 높일 수 있었습니다.
+> 또한 이번 프로젝트에서 디자이너분들과 협업하며 의사소통과 문제 해결 능력이 향상되었음을 앞으로의 프로젝트에서 보여줄 수 있을 것이라 생각합니다.
 
 ### 김지영
 

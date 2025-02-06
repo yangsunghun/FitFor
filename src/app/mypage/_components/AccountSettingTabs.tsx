@@ -21,7 +21,7 @@ const AccountSettingTabs = () => {
 
   const menuItems: { title: string; mode: AccountModalMode }[] = [
     { title: "서비스 약관", mode: "serviceRule" },
-    { title: "개인정보 수집 처리방침", mode: "agreement" },
+    { title: "개인정보 수집 처리 방침", mode: "agreement" },
     { title: "로그아웃", mode: "logout" },
     { title: "회원탈퇴", mode: "deleteAccount" }
   ];

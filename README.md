@@ -512,9 +512,31 @@
 
 3. **어려운 유지보수**: 새로운 상태를 추가하거나 수정하려고 하면, useState를 개별적으로 또 추가하거나 수정해야 하므로 유지보수가 어렵습니다.
 
+<details>
+<summary><strong>이전의 많은 상태들</strong></summary>
+
+```ts
+const WritePage = () => {
+  const [address, setAddress] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [bodySize, setBodySize] = useState({ height: "", weight: "" });
+  const [thumbnail, setThumbnail] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const currentUser = useAuthStore((state) => state.user);
+};
+```
+
+</details>
+
 #### 🚀 문제 해결
 
 이를 해결하기 위해 상태를 객체로 묶어서 관리하였습니다. useState를 여러 번 쓰는 대신에, 하나의 useState로 상태를 객체로 묶어서 관리하는 방법을 채택하였습니다.
+
+<details>
+<summary><strong>개선된 코드</strong></summary>
 
 ```ts
 const WritePage = () => {
@@ -547,6 +569,8 @@ const WritePage = () => {
 };
 ```
 
+</details>
+
 ### 3. 저장된 유저 정보 불러오기 기능 개선
 
 #### ⚙️ 문제 상황 및 원인 분석
@@ -555,9 +579,8 @@ const WritePage = () => {
 
 Header에 useUser라는 커스텀 훅을 만들어 헤더가 리렌더링 될때마다 유저의 정보를 가져오는 로직을 초기에 구현하였으나 이로 인한 문제가 헤더가 리렌더링 되지 않으면 유저 정보가 업데이트 되지 않거나, 리렌더링 할때마다 불필요한 요청을 계속 보내고 있던 상황이었습니다.
 
-#### 🚀 문제 해결
-
-zustand 하나만 전역 상태 관리에 사용하는 것이 아닌 Context API를 활용하여 `<main>`을 Provider 하나로 감싸주어 관리하였습니다.
+<details>
+<summary><strong>개선 전 코드</strong></summary>
 
 ```ts
 // useUser.ts [개선 전 코드]
@@ -595,7 +618,14 @@ const HeaderContent = () => {
 export default HeaderContent;
 ```
 
-위의 코드를 개선한 것이 아래의 코드입니다.
+</details>
+
+#### 🚀 문제 해결
+
+zustand 하나만 전역 상태 관리에 사용하는 것이 아닌 Context API를 활용하여 `<main>`을 Provider 하나로 감싸주어 관리하였습니다.
+
+<details>
+<summary><strong>개선된 코드</strong></summary>
 
 ```ts
 // 개선된 코드
@@ -639,21 +669,169 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       <AuthProvider>
         <TQProviders>
           <body className={`${pretendard.className} text-body text-text-04`}>
-						// ... 나머지 코드
+            {/* 나머지 코드 */}
           </body>
         </TQProviders>
       </AuthProvider>
     </html>
 ```
 
+</details>
+
+### 4. 비슷하지만 다른 좋아요/북마크 기능의 코드 분리
+
+#### ⚙️ 문제 상황 및 원인 분석
+
+처음에는 좋아요와 북마크 기능이 모두 "클릭 토글 + 낙관적 업데이트" 방식이라는 점에 치중하여 하나의 로직으로 통합해 구현했습니다. 두 기능 모두 사용자가 클릭하면 즉시 UI에 반영하고, 이후 서버 요청을 처리하는 구조였기 때문에, 하나의 훅을 만들어 "재사용성"을 높이고자 했습니다. 이렇게 하면 코드 중복을 줄이고 유지보수도 더 쉬울 것이라 생각했습니다.
+
+그러나 이후 기능을 수정하는 과정에서 좋아요와 북마크의 미묘한 차이점이 문제로 드러났습니다. 좋아요는 단순한 ON/OFF 상태 변경뿐만 아니라, 좋아요 개수가 함께 표시되어야 했습니다. 즉, 사용자가 좋아요를 누르면 UI에서 숫자까지 즉각적으로 변경되어야 했고, 서버 요청이 실패할 경우 숫자를 원래 상태로 롤백해야 했습니다. 반면, 북마크는 숫자 개수를 표시할 필요 없이 단순히 ON/OFF 상태만 관리하면 되는 기능이었기 때문에, 좋아요처럼 숫자 변경 로직을 포함할 필요가 없었습니다.
+
+문제는 좋아요와 북마크의 로직을 하나로 합쳐 놓았기 때문에, 좋아요 개수를 관리하는 코드가 북마크 로직에도 영향을 미쳤다는 점입니다. 북마크에는 불필요한 숫자 증가/감소 로직이 포함되었고, 이를 수정하려다 보니 코드가 점점 복잡해지고, 특정 기능만 수정하려 해도 전체 로직을 변경해야 하는 문제가 발생했습니다.
+
+<details>
+<summary><strong>개선 전 코드(한 훅에서 관리)</strong></summary>
+
+```ts
+// useToggleAction.ts
+import { useAuthStore } from "@/lib/store/authStore";
+import { toast } from "@/lib/utils/common/toast";
+type UseToggleActionProps = {
+  postId: string;
+  actionHook: (
+    postId: string,
+    userId: string
+  ) => {
+    isActive: boolean;
+    isPending: boolean;
+    toggleAction: () => void;
+    count?: number;
+  };
+  requireLoginMessage?: string;
+};
+export const useToggleAction = ({ postId, actionHook, requireLoginMessage }: UseToggleActionProps) => {
+  const { user } = useAuthStore();
+  const userId = user?.id;
+  if (!userId) {
+    return {
+      isActive: false,
+      isPending: false,
+      count: null,
+      handleClick: () => toast(requireLoginMessage || "로그인이 필요합니다", "warning")
+    };
+  }
+  const { isActive, isPending, toggleAction, count } = actionHook(postId, userId);
+  return {
+    isActive,
+    isPending,
+    count,
+    handleClick: toggleAction
+  };
+};
+```
+
+</details>
+
+#### 🚀 문제 해결
+
+좋아요와 북마크의 로직을 개별적으로 분리하며 단일 책임 원칙의 중요성을 다시금 깨닫게 되었습니다. 기능을 분리한 후에는 좋아요는 숫자 증가/감소를 포함하는 로직으로, 북마크는 단순 상태 변경 로직으로 각각 최적화할 수 있었으며, 유지보수도 훨씬 쉬워졌습니다.
+이 경험을 통해, 비슷한 동작이라고 해서 무조건 하나의 로직으로 합치는 것이 아니라, 미묘한 차이를 고려해 역할을 분리하는 것이 더 유연한 구조를 만들 수 있다는 점을 배웠습니다. 앞으로는 기능을 통합하기 전에 각 기능이 완전히 동일한 책임을 가지는지, 유지보수와 확장성을 고려했을 때 별도로 분리하는 것이 더 적절한지를 먼저 고민하는 과정을 거치려고 합니다.
+
+<details>
+<summary><strong>분리된 코드</strong></summary>
+
+```ts
+// useBookmark.ts
+import { toast } from "@/lib/utils/common/toast";
+import { addBookmark, isPostBookmarked, removeBookmark } from "@/lib/utils/detail/bookmarkActions";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+type BookmarkState = {
+  isBookmarked: boolean;
+};
+
+export const useBookmarks = (postId: string, userId?: string) => {
+  const queryClient = useQueryClient();
+  const queryKey = ["bookmarks", postId, userId || "guest"];
+
+  // 북마크 상태 가져오기
+  const { data: bookmarkData = { isBookmarked: false }, isPending } = useQuery<BookmarkState>({
+    // 관련 코드
+  });
+
+  //  Mutation (항상 실행되지만, userId 없을 때는 토스트 출력)
+  const mutation = useMutation({
+    // 관련 코드
+  });
+
+  return {
+    isBookmarked: bookmarkData.isBookmarked,
+    isPending,
+    toggleBookmark: () => {
+      if (!userId || userId === "guest") {
+        return toast("로그인 후 북마크를 추가할 수 있습니다.", "warning");
+      }
+      mutation.mutate(bookmarkData.isBookmarked);
+    }
+  };
+};
+
+// useLike.ts
+import { toast } from "@/lib/utils/common/toast";
+import { addLike, getLikeCount, isPostLiked, removeLike } from "@/lib/utils/detail/likeActions";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+export const useLike = (postId: string, userId?: string) => {
+  const queryClient = useQueryClient();
+  const likeStatusQueryKey = ["likes", postId, userId || "guest"];
+  const likeCountQueryKey = ["likeCount", postId];
+
+  // 좋아요 상태 가져오기
+  const { data: likeData, isPending } = useQuery({
+    // 관련 코드
+  });
+
+  // 좋아요 토글 Mutation (비회원 차단)
+  const mutation = useMutation({
+    // 관련 코드
+  });
+
+  return {
+    isLiked: likeData?.isLiked || false,
+    isPending,
+    toggleLike: () => {
+      if (!userId || userId === "guest") {
+        return toast("로그인 후 좋아요를 누를 수 있습니다.", "warning");
+      }
+      mutation.mutate(likeData?.isLiked || false);
+    }
+  };
+};
+
+// 좋아요 수에 대한 코드
+export function useLikeCount(postId: string | null) {
+  const { data: likeCount = 0, isPending: likeCountPending } = useQuery({
+    queryKey: ["likeCount", postId],
+    queryFn: async () => {
+      return await getLikeCount(postId!);
+    },
+    enabled: Boolean(postId),
+    staleTime: 300000
+  });
+
+  return { likeCount, likeCountPending };
+}
+```
+
+</details>
+
 ## ⏳ 향후 목표
 
-- 로딩 UI 개선
-- 로그인/온보딩 라우팅의 방법의 개선
-- 날씨 기반의 데이터에 따른 룩북 추천
-- 더 다양한 인증/배지 시스템 구축
-- 색상 관련 검색 기능
-- 수익화
+- 로딩 UI 개선 예정입니다.
+- 로그인/온보딩 라우팅의 방법의 개선이 작업을 진행할 예정입니다.
+- 날씨 기반의 데이터에 따른 룩북 추천하는 기능을 추가할 예정입니다.
+- 더 다양한 인증/배지 시스템 구축할 예정입니다.
+- 색상 관련 검색 기능 구상 중입니다.
+- 수익화까지 목표하고 있습니다.
 
 ## 🌱 회고
 
@@ -686,4 +864,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
 ### 김지영
 
+> 여러 프로젝트를 진행해 보았지만, 웹/반응형 디자인도, 개발자와의 협업, 실제 구현, 그리고 QA까지.
+> 모두 처음인지라 다양한 경험을 쌓고 갈 수 있어 좋았습니다.
+> 특히, 2-3주가량의 짧은 시간에 웹과 앱, 두 가지 디바이스의 디자인을 해내었단 점이 스스로 놀라웠습니다.
+> '협업'의 의미는 여기서 나오는 것이라고 생각합니다. '혼자'가 아닌 '함께'일 때 그 이상의 것을 가능하게 하는 힘. 한 달이라는 시간을 저와 함께 달려주셔서 감사합니다! 모두들 수고 많으셨어요 🙂
+
 ### 이홍원
+
+> 이번 프로젝트는 개발자와의 협업을 통해 디자인을 실제 서비스로 구현하는 새로운 경험이었습니다.
+> 약 5주라는 짧은 기간 동안 반응형 웹 애플리케이션을 출시하기 위해 Figma를 활용한 효율적인 커뮤니케이션과 디자인 시스템 구축에 집중했습니다.
+> 또한, 사용자 테스트와 디자인 QA를 반복하며 UI/UX를 개선하는 과정이 사용자 만족도를 높이는 데 큰 영향을 미친다는 점을 다시 한번 실감했습니다.
+> 이번 경험을 바탕으로 앞으로도 우리 삶을 더 개선하고, 사용자 중심적인 디자인을 하고 싶습니다.

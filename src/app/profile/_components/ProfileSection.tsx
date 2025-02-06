@@ -3,9 +3,7 @@
 import ProfileSkeleton from "@/app/mypage/_components/ProfileSkeleton";
 import VerifiedBadge from "@/app/mypage/_components/VerifiedBadge";
 import { useUserProfile } from "@/lib/hooks/profile/useUserProfile";
-import { PencilSimple } from "@phosphor-icons/react";
 import Image from "next/image";
-import Link from "next/link";
 
 type Props = {
   userId: string;
@@ -31,9 +29,6 @@ const ProfileSection = ({ userId }: Props) => {
       <div className="relative flex h-full w-full max-w-96 flex-col gap-2 tb:ml-0 tb:h-[4.688rem] tb:w-full tb:items-center mb:w-[19rem]">
         <div className="flex flex-row items-center gap-1">
           <p className="mb-2 text-title1 font-bold tb:m-0 tb:text-title2">{userData?.nickname || "User"}</p>
-          <Link href="/mypage/profile-setting" className="hidden text-text-03 tb:inline">
-            <PencilSimple />
-          </Link>
         </div>
         <p className="tb:max-w=[7.875rem] flex flex-col text-body text-text-03 tb:break-keep tb:text-center tb:text-caption tb:font-medium">
           {userData?.introduction || "아직 한 줄 소개가 없습니다."}

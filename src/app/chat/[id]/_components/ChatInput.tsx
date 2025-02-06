@@ -70,7 +70,11 @@ export const DesktopInput = ({ roomId }: InputProps) => {
           <input type="file" id="file-input" className="hidden" onChange={handleFileUpload} />
           <Image alt="사진 전송하기" size={28} className="text-gray-600" />
         </label>
-        <Button variant="disabled" onClick={handleSendMessage} disabled={!isAllowedToChat}>
+        <Button
+          variant={message.trim() ? "primary" : "disabled"}
+          onClick={handleSendMessage}
+          disabled={!isAllowedToChat}
+        >
           보내기
         </Button>
       </div>

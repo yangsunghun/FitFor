@@ -4,7 +4,7 @@ import { fetchMessages } from "@/lib/utils/chat/fetchMessages";
 import { createClient } from "@/lib/utils/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const supabase = createClient();
 
@@ -44,11 +44,32 @@ const ChatMessages = ({ roomId }: ChatMessageProps) => {
     };
   }, [roomId, queryClient]);
 
+  const scrollRef = useRef<HTMLDivElement>(null); // 스크롤 컨테이너 ref
+
+  // 스크롤을 맨 아래로 이동시키는 함수
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
+  // 채팅이 입력될 때 스크롤 이동
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   if (isLoading) return <div></div>;
   if (isError) return <div>메시지를 불러오는 중 오류가 발생했습니다.</div>;
 
   return (
-    <div className="scrollbar-hide h-[calc(100vh-146px-139px)] flex-1 items-center justify-between overflow-y-auto bg-pink-100 px-4 pb-10 pt-6 tb:h-[calc(100vh-222px)]">
+    <div
+      ref={scrollRef}
+      className="scrollbar-hide h-[calc(100vh-146px-139px)] flex-1 items-center justify-between overflow-y-auto bg-pink-100 px-4 pb-10 pt-6 tb:h-[calc(100vh-222px)]"
+    >
       <div className="flex w-full flex-col gap-4 tb:gap-1">
         {messages.map((messages: ChatMessage) => {
           const isSender = messages.member_id === currentUser?.id;

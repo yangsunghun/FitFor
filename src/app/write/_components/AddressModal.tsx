@@ -3,6 +3,7 @@
 import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import { Button } from "@/components/ui/Button";
 import ModalItem from "@/components/ui/Modal";
+import useLockScroll from "@/lib/hooks/common/useLockScroll";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { getAddressFromCoordinates, getCurrentPosition } from "@/lib/utils/write/location";
 import { CaretLeft, CircleNotch, MagnifyingGlass, MapPinArea } from "@phosphor-icons/react";
@@ -99,6 +100,9 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: AddressModalProps) =
       setState((prevState) => ({ ...prevState, geoLoading: false })); // 로딩 상태 비활성화
     }
   };
+
+  // 스크롤 생기는 현상 방지
+  useLockScroll(isOpen);
 
   // 모달이 닫혀 있으면 렌더링 X
   if (!isOpen) return null;

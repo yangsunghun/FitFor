@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { toast } from "@/lib/utils/common/toast";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,7 +13,7 @@ export const useChatRoomQuery = () => {
       ? JSON.parse(decodeURIComponent(searchParams.get("category") || "[]"))
       : { gender: [], season: [], style: [], tpo: [] };
   }, [searchParams]);
-  
+
   const sortFromUrl = searchParams.get("sort") || "created_at";
 
   const [tags, setTags] = useState<{ [key: string]: string[] }>(tagsFromUrl);
@@ -22,7 +22,7 @@ export const useChatRoomQuery = () => {
   useEffect(() => {
     if (JSON.stringify(tags) !== JSON.stringify(tagsFromUrl)) setTags(tagsFromUrl);
     if (sort !== sortFromUrl) setSort(sortFromUrl);
-  }, [tags, sort, tagsFromUrl, sortFromUrl]);
+  }, [tagsFromUrl, sortFromUrl]);
 
   const encodeTagsForUrl = (tags: { [key: string]: string[] }): string => {
     return JSON.stringify(tags);
@@ -60,11 +60,7 @@ export const useChatRoomQuery = () => {
   const handleSort = (newSort: string) => {
     if (newSort !== sort) {
       setSort(newSort);
-      router.replace(
-        `/chat?category=${encodeTagsForUrl(
-          tags
-        )}&sort=${encodeURIComponent(newSort)}`
-      );
+      router.replace(`/chat?category=${encodeTagsForUrl(tags)}&sort=${encodeURIComponent(newSort)}`);
     }
   };
 

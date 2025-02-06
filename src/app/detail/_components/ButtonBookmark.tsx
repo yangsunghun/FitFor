@@ -20,7 +20,7 @@ const BookmarkButton = ({ postId, styleType = "masonry", iconSize, iconWeight = 
   const { isBookmarked, isPending, toggleBookmark } = useBookmarks(postId, userId);
 
   const buttonClass = cn("flex justify-center items-center text-text-02 transition-color duration-300", {
-    "text-status-info": isBookmarked,
+    "text-secondary-default": isBookmarked,
     "w-7 h-7 rounded-lg bg-bg-01": styleType === "masonry",
     "gap-1": styleType === "list" || styleType === "detailMob",
     "flex-col gap-2": styleType === "detail"

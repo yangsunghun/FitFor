@@ -165,7 +165,7 @@
 ![Zod](https://img.shields.io/badge/zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white)
 ![TailwindCss](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![PhosphorIcons](https://img.shields.io/badge/Phosphor_Icons-A4B55B?style=for-the-badge&logo=phosphor-icons&logoColor=white)
-![PhosphorIcons](https://img.shields.io/badge/ShadCN-000000?style=for-the-badge&logo=shadcn&logoColor=white)
+![ShadCn](https://img.shields.io/badge/ShadCN-000000?style=for-the-badge&logo=shadcn&logoColor=white)
 ![KakaoMap](https://img.shields.io/badge/Kakao_MAP-FFEB00?style=for-the-badge&logo=kakao&logoColor=1a1a1a)
 
 #### ✔️ 버전 컨트롤 및 배포
@@ -487,6 +487,8 @@
 > 작성페이지와 수정페이지에 임시저장 기능 및 다중업로드 기능 등 다양한 기능을 도입하여 블로그와 유사한 사용자 경험을 구현하려는 노력을 기울였습니다. 각 기능 구현 과정에서 발생한 여러 문제들을 해결하며, 사용자 경험과 시스템 안정성을 동시에 고려하는 방법을 배울 수 있었던 시간이었습니다. 이 과정에서 팀원들과의 협업 및 소통의 중요성을 재확인하며 문제 해결 능력 또한 크게 향상시킬 수 있었으며 도전적인 경험은 앞으로의 프로젝트에서 보다 효과적으로 기술적 의사결정을 내릴 수 있을 것이라 생각됩니다.
 
 ### 박채현
+
+> 막상 캠프에서 로그인을 해본 적이 없어 도전해 보았습니다. 유저 상태 관리는 예상보다 복잡했지만, 직접 시도해 보길 잘했다는 생각이 들었고, 앞으로 유저 관련 로직을 다루는 데 많은 공부가 된 시간이었습니다. 마이페이지 또한 이전에 구현해 본 경험이 있지만, 이번에는 규모가 커지면서 유저 정보를 불러오는 과정에서 TanStack Query와 씨름하는 등 새로운 어려움을 겪었습니다. 하지만 이 과정을 통해 서버 상태 관리에 대한 이해도를 확실히 높일 수 있었습니다. 이번 프로젝트에서 디자이너분들과 협업하며 의사소통과 문제 해결 능력이 향상되었음을 앞으로의 프로젝트에서 보여줄 수 있을 것이라 생각합니다.
 
 ### 김지영
 

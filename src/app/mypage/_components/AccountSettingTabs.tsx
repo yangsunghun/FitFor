@@ -4,15 +4,17 @@ import { ComponentType, useState } from "react";
 import AccountDeleteContent from "./AccountDeleteContent";
 import AgreementContent from "./AgreementContent";
 import LogOutContent from "./LogOutContent";
+import ProjectInfoContent from "./ProjectInfoContent";
 import ServiceContent from "./ServiceContent";
 
-type AccountModalMode = "agreement" | "serviceRule" | "deleteAccount" | "logout";
+type AccountModalMode = "agreement" | "serviceRule" | "deleteAccount" | "logout" | "info";
 
 const contentComponents: Record<AccountModalMode, ComponentType<{ closeModal: () => void }>> = {
   serviceRule: ServiceContent,
   agreement: AgreementContent,
   deleteAccount: AccountDeleteContent,
-  logout: LogOutContent
+  logout: LogOutContent,
+  info: ProjectInfoContent
 };
 
 const AccountSettingTabs = () => {
@@ -22,6 +24,7 @@ const AccountSettingTabs = () => {
   const menuItems: { title: string; mode: AccountModalMode }[] = [
     { title: "서비스 약관", mode: "serviceRule" },
     { title: "개인정보 수집 처리 방침", mode: "agreement" },
+    { title: "프로젝트 정보", mode: "info" },
     { title: "로그아웃", mode: "logout" },
     { title: "회원탈퇴", mode: "deleteAccount" }
   ];

@@ -52,8 +52,8 @@
 
 어떤 상황에도 반응할 수 있는 인재들이 되고자 하는 의지의 **반응형 인재들**
 
-<div style="display: flex; justify-content: center;">
-  <table style="width: 90%; text-align: center; table-layout: fixed;">
+<center style="display: flex; justify-content: center;">
+  <table align="center" style="width: 90%; text-align: center; table-layout: fixed;">
     <thead>
       <tr>
         <th style="text-align: center;"><strong>양성훈</strong></th>
@@ -68,29 +68,29 @@
       <tr>
         <td>
           <a href="https://github.com/yangsunghun">
-            <img src="https://github.com/user-attachments/assets/439e16dd-9442-496a-b036-62e512128a47" width="100px;" alt="양성훈"/>
+            <img src="https://github.com/user-attachments/assets/439e16dd-9442-496a-b036-62e512128a47" width="100px;" height="100px" alt="양성훈"/>
           </a>
         </td>
         <td>
           <a href="https://github.com/ovezen">
-            <img src="https://github.com/user-attachments/assets/81709e79-194b-4c49-b516-d2656eb41d15" width="100px;" alt="엄정은"/>
+            <img src="https://github.com/user-attachments/assets/81709e79-194b-4c49-b516-d2656eb41d15" width="100px;" height="100px" alt="엄정은"/>
           </a>
         </td>
         <td>
           <a href="https://github.com/reizvoll">
-            <img src="https://github.com/user-attachments/assets/ebbdfb9f-d878-4c49-813f-228b340c2769" width="100px;" alt="임지영"/>
+            <img src="https://github.com/user-attachments/assets/ebbdfb9f-d878-4c49-813f-228b340c2769" width="100px;" height="100px" alt="임지영"/>
           </a>
         </td>
         <td>
           <a href="https://github.com/chay140">
-            <img src="https://github.com/user-attachments/assets/a245aba4-a826-4e7e-878e-89da498d7186" width="100px;" alt="박채현"/>
+            <img src="https://github.com/user-attachments/assets/a245aba4-a826-4e7e-878e-89da498d7186" width="100px;" height="100px" alt="박채현"/>
           </a>
         </td>
         <td>
-          <img src="https://github.com/user-attachments/assets/ba74e032-2388-4910-acdf-c92d4ad230df" width="100px;" alt="김지영"/>
+          <img src="https://github.com/user-attachments/assets/ba74e032-2388-4910-acdf-c92d4ad230df" width="100px;" height="100px" alt="김지영"/>
         </td>
         <td>
-          <img src="https://github.com/user-attachments/assets/8926013a-144a-4db2-8023-dff6fd57892e" width="100px;" alt="양홍원"/>
+          <img src="https://github.com/user-attachments/assets/8926013a-144a-4db2-8023-dff6fd57892e" width="100px;" height="100px" alt="양홍원"/>
         </td>
       </tr>
       <tr>
@@ -110,7 +110,7 @@
         <td>웹/모바일 UI/UX 디자이너</td>
       </tr>
       <tr>
-        <td><strong>"We were good team"<strong></td>
+        <td><strong>"We were good team"</strong></td>
         <td><strong>"밥 먹고 오세요"</strong></td>
         <td><strong>"튜터 아닙니다"</strong></td>
         <td><strong>"감자, MashedPotato되다"</strong></td>
@@ -119,7 +119,7 @@
       </tr>
     </tbody>
   </table>
-</div>
+</center>
 
 #### [🎨 반응형 인재들 노션 바로가기](https://www.notion.so/teamsparta/3-48193215cc7a42e98a9ca0afefcab302)
 

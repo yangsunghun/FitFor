@@ -114,8 +114,8 @@
         <td><strong>"밥 먹고 오세요"</strong></td>
         <td><strong>"튜터 아닙니다"</strong></td>
         <td><strong>"감자, MashedPotato되다"</strong></td>
-        <td><strong>"기억하세요 개구리 자세"</strong></td>
         <td><strong>"햄부기햄북햄북스딱스"</strong></td>
+        <td><strong>"기억하세요 개구리 자세"</strong></td>
       </tr>
     </tbody>
   </table>

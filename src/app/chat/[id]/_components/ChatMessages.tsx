@@ -68,7 +68,7 @@ const ChatMessages = ({ roomId }: ChatMessageProps) => {
   return (
     <div
       ref={scrollRef}
-      className="scrollbar-hide h-[calc(100vh-146px-139px)] flex-1 items-center justify-between overflow-y-auto bg-pink-100 px-4 pb-10 pt-6 tb:h-[calc(100vh-222px)]"
+      className="scrollbar-hide h-[calc(100vh-146px-139px)] flex-1 items-center justify-between overflow-y-auto bg-pink-100 px-4 pb-10 pt-6 tb:h-[calc(100vh-160px)]"
     >
       <div className="flex w-full flex-col gap-4 tb:gap-1">
         {messages.map((messages: ChatMessage) => {

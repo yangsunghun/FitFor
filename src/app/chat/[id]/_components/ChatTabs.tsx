@@ -1,15 +1,19 @@
 "use client";
+import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
 import ChatGallery from "./ChatGallery";
 import { DesktopInput, MobileInput } from "./ChatInput";
-import { MinTablet, Tablet } from "@/components/common/BreakPoints";
 import ChatMessages from "./ChatMessages";
 
 const ChatTabs = ({ roomId }: { roomId: string }) => {
   const { activeTab, handleTabChange } = useActiveTabs();
   return (
-    <Tabs value={activeTab} onValueChange={handleTabChange} className="absolute left-0 top-[96px] h-[50px] w-full">
+    <Tabs
+      value={activeTab}
+      onValueChange={handleTabChange}
+      className="absolute left-0 top-[96px] h-[50px] w-full tb:top-[48px]"
+    >
       <TabsList className="h-full w-full justify-start rounded-none bg-transparent p-0">
         <TabsTrigger
           value="tab-0"

@@ -1,12 +1,12 @@
+import ProfileImageCircle from "@/components/shared/ProfileImageCircle";
+import Dropdown from "@/components/ui/Dropdown";
+import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useAuthStore } from "@/lib/store/authStore";
 import { deleteChatRoom } from "@/lib/utils/chat/chat";
 import { createClient } from "@/lib/utils/supabase/client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { CaretLeft, List } from "@phosphor-icons/react";
-import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
-import ProfileImageCircle from "@/components/shared/ProfileImageCircle";
-import Dropdown from "@/components/ui/Dropdown";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const supabase = createClient();
 
@@ -75,11 +75,11 @@ const ChatHeader = ({ roomId }: ChatHeaderProps) => {
   };
 
   if (!roomData) {
-    return <div></div>
+    return <div></div>;
   }
 
   return (
-    <div className="absolute left-1/2 top-0 z-20 flex h-[96px] w-full -translate-x-1/2 items-center justify-between bg-white px-4">
+    <div className="absolute left-1/2 top-0 z-20 flex h-[96px] w-full -translate-x-1/2 items-center justify-between bg-white px-4 tb:h-[48px] tb:pt-[16px]">
       <div className="flex items-center gap-2">
         <Link href="/chat">
           <CaretLeft size={24} weight="bold" />

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useNavBarStore } from "@/lib/store/useNavBarStore";
 import { toast } from "@/lib/utils/common/toast";
 import { updateUserProfile } from "@/lib/utils/mypage/userInfo";
 import { createClient } from "@/lib/utils/supabase/client";
@@ -22,6 +23,14 @@ const ProfileSettingsForm = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null); // 이미지 미리보기
   const [isUploading, setIsUploading] = useState(false); // 저장 중 버튼 클릭 방지
   const isTabletOrSmaller = useMediaQuery("(max-width: 768px)"); // tablet 사이즈 감지
+
+  const { hideNavBar, showNavBar } = useNavBarStore();
+
+  useEffect(() => {
+    hideNavBar();
+    return () => showNavBar();
+  }, [hideNavBar, showNavBar]);
+
   const {
     register,
     handleSubmit,

@@ -57,7 +57,7 @@ export const DesktopInput = ({ roomId }: InputProps) => {
         <Lock size={24} className="absolute left-4 top-[20%] -translate-y-[30%] transform text-text-03" weight="fill" />
       )}
       <textarea
-        className="w-full resize-none pl-8 pt-1 text-title2 font-medium text-text-03 outline-none"
+        className="w-full resize-none pl-8 pt-1 text-title2 font-medium text-text-03 outline-none disabled:bg-bg-01"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}

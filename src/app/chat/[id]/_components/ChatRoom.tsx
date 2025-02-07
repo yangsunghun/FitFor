@@ -9,6 +9,7 @@ import ModalItem from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import useMediaQuery from "@/lib/hooks/common/useMediaQuery";
 import { createClient } from "@/lib/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 type ChatRoomProps = {
   roomId: string;
@@ -21,6 +22,7 @@ const ChatRoom = ({ roomId }: ChatRoomProps) => {
   const [isActive, setIsActive] = useState<boolean | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const supabase = createClient();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMemberStatus = async () => {
@@ -51,6 +53,10 @@ const ChatRoom = ({ roomId }: ChatRoomProps) => {
     fetchMemberStatus();
   }, [currentUser, roomId, openModal]);
 
+  const handleExit = () => {
+    router.push("/chat");
+  };
+
   return (
     <div>
       <ChatHeader roomId={roomId} />
@@ -64,7 +70,12 @@ const ChatRoom = ({ roomId }: ChatRoomProps) => {
               인증 유저 신청은 마이페이지 - 인증 메뉴에서 확인할 수 있어요.
             </p>
             <div className="flex w-full flex-row gap-2">
-              <Button variant="disabled" className="w-full !text-text-04" size={isTabletOrSmaller ? "sm" : "lg"}>
+              <Button
+                variant="disabled"
+                className="w-full !text-text-04"
+                size={isTabletOrSmaller ? "sm" : "lg"}
+                onClick={handleExit}
+              >
                 나가기
               </Button>
               <Button size={isTabletOrSmaller ? "sm" : "lg"} onClick={closeModal} className="w-full">

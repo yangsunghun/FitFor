@@ -30,10 +30,7 @@ const ChatRoomList = () => {
   const [readyToRender, setReadyToRender] = useState(false);
   const router = useRouter();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatRooms(
-    Object.values(tags).flat(),
-    sort
-  );
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatRooms(Object.values(tags).flat(), sort);
   const observerRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,7 +42,8 @@ const ChatRoomList = () => {
 
   const handleEnterRoom = async (roomId: string) => {
     if (!currentUser?.id) {
-      console.error("로그인된 사용자 정보가 없습니다.");
+      alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+      router.push("/login");
       return;
     }
 
@@ -53,7 +51,7 @@ const ChatRoomList = () => {
       await enterAsMember(currentUser.id, roomId);
       router.push(`/chat/${roomId}`);
     } catch (error) {
-      console.error("채팅방 입장 중 오류 발생:", error);
+      console.error("채팅방 입장 중 오류 발생");
     }
   };
 

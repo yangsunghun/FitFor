@@ -30,7 +30,7 @@ const EditPage = ({ params: { id } }: EditPageProps) => {
     <div className="mx-auto max-w-[700px] pb-20 pt-20 tb:pt-10 mb:pt-4">
       <PostHeader mode="edit" postId={id} handleBack={pageState.handleBack} />
       <PostForm {...pageState} mode="edit" />
-      <UpdateButton postId={id} onSubmit={() => pageState.handleUpdate(id)} />
+      <UpdateButton postId={id} onSubmit={() => pageState.handleUpdate(id, { skipUnsavedCheck: true })} />
       <ScrollTopButton />
       <ExitOrContinueModal
         isOpen={pageState.isExitModalOpen}

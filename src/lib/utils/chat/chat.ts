@@ -209,7 +209,7 @@ export const sendMessage = async ({
   file: File | null;
   roomId: string;
   memberId: string;
-  }) => {
+}) => {
   let fileUrl = null;
 
   // 파일 용량 제한 (예: 5MB)
@@ -219,13 +219,15 @@ export const sendMessage = async ({
   if (file) {
     // 파일 용량 검증
     if (file.size > MAX_FILE_SIZE) {
-      throw new Error("파일 용량은 5MB를 초과할 수 없습니다..");
+      alert("파일 용량은 5MB를 초과할 수 없습니다.");
+      return;
     }
 
     // 파일 확장자 검증
     const fileExtension = file.name.split(".").pop()?.toLowerCase();
     if (!ALLOWED_EXTENSIONS.includes(fileExtension || "")) {
-      throw new Error(`허용되지 않는 파일 유형입니다. allowed extensions: ${ALLOWED_EXTENSIONS.join(", ")}`);
+      alert(`허용되지 않는 파일 유형입니다. 사용 가능한 확장자: ${ALLOWED_EXTENSIONS.join(", ")}`);
+      return;
     }
 
     // 한글 파일 이름 처리
@@ -237,7 +239,8 @@ export const sendMessage = async ({
       .upload(`rooms/${roomId}/${sanitizedFileName}`, file);
 
     if (uploadError) {
-      throw new Error(uploadError.message);
+      alert(`파일 업로드 실패: ${uploadError.message}`);
+      return;
     }
     fileUrl = data?.path;
   }
@@ -252,6 +255,8 @@ export const sendMessage = async ({
   });
 
   if (error) {
-    throw new Error(error.message);
+    alert(`메시지 전송 실패: ${error.message}`);
+    return;
   }
 };
+

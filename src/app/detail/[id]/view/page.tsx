@@ -5,13 +5,13 @@ import ContentsSection from "../../_components/ContentsSection";
 import PurchaseList from "../../_components/PurchaseList";
 import ViewCounter from "../../_components/ViewCounter";
 
-type DetailPageProps = {
+type DetailPageViewProps = {
   params: {
     id: string;
   };
 };
 
-export const generateMetadata = async ({ params }: DetailPageProps): Promise<Metadata> => {
+export const generateMetadata = async ({ params }: DetailPageViewProps): Promise<Metadata> => {
   const postId = params.id;
   const post = await fetchPostDetail(postId);
 
@@ -41,7 +41,7 @@ export const generateMetadata = async ({ params }: DetailPageProps): Promise<Met
   };
 };
 
-const DetailPage = async ({ params }: DetailPageProps) => {
+const DetailPageView = async ({ params }: DetailPageViewProps) => {
   const postId = params.id;
 
   return (
@@ -63,4 +63,4 @@ const DetailPage = async ({ params }: DetailPageProps) => {
   );
 };
 
-export default DetailPage;
+export default DetailPageView;

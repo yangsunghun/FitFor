@@ -1,15 +1,66 @@
-import { redirect } from "next/navigation";
+import { fetchPostDetail } from "@/lib/utils/post/fetchPostDetail";
+import type { Metadata } from "next";
+import CommentSection from "../../_components/CommentSection";
+import ContentsSection from "../../_components/ContentsSection";
+import PurchaseList from "../../_components/PurchaseList";
+import ViewCounter from "../../_components/ViewCounter";
 
-type Props = {
+type DetailPageViewProps = {
   params: {
     id: string;
   };
 };
 
-const DetailPageView = async ({ params }: Props) => {
+export const generateMetadata = async ({ params }: DetailPageViewProps): Promise<Metadata> => {
+  const postId = params.id;
+  const post = await fetchPostDetail(postId);
+
+  if (!post) {
+    return {
+      title: "FitFor",
+      description: "삭제된 게시글",
+      openGraph: {
+        title: "FitFor",
+        description: "삭제된 게시글",
+        url: `https://fit4.vercel.app/detail/${params.id}`
+      }
+    };
+  }
+  const maxDescriptionLength = 160;
+
+  return {
+    title: `FitFor - ${post.users.nickname}님의 룩북`,
+    description:
+      post.content.length > maxDescriptionLength ? `${post.content.slice(0, maxDescriptionLength)}...` : post.content,
+    openGraph: {
+      title: `FitFor - ${post.users.nickname}님의 룩북`,
+      description:
+        post.content.length > maxDescriptionLength ? `${post.content.slice(0, maxDescriptionLength)}...` : post.content,
+      url: `https://fit4.vercel.app/detail/${params.id}`
+    }
+  };
+};
+
+const DetailPageView = async ({ params }: DetailPageViewProps) => {
   const postId = params.id;
 
-  return redirect(`/detail/${postId}`);
+  return (
+    <div className="md:inner pb-40 pt-10 tb:pb-20 tb:pt-[70px]">
+      <ViewCounter postId={postId} />
+
+      <section>
+        <ContentsSection postId={postId} />
+      </section>
+      <hr className="my-[3.75rem] border-line-02 tb:hidden" />
+      <section className="tb:hidden">
+        <PurchaseList postId={postId} />
+      </section>
+      <hr className="my-[3.75rem] border-line-02 tb:hidden" />
+      <section id="comment" className="tb:hidden">
+        <CommentSection postId={postId} />
+      </section>
+    </div>
+  );
 };
 
 export default DetailPageView;

@@ -2,6 +2,8 @@ export const POSTS_PER_PAGE = 8; // 페이지 당 게시물 개수
 
 export const VERIFICATION_THRESHOLD = 500; // 인증 유저 조건
 
+export const ALLOWED_IMAGE_FILE_TYPES = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
 // 태그 그룹 정의
 export const TAG_GROUPS = [
   { key: "gender", title: "성별", tags: ["남성", "여성", "성별무관"], max: 1 },

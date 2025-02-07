@@ -1,3 +1,5 @@
+import { ALLOWED_IMAGE_FILE_TYPES } from "@/lib/constants/constants";
+import { toast } from "@/lib/utils/common/toast";
 import Image from "next/image";
 import { ChangeEvent, Dispatch, DragEvent, SetStateAction } from "react";
 import CameraButton from "./CameraButton";
@@ -13,6 +15,11 @@ const ProfileImageUploadSection = ({ setImageFile, setImagePreview, imagePreview
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!ALLOWED_IMAGE_FILE_TYPES.includes(file.type)) {
+        toast("PNG, JPG, JPEG, 그리고 GIF 파일만 첨부가 가능합니다.", "warning");
+        return;
+      }
+
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => setImagePreview(reader.result as string);
@@ -25,6 +32,11 @@ const ProfileImageUploadSection = ({ setImageFile, setImagePreview, imagePreview
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
     if (file) {
+      if (!ALLOWED_IMAGE_FILE_TYPES.includes(file.type)) {
+        toast("PNG, JPG, JPEG, 그리고 GIF 파일만 첨부가 가능합니다.", "warning");
+        return;
+      }
+
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => setImagePreview(reader.result as string);

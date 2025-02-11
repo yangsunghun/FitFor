@@ -1,6 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { MYPAGE_MENU } from "@/lib/constants/constants";
-import ProfileSkeleton from "./_components/ProfileSkeleton";
+import ProfileSkeleton from "./_components/profile/ProfileSkeleton";
 
 const loading = () => {
   return (

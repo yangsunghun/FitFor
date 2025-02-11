@@ -1,6 +1,6 @@
 "use client";
 
-import ProfileSkeleton from "@/app/mypage/_components/ProfileSkeleton";
+import ProfileSkeleton from "@/app/mypage/_components/profile/ProfileSkeleton";
 import VerifiedBadge from "@/app/mypage/_components/VerifiedBadge";
 import { useUserProfile } from "@/lib/hooks/profile/useUserProfile";
 import Image from "next/image";

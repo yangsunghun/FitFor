@@ -3,10 +3,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { MYPAGE_MENU } from "@/lib/constants/constants";
 import { useActiveTabs } from "@/lib/hooks/common/useActiveTabs";
-import AccountSettingTabs from "./AccountSettingTabs";
-import MyPosts from "./MyPosts";
-import RecentViewPosts from "./RecentViewPosts";
-import VerificationSection from "./VerificationSection";
+import AccountSettingTabs from "./account-info/AccountSettingTabs";
+import MyPosts from "./posts/MyPosts";
+import RecentViewPosts from "./posts/RecentViewPosts";
+import VerificationSection from "./verification/VerificationSection";
 
 const MypageMenu = () => {
   const { activeTab, handleTabChange } = useActiveTabs(4);

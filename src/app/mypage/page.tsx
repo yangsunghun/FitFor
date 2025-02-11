@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import MypageMenu from "./_components/MypageMenu";
-import ProfileSection from "./_components/ProfileSection";
+import ProfileSection from "./_components/profile/ProfileSection";
 
 export const metadata: Metadata = {
   title: "FitFor - 마이페이지",
